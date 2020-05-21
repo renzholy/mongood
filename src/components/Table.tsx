@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import {
-  ShimmeredDetailsList,
+  DetailsList,
   SelectionMode,
   DetailsListLayoutMode,
   ConstrainMode,
@@ -79,9 +79,8 @@ export function Table() {
           root: { maxWidth: '100%' },
           stickyBelow: { display: 'none' },
         }}>
-        <ShimmeredDetailsList
+        <DetailsList
           compact={true}
-          enableShimmer={!data}
           selectionMode={SelectionMode.none}
           constrainMode={ConstrainMode.unconstrained}
           layoutMode={DetailsListLayoutMode.fixedColumns}

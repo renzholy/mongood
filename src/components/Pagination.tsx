@@ -44,7 +44,7 @@ export function Pagination() {
           {skip + 1} ~ {Math.min(skip + limit, count)} of {Number.format(count)}
         </Text>
       ) : (
-        <Text style={{ marginRight: 20 }}>total: {Number.format(count)}</Text>
+        <Text style={{ marginRight: 20 }}>No Data</Text>
       )}
       <IconButton
         iconProps={{ iconName: 'Back' }}

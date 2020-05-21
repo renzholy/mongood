@@ -48,7 +48,7 @@ export default () => {
     if (!database || !collection) {
       return
     }
-    history.push({
+    history.replace({
       pathname: '/docs',
       search: new URLSearchParams({ database, collection }).toString(),
     })
