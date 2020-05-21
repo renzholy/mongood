@@ -19,6 +19,7 @@ export function stringify(
     | { $numberLong: string }
     | { $regularExpression: { pattern: string; options: string } }
     | { $timestamp: { t: number; i: number } }
+    | { $binary: { base64: string; subType: '04' } }
     | any[]
     | object,
 ): string {
@@ -63,6 +64,9 @@ export function stringify(
   if ('$timestamp' in val) {
     return `Timestamp(${val.$timestamp.t}, ${val.$timestamp.i})`
   }
+  if ('$binary' in val) {
+    return `Binary("${val.$binary.base64}", "${val.$binary.subType}")`
+  }
   if (Array.isArray(val)) {
     return `[${val.map(stringify).join(', ')}]`
   }
@@ -86,6 +90,9 @@ export function parse(str: string): object {
         NumberInt: (s: string) => ({ $numberInt: s }),
         NumberLong: (s: string) => ({ $numberLong: s }),
         Timestamp: (t: number, i: number) => ({ $timestamp: { t, i } }),
+        Binary: (base64: string, subType: string) => ({
+          $binary: { base64, subType },
+        }),
       }),
       (_key, value) => {
         if (value instanceof RegExp) {
