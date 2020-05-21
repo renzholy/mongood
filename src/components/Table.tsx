@@ -59,7 +59,7 @@ export function Table() {
         items={[
           {
             key: 'copy',
-            text: 'Copy',
+            text: 'Copy Document',
             onClick: () => {
               window.navigator.clipboard.writeText(
                 `{${_.map(
@@ -91,11 +91,9 @@ export function Table() {
           constrainMode={ConstrainMode.unconstrained}
           layoutMode={DetailsListLayoutMode.fixedColumns}
           items={data?.cursor.firstBatch || []}
-          onRenderItemColumn={(_item, _index, colume) => (
-            <span style={{ userSelect: 'none' }}>
-              {stringify(_item[colume?.key!])}
-            </span>
-          )}
+          onRenderItemColumn={(_item, _index, colume) =>
+            stringify(_item[colume?.key!])
+          }
           onRenderDetailsHeader={(detailsHeaderProps) => (
             <Sticky>
               <DetailsHeader
