@@ -1,0 +1,17 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "jsxBracketSameLine": true,
+  "overrides": [
+    {
+      "files": "*.ejs",
+      "options": { "parser": "html" }
+    },
+    {
+      "files": ".prettierrc",
+      "options": { "parser": "json" }
+    }
+  ]
+}

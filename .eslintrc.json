@@ -1,0 +1,24 @@
+{
+  "extends": ["airbnb-typescript", "prettier", "prettier/@typescript-eslint"],
+  "plugins": ["prettier", "react", "import"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-closing-bracket-location": "off",
+    "react/prop-types": "off",
+    "react/jsx-boolean-value": "off",
+    "react/jsx-curly-newline": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/jsx-wrap-multilines": "off"
+  }
+}

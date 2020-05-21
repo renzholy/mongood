@@ -1,0 +1,17 @@
+.DS_Store
+.vscode/
+node_modules/
+dist/
+.*ignore
+*.html
+Dockerfile
+*.conf
+.npmrc
+.umi/
+.umi-production/
+.env
+*.png
+*.ico
+*.svg
+*.xml
+server/

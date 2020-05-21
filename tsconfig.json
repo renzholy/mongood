@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "alwaysStrict": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@@/*": ["src/.umi/*"]
+    }
+  },
+  "include": ["mock/**/*", "src/**/*", "config/**/*", ".umirc.ts"]
+}
