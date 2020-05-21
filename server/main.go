@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/gofiber/compression"
@@ -66,7 +65,6 @@ func main() {
 			c.Status(400).Send(parseErr)
 			return
 		}
-		fmt.Println(filter)
 		result, err := client.ListDatabases(ctx, filter)
 		if err != nil {
 			c.Status(500).Send(err)
