@@ -19,7 +19,10 @@ export default () => {
   const { data } = useSWR(
     `listDatabases/${JSON.stringify(filter)}`,
     () => listDatabases(filter),
-    { refreshInterval: 10 * 1000, errorRetryCount: 0 },
+    {
+      refreshInterval: 60 * 1000,
+      errorRetryCount: 0,
+    },
   )
   const [links, setLinks] = useState<INavLink[]>([])
   const dispatch = useDispatch()

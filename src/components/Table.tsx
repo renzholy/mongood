@@ -48,7 +48,7 @@ export function Table() {
       )
     },
     {
-      refreshInterval: 10 * 1000,
+      refreshInterval: 60 * 1000,
       errorRetryCount: 0,
     },
   )
