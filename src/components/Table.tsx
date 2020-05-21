@@ -61,12 +61,7 @@ export function Table() {
             key: 'copy',
             text: 'Copy Document',
             onClick: () => {
-              window.navigator.clipboard.writeText(
-                `{${_.map(
-                  item,
-                  (value, key) => `${key}: ${stringify(value)}`,
-                ).join(', ')}}`,
-              )
+              window.navigator.clipboard.writeText(stringify(item))
             },
           },
         ]}

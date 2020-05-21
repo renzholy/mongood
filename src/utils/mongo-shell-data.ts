@@ -1,4 +1,5 @@
 import saferEval from 'safer-eval'
+import _ from 'lodash'
 
 /**
  * @see https://docs.mongodb.com/manual/reference/mongodb-extended-json/#example
@@ -65,7 +66,9 @@ export function stringify(
   if (Array.isArray(val)) {
     return `[${val.map(stringify).join(', ')}]`
   }
-  return JSON.stringify(val)
+  return `{${_.map(val, (value, key) => `${key}: ${stringify(value)}`).join(
+    ', ',
+  )}}`
 }
 
 export function parse(str: string): object {
