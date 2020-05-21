@@ -11,4 +11,6 @@ MongoDB Operation Dashboard
 
 ## 📷 Screenshots:
 
-![](/screenshots/documents.png)
+![](/screenshots/documents0.png)
+
+![](/screenshots/documents1.png)
