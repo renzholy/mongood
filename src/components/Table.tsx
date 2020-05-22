@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   DetailsList,
   SelectionMode,
@@ -13,6 +13,9 @@ import {
   ProgressIndicator,
   ContextualMenu,
   getTheme,
+  HoverCard,
+  Text,
+  HoverCardType,
 } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
@@ -54,6 +57,19 @@ export function Table() {
       errorRetryCount: 0,
     },
   )
+  const onRenderPlainCard = useCallback((str: string) => {
+    return (
+      <div
+        style={{
+          padding: 20,
+          maxWidth: 300,
+          maxHeight: 500,
+          overflowY: 'scroll',
+        }}>
+        <Text>{str}</Text>
+      </div>
+    )
+  }, [])
 
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
@@ -87,9 +103,23 @@ export function Table() {
           constrainMode={ConstrainMode.unconstrained}
           layoutMode={DetailsListLayoutMode.fixedColumns}
           items={data?.cursor.firstBatch || []}
-          onRenderItemColumn={(_item, _index, colume) =>
-            stringify(_item[colume?.key!])
-          }
+          onRenderItemColumn={(_item, _index, colume) => {
+            const str = stringify(_item[colume?.key!])
+            return str.length > 100 ? (
+              <HoverCard
+                type={HoverCardType.plain}
+                plainCardProps={{
+                  onRenderPlainCard,
+                  renderData: str,
+                }}
+                styles={{ host: { cursor: 'pointer' } }}
+                instantOpenOnClick={true}>
+                {str}
+              </HoverCard>
+            ) : (
+              str
+            )
+          }}
           onRenderDetailsHeader={(detailsHeaderProps) => (
             <Sticky>
               <DetailsHeader
