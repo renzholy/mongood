@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import useSWR from 'swr'
-import { Stack } from '@fluentui/react'
+import { Stack, DefaultButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
@@ -32,20 +32,24 @@ export function IndexesStack() {
       horizontal={true}
       tokens={{ childrenGap: 10, padding: 10 }}
       styles={{ root: { minHeight: 52, marginBottom: -10 } }}>
-      {indexes?.cursor.firstBatch.map((item) => (
-        <IndexButton
-          key={item.name}
-          value={item}
-          selected={item.name === index?.name}
-          onSelect={() => {
-            dispatch(
-              actions.docs.setIndex(
-                item.name === index?.name ? undefined : item,
-              ),
-            )
-          }}
-        />
-      ))}
+      {indexes?.cursor.firstBatch.length ? (
+        indexes.cursor.firstBatch.map((item) => (
+          <IndexButton
+            key={item.name}
+            value={item}
+            selected={item.name === index?.name}
+            onSelect={() => {
+              dispatch(
+                actions.docs.setIndex(
+                  item.name === index?.name ? undefined : item,
+                ),
+              )
+            }}
+          />
+        ))
+      ) : (
+        <DefaultButton disabled={true} text="No Index" />
+      )}
       <Stack.Item grow={1}>&nbsp;</Stack.Item>
       <Pagination />
     </Stack>
