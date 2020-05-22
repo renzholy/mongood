@@ -29,7 +29,7 @@ export function IndexesStack(props: {
   }, [indexes])
 
   return (
-    <div style={{ width: '100%', overflowX: 'scroll', height: 60 }}>
+    <div style={{ width: '100%', overflowX: 'scroll', height: 64 }}>
       <Stack
         tokens={{ childrenGap: 20, padding: 10 }}
         horizontal={true}
