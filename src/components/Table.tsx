@@ -24,25 +24,24 @@ import _ from 'lodash'
 import { runCommand } from '@/utils/fetcher'
 import { stringify } from '@/utils/mongo-shell-data'
 
-export function Table() {
+export function Table(props: { database?: string; collection?: string }) {
   const theme = getTheme()
-  const { database, collection } = useSelector((state) => state.root)
   const { index, filter, sort, skip, limit } = useSelector(
     (state) => state.docs,
   )
   const [event, setEvent] = useState<MouseEvent>()
   const [item, setItem] = useState<any>()
   const { data, isValidating } = useSWR(
-    database && collection
-      ? `find/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
-          filter,
-        )}/${JSON.stringify(sort)}`
+    props.database && props.collection
+      ? `find/${props.database}/${
+          props.collection
+        }/${skip}/${limit}/${JSON.stringify(filter)}/${JSON.stringify(sort)}`
       : null,
     () => {
       return runCommand<{ cursor: { firstBatch: unknown[] } }>(
-        database,
+        props.database!,
         {
-          find: collection,
+          find: props.collection,
           filter,
           sort,
           hint: _.isEmpty(filter) ? undefined : index?.name,
