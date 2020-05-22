@@ -68,7 +68,9 @@ export function Table() {
           overflowY: 'scroll',
         }}>
         <Text>
-          <pre style={{ whiteSpace: 'pre' }}>{str}</pre>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+            {str}
+          </pre>
         </Text>
       </div>
     )
