@@ -127,21 +127,23 @@ export function Table() {
           }}
           onRenderDetailsHeader={(detailsHeaderProps) => (
             <Sticky>
+              <ProgressIndicator
+                progressHidden={!isValidating}
+                barHeight={1}
+                styles={{ itemProgress: { padding: 0 } }}
+              />
               <DetailsHeader
                 {...(detailsHeaderProps as IDetailsHeaderProps)}
                 styles={{
                   root: {
                     paddingTop: 0,
-                    borderTop: `1px solid ${theme.palette.neutralLight}`,
+                    borderTop: isValidating
+                      ? 0
+                      : `1px solid ${theme.palette.neutralLight}`,
                     paddingBottom: -1,
                   },
                 }}
               />
-              {isValidating ? (
-                <ProgressIndicator
-                  styles={{ root: { marginTop: -9, marginBottom: -9 } }}
-                />
-              ) : null}
             </Sticky>
           )}
           onItemContextMenu={(_item, _index, ev) => {
