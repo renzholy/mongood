@@ -22,6 +22,7 @@ export function stringify(
     | { $binary: { base64: string; subType: string } }
     | any[]
     | object,
+  indent = '',
 ): string {
   if (typeof val === 'string') {
     return `"${val}"`
@@ -68,11 +69,14 @@ export function stringify(
     return `Binary("${val.$binary.base64}", "${val.$binary.subType}")`
   }
   if (Array.isArray(val)) {
-    return `[${val.map(stringify).join(', ')}]`
+    return `[\n${val
+      .map((v) => `  ${indent}${stringify(v, `${indent}  `)}`)
+      .join(',\n')}\n]`
   }
-  return `{${_.map(val, (value, key) => `${key}: ${stringify(value)}`).join(
-    ', ',
-  )}}`
+  return `{\n${_.map(
+    val,
+    (value, key) => `  ${indent}${key}: ${stringify(value, `${indent}  `)}`,
+  ).join(',\n')},\n${indent}}`
 }
 
 export function parse(str: string): object {

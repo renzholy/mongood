@@ -62,11 +62,13 @@ export function Table() {
       <div
         style={{
           padding: 20,
-          maxWidth: 300,
+          maxWidth: 500,
           maxHeight: 500,
           overflowY: 'scroll',
         }}>
-        <Text>{str}</Text>
+        <Text>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{str}</pre>
+        </Text>
       </div>
     )
   }, [])
@@ -112,7 +114,9 @@ export function Table() {
                   onRenderPlainCard,
                   renderData: str,
                 }}
-                styles={{ host: { cursor: 'pointer' } }}
+                styles={{
+                  host: { cursor: 'pointer' },
+                }}
                 instantOpenOnClick={true}>
                 {str}
               </HoverCard>
