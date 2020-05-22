@@ -7,7 +7,6 @@ import _ from 'lodash'
 
 import { actions } from '@/stores'
 import { nextSorter } from '@/utils/sorter'
-import { stringify } from '@/utils/mongo-shell-data'
 import { FilterInput } from './FilterInput'
 
 export function FilterStack() {
@@ -32,9 +31,7 @@ export function FilterStack() {
         <FilterInput
           disabled={true}
           placeholder="querying without an index is not allowed"
-          onChange={(value) => {
-            dispatch(actions.docs.setFilter(value as { [key: string]: object }))
-          }}
+          onChange={() => {}}
         />
       </Stack>
     )
@@ -79,7 +76,7 @@ export function FilterStack() {
               disabled={true}
               prefix={`${key}:`}
               iconProps={iconProps}
-              placeholder={stringify(index.partialFilterExpression[key])}
+              value={index.partialFilterExpression[key]}
               onChange={() => {}}
             />
           )
@@ -91,6 +88,7 @@ export function FilterStack() {
             disabled={disableFilter}
             prefix={`${key}:`}
             iconProps={iconProps}
+            value={filter[key]}
             onChange={(value) => {
               dispatch(
                 actions.docs.setFilter({
@@ -108,7 +106,7 @@ export function FilterStack() {
             key={key}
             disabled={true}
             prefix={`${key}:`}
-            placeholder={stringify(index.partialFilterExpression?.[key])}
+            value={index.partialFilterExpression?.[key]}
             onChange={() => {}}
           />
         )

@@ -26,7 +26,7 @@ export function Pagination() {
       })
     },
     {
-      refreshInterval: 60 * 1000,
+      refreshInterval: 20 * 1000,
       errorRetryCount: 0,
     },
   )

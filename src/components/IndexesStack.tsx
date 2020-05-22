@@ -18,6 +18,7 @@ export function IndexesStack() {
         listIndexes: collection,
       })
     },
+    { revalidateOnFocus: false },
   )
   const index = useSelector((state) => state.docs.index)
   const dispatch = useDispatch()
