@@ -7,6 +7,8 @@ export type Index = {
   background?: boolean
   unique?: boolean
   sparse?: boolean
-  partialFilterExpression?: object
+  partialFilterExpression?: {
+    [key: string]: object
+  }
   expireAfterSeconds?: number
 }
