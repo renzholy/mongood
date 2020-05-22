@@ -51,13 +51,16 @@ export function stringify(
     return `NumberDecimal("${val.$numberDecimal}")`
   }
   if ('$numberDouble' in val) {
+    if (['Infinity', '-Infinity', 'NaN'].includes(val.$numberDouble)) {
+      return `NumberDouble("${val.$numberDouble}")`
+    }
     return val.$numberDouble
   }
   if ('$numberInt' in val) {
-    return `NumberInt("${val.$numberInt}")`
+    return val.$numberInt
   }
   if ('$numberLong' in val) {
-    return `NumberLong("${val.$numberLong}")`
+    return val.$numberLong
   }
   if ('$regularExpression' in val) {
     return `/${val.$regularExpression.pattern}/${val.$regularExpression.options}`
@@ -69,14 +72,16 @@ export function stringify(
     return `Binary("${val.$binary.base64}", "${val.$binary.subType}")`
   }
   if (Array.isArray(val)) {
-    return `[\n${val
-      .map((v) => `  ${indent}${stringify(v, `${indent}  `)}`)
-      .join(',\n')}\n]`
+    return val.length
+      ? `[\n${val
+          .map((v) => `  ${indent}${stringify(v, `${indent}  `)}`)
+          .join(',\n')}\n${indent}]`
+      : '[]'
   }
   return `{\n${_.map(
     val,
     (value, key) => `  ${indent}${key}: ${stringify(value, `${indent}  `)}`,
-  ).join(',\n')},\n${indent}}`
+  ).join(',\n')}\n${indent}}`
 }
 
 export function parse(str: string): object {
@@ -91,6 +96,7 @@ export function parse(str: string): object {
           $date: { $numberLong: new Date(s).getTime() },
         }),
         NumberDecimal: (s: string) => ({ $numberDecimal: s }),
+        NumberDouble: (s: string) => ({ $numberDouble: s }),
         NumberInt: (s: string) => ({ $numberInt: s }),
         NumberLong: (s: string) => ({ $numberLong: s }),
         Timestamp: (t: number, i: number) => ({ $timestamp: { t, i } }),
