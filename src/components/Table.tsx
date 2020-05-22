@@ -68,12 +68,21 @@ export function Table() {
           overflowY: 'scroll',
         }}>
         <Text>
-          <pre style={{ whiteSpace: 'pre-wrap' }}>{str}</pre>
+          <pre style={{ whiteSpace: 'pre' }}>{str}</pre>
         </Text>
       </div>
     )
   }, [])
 
+  if (!data || data.cursor.firstBatch.length === 0) {
+    return (
+      <div
+        style={{
+          borderTop: `1px solid ${theme.palette.neutralLight}`,
+        }}
+      />
+    )
+  }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
       <ContextualMenu
@@ -101,11 +110,10 @@ export function Table() {
           stickyBelow: { display: 'none' },
         }}>
         <DetailsList
-          compact={true}
           selectionMode={SelectionMode.none}
           constrainMode={ConstrainMode.unconstrained}
           layoutMode={DetailsListLayoutMode.fixedColumns}
-          items={data?.cursor.firstBatch || []}
+          items={data.cursor.firstBatch || []}
           onRenderItemColumn={(_item, _index, colume) => {
             const str = stringify(_item[colume?.key!])
             return str.length > 100 ? (
