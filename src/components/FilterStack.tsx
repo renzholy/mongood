@@ -26,10 +26,9 @@ export function FilterStack() {
   if (!index) {
     return (
       <Stack
-        wrap={true}
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { minHeight: 52 } }}>
+        styles={{ root: { height: 52 } }}>
         <FilterInput
           disabled={true}
           placeholder="querying without an index is not allowed"
