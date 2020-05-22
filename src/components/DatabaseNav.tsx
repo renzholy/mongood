@@ -67,7 +67,8 @@ export function DatabaseNav(props: { database?: string; collection?: string }) {
           selectedKey={`${props.database}${splitter}${props.collection}`}
           onLinkClick={(_ev, item) => {
             if (!item?.links && item?.key) {
-              history.push(`/docs/${item.key}`)
+              const [_database, _collection] = item.key.split(splitter)
+              history.push(`/docs/${_database}/${_collection}`)
             }
           }}
           onLinkExpandClick={(_ev, item) => {
