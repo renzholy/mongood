@@ -13,7 +13,6 @@ export function IndexButton(props: {
       text={props.value.name}
       primary={props.selected}
       onClick={props.onSelect}
-      split={true}
     />
   )
 }
