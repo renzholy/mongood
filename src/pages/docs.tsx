@@ -16,13 +16,8 @@ export default () => {
   const theme = getTheme()
   const history = useHistory()
   const filter = useSelector((state) => state.root.filter)
-  const { data } = useSWR(
-    `listDatabases/${JSON.stringify(filter)}`,
-    () => listDatabases(filter),
-    {
-      refreshInterval: 60 * 1000,
-      errorRetryCount: 0,
-    },
+  const { data } = useSWR(`listDatabases/${JSON.stringify(filter)}`, () =>
+    listDatabases(filter),
   )
   const [links, setLinks] = useState<INavLink[]>([])
   const dispatch = useDispatch()
@@ -55,8 +50,14 @@ export default () => {
   }, [database, collection])
   useEffect(() => {
     const searchParams = new URLSearchParams(history.location.search)
-    dispatch(actions.root.setDatabase(searchParams.get('database') || ''))
-    dispatch(actions.root.setCollection(searchParams.get('collection') || ''))
+    const _database = searchParams.get('database')
+    const _collection = searchParams.get('collection')
+    if (_database !== database) {
+      dispatch(actions.root.setDatabase(_database || ''))
+    }
+    if (_collection !== collection) {
+      dispatch(actions.root.setCollection(_collection || ''))
+    }
   }, [history.location.search])
 
   return (

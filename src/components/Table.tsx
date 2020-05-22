@@ -12,6 +12,7 @@ import {
   IDetailsHeaderProps,
   ProgressIndicator,
   ContextualMenu,
+  getTheme,
 } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
@@ -21,6 +22,7 @@ import { runCommand } from '@/utils/fetcher'
 import { stringify } from '@/utils/mongo-shell-data'
 
 export function Table() {
+  const theme = getTheme()
   const { database, collection } = useSelector((state) => state.root)
   const { index, filter, sort, skip, limit } = useSelector(
     (state) => state.documents,
@@ -92,7 +94,13 @@ export function Table() {
             <Sticky>
               <DetailsHeader
                 {...(detailsHeaderProps as IDetailsHeaderProps)}
-                styles={{ root: { paddingTop: 0 } }}
+                styles={{
+                  root: {
+                    paddingTop: 0,
+                    borderTop: `1px solid ${theme.palette.neutralLight}`,
+                    paddingBottom: -1,
+                  },
+                }}
               />
               {isValidating ? (
                 <ProgressIndicator

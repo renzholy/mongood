@@ -62,7 +62,10 @@ export function IndexCard(props: {
       </Card.Section>
       <Card.Section
         styles={{
-          root: { borderLeft: '1px solid #F3F2F1', paddingLeft: 10 },
+          root: {
+            borderLeft: `1px solid ${theme.palette.neutralLighter}`,
+            paddingLeft: 10,
+          },
         }}>
         <TooltipHost
           delay={TooltipDelay.zero}
@@ -95,7 +98,7 @@ export function IndexCard(props: {
                     styles={{
                       root: showTitle
                         ? {
-                            borderTop: '1px solid #F3F2F1',
+                            borderTop: `1px solid ${theme.palette.neutralLighter}`,
                           }
                         : {},
                     }}>
