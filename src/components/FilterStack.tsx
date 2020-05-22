@@ -11,15 +11,16 @@ import { stringify } from '@/utils/mongo-shell-data'
 import { FilterInput } from './FilterInput'
 import { Pagination } from './Pagination'
 
-export function FilterStack(props: { database?: string; collection?: string }) {
+export function FilterStack() {
   const dispatch = useDispatch()
+  const { database, collection } = useSelector((state) => state.root)
   const { index, filter, sort } = useSelector((state) => state.docs)
   useEffect(() => {
     dispatch(actions.docs.setFilter(index?.partialFilterExpression || {}))
     dispatch(actions.docs.setSort({}))
   }, [index])
 
-  if (!props.database || !props.collection) {
+  if (!database || !collection) {
     return <div style={{ height: 52 }} />
   }
 
@@ -36,7 +37,7 @@ export function FilterStack(props: { database?: string; collection?: string }) {
             dispatch(actions.docs.setFilter(value as { [key: string]: object }))
           }}
         />
-        <Pagination database={props.database} collection={props.collection} />
+        <Pagination />
       </Stack>
     )
   }
@@ -114,7 +115,7 @@ export function FilterStack(props: { database?: string; collection?: string }) {
           />
         )
       })}
-      <Pagination database={props.database} collection={props.collection} />
+      <Pagination />
     </Stack>
   )
 }

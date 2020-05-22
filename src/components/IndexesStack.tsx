@@ -8,17 +8,13 @@ import { Index } from '@/types'
 import { actions } from '@/stores'
 import { IndexCard } from './IndexCard'
 
-export function IndexesStack(props: {
-  database?: string
-  collection?: string
-}) {
+export function IndexesStack() {
+  const { database, collection } = useSelector((state) => state.root)
   const { data: indexes } = useSWR(
-    props.database && props.collection
-      ? `listIndexes/${props.database}/${props.collection}`
-      : null,
+    database && collection ? `listIndexes/${database}/${collection}` : null,
     () => {
-      return runCommand<{ cursor: { firstBatch: Index[] } }>(props.database!, {
-        listIndexes: props.collection,
+      return runCommand<{ cursor: { firstBatch: Index[] } }>(database, {
+        listIndexes: collection,
       })
     },
   )

@@ -8,18 +8,19 @@ import _ from 'lodash'
 import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 
-export function Pagination(props: { database?: string; collection?: string }) {
+export function Pagination() {
+  const { database, collection } = useSelector((state) => state.root)
   const { index, filter, skip, limit, count } = useSelector(
     (state) => state.docs,
   )
   const dispatch = useDispatch()
   const { data } = useSWR(
-    props.database && props.collection
-      ? `count/${props.database}/${props.collection}/${JSON.stringify(filter)}`
+    database && collection
+      ? `count/${database}/${collection}/${JSON.stringify(filter)}`
       : null,
     () => {
-      return runCommand<{ n: number }>(props.database!, {
-        count: props.collection,
+      return runCommand<{ n: number }>(database, {
+        count: collection,
         query: filter,
         hint: _.isEmpty(filter) ? undefined : index?.name,
       })
@@ -34,7 +35,7 @@ export function Pagination(props: { database?: string; collection?: string }) {
   }, [data])
   useEffect(() => {
     dispatch(actions.docs.setSkip(0))
-  }, [props.database, props.collection])
+  }, [database, collection])
 
   return (
     <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>

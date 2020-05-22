@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
-import { useDispatch, useSelector } from 'react-redux'
-import useSWR from 'swr'
-import { useHistory } from 'umi'
 
 import { actions } from '@/stores'
 import { runCommand, listDatabases } from '@/utils/fetcher'
+import { useDispatch, useSelector } from 'react-redux'
+import useSWR from 'swr'
 
 const splitter = '/'
 
-export function DatabaseNav(props: { database?: string; collection?: string }) {
+export function DatabaseNav() {
   const theme = getTheme()
-  const { filter } = useSelector((state) => state.root)
+  const filter = useSelector((state) => state.root.filter)
   const { data } = useSWR(`listDatabases/${JSON.stringify(filter)}`, () =>
     listDatabases(filter),
   )
   const [links, setLinks] = useState<INavLink[]>([])
   const dispatch = useDispatch()
-  const history = useHistory()
+  const { database, collection } = useSelector((state) => state.root)
   useEffect(() => {
     setLinks(
       data
@@ -35,6 +34,13 @@ export function DatabaseNav(props: { database?: string; collection?: string }) {
         : [],
     )
   }, [data])
+  useEffect(() => {
+    setLinks(
+      links.map((item) =>
+        item.key === database ? { ...item, isExpanded: true } : item,
+      ),
+    )
+  }, [database])
 
   return (
     <div
@@ -64,15 +70,16 @@ export function DatabaseNav(props: { database?: string; collection?: string }) {
         }}>
         <Nav
           groups={[{ links }]}
-          selectedKey={`${props.database}${splitter}${props.collection}`}
+          selectedKey={`${database}${splitter}${collection}`}
           onLinkClick={(_ev, item) => {
             if (!item?.links && item?.key) {
               const [_database, _collection] = item.key.split(splitter)
-              history.push(`/docs/${_database}/${_collection}`)
+              dispatch(actions.root.setDatabase(_database))
+              dispatch(actions.root.setCollection(_collection))
             }
           }}
           onLinkExpandClick={(_ev, item) => {
-            if (item && !item.isExpanded) {
+            if (item) {
               runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
                 item.name,
                 {
