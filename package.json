@@ -27,7 +27,6 @@
     "@types/react-redux": "7.1.9",
     "@uifabric/react-cards": "0.109.86",
     "bson": "4.0.4",
-    "normalize.css": "8.0.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-redux": "7.2.0",
