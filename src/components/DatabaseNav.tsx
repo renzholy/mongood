@@ -84,7 +84,6 @@ export function DatabaseNav() {
                     return link.name === item.name
                       ? {
                           ...link,
-                          isExpanded: true,
                           links: firstBatch.map(({ name }) => ({
                             key: `${link.name}${splitter}${name}`,
                             name,
