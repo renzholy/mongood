@@ -61,7 +61,8 @@ export function Table() {
     return (
       <div
         style={{
-          padding: 20,
+          paddingLeft: 10,
+          paddingRight: 10,
           maxWidth: 500,
           maxHeight: 500,
           overflowY: 'scroll',
