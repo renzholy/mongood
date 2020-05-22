@@ -16,6 +16,9 @@ export function FilterInput(props: {
     <TextField
       autoComplete="off"
       autoCorrect="off"
+      autoCapitalize="off"
+      autoSave="off"
+      spellCheck={false}
       styles={{ root: { flex: 1 } }}
       disabled={props.disabled}
       onRenderPrefix={
