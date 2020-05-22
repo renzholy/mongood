@@ -23,6 +23,10 @@ func main() {
 	if url == "" {
 		url = "mongodb://localhost:27017"
 	}
+	root := os.Getenv("ROOT")
+	if root == "" {
+		root = "../dist"
+	}
 	client, _ := mongo.NewClient(options.Client().ApplyURI(url))
 	database = client.Database("push")
 	ctx = context.Background()
@@ -32,7 +36,7 @@ func main() {
 	app.Use(compression.New())
 	app.Use(logger.New())
 	app.Use(cors.New())
-	app.Static("/", "../dist")
+	app.Static("/", root)
 	app.Post("/api/runCommand", func(c *fiber.Ctx) {
 		type Request struct {
 			Database string
