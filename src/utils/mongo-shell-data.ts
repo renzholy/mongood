@@ -1,9 +1,10 @@
-import saferEval from 'safer-eval'
-import _ from 'lodash'
-
 /**
  * @see https://docs.mongodb.com/manual/reference/mongodb-extended-json/#example
  */
+
+import saferEval from 'safer-eval'
+import _ from 'lodash'
+
 export function stringify(
   val:
     | string
@@ -22,7 +23,8 @@ export function stringify(
     | { $binary: { base64: string; subType: string } }
     | any[]
     | object,
-  indent = '',
+  indent = 0,
+  depth = 0,
 ): string {
   if (typeof val === 'string') {
     return `"${val}"`
@@ -72,16 +74,39 @@ export function stringify(
     return `Binary("${val.$binary.base64}", "${val.$binary.subType}")`
   }
   if (Array.isArray(val)) {
+    if (indent === 0) {
+      return `[${val
+        .map((v) => `${stringify(v, indent, depth + indent)}`)
+        .join(', ')}]`
+    }
     return val.length
       ? `[\n${val
-          .map((v) => `  ${indent}${stringify(v, `${indent}  `)}`)
-          .join(',\n')}\n${indent}]`
+          .map(
+            (v) =>
+              `  ${_.repeat(' ', depth)}${stringify(
+                v,
+                indent,
+                depth + indent,
+              )}`,
+          )
+          .join(',\n')}\n${_.repeat(' ', depth)}]`
       : '[]'
+  }
+  if (indent === 0) {
+    return `{${_.map(
+      val,
+      (value, key) => `${key}: ${stringify(value, indent, depth + indent)}`,
+    ).join(', ')}}`
   }
   return `{\n${_.map(
     val,
-    (value, key) => `  ${indent}${key}: ${stringify(value, `${indent}  `)}`,
-  ).join(',\n')}\n${indent}}`
+    (value, key) =>
+      `  ${_.repeat(' ', depth)}${key}: ${stringify(
+        value,
+        indent,
+        depth + indent,
+      )}`,
+  ).join(',\n')}\n${_.repeat(' ', depth)}}`
 }
 
 export function parse(str: string): object {

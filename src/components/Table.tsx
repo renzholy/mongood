@@ -91,7 +91,7 @@ export function Table() {
             key: 'copy',
             text: 'Copy Document',
             onClick: () => {
-              window.navigator.clipboard.writeText(stringify(item))
+              window.navigator.clipboard.writeText(stringify(item, 2))
             },
           },
         ]}
@@ -115,7 +115,7 @@ export function Table() {
           layoutMode={DetailsListLayoutMode.fixedColumns}
           items={data.cursor.firstBatch || []}
           onRenderItemColumn={(_item, _index, colume) => {
-            const str = stringify(_item[colume?.key!])
+            const str = stringify(_item[colume?.key!], 2)
             return str.length > 100 ? (
               <HoverCard
                 type={HoverCardType.plain}
