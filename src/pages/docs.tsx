@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { INavLink, Nav, getTheme, SearchBox } from '@fluentui/react'
 import useSWR from 'swr'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'umi'
 
 import { listDatabases, runCommand } from '@/utils/fetcher'
 import { Table } from '@/components/Table'
@@ -14,7 +13,6 @@ const splitter = '/'
 
 export default () => {
   const theme = getTheme()
-  const history = useHistory()
   const filter = useSelector((state) => state.root.filter)
   const { data } = useSWR(`listDatabases/${JSON.stringify(filter)}`, () =>
     listDatabases(filter),
@@ -39,26 +37,6 @@ export default () => {
         : [],
     )
   }, [data])
-  useEffect(() => {
-    if (!database || !collection) {
-      return
-    }
-    history.replace({
-      pathname: '/docs',
-      search: new URLSearchParams({ database, collection }).toString(),
-    })
-  }, [database, collection])
-  useEffect(() => {
-    const searchParams = new URLSearchParams(history.location.search)
-    const _database = searchParams.get('database')
-    const _collection = searchParams.get('collection')
-    if (_database !== database) {
-      dispatch(actions.root.setDatabase(_database || ''))
-    }
-    if (_collection !== collection) {
-      dispatch(actions.root.setCollection(_collection || ''))
-    }
-  }, [history.location.search])
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
