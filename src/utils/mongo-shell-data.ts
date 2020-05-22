@@ -19,7 +19,7 @@ export function stringify(
     | { $numberLong: string }
     | { $regularExpression: { pattern: string; options: string } }
     | { $timestamp: { t: number; i: number } }
-    | { $binary: { base64: string; subType: '04' } }
+    | { $binary: { base64: string; subType: string } }
     | any[]
     | object,
 ): string {
