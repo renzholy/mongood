@@ -34,6 +34,13 @@ export function DatabaseNav() {
         : [],
     )
   }, [data])
+  useEffect(() => {
+    setLinks(
+      links.map((item) =>
+        item.key === database ? { ...item, isExpanded: true } : item,
+      ),
+    )
+  }, [database])
 
   return (
     <div
