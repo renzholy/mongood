@@ -13,11 +13,16 @@ import { Pagination } from './Pagination'
 
 export function FilterStack() {
   const dispatch = useDispatch()
+  const { database, collection } = useSelector((state) => state.root)
   const { index, filter, sort } = useSelector((state) => state.docs)
   useEffect(() => {
     dispatch(actions.docs.setFilter(index?.partialFilterExpression || {}))
     dispatch(actions.docs.setSort({}))
   }, [index])
+
+  if (!database || !collection) {
+    return null
+  }
 
   if (!index) {
     return (
