@@ -9,8 +9,7 @@ import { actions } from '@/stores'
 import { IndexCard } from './IndexCard'
 
 export function IndexesStack() {
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const { database, collection } = useSelector((state) => state.root)
   const { data: indexes } = useSWR(
     database && collection ? `listIndexes/${database}/${collection}` : null,
     () => {
@@ -22,8 +21,8 @@ export function IndexesStack() {
   const index = useSelector((state) => state.docs.index)
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(actions.docs.setIndex(undefined))
-  }, [database, collection])
+    dispatch(actions.docs.setIndex(indexes?.cursor.firstBatch[0]))
+  }, [indexes])
 
   return (
     <div style={{ width: '100%', overflowX: 'scroll', height: 60 }}>

@@ -21,7 +21,7 @@ export function FilterStack() {
   }, [index])
 
   if (!database || !collection) {
-    return null
+    return <div style={{ height: 52 }} />
   }
 
   if (!index) {
