@@ -50,7 +50,7 @@ export function stringify(
     return `NumberDecimal("${val.$numberDecimal}")`
   }
   if ('$numberDouble' in val) {
-    return val.toString()
+    return val.$numberDouble
   }
   if ('$numberInt' in val) {
     return `NumberInt("${val.$numberInt}")`
