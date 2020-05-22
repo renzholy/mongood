@@ -6,7 +6,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { runCommand } from '@/utils/fetcher'
 import { Index } from '@/types'
 import { actions } from '@/stores'
-import { IndexCard } from './IndexCard'
+import { IndexButton } from './IndexButton'
+import { Pagination } from './Pagination'
 
 export function IndexesStack() {
   const { database, collection } = useSelector((state) => state.root)
@@ -25,26 +26,27 @@ export function IndexesStack() {
   }, [indexes])
 
   return (
-    <div style={{ width: '100%', overflowX: 'scroll', height: 64 }}>
-      <Stack
-        tokens={{ childrenGap: 20, padding: 10 }}
-        horizontal={true}
-        style={{ alignItems: 'flex-start' }}>
-        {indexes?.cursor.firstBatch.map((item) => (
-          <IndexCard
-            key={item.name}
-            value={item}
-            selected={item.name === index?.name}
-            onSelect={() => {
-              dispatch(
-                actions.docs.setIndex(
-                  item.name === index?.name ? undefined : item,
-                ),
-              )
-            }}
-          />
-        ))}
-      </Stack>
-    </div>
+    <Stack
+      wrap={true}
+      horizontal={true}
+      tokens={{ childrenGap: 10, padding: 10 }}
+      styles={{ root: { minHeight: 52, marginBottom: -10 } }}>
+      {indexes?.cursor.firstBatch.map((item) => (
+        <IndexButton
+          key={item.name}
+          value={item}
+          selected={item.name === index?.name}
+          onSelect={() => {
+            dispatch(
+              actions.docs.setIndex(
+                item.name === index?.name ? undefined : item,
+              ),
+            )
+          }}
+        />
+      ))}
+      <Stack.Item grow={1}>&nbsp;</Stack.Item>
+      <Pagination />
+    </Stack>
   )
 }

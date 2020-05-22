@@ -9,7 +9,6 @@ import { actions } from '@/stores'
 import { nextSorter } from '@/utils/sorter'
 import { stringify } from '@/utils/mongo-shell-data'
 import { FilterInput } from './FilterInput'
-import { Pagination } from './Pagination'
 
 export function FilterStack() {
   const dispatch = useDispatch()
@@ -27,9 +26,10 @@ export function FilterStack() {
   if (!index) {
     return (
       <Stack
+        wrap={true}
         horizontal={true}
-        tokens={{ childrenGap: 20, padding: 10 }}
-        styles={{ root: { height: 52 } }}>
+        tokens={{ childrenGap: 10, padding: 10 }}
+        styles={{ root: { minHeight: 52 } }}>
         <FilterInput
           disabled={true}
           placeholder="querying without an index is not allowed"
@@ -37,7 +37,6 @@ export function FilterStack() {
             dispatch(actions.docs.setFilter(value as { [key: string]: object }))
           }}
         />
-        <Pagination />
       </Stack>
     )
   }
@@ -49,7 +48,7 @@ export function FilterStack() {
   return (
     <Stack
       horizontal={true}
-      tokens={{ childrenGap: 20, padding: 10 }}
+      tokens={{ childrenGap: 10, padding: 10 }}
       styles={{ root: { height: 52 } }}>
       {keys.map((key, i) => {
         const disableSort =
@@ -115,7 +114,6 @@ export function FilterStack() {
           />
         )
       })}
-      <Pagination />
     </Stack>
   )
 }
