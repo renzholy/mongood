@@ -5,7 +5,7 @@ export async function runCommand<T>(
   command: object,
   opts: { canonical?: boolean } = {},
 ): Promise<T> {
-  const response = await fetch('http://localhost:3000/runCommand', {
+  const response = await fetch('/api/runCommand', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export async function listDatabases(filter: {
   }[]
   TotalSize: number
 }> {
-  const response = await fetch('http://localhost:3000/listDatabases', {
+  const response = await fetch('/api/listDatabases', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

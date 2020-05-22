@@ -32,7 +32,8 @@ func main() {
 	app.Use(compression.New())
 	app.Use(logger.New())
 	app.Use(cors.New())
-	app.Post("/runCommand", func(c *fiber.Ctx) {
+	app.Static("/", "../dist")
+	app.Post("/api/runCommand", func(c *fiber.Ctx) {
 		type Request struct {
 			Database string
 			Command  string
@@ -53,7 +54,7 @@ func main() {
 		c.Fasthttp.SetContentType("application/json")
 		c.Send(result)
 	})
-	app.Post("/listDatabases", func(c *fiber.Ctx) {
+	app.Post("/api/listDatabases", func(c *fiber.Ctx) {
 		type Request struct {
 			Filter string
 		}
