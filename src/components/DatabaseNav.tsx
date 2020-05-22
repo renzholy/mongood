@@ -47,6 +47,7 @@ export function DatabaseNav() {
       <SearchBox
         placeholder="Search Database"
         styles={{ root: { margin: 10 } }}
+        value={filter.name?.$regex}
         onChange={(_ev, newValue) => {
           dispatch(
             actions.root.setFilter(

@@ -10,7 +10,9 @@ export default createSlice({
     database: string
     collection: string
     filter: {
-      name?: unknown
+      name?: {
+        $regex: string
+      }
     }
   },
   reducers: {
@@ -22,7 +24,10 @@ export default createSlice({
       ...state,
       collection: payload,
     }),
-    setFilter: (state, { payload }: PayloadAction<{ name?: unknown }>) => ({
+    setFilter: (
+      state,
+      { payload }: PayloadAction<{ name?: { $regex: string } }>,
+    ) => ({
       ...state,
       filter: payload,
     }),
