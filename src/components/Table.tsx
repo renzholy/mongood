@@ -25,7 +25,7 @@ export function Table() {
   const theme = getTheme()
   const { database, collection } = useSelector((state) => state.root)
   const { index, filter, sort, skip, limit } = useSelector(
-    (state) => state.documents,
+    (state) => state.docs,
   )
   const [event, setEvent] = useState<MouseEvent>()
   const [item, setItem] = useState<any>()

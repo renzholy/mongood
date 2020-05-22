@@ -11,7 +11,7 @@ import { Number } from '@/utils/formatter'
 export function Pagination() {
   const { database, collection } = useSelector((state) => state.root)
   const { index, filter, skip, limit, count } = useSelector(
-    (state) => state.documents,
+    (state) => state.docs,
   )
   const dispatch = useDispatch()
   const { data } = useSWR(
@@ -31,10 +31,10 @@ export function Pagination() {
     },
   )
   useEffect(() => {
-    dispatch(actions.documents.setCount(data?.n || 0))
+    dispatch(actions.docs.setCount(data?.n || 0))
   }, [data])
   useEffect(() => {
-    dispatch(actions.documents.setSkip(0))
+    dispatch(actions.docs.setSkip(0))
   }, [database, collection])
 
   return (
@@ -50,14 +50,14 @@ export function Pagination() {
         iconProps={{ iconName: 'Back' }}
         disabled={skip <= 0}
         onClick={() => {
-          dispatch(actions.documents.setSkip(Math.max(skip - limit, 0)))
+          dispatch(actions.docs.setSkip(Math.max(skip - limit, 0)))
         }}
       />
       <IconButton
         iconProps={{ iconName: 'Forward' }}
         disabled={skip + limit >= count}
         onClick={() => {
-          dispatch(actions.documents.setSkip(Math.min(skip + limit, count)))
+          dispatch(actions.docs.setSkip(Math.min(skip + limit, count)))
         }}
       />
     </Stack>

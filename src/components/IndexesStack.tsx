@@ -19,10 +19,10 @@ export function IndexesStack() {
       })
     },
   )
-  const index = useSelector((state) => state.documents.index)
+  const index = useSelector((state) => state.docs.index)
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(actions.documents.setIndex(undefined))
+    dispatch(actions.docs.setIndex(undefined))
   }, [database, collection])
 
   return (
@@ -38,7 +38,7 @@ export function IndexesStack() {
             selected={item.name === index?.name}
             onSelect={() => {
               dispatch(
-                actions.documents.setIndex(
+                actions.docs.setIndex(
                   item.name === index?.name ? undefined : item,
                 ),
               )

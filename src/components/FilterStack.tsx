@@ -11,10 +11,10 @@ import { Pagination } from './Pagination'
 
 export function FilterStack() {
   const dispatch = useDispatch()
-  const { index, filter, sort } = useSelector((state) => state.documents)
+  const { index, filter, sort } = useSelector((state) => state.docs)
   useEffect(() => {
-    dispatch(actions.documents.setFilter({}))
-    dispatch(actions.documents.setSort({}))
+    dispatch(actions.docs.setFilter({}))
+    dispatch(actions.docs.setSort({}))
   }, [index])
 
   if (!index) {
@@ -27,9 +27,7 @@ export function FilterStack() {
           disabled={true}
           placeholder="querying without an index is not allowed"
           onChange={(value) => {
-            dispatch(
-              actions.documents.setFilter(value as { [key: string]: object }),
-            )
+            dispatch(actions.docs.setFilter(value as { [key: string]: object }))
           }}
         />
         <Pagination />
@@ -71,13 +69,13 @@ export function FilterStack() {
                 ? undefined
                 : () => {
                     dispatch(
-                      actions.documents.setSort(nextSorter(i, index.key, sort)),
+                      actions.docs.setSort(nextSorter(i, index.key, sort)),
                     )
                   },
             }}
             onChange={(value) => {
               dispatch(
-                actions.documents.setFilter({
+                actions.docs.setFilter({
                   ...filter,
                   [key]: value,
                 }),

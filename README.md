@@ -33,6 +33,6 @@ npm run dev & go run server.go
 
 ## 📷 Screenshots:
 
-![](/screenshots/documents0.png)
+![](/screenshots/docs0.png)
 
-![](/screenshots/documents1.png)
+![](/screenshots/docs1.png)

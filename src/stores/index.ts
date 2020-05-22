@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux'
 import { configureStore } from '@reduxjs/toolkit'
 
-import documents from './documents'
+import docs from './docs'
 import root from './root'
 
 const rootReducer = combineReducers({
-  documents: documents.reducer,
+  docs: docs.reducer,
   root: root.reducer,
 })
 
 export const actions = {
-  documents: documents.actions,
+  docs: docs.actions,
   root: root.actions,
 }
 

@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Index } from '@/types'
 
 export default createSlice({
-  name: 'documents',
+  name: 'docs',
   initialState: {
     index: undefined,
     filter: {},
