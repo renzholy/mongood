@@ -2,10 +2,15 @@ import React from 'react'
 import { Card } from '@uifabric/react-cards'
 import { Text, getTheme } from '@fluentui/react'
 import _ from 'lodash'
+import bytes from 'bytes'
 
-import { Index } from '@/types'
+import { Index, StatDetail } from '@/types'
 
-export function IndexCard(props: { value: Index }) {
+export function IndexCard(props: {
+  value: Index
+  size: number
+  statDetail: StatDetail
+}) {
   const theme = getTheme()
   const features = _.compact([
     props.value.background ? 'background' : null,
@@ -19,7 +24,10 @@ export function IndexCard(props: { value: Index }) {
     <Card horizontal={true} tokens={{ childrenGap: 10, padding: 10 }}>
       <Card.Section>
         <Card.Item>
-          <Text variant="large">{props.value.name}</Text>
+          <Text variant="large">{props.value.name}&nbsp;</Text>
+          <Text styles={{ root: { color: theme.palette.neutralPrimary } }}>
+            ({bytes(props.size, { unitSeparator: ' ' })})
+          </Text>
         </Card.Item>
         {features ? (
           <Card.Item>

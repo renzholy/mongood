@@ -4,10 +4,13 @@ import useSWR from 'swr'
 import { Stack } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
-import { Index } from '@/types'
+import { Index, StatDetail } from '@/types'
 import { IndexCard } from './IndexCard'
 
-export function IndexCardList() {
+export function IndexCardList(props: {
+  indexDetails: { [key: string]: StatDetail }
+  indexSizes: { [key: string]: number }
+}) {
   const { database, collection } = useSelector((state) => state.root)
   const { data: indexes } = useSWR(
     database && collection ? `listIndexes/${database}/${collection}` : null,
@@ -21,7 +24,12 @@ export function IndexCardList() {
   return (
     <Stack tokens={{ childrenGap: 10, padding: 10 }}>
       {indexes?.cursor.firstBatch.map((item) => (
-        <IndexCard key={item.name} value={item} />
+        <IndexCard
+          key={item.name}
+          value={item}
+          size={props.indexSizes[item.name]}
+          statDetail={props.indexDetails[item.name]}
+        />
       ))}
     </Stack>
   )

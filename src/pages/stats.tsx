@@ -77,7 +77,10 @@ export default () => {
         />
         <InfoCard title="Capped:" content={stats.capped ? 'Yes' : 'No'} />
       </Stack>
-      <IndexCardList />
+      <IndexCardList
+        indexDetails={stats.indexDetails}
+        indexSizes={stats.indexSizes}
+      />
     </>
   )
 }
