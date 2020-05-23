@@ -1,10 +1,17 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
-import { initializeIcons, loadTheme } from '@fluentui/react'
+import {
+  initializeIcons,
+  loadTheme,
+  Pivot,
+  PivotItem,
+  getTheme,
+} from '@fluentui/react'
 import { Provider } from 'react-redux'
 
 import { DatabaseNav } from '@/components/DatabaseNav'
 import { store } from '@/stores/index'
+import { useHistory } from 'umi'
 
 initializeIcons()
 
@@ -36,6 +43,9 @@ loadTheme({
 })
 
 export default (props: RouteComponentProps & { children: React.ReactNode }) => {
+  const theme = getTheme()
+  const history = useHistory()
+
   return (
     <Provider store={store}>
       <div
@@ -45,7 +55,30 @@ export default (props: RouteComponentProps & { children: React.ReactNode }) => {
         }}>
         <div style={{ display: 'flex', height: '100%' }}>
           <DatabaseNav />
-          {props.children}
+          <div
+            style={{
+              flex: 1,
+              width: 0,
+              display: 'flex',
+              flexDirection: 'column',
+            }}>
+            <Pivot
+              selectedKey={history.location.pathname}
+              onLinkClick={(link) => {
+                history.push(link?.props.itemKey || '/')
+              }}
+              styles={{
+                root: {
+                  paddingLeft: 8,
+                  backgroundColor: theme.palette.neutralLight,
+                },
+              }}>
+              <PivotItem headerText="Document" itemKey="/docs" />
+              <PivotItem headerText="Index" itemKey="/indexes" />
+              <PivotItem headerText="Schema" itemKey="/schemas" />
+            </Pivot>
+            {props.children}
+          </div>
         </div>
       </div>
     </Provider>
