@@ -74,7 +74,7 @@ export default (props: RouteComponentProps & { children: React.ReactNode }) => {
                 },
               }}>
               <PivotItem headerText="Document" itemKey="/docs" />
-              <PivotItem headerText="Stat" itemKey="/stats" />
+              <PivotItem headerText="Index" itemKey="/indexes" />
               <PivotItem headerText="Schema" itemKey="/schemas" />
             </Pivot>
             {props.children}

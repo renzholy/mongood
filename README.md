@@ -44,4 +44,4 @@ npm run dev & go run server.go
 
 ![](/screenshots/docs.png)
 
-![](/screenshots/stats.png)
+![](/screenshots/indexes.png)
