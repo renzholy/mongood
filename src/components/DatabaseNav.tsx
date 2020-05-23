@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
+import { useDispatch, useSelector } from 'react-redux'
+import useSWR from 'swr'
 
 import { actions } from '@/stores'
 import { runCommand, listDatabases } from '@/utils/fetcher'
-import { useDispatch, useSelector } from 'react-redux'
-import useSWR from 'swr'
 
 const splitter = '/'
 
