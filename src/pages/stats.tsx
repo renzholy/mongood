@@ -60,7 +60,7 @@ export default () => {
   return (
     <>
       <Stack
-        tokens={{ padding: 10, childrenGap: 10 }}
+        tokens={{ padding: 10, childrenGap: 20 }}
         horizontal={true}
         styles={{ root: { overflowX: 'scroll' } }}>
         <InfoCard
@@ -69,12 +69,17 @@ export default () => {
         />
         <InfoCard title="Count:" content={Number.format(stats.count)} />
         <InfoCard
-          title="Storage Size:"
-          content={bytes(stats.storageSize, { unitSeparator: ' ' })}
-        />
-        <InfoCard
           title="Total Index Size:"
           content={bytes(stats.totalIndexSize, { unitSeparator: ' ' })}
+        />
+      </Stack>
+      <Stack
+        tokens={{ padding: 10, childrenGap: 20 }}
+        horizontal={true}
+        styles={{ root: { overflowX: 'scroll' } }}>
+        <InfoCard
+          title="Storage Size:"
+          content={bytes(stats.storageSize, { unitSeparator: ' ' })}
         />
         <InfoCard
           title="Average Object Size:"
@@ -82,9 +87,6 @@ export default () => {
         />
         <InfoCard title="Capped:" content={stats.capped ? 'Yes' : 'No'} />
       </Stack>
-      <Text variant="xxLarge" styles={{ root: { marginLeft: 10 } }}>
-        Indexes:
-      </Text>
       <IndexCardList
         indexDetails={stats.indexDetails}
         indexSizes={stats.indexSizes}

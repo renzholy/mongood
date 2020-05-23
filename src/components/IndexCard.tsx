@@ -25,61 +25,61 @@ export function IndexCard(props: {
   ])
 
   return (
-    <Card horizontal={true} tokens={{ childrenGap: 10, padding: 20 }}>
-      <Card.Section>
-        <Card.Item>
-          <Text variant="xLarge">{props.value.name}&nbsp;</Text>
-          <Text styles={{ root: { color: theme.palette.neutralSecondary } }}>
-            ({bytes(props.size, { unitSeparator: ' ' })})
-          </Text>
-        </Card.Item>
-        <Card.Item>
-          <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
-            {'textIndexVersion' in props.value
-              ? _.map(props.value.weights, (v, k) => (
-                  <Text
-                    key={k}
-                    styles={{
-                      root: { display: 'flex', alignItems: 'center' },
-                    }}>
-                    {k}:&nbsp;
-                    {v}
-                  </Text>
-                ))
-              : _.map(props.value.key, (v, k) => (
-                  <Text
-                    key={k}
-                    styles={{
-                      root: { display: 'flex', alignItems: 'center' },
-                    }}>
-                    {k}:&nbsp;
-                    {v === 1 ? (
-                      <Icon iconName="Up" />
-                    ) : (
-                      <Icon iconName="Down" />
-                    )}
-                  </Text>
-                ))}
-          </Stack>
-        </Card.Item>
-        {features ? (
-          <Card.Item>
-            <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
-              {features.map((feature) => (
+    <Card
+      tokens={{
+        childrenGap: 10,
+        padding: 20,
+        maxWidth: 675,
+        minHeight: 'unset',
+      }}>
+      <Card.Item>
+        <Text variant="xLarge">{props.value.name}&nbsp;</Text>
+        <Text styles={{ root: { color: theme.palette.neutralSecondary } }}>
+          ({bytes(props.size, { unitSeparator: ' ' })})
+        </Text>
+      </Card.Item>
+      <Card.Item>
+        <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
+          {'textIndexVersion' in props.value
+            ? _.map(props.value.weights, (v, k) => (
                 <Text
-                  key={feature}
+                  key={k}
                   styles={{
-                    root: {
-                      color: theme.palette.neutralSecondary,
-                    },
+                    root: { display: 'flex', alignItems: 'center' },
                   }}>
-                  {feature}
+                  {k}:&nbsp;
+                  {v}
+                </Text>
+              ))
+            : _.map(props.value.key, (v, k) => (
+                <Text
+                  key={k}
+                  styles={{
+                    root: { display: 'flex', alignItems: 'center' },
+                  }}>
+                  {k}:&nbsp;
+                  {v === 1 ? <Icon iconName="Up" /> : <Icon iconName="Down" />}
                 </Text>
               ))}
-            </Stack>
-          </Card.Item>
-        ) : null}
-      </Card.Section>
+        </Stack>
+      </Card.Item>
+      {features.length ? (
+        <Card.Item>
+          <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
+            {features.map((feature) => (
+              <Text
+                key={feature}
+                styles={{
+                  root: {
+                    color: theme.palette.neutralSecondary,
+                  },
+                }}>
+                {feature}
+              </Text>
+            ))}
+          </Stack>
+        </Card.Item>
+      ) : null}
     </Card>
   )
 }

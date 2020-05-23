@@ -22,7 +22,7 @@ export function IndexCardList(props: {
   )
 
   return (
-    <Stack tokens={{ childrenGap: 10, padding: 10 }}>
+    <Stack tokens={{ childrenGap: 20, padding: 10 }}>
       {indexes?.cursor.firstBatch.map((item) => (
         <IndexCard
           key={item.name}
