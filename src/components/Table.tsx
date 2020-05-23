@@ -80,7 +80,7 @@ export function Table() {
     return (
       <div
         style={{
-          borderTop: `1px solid ${theme.palette.neutralLight}`,
+          borderTop: `1px solid ${theme.palette.red}`,
         }}
       />
     )
