@@ -63,7 +63,19 @@ export function DatabaseNav() {
           overflowY: 'scroll',
         }}>
         <Nav
-          groups={[{ links }]}
+          groups={[
+            {
+              links: links.length
+                ? links
+                : [
+                    {
+                      name: 'No Database',
+                      url: '',
+                      disabled: true,
+                    },
+                  ],
+            },
+          ]}
           selectedKey={`${database}${splitter}${collection}`}
           onLinkClick={(_ev, item) => {
             if (!item?.links && item?.key) {
