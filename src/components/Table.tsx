@@ -126,7 +126,10 @@ export function Table() {
                   renderData: str,
                 }}
                 styles={{
-                  host: { cursor: 'pointer' },
+                  host: {
+                    cursor: 'pointer',
+                    color: theme.palette.neutralSecondary,
+                  },
                 }}
                 instantOpenOnClick={true}>
                 {str}
