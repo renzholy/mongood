@@ -13,6 +13,7 @@ MongoDB Operation Dashboard
 
 ## 🚧 Roadmap:
 
+- [ ] dark mode
 - [ ] doc insert, update and delete
 - [ ] index create and drop
 - [ ] geo search
