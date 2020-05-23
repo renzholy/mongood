@@ -30,9 +30,9 @@ export function FilterStack() {
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height: 52 } }}>
         <FilterInput
-          disabled={true}
-          placeholder="querying without an index is not allowed"
-          onChange={() => {}}
+          onChange={(value) => {
+            dispatch(actions.docs.setFilter(value as {}))
+          }}
         />
       </Stack>
     )

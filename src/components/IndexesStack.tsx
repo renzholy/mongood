@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import useSWR from 'swr'
 import { Stack, DefaultButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -18,13 +18,9 @@ export function IndexesStack() {
         listIndexes: collection,
       })
     },
-    { revalidateOnFocus: false },
   )
   const index = useSelector((state) => state.docs.index)
   const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(actions.docs.setIndex(indexes?.cursor.firstBatch[0]))
-  }, [indexes])
 
   return (
     <Stack
