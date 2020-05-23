@@ -3,7 +3,8 @@ import { RouteComponentProps } from 'react-router'
 import { initializeIcons, loadTheme } from '@fluentui/react'
 import { Provider } from 'react-redux'
 
-import { store } from '../stores/index'
+import { DatabaseNav } from '@/components/DatabaseNav'
+import { store } from '@/stores/index'
 
 initializeIcons()
 
@@ -42,7 +43,10 @@ export default (props: RouteComponentProps & { children: React.ReactNode }) => {
           height: '100vh',
           overflow: 'hidden',
         }}>
-        {props.children}
+        <div style={{ display: 'flex', height: '100%' }}>
+          <DatabaseNav />
+          {props.children}
+        </div>
       </div>
     </Provider>
   )
