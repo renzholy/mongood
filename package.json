@@ -22,15 +22,15 @@
   },
   "homepage": "https://github.com/RenzHoly/Mongood#readme",
   "dependencies": {
-    "@fluentui/react": "7.115.2",
+    "@fluentui/react": "7.115.3",
     "@reduxjs/toolkit": "1.3.6",
-    "@uifabric/react-cards": "0.109.86",
+    "@uifabric/react-cards": "0.109.87",
     "bson": "4.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-redux": "7.2.0",
     "safer-eval": "1.3.6",
-    "swr": "0.2.1"
+    "swr": "0.2.2"
   },
   "devDependencies": {
     "@types/bson": "4.0.2",
@@ -41,7 +41,7 @@
     "@typescript-eslint/eslint-plugin": "3.0.0",
     "@typescript-eslint/parser": "3.0.0",
     "@umijs/preset-react": "1.5.3",
-    "eslint": "7.0.0",
+    "eslint": "7.1.0",
     "eslint-config-airbnb-typescript": "7.2.1",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-import": "2.20.2",
