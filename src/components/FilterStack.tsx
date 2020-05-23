@@ -47,54 +47,64 @@ export function FilterStack() {
       horizontal={true}
       tokens={{ childrenGap: 10, padding: 10 }}
       styles={{ root: { height: 52 } }}>
-      {keys.map((key, i) => {
-        const disableSort =
-          i > 0 && !filter[keys[i - 1]] && sort[keys[i - 1]] === undefined
-        const iconProps: IIconProps = {
-          iconName: sort[key] === 1 ? 'Up' : sort[key] === -1 ? 'Down' : 'Sort',
-          styles: {
-            root: {
-              userSelect: 'none',
-              pointerEvents: 'unset',
-              cursor: disableSort ? 'not-allowed' : 'pointer',
-            },
-          },
-          onClick: disableSort
-            ? undefined
-            : () => {
-                dispatch(actions.docs.setSort(nextSorter(i, index.key, sort)))
+      {'textIndexVersion' in index ? (
+        <FilterInput
+          prefix="Text Search"
+          onChange={(value) => {
+            dispatch(actions.docs.setFilter({ $text: { $search: value } }))
+          }}
+        />
+      ) : (
+        keys.map((key, i) => {
+          const disableSort =
+            i > 0 && !filter[keys[i - 1]] && sort[keys[i - 1]] === undefined
+          const iconProps: IIconProps = {
+            iconName:
+              sort[key] === 1 ? 'Up' : sort[key] === -1 ? 'Down' : 'Sort',
+            styles: {
+              root: {
+                userSelect: 'none',
+                pointerEvents: 'unset',
+                cursor: disableSort ? 'not-allowed' : 'pointer',
               },
-        }
-        if (index.partialFilterExpression?.[key]) {
+            },
+            onClick: disableSort
+              ? undefined
+              : () => {
+                  dispatch(actions.docs.setSort(nextSorter(i, index.key, sort)))
+                },
+          }
+          if (index.partialFilterExpression?.[key]) {
+            return (
+              <FilterInput
+                key={key}
+                disabled={true}
+                prefix={`${key}:`}
+                iconProps={iconProps}
+                placeholder={stringify(index.partialFilterExpression[key])}
+                onChange={() => {}}
+              />
+            )
+          }
+          const disableFilter = i > 0 && !filter[keys[i - 1]]
           return (
             <FilterInput
               key={key}
-              disabled={true}
+              disabled={disableFilter}
               prefix={`${key}:`}
               iconProps={iconProps}
-              placeholder={stringify(index.partialFilterExpression[key])}
-              onChange={() => {}}
+              onChange={(value) => {
+                dispatch(
+                  actions.docs.setFilter({
+                    ...filter,
+                    [key]: value,
+                  }),
+                )
+              }}
             />
           )
-        }
-        const disableFilter = i > 0 && !filter[keys[i - 1]]
-        return (
-          <FilterInput
-            key={key}
-            disabled={disableFilter}
-            prefix={`${key}:`}
-            iconProps={iconProps}
-            onChange={(value) => {
-              dispatch(
-                actions.docs.setFilter({
-                  ...filter,
-                  [key]: value,
-                }),
-              )
-            }}
-          />
-        )
-      })}
+        })
+      )}
       {extraPartialKeys.map((key) => {
         return (
           <FilterInput
