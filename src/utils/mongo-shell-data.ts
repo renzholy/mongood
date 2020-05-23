@@ -115,10 +115,10 @@ export function parse(str: string): object {
       saferEval(str, {
         ObjectId: (s: string) => ({ $oid: s }),
         Date: (s: string) => ({
-          $date: { $numberLong: new Date(s).getTime() },
+          $date: { $numberLong: new Date(s).getTime().toString() },
         }),
         ISODate: (s: string) => ({
-          $date: { $numberLong: new Date(s).getTime() },
+          $date: { $numberLong: new Date(s).getTime().toString() },
         }),
         NumberDecimal: (s: string) => ({ $numberDecimal: s }),
         NumberDouble: (s: string) => ({ $numberDouble: s }),
