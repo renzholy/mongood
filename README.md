@@ -33,6 +33,14 @@ npm run dev & go run server.go
 
 ## 📷 Screenshots:
 
-![](/screenshots/docs0.png)
+![](/screenshots/docs.png)
 
-![](/screenshots/docs1.png)
+![](/screenshots/stats.png)
+
+## 🔮 TODO:
+
+- [ ] doc insert, update and delete
+- [ ] index create and drop
+- [ ] geo search
+- [ ] json schema
+- [ ] role management

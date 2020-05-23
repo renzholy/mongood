@@ -45,7 +45,7 @@ export function Table() {
           find: collection,
           filter,
           sort,
-          hint: _.isEmpty(filter) ? undefined : index?.name,
+          hint: filter.$text || _.isEmpty(filter) ? undefined : index?.name,
           skip,
           limit,
         },
@@ -76,11 +76,11 @@ export function Table() {
     )
   }, [])
 
-  if (!data || data.cursor.firstBatch.length === 0) {
+  if (data?.cursor.firstBatch.length === 0) {
     return (
       <div
         style={{
-          borderTop: `1px solid ${theme.palette.neutralLight}`,
+          borderTop: `1px solid ${theme.palette.red}`,
         }}
       />
     )
@@ -115,7 +115,7 @@ export function Table() {
           selectionMode={SelectionMode.none}
           constrainMode={ConstrainMode.unconstrained}
           layoutMode={DetailsListLayoutMode.fixedColumns}
-          items={data.cursor.firstBatch || []}
+          items={data?.cursor.firstBatch || []}
           onRenderItemColumn={(_item, _index, colume) => {
             const str = stringify(_item[colume?.key!], 2)
             return str.length > 100 ? (
@@ -126,7 +126,10 @@ export function Table() {
                   renderData: str,
                 }}
                 styles={{
-                  host: { cursor: 'pointer' },
+                  host: {
+                    cursor: 'pointer',
+                    color: theme.palette.neutralSecondary,
+                  },
                 }}
                 instantOpenOnClick={true}>
                 {str}

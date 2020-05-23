@@ -3,6 +3,7 @@
 node_modules/
 dist/
 .*ignore
+.gitattributes
 *.html
 Dockerfile
 *.conf
