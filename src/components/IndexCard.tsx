@@ -18,6 +18,8 @@ export function IndexCard(props: {
     props.value.sparse ? 'sparse' : null,
     props.value.partialFilterExpression ? 'partial' : null,
     props.value.expireAfterSeconds ? 'expire' : null,
+    props.value['2dsphereIndexVersion'] ? '2dsphere' : null,
+    props.value.default_language ? 'text' : null,
   ]).join(', ')
 
   return (

@@ -11,6 +11,9 @@ export type Index = {
     [key: string]: object
   }
   expireAfterSeconds?: number
+  '2dsphereIndexVersion'?: number
+  default_language?: string
+  language_override?: string
 }
 
 export type StatDetail = {
