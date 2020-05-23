@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import { Stack, Text } from '@fluentui/react'
+import { Stack, Text, getTheme } from '@fluentui/react'
 import { Card } from '@uifabric/react-cards'
 import bytes from 'bytes'
 
@@ -11,13 +11,19 @@ import { StatDetail } from '@/types'
 import { Number } from '@/utils/formatter'
 
 function InfoCard(props: { title: string; content: string }) {
+  const theme = getTheme()
+
   return (
-    <Card tokens={{ padding: 10, childrenGap: 10 }}>
+    <Card tokens={{ padding: 20, childrenGap: 10 }}>
       <Card.Item>
-        <Text block={true}>{props.title}</Text>
+        <Text
+          block={true}
+          styles={{ root: { color: theme.palette.neutralSecondary } }}>
+          {props.title}
+        </Text>
       </Card.Item>
       <Card.Item>
-        <Text variant="large">{props.content}</Text>
+        <Text variant="xLarge">{props.content}</Text>
       </Card.Item>
     </Card>
   )
@@ -47,7 +53,6 @@ export default () => {
       })
     },
   )
-  console.log(stats)
 
   if (!stats) {
     return null
@@ -72,11 +77,14 @@ export default () => {
           content={bytes(stats.totalIndexSize, { unitSeparator: ' ' })}
         />
         <InfoCard
-          title="Avg Obj Size:"
+          title="Average Object Size:"
           content={bytes(stats.avgObjSize, { unitSeparator: ' ' })}
         />
         <InfoCard title="Capped:" content={stats.capped ? 'Yes' : 'No'} />
       </Stack>
+      <Text variant="xxLarge" styles={{ root: { marginLeft: 10 } }}>
+        Indexes:
+      </Text>
       <IndexCardList
         indexDetails={stats.indexDetails}
         indexSizes={stats.indexSizes}

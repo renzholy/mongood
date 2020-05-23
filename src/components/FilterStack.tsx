@@ -51,12 +51,7 @@ export function FilterStack() {
         const disableSort =
           i > 0 && !filter[keys[i - 1]] && sort[keys[i - 1]] === undefined
         const iconProps: IIconProps = {
-          iconName:
-            sort[key] === 1
-              ? 'Ascending'
-              : sort[key] === -1
-              ? 'Descending'
-              : 'Sort',
+          iconName: sort[key] === 1 ? 'Up' : sort[key] === -1 ? 'Down' : 'Sort',
           styles: {
             root: {
               userSelect: 'none',

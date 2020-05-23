@@ -12,8 +12,10 @@ export type Index = {
   }
   expireAfterSeconds?: number
   '2dsphereIndexVersion'?: number
-  default_language?: string
-  language_override?: string
+  textIndexVersion?: number
+  weights?: {
+    [key: string]: number
+  }
 }
 
 export type StatDetail = {
