@@ -16,6 +16,8 @@ import {
   HoverCard,
   Text,
   HoverCardType,
+  MessageBar,
+  MessageBarType,
 } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
@@ -76,11 +78,31 @@ export function Table() {
     )
   }, [])
 
-  if (data?.cursor.firstBatch.length === 0 || error) {
+  if (error) {
     return (
       <div
         style={{
           borderTop: `1px solid ${theme.palette.red}`,
+          display: 'flex',
+          justifyContent: 'center',
+        }}>
+        {error.message ? (
+          <MessageBar
+            messageBarType={MessageBarType.error}
+            styles={{ root: { margin: 10 } }}>
+            {error.message}
+          </MessageBar>
+        ) : null}
+      </div>
+    )
+  }
+  if (data?.cursor.firstBatch.length === 0) {
+    return (
+      <div
+        style={{
+          borderTop: `1px solid ${theme.palette.yellow}`,
+          display: 'flex',
+          justifyContent: 'center',
         }}
       />
     )

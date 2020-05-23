@@ -12,7 +12,10 @@ export async function runCommand<T>(
     },
     body: JSON.stringify({ database, command: JSON.stringify(command) }),
   })
-  return opts.canonical
-    ? response.json()
-    : (EJSON.parse(await response.text()) as T)
+  if (response.ok) {
+    return opts.canonical
+      ? response.json()
+      : (EJSON.parse(await response.text()) as T)
+  }
+  throw new Error(await response.text())
 }
