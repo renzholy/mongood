@@ -1,14 +1,13 @@
 import { TextField, IIconProps } from '@fluentui/react'
 import React, { useState } from 'react'
 
-import { stringify, parse } from '@/utils/mongo-shell-data'
+import { parse } from '@/utils/mongo-shell-data'
 
 export function FilterInput(props: {
   disabled?: boolean
   prefix?: string
   placeholder?: string
   iconProps?: IIconProps
-  value?: object
   onChange(value?: object): void
 }) {
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -20,28 +19,15 @@ export function FilterInput(props: {
       autoCapitalize="off"
       autoSave="off"
       spellCheck={false}
-      styles={{ root: { flex: 1 } }}
+      styles={{
+        root: { flex: 1 },
+        prefix: { userSelect: 'none', cursor: 'default' },
+      }}
       disabled={props.disabled}
-      onRenderPrefix={
-        props.prefix
-          ? () => {
-              return (
-                <span
-                  style={{
-                    paddingBottom: 1,
-                    userSelect: 'none',
-                    cursor: 'default',
-                  }}>
-                  {props.prefix}
-                </span>
-              )
-            }
-          : undefined
-      }
+      prefix={props.prefix}
       placeholder={props.placeholder}
       iconProps={props.iconProps}
       errorMessage={errorMessage}
-      value={stringify(props.value)}
       onChange={(_ev, newValue) => {
         if (!newValue) {
           props.onChange(undefined)

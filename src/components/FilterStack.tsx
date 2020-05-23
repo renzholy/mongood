@@ -7,6 +7,7 @@ import _ from 'lodash'
 
 import { actions } from '@/stores'
 import { nextSorter } from '@/utils/sorter'
+import { stringify } from '@/utils/mongo-shell-data'
 import { FilterInput } from './FilterInput'
 
 export function FilterStack() {
@@ -76,7 +77,7 @@ export function FilterStack() {
               disabled={true}
               prefix={`${key}:`}
               iconProps={iconProps}
-              value={index.partialFilterExpression[key]}
+              placeholder={stringify(index.partialFilterExpression[key])}
               onChange={() => {}}
             />
           )
@@ -88,7 +89,6 @@ export function FilterStack() {
             disabled={disableFilter}
             prefix={`${key}:`}
             iconProps={iconProps}
-            value={filter[key]}
             onChange={(value) => {
               dispatch(
                 actions.docs.setFilter({
@@ -106,7 +106,7 @@ export function FilterStack() {
             key={key}
             disabled={true}
             prefix={`${key}:`}
-            value={index.partialFilterExpression?.[key]}
+            placeholder={stringify(index.partialFilterExpression?.[key])}
             onChange={() => {}}
           />
         )
