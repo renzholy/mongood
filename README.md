@@ -11,6 +11,15 @@ MongoDB Operation Dashboard
 - [x] built with [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui)
 - [ ] and so on...
 
+## 🚧 Roadmap:
+
+- [ ] doc insert, update and delete
+- [ ] index create and drop
+- [ ] geo search
+- [ ] json schema
+- [ ] role management
+- [ ] and so on...
+
 ## 🔧 Usage:
 
 ### Docker run:
@@ -36,11 +45,3 @@ npm run dev & go run server.go
 ![](/screenshots/docs.png)
 
 ![](/screenshots/stats.png)
-
-## 🔮 TODO:
-
-- [ ] doc insert, update and delete
-- [ ] index create and drop
-- [ ] geo search
-- [ ] json schema
-- [ ] role management
