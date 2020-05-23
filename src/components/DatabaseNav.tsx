@@ -25,6 +25,7 @@ export function DatabaseNav() {
             name: _database.Name,
             links: [
               {
+                disabled: true,
                 name: '...',
                 url: '',
               },
