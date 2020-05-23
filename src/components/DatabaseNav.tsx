@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import _ from 'lodash'
 
 import { actions } from '@/stores'
-import { runCommand, listDatabases } from '@/utils/fetcher'
+import { runCommand } from '@/utils/fetcher'
 
 const splitter = '/'
 
@@ -13,7 +13,13 @@ export function DatabaseNav() {
   const theme = getTheme()
   const filter = useSelector((state) => state.root.filter)
   const { data } = useSWR(`listDatabases/${JSON.stringify(filter)}`, () =>
-    listDatabases(filter),
+    runCommand<{
+      databases: {
+        empty: boolean
+        name: string
+        sizeOnDisk: number
+      }[]
+    }>('admin', { listDatabases: 1, filter }),
   )
   const [links, setLinks] = useState<INavLink[]>([])
   const dispatch = useDispatch()
@@ -21,9 +27,9 @@ export function DatabaseNav() {
   useEffect(() => {
     setLinks(
       data
-        ? data.Databases.map((_database) => ({
-            key: _database.Name,
-            name: _database.Name,
+        ? data.databases.map(({ name }) => ({
+            key: name,
+            name,
             links: [
               {
                 name: '...',

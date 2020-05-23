@@ -58,24 +58,5 @@ func main() {
 		c.Fasthttp.SetContentType("application/json")
 		c.Send(result)
 	})
-	app.Post("/api/listDatabases", func(c *fiber.Ctx) {
-		type Request struct {
-			Filter string
-		}
-		var request Request
-		c.BodyParser(&request)
-		var filter interface{}
-		parseErr := bson.UnmarshalExtJSON([]byte(request.Filter), true, &filter)
-		if parseErr != nil {
-			c.Status(400).Send(parseErr)
-			return
-		}
-		result, err := client.ListDatabases(ctx, filter)
-		if err != nil {
-			c.Status(500).Send(err)
-			return
-		}
-		c.JSON(result)
-	})
 	app.Listen(3000)
 }
