@@ -32,7 +32,7 @@ export function Table() {
   )
   const [event, setEvent] = useState<MouseEvent>()
   const [item, setItem] = useState<any>()
-  const { data, isValidating } = useSWR(
+  const { data, error, isValidating } = useSWR(
     database && collection
       ? `find/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
@@ -76,7 +76,7 @@ export function Table() {
     )
   }, [])
 
-  if (data?.cursor.firstBatch.length === 0) {
+  if (data?.cursor.firstBatch.length === 0 || error) {
     return (
       <div
         style={{
