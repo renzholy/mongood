@@ -8,6 +8,11 @@ import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
 
 const splitter = '/'
+const loadingLink = {
+  name: '...',
+  url: '',
+  disabled: true,
+}
 
 export function DatabaseNav() {
   const theme = getTheme()
@@ -30,16 +35,10 @@ export function DatabaseNav() {
         ? data.databases.map(({ name }) => ({
             key: name,
             name,
-            links: [
-              {
-                name: '...',
-                url: '',
-                disabled: true,
-              },
-            ],
+            links: [loadingLink],
             url: '',
           }))
-        : [],
+        : [loadingLink],
     )
   }, [data])
 
