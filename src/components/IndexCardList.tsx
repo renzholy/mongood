@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import { Stack } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
-import { Index, StatDetail } from '@/types'
+import { Index } from '@/types'
 import { IndexCard } from './IndexCard'
 
 export function IndexCardList() {
@@ -17,29 +17,6 @@ export function IndexCardList() {
       })
     },
   )
-  const { data: stats } = useSWR(
-    database && collection ? `collStats/${database}/${collection}` : null,
-    () => {
-      return runCommand<{
-        avgObjSize: number
-        capped: boolean
-        count: number
-        indexDetails: { [key: string]: StatDetail }
-        indexSizes: { [key: string]: number }
-        nindexes: number
-        ns: string
-        ok: number
-        scaleFactor: number
-        size: number
-        storageSize: number
-        totalIndexSize: number
-        wiredTiger: StatDetail
-      }>(database, {
-        collStats: collection,
-      })
-    },
-  )
-  console.log(stats)
 
   return (
     <Stack tokens={{ childrenGap: 10, padding: 10 }}>
