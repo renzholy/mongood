@@ -19,7 +19,7 @@ export function IndexCard(props: {
     props.value.unique ? 'UNIQUE' : null,
     props.value.sparse ? 'SPARSE' : null,
     props.value.partialFilterExpression ? 'PARTIAL' : null,
-    props.value.expireAfterSeconds ? 'TTL' : null,
+    'expireAfterSeconds' in props.value ? 'TTL' : null,
     '2dsphereIndexVersion' in props.value ? 'GEOSPATIAL' : null,
     'textIndexVersion' in props.value ? 'TEXT' : null,
   ])

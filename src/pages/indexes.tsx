@@ -52,6 +52,7 @@ export default () => {
         collStats: collection,
       })
     },
+    { refreshInterval: 5 * 1000 },
   )
 
   if (!stats) {
