@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 import { Stack, Text } from '@fluentui/react'
 import { Card } from '@uifabric/react-cards'
+import bytes from 'bytes'
 
 import { IndexCardList } from '@/components/IndexCardList'
 import { runCommand } from '@/utils/fetcher'
@@ -40,29 +41,56 @@ export default () => {
   }
   return (
     <>
-      <Stack tokens={{ padding: 10, childrenGap: 10 }} horizontal={true}>
+      <Stack
+        tokens={{ padding: 10, childrenGap: 10 }}
+        horizontal={true}
+        styles={{ root: { overflowX: 'scroll' } }}>
         <Card tokens={{ padding: 10, childrenGap: 10 }}>
           <Card.Item>
             <Text variant="large" block={true}>
-              avgObjSize:
+              Size:
             </Text>
-            <Text>{Number.format(stats.avgObjSize)}</Text>
+            <Text>{bytes(stats.size, { unitSeparator: ' ' })}</Text>
           </Card.Item>
         </Card>
         <Card tokens={{ padding: 10, childrenGap: 10 }}>
           <Card.Item>
             <Text variant="large" block={true}>
-              storageSize:
+              Count:
             </Text>
-            <Text>{Number.format(stats.storageSize)}</Text>
+            <Text>{Number.format(stats.count)}</Text>
           </Card.Item>
         </Card>
         <Card tokens={{ padding: 10, childrenGap: 10 }}>
           <Card.Item>
             <Text variant="large" block={true}>
-              totalIndexSize:
+              Storage Size:
             </Text>
-            <Text>{Number.format(stats.totalIndexSize)}</Text>
+            <Text>{bytes(stats.storageSize, { unitSeparator: ' ' })}</Text>
+          </Card.Item>
+        </Card>
+        <Card tokens={{ padding: 10, childrenGap: 10 }}>
+          <Card.Item>
+            <Text variant="large" block={true}>
+              Total Index Size:
+            </Text>
+            <Text>{bytes(stats.totalIndexSize, { unitSeparator: ' ' })}</Text>
+          </Card.Item>
+        </Card>
+        <Card tokens={{ padding: 10, childrenGap: 10 }}>
+          <Card.Item>
+            <Text variant="large" block={true}>
+              Avg Obj Size:
+            </Text>
+            <Text>{bytes(stats.avgObjSize, { unitSeparator: ' ' })}</Text>
+          </Card.Item>
+        </Card>
+        <Card tokens={{ padding: 10, childrenGap: 10 }}>
+          <Card.Item>
+            <Text variant="large" block={true}>
+              Capped:
+            </Text>
+            <Text>{stats.capped ? 'True' : 'False'}</Text>
           </Card.Item>
         </Card>
       </Stack>
