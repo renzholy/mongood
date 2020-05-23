@@ -12,3 +12,20 @@ export type Index = {
   }
   expireAfterSeconds?: number
 }
+
+export type StatDetail = {
+  LSM: { [key: string]: number }
+  'block-manager': { [key: string]: number }
+  btree: { [key: string]: number }
+  cache: { [key: string]: number }
+  cache_walk: { [key: string]: number }
+  compression: { [key: string]: number }
+  creationString: string
+  cursor: { [key: string]: number }
+  metadata: { [key: string]: number }
+  reconciliation: { [key: string]: number }
+  session: { [key: string]: number }
+  transaction: { [key: string]: number }
+  type: string
+  uri: string
+}
