@@ -10,6 +10,19 @@ import { runCommand } from '@/utils/fetcher'
 import { StatDetail } from '@/types'
 import { Number } from '@/utils/formatter'
 
+function InfoCard(props: { title: string; content: string }) {
+  return (
+    <Card tokens={{ padding: 10, childrenGap: 10 }}>
+      <Card.Item>
+        <Text block={true}>{props.title}</Text>
+      </Card.Item>
+      <Card.Item>
+        <Text variant="large">{props.content}</Text>
+      </Card.Item>
+    </Card>
+  )
+}
+
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
   const { data: stats } = useSWR(
@@ -45,54 +58,24 @@ export default () => {
         tokens={{ padding: 10, childrenGap: 10 }}
         horizontal={true}
         styles={{ root: { overflowX: 'scroll' } }}>
-        <Card tokens={{ padding: 10, childrenGap: 10 }}>
-          <Card.Item>
-            <Text variant="large" block={true}>
-              Size:
-            </Text>
-            <Text>{bytes(stats.size, { unitSeparator: ' ' })}</Text>
-          </Card.Item>
-        </Card>
-        <Card tokens={{ padding: 10, childrenGap: 10 }}>
-          <Card.Item>
-            <Text variant="large" block={true}>
-              Count:
-            </Text>
-            <Text>{Number.format(stats.count)}</Text>
-          </Card.Item>
-        </Card>
-        <Card tokens={{ padding: 10, childrenGap: 10 }}>
-          <Card.Item>
-            <Text variant="large" block={true}>
-              Storage Size:
-            </Text>
-            <Text>{bytes(stats.storageSize, { unitSeparator: ' ' })}</Text>
-          </Card.Item>
-        </Card>
-        <Card tokens={{ padding: 10, childrenGap: 10 }}>
-          <Card.Item>
-            <Text variant="large" block={true}>
-              Total Index Size:
-            </Text>
-            <Text>{bytes(stats.totalIndexSize, { unitSeparator: ' ' })}</Text>
-          </Card.Item>
-        </Card>
-        <Card tokens={{ padding: 10, childrenGap: 10 }}>
-          <Card.Item>
-            <Text variant="large" block={true}>
-              Avg Obj Size:
-            </Text>
-            <Text>{bytes(stats.avgObjSize, { unitSeparator: ' ' })}</Text>
-          </Card.Item>
-        </Card>
-        <Card tokens={{ padding: 10, childrenGap: 10 }}>
-          <Card.Item>
-            <Text variant="large" block={true}>
-              Capped:
-            </Text>
-            <Text>{stats.capped ? 'True' : 'False'}</Text>
-          </Card.Item>
-        </Card>
+        <InfoCard
+          title="Size:"
+          content={bytes(stats.size, { unitSeparator: ' ' })}
+        />
+        <InfoCard title="Count:" content={Number.format(stats.count)} />
+        <InfoCard
+          title="Storage Size:"
+          content={bytes(stats.storageSize, { unitSeparator: ' ' })}
+        />
+        <InfoCard
+          title="Total Index Size:"
+          content={bytes(stats.totalIndexSize, { unitSeparator: ' ' })}
+        />
+        <InfoCard
+          title="Avg Obj Size:"
+          content={bytes(stats.avgObjSize, { unitSeparator: ' ' })}
+        />
+        <InfoCard title="Capped:" content={stats.capped ? 'Yes' : 'No'} />
       </Stack>
       <IndexCardList />
     </>
