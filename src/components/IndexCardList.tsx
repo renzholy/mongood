@@ -17,6 +17,15 @@ export function IndexCardList() {
       })
     },
   )
+  const { data: stats } = useSWR(
+    database && collection ? `collStats/${database}/${collection}` : null,
+    () => {
+      return runCommand<{ cursor: { firstBatch: Index[] } }>(database, {
+        collStats: collection,
+      })
+    },
+  )
+  console.log(stats)
 
   return (
     <Stack tokens={{ childrenGap: 10, padding: 10 }}>
