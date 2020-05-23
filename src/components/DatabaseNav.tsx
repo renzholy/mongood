@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
+import _ from 'lodash'
 
 import { actions } from '@/stores'
 import { runCommand, listDatabases } from '@/utils/fetcher'
@@ -25,9 +26,9 @@ export function DatabaseNav() {
             name: _database.Name,
             links: [
               {
-                disabled: true,
                 name: '...',
                 url: '',
+                disabled: true,
               },
             ],
             url: '',
@@ -70,7 +71,7 @@ export function DatabaseNav() {
                 ? links
                 : [
                     {
-                      name: 'No Database',
+                      name: _.isEmpty(filter) ? '' : 'No Database',
                       url: '',
                       disabled: true,
                     },
