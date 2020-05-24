@@ -26,7 +26,7 @@ MongoDB Operation Dashboard
 ### Client Mode:
 
 ```shell
-npm run build && cd client && go run main.go
+npm run build && cd client && MONGO_URL="mongodb://localhost:27017" go run main.go
 ```
 
 ### Server Mode:
