@@ -16,3 +16,4 @@ Dockerfile
 *.svg
 *.xml
 server/
+client/
