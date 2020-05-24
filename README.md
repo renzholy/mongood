@@ -46,3 +46,5 @@ npm run dev & go run server.go
 ![](/screenshots/docs.png)
 
 ![](/screenshots/indexes.png)
+
+![](/screenshots/ops.png)
