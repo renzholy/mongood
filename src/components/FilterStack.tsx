@@ -7,7 +7,6 @@ import _ from 'lodash'
 
 import { actions } from '@/stores'
 import { nextSorter } from '@/utils/sorter'
-import { stringify } from '@/utils/mongo-shell-data'
 import { FilterInput } from './FilterInput'
 
 export function FilterStack() {
@@ -30,6 +29,8 @@ export function FilterStack() {
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height: 52 } }}>
         <FilterInput
+          autoFocus={true}
+          value={filter}
           onChange={(value) => {
             dispatch(actions.docs.setFilter(value as {}))
           }}
@@ -49,6 +50,7 @@ export function FilterStack() {
       styles={{ root: { height: 52 } }}>
       {'textIndexVersion' in index ? (
         <FilterInput
+          autoFocus={true}
           prefix="Text Search"
           onChange={(value) => {
             dispatch(actions.docs.setFilter({ $text: { $search: value } }))
@@ -74,22 +76,31 @@ export function FilterStack() {
                   dispatch(actions.docs.setSort(nextSorter(i, index.key, sort)))
                 },
           }
+          const disableFilter = i > 0 && !filter[keys[i - 1]]
           if (index.partialFilterExpression?.[key]) {
             return (
               <FilterInput
                 key={key}
-                disabled={true}
+                autoFocus={i === 0}
+                disabled={disableFilter}
                 prefix={`${key}:`}
                 iconProps={iconProps}
-                placeholder={stringify(index.partialFilterExpression[key])}
-                onChange={() => {}}
+                value={index.partialFilterExpression[key]}
+                onChange={(value) => {
+                  dispatch(
+                    actions.docs.setFilter({
+                      ...filter,
+                      [key]: value,
+                    }),
+                  )
+                }}
               />
             )
           }
-          const disableFilter = i > 0 && !filter[keys[i - 1]]
           return (
             <FilterInput
               key={key}
+              autoFocus={i === 0}
               disabled={disableFilter}
               prefix={`${key}:`}
               iconProps={iconProps}
@@ -111,7 +122,7 @@ export function FilterStack() {
             key={key}
             disabled={true}
             prefix={`${key}:`}
-            placeholder={stringify(index.partialFilterExpression?.[key])}
+            value={index.partialFilterExpression?.[key]}
             onChange={() => {}}
           />
         )

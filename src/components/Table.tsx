@@ -19,46 +19,18 @@ import {
   MessageBar,
   MessageBarType,
 } from '@fluentui/react'
-import useSWR from 'swr'
-import { useSelector } from 'react-redux'
-import _ from 'lodash'
 
-import { runCommand } from '@/utils/fetcher'
 import { stringify } from '@/utils/mongo-shell-data'
 
-export function Table() {
+export function Table(props: {
+  items: any[]
+  error: any
+  isValidating: boolean
+}) {
   const theme = getTheme()
-  const { database, collection } = useSelector((state) => state.root)
-  const { index, filter, sort, skip, limit } = useSelector(
-    (state) => state.docs,
-  )
   const [event, setEvent] = useState<MouseEvent>()
   const [item, setItem] = useState<any>()
-  const { data, error, isValidating } = useSWR(
-    database && collection
-      ? `find/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
-          filter,
-        )}/${JSON.stringify(sort)}`
-      : null,
-    () => {
-      return runCommand<{ cursor: { firstBatch: unknown[] } }>(
-        database,
-        {
-          find: collection,
-          filter,
-          sort,
-          hint: filter.$text || _.isEmpty(filter) ? undefined : index?.name,
-          skip,
-          limit,
-        },
-        { canonical: true },
-      )
-    },
-    {
-      refreshInterval: 20 * 1000,
-      errorRetryCount: 0,
-    },
-  )
+  const { items, error, isValidating } = props
   const onRenderPlainCard = useCallback((str: string) => {
     return (
       <div
@@ -96,7 +68,7 @@ export function Table() {
       </div>
     )
   }
-  if (data?.cursor.firstBatch.length === 0) {
+  if (items.length === 0) {
     return (
       <div
         style={{
@@ -137,7 +109,7 @@ export function Table() {
           selectionMode={SelectionMode.none}
           constrainMode={ConstrainMode.unconstrained}
           layoutMode={DetailsListLayoutMode.fixedColumns}
-          items={data?.cursor.firstBatch || []}
+          items={items}
           onRenderItemColumn={(_item, _index, colume) => {
             const str = stringify(_item[colume?.key!], 2)
             return str.length > 100 ? (

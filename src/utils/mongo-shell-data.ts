@@ -5,6 +5,13 @@
 import saferEval from 'safer-eval'
 import _ from 'lodash'
 
+function wrapKey(key: string) {
+  if (key.includes('-') || key.includes('.')) {
+    return `"${key}"`
+  }
+  return key
+}
+
 export function stringify(
   val:
     | string
@@ -65,7 +72,9 @@ export function stringify(
     return val.$numberLong
   }
   if ('$regularExpression' in val) {
-    return `/${val.$regularExpression.pattern}/${val.$regularExpression.options}`
+    return `/${val.$regularExpression.pattern}/${
+      val.$regularExpression.options || ''
+    }`
   }
   if ('$timestamp' in val) {
     return `Timestamp(${val.$timestamp.t}, ${val.$timestamp.i})`
@@ -95,13 +104,14 @@ export function stringify(
   if (indent === 0) {
     return `{${_.map(
       val,
-      (value, key) => `${key}: ${stringify(value, indent, depth + indent)}`,
+      (value, key) =>
+        `${wrapKey(key)}: ${stringify(value, indent, depth + indent)}`,
     ).join(', ')}}`
   }
   return `{\n${_.map(
     val,
     (value, key) =>
-      `  ${_.repeat(' ', depth)}${key}: ${stringify(
+      `  ${_.repeat(' ', depth)}${wrapKey(key)}: ${stringify(
         value,
         indent,
         depth + indent,
@@ -110,6 +120,10 @@ export function stringify(
 }
 
 export function parse(str: string): object {
+  if (/\{\s*_\s*\}/.test(str)) {
+    // special for global lodash
+    throw new Error('ParseError')
+  }
   return JSON.parse(
     JSON.stringify(
       saferEval(str, {

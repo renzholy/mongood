@@ -1,16 +1,11 @@
 import React from 'react'
 import { Pivot, PivotItem, getTheme } from '@fluentui/react'
 import { useHistory } from 'umi'
-import { useSelector } from 'react-redux'
 
 export function TopPivot() {
   const history = useHistory()
   const theme = getTheme()
-  const { database, collection } = useSelector((state) => state.root)
 
-  if (!database || !collection) {
-    return null
-  }
   return (
     <Pivot
       selectedKey={history.location.pathname}
@@ -25,6 +20,7 @@ export function TopPivot() {
       }}>
       <PivotItem headerText="Documents" itemKey="/docs" />
       <PivotItem headerText="Indexes" itemKey="/indexes" />
+      <PivotItem headerText="Operations" itemKey="/ops" />
       <PivotItem headerText="Schemas" itemKey="/schemas" />
     </Pivot>
   )
