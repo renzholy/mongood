@@ -79,6 +79,7 @@ export default () => {
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height: 52 } }}>
         <FilterInput
+          autoFocus={true}
           value={filter}
           onChange={(value) => {
             setExample(undefined)

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { parse, stringify } from '@/utils/mongo-shell-data'
 
 export function FilterInput(props: {
+  autoFocus?: boolean
   disabled?: boolean
   prefix?: string
   iconProps?: IIconProps
@@ -18,6 +19,7 @@ export function FilterInput(props: {
 
   return (
     <TextField
+      autoFocus={props.autoFocus}
       autoComplete="off"
       autoCorrect="off"
       autoCapitalize="off"

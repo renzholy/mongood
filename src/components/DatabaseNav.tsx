@@ -52,6 +52,7 @@ export function DatabaseNav() {
         flexDirection: 'column',
       }}>
       <SearchBox
+        autoFocus={true}
         placeholder="Search Database"
         styles={{ root: { margin: 10 } }}
         value={filter.name?.$regex}

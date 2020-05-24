@@ -29,6 +29,7 @@ export function FilterStack() {
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height: 52 } }}>
         <FilterInput
+          autoFocus={true}
           onChange={(value) => {
             dispatch(actions.docs.setFilter(value as {}))
           }}
@@ -48,6 +49,7 @@ export function FilterStack() {
       styles={{ root: { height: 52 } }}>
       {'textIndexVersion' in index ? (
         <FilterInput
+          autoFocus={true}
           prefix="Text Search"
           onChange={(value) => {
             dispatch(actions.docs.setFilter({ $text: { $search: value } }))
@@ -78,6 +80,7 @@ export function FilterStack() {
             return (
               <FilterInput
                 key={key}
+                autoFocus={i === 0}
                 disabled={disableFilter}
                 prefix={`${key}:`}
                 iconProps={iconProps}
@@ -96,6 +99,7 @@ export function FilterStack() {
           return (
             <FilterInput
               key={key}
+              autoFocus={i === 0}
               disabled={disableFilter}
               prefix={`${key}:`}
               iconProps={iconProps}
