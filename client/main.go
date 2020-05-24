@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/gobuffalo/packr"
-	"github.com/zserge/webview"
+	"github.com/wailsapp/wails/lib/renderer/webview"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -67,10 +67,13 @@ func main() {
 		w.Write(json)
 	})
 	go http.ListenAndServe(":3000", nil)
-	w := webview.New(true)
-	defer w.Destroy()
-	w.SetSize(1280, 800, webview.HintNone)
-	w.Navigate("http://localhost:3000")
-	w.SetTitle("Mongood")
+	w := webview.NewWebview(webview.Settings{
+		Title:     "Mongood",
+		URL:       "http://localhost:3000",
+		Width:     1280,
+		Height:    800,
+		Resizable: true,
+	})
 	w.Run()
+	defer w.Terminate()
 }
