@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 import _ from 'lodash'
@@ -56,11 +56,6 @@ export default () => {
       }),
     { refreshInterval: 1000 },
   )
-  useEffect(() => {
-    if (example) {
-      setFilter(examples[example])
-    }
-  }, [example])
 
   return (
     <>
@@ -75,7 +70,8 @@ export default () => {
             text={k}
             primary={example === k}
             onClick={() => {
-              setExample(k)
+              setExample(example === k ? undefined : k)
+              setFilter(example === k || !k ? {} : examples[k])
             }}
           />
         ))}
