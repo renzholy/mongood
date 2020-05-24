@@ -6,7 +6,8 @@ import saferEval from 'safer-eval'
 import _ from 'lodash'
 
 function wrapKey(key: string) {
-  if (key.toString().includes('-') || key.toString().includes('.')) {
+  const strKey = key.toString()
+  if (strKey.includes('-') || strKey.includes('.')) {
     return `"${key}"`
   }
   return key
@@ -82,6 +83,7 @@ export function stringify(
   if ('$binary' in val) {
     return `Binary("${val.$binary.base64}", "${val.$binary.subType}")`
   }
+  const spaces = _.repeat(' ', depth)
   if (Array.isArray(val)) {
     if (indent === 0) {
       return `[${val
@@ -90,15 +92,8 @@ export function stringify(
     }
     return val.length
       ? `[\n${val
-          .map(
-            (v) =>
-              `  ${_.repeat(' ', depth)}${stringify(
-                v,
-                indent,
-                depth + indent,
-              )}`,
-          )
-          .join(',\n')}\n${_.repeat(' ', depth)}]`
+          .map((v) => `  ${spaces}${stringify(v, indent, depth + indent)}`)
+          .join(',\n')}\n${spaces}]`
       : '[]'
   }
   if (indent === 0) {
@@ -111,12 +106,8 @@ export function stringify(
   return `{\n${_.map(
     val,
     (value, key) =>
-      `  ${_.repeat(' ', depth)}${wrapKey(key)}: ${stringify(
-        value,
-        indent,
-        depth + indent,
-      )}`,
-  ).join(',\n')}\n${_.repeat(' ', depth)}}`
+      `  ${spaces}${wrapKey(key)}: ${stringify(value, indent, depth + indent)}`,
+  ).join(',\n')}\n${spaces}}`
 }
 
 export function parse(str: string): object {
