@@ -83,7 +83,6 @@ export function DatabaseNav() {
             {
               links: data?.databases.length
                 ? data.databases.map(({ name }) => ({
-                    key: name,
                     name,
                     url: '',
                     isExpanded: expandedDatabases.includes(name),
@@ -101,7 +100,7 @@ export function DatabaseNav() {
                   }))
                 : [
                     {
-                      name: _.isEmpty(filter) ? '' : 'No Database',
+                      name: _.isEmpty(filter) ? '...' : 'No Database',
                       url: '',
                       disabled: true,
                     },
