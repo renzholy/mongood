@@ -9,7 +9,7 @@ export default createSlice({
     filter: {},
     sort: {},
     skip: 0,
-    limit: 50,
+    limit: 25,
     count: 0,
   } as {
     index?: Index

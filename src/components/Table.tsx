@@ -18,6 +18,7 @@ import {
   HoverCardType,
   MessageBar,
   MessageBarType,
+  IColumn,
 } from '@fluentui/react'
 
 import { stringify } from '@/utils/mongo-shell-data'
@@ -49,6 +50,62 @@ export function Table(props: {
       </div>
     )
   }, [])
+  const onRenderItemColumn = useCallback(
+    (_item?: any, _index?: number, column?: IColumn) => {
+      const str = stringify(_item[column?.key!], 2)
+      return str.length > 100 ? (
+        <HoverCard
+          type={HoverCardType.plain}
+          plainCardProps={{
+            onRenderPlainCard,
+            renderData: str,
+          }}
+          styles={{
+            host: {
+              cursor: 'pointer',
+              color: theme.palette.neutralSecondary,
+            },
+          }}
+          instantOpenOnClick={true}>
+          {str}
+        </HoverCard>
+      ) : (
+        str
+      )
+    },
+    [onRenderPlainCard, theme],
+  )
+  const onRenderDetailsHeader = useCallback(
+    (detailsHeaderProps?: IDetailsHeaderProps) => (
+      <Sticky>
+        <ProgressIndicator
+          progressHidden={!isValidating}
+          barHeight={1}
+          styles={{ itemProgress: { padding: 0 } }}
+        />
+        <DetailsHeader
+          {...(detailsHeaderProps as IDetailsHeaderProps)}
+          styles={{
+            root: {
+              paddingTop: 0,
+              borderTop: isValidating
+                ? 0
+                : `1px solid ${theme.palette.neutralLight}`,
+              paddingBottom: -1,
+            },
+          }}
+        />
+      </Sticky>
+    ),
+    [isValidating, theme],
+  )
+  const onItemContextMenu = useCallback(
+    (_item?: any, _index?: number, ev?: Event) => {
+      setEvent(ev as MouseEvent)
+      setItem(_item)
+    },
+    [],
+  )
 
   if (error) {
     return (
@@ -114,54 +171,11 @@ export function Table(props: {
           selectionMode={SelectionMode.none}
           constrainMode={ConstrainMode.unconstrained}
           layoutMode={DetailsListLayoutMode.fixedColumns}
+          onShouldVirtualize={() => false}
           items={items || []}
-          onRenderItemColumn={(_item, _index, colume) => {
-            const str = stringify(_item[colume?.key!], 2)
-            return str.length > 100 ? (
-              <HoverCard
-                type={HoverCardType.plain}
-                plainCardProps={{
-                  onRenderPlainCard,
-                  renderData: str,
-                }}
-                styles={{
-                  host: {
-                    cursor: 'pointer',
-                    color: theme.palette.neutralSecondary,
-                  },
-                }}
-                instantOpenOnClick={true}>
-                {str}
-              </HoverCard>
-            ) : (
-              str
-            )
-          }}
-          onRenderDetailsHeader={(detailsHeaderProps) => (
-            <Sticky>
-              <ProgressIndicator
-                progressHidden={!isValidating}
-                barHeight={1}
-                styles={{ itemProgress: { padding: 0 } }}
-              />
-              <DetailsHeader
-                {...(detailsHeaderProps as IDetailsHeaderProps)}
-                styles={{
-                  root: {
-                    paddingTop: 0,
-                    borderTop: isValidating
-                      ? 0
-                      : `1px solid ${theme.palette.neutralLight}`,
-                    paddingBottom: -1,
-                  },
-                }}
-              />
-            </Sticky>
-          )}
-          onItemContextMenu={(_item, _index, ev) => {
-            setEvent(ev as MouseEvent)
-            setItem(_item)
-          }}
+          onRenderItemColumn={onRenderItemColumn}
+          onRenderDetailsHeader={onRenderDetailsHeader}
+          onItemContextMenu={onItemContextMenu}
         />
       </ScrollablePane>
     </div>
