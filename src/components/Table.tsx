@@ -23,7 +23,7 @@ import {
 import { stringify } from '@/utils/mongo-shell-data'
 
 export function Table(props: {
-  items: any[]
+  items?: any[]
   error: any
   isValidating: boolean
 }) {
@@ -68,7 +68,7 @@ export function Table(props: {
       </div>
     )
   }
-  if (items.length === 0) {
+  if (items?.length === 0) {
     return (
       <div
         style={{
@@ -114,7 +114,7 @@ export function Table(props: {
           selectionMode={SelectionMode.none}
           constrainMode={ConstrainMode.unconstrained}
           layoutMode={DetailsListLayoutMode.fixedColumns}
-          items={items}
+          items={items || []}
           onRenderItemColumn={(_item, _index, colume) => {
             const str = stringify(_item[colume?.key!], 2)
             return str.length > 100 ? (

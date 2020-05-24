@@ -41,7 +41,7 @@ export function DocumentTable() {
 
   return (
     <Table
-      items={data?.cursor.firstBatch || []}
+      items={data?.cursor.firstBatch}
       error={error}
       isValidating={isValidating}
     />
