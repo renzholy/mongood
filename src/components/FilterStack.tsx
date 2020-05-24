@@ -17,6 +17,9 @@ export function FilterStack() {
     dispatch(actions.docs.setFilter(index?.partialFilterExpression || {}))
     dispatch(actions.docs.setSort({}))
   }, [index])
+  useEffect(() => {
+    dispatch(actions.docs.setIndex(undefined))
+  }, [database, collection])
 
   if (!database || !collection) {
     return <div style={{ height: 52 }} />
