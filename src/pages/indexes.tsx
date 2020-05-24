@@ -35,7 +35,7 @@ export default () => {
     database && collection ? `collStats/${database}/${collection}` : null,
     () => {
       return runCommand<{
-        avgObjSize: number
+        avgObjSize?: number
         capped: boolean
         count: number
         indexDetails: { [key: string]: StatDetail }
@@ -84,7 +84,7 @@ export default () => {
         />
         <InfoCard
           title="Average Object Size:"
-          content={bytes(stats.avgObjSize, { unitSeparator: ' ' })}
+          content={bytes(stats.avgObjSize || 0, { unitSeparator: ' ' })}
         />
         <InfoCard title="Capped:" content={stats.capped ? 'Yes' : 'No'} />
       </Stack>
