@@ -15,16 +15,16 @@ function InfoCard(props: { title: string; content: string }) {
 
   return (
     <Card tokens={{ padding: 20, childrenGap: 10 }}>
-      <Card.Item>
+      <Card.Section>
         <Text
           block={true}
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {props.title}
         </Text>
-      </Card.Item>
-      <Card.Item>
+      </Card.Section>
+      <Card.Section>
         <Text variant="xLarge">{props.content}</Text>
-      </Card.Item>
+      </Card.Section>
     </Card>
   )
 }
@@ -59,7 +59,7 @@ export default () => {
     return null
   }
   return (
-    <>
+    <div style={{ overflowY: 'scroll' }}>
       <Stack
         tokens={{ padding: 10, childrenGap: 20 }}
         horizontal={true}
@@ -92,6 +92,6 @@ export default () => {
         indexDetails={stats.indexDetails}
         indexSizes={stats.indexSizes}
       />
-    </>
+    </div>
   )
 }

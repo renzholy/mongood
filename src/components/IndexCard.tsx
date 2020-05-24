@@ -34,7 +34,7 @@ export function IndexCard(props: {
       }}>
       <Card.Item>
         <Text variant="xLarge">{props.value.name}&nbsp;</Text>
-        <Text styles={{ root: { color: theme.palette.neutralSecondary } }}>
+        <Text styles={{ root: { color: theme.palette.neutralPrimaryAlt } }}>
           ({bytes(props.size, { unitSeparator: ' ' })})
         </Text>
       </Card.Item>
@@ -55,10 +55,28 @@ export function IndexCard(props: {
                 <Text
                   key={k}
                   styles={{
-                    root: { display: 'flex', alignItems: 'center' },
+                    root: {
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: theme.palette.neutralPrimaryAlt,
+                    },
                   }}>
                   {k}:&nbsp;
-                  {v === 1 ? <Icon iconName="Up" /> : <Icon iconName="Down" />}
+                  {v === 1 ? (
+                    <Icon
+                      iconName="Up"
+                      styles={{
+                        root: { color: theme.palette.neutralPrimaryAlt },
+                      }}
+                    />
+                  ) : (
+                    <Icon
+                      iconName="Down"
+                      styles={{
+                        root: { color: theme.palette.neutralPrimaryAlt },
+                      }}
+                    />
+                  )}
                 </Text>
               ))}
         </Stack>
