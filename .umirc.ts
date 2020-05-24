@@ -4,9 +4,7 @@ export default defineConfig({
   antd: false,
   dva: false,
   title: 'Mongood',
-  dynamicImport: {
-    loading: '@/layouts/PageLoading.tsx',
-  },
+  esbuild: {},
   history: { type: 'hash' },
   hash: true,
   proxy: {
