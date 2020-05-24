@@ -6,7 +6,7 @@ import saferEval from 'safer-eval'
 import _ from 'lodash'
 
 function wrapKey(key: string) {
-  if (key.includes('-' || '.')) {
+  if (key.includes('-') || key.includes('.')) {
     return `"${key}"`
   }
   return key
@@ -120,7 +120,7 @@ export function stringify(
 }
 
 export function parse(str: string): object {
-  if (str === '{_}') {
+  if (/\{\s*_\s*\}/.test(str)) {
     // special for global lodash
     throw new Error('ParseError')
   }
