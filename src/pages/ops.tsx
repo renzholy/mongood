@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { DefaultButton, Stack } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
-import { parse, stringify } from '@/utils/mongo-shell-data'
+import { parse } from '@/utils/mongo-shell-data'
 import { Table } from '@/components/Table'
 import { FilterInput } from '@/components/FilterInput'
 
@@ -39,7 +39,7 @@ const examples: { [key: string]: object } = {
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
   const [filter, setFilter] = useState<object>({})
-  const [example, setExample] = useState('')
+  const [example, setExample] = useState<string>()
   const { data, error, isValidating } = useSWR(
     `currentOp/${database}/${collection}/${JSON.stringify(filter)}`,
     () =>
@@ -51,7 +51,9 @@ export default () => {
     { refreshInterval: 1000 },
   )
   useEffect(() => {
-    setFilter(examples[example])
+    if (example) {
+      setFilter(examples[example])
+    }
   }, [example])
 
   return (
@@ -77,9 +79,9 @@ export default () => {
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height: 52 } }}>
         <FilterInput
-          placeholder={stringify(filter)}
+          value={filter}
           onChange={(value) => {
-            setExample('')
+            setExample(undefined)
             setFilter(value as {})
           }}
         />

@@ -97,13 +97,13 @@ export function stringify(
   if (indent === 0) {
     return `{${_.map(
       val,
-      (value, key) => `${key}: ${stringify(value, indent, depth + indent)}`,
+      (value, key) => `"${key}": ${stringify(value, indent, depth + indent)}`,
     ).join(', ')}}`
   }
   return `{\n${_.map(
     val,
     (value, key) =>
-      `  ${_.repeat(' ', depth)}${key}: ${stringify(
+      `  ${_.repeat(' ', depth)}"${key}": ${stringify(
         value,
         indent,
         depth + indent,
