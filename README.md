@@ -23,22 +23,22 @@ MongoDB Operation Dashboard
 
 ## 🔧 Usage:
 
-### Docker run:
+### Client Mode:
 
 ```shell
-docker run -p 3000:3000 renzholy/mongood
+npm run build && cd client && go run main.go
 ```
 
-### Custom mongo url:
+### Server Mode:
 
 ```shell
 docker run -p 3000:3000 -e MONGO_URL="mongodb://localhost:27017" renzholy/mongood
 ```
 
-### Run dev:
+### Dev dev:
 
 ```shell
-npm run dev & go run server.go
+npm run dev & cd server && go run main.go
 ```
 
 ## 📷 Screenshots:
