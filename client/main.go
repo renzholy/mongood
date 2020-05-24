@@ -3,10 +3,13 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gobuffalo/packr"
+	"github.com/phayes/freeport"
 	"github.com/wailsapp/wails/lib/renderer/webview"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -19,6 +22,11 @@ var (
 )
 
 func main() {
+	port, err := freeport.GetFreePort()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 	url := os.Getenv("MONGO_URL")
 	if url == "" {
 		url = "mongodb://localhost:27017"
@@ -66,10 +74,10 @@ func main() {
 		w.Header().Set("Content-Type", "application/bson")
 		w.Write(json)
 	})
-	go http.ListenAndServe(":3000", nil)
+	go http.ListenAndServe(":"+strconv.Itoa(port), nil)
 	w := webview.NewWebview(webview.Settings{
 		Title:     "Mongood",
-		URL:       "http://localhost:3000",
+		URL:       "http://localhost:" + strconv.Itoa(port),
 		Width:     1280,
 		Height:    800,
 		Resizable: true,
