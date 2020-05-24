@@ -2,24 +2,26 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 import _ from 'lodash'
-
-import { runCommand } from '@/utils/fetcher'
-import { parse } from '@/utils/mongo-shell-data'
-import { Table } from '@/components/Table'
 import { DefaultButton, Stack } from '@fluentui/react'
 
+import { runCommand } from '@/utils/fetcher'
+import { parse, stringify } from '@/utils/mongo-shell-data'
+import { Table } from '@/components/Table'
+import { FilterInput } from '@/components/FilterInput'
+
 const examples: { [key: string]: object } = {
-  'Display All Current Operations': {},
   'Slow Operations': {
     active: true,
     secs_running: { $gte: 0.1 },
   },
-  'Write Operations Waiting for a Lock': {
-    waitingForLock: true,
+  'Write Operations': {
     $or: [
       { op: { $in: ['insert', 'update', 'remove'] } },
       { 'command.findandmodify': { $exists: true } },
     ],
+  },
+  'Waiting for a Lock': {
+    waitingForLock: true,
   },
   'Active Operations with no Yields': {
     active: true,
@@ -37,7 +39,7 @@ const examples: { [key: string]: object } = {
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
   const [filter, setFilter] = useState<object>({})
-  const [example, setExample] = useState('Display All Current Operations')
+  const [example, setExample] = useState('')
   const { data, error, isValidating } = useSWR(
     `currentOp/${database}/${collection}/${JSON.stringify(filter)}`,
     () =>
@@ -57,7 +59,8 @@ export default () => {
       <Stack
         wrap={true}
         horizontal={true}
-        tokens={{ childrenGap: 10, padding: 10 }}>
+        tokens={{ childrenGap: 10, padding: 10 }}
+        styles={{ root: { marginBottom: -10 } }}>
         {_.map(examples, (_v, k) => (
           <DefaultButton
             key={k}
@@ -68,6 +71,18 @@ export default () => {
             }}
           />
         ))}
+      </Stack>
+      <Stack
+        horizontal={true}
+        tokens={{ childrenGap: 10, padding: 10 }}
+        styles={{ root: { height: 52 } }}>
+        <FilterInput
+          placeholder={stringify(filter)}
+          onChange={(value) => {
+            setExample('')
+            setFilter(value as {})
+          }}
+        />
       </Stack>
       <Table
         items={data?.inprog || []}
