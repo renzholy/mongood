@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
+import React, { useEffect, useCallback } from 'react'
+import { SearchBox, Nav, getTheme } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
 import _ from 'lodash'
@@ -8,16 +8,16 @@ import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
 
 const splitter = '/'
-const loadingLink = {
-  name: '...',
-  url: '',
-  disabled: true,
-}
 
 export function DatabaseNav() {
   const theme = getTheme()
-  const filter = useSelector((state) => state.root.filter)
-  const { database, collection } = useSelector((state) => state.root)
+  const {
+    filter,
+    database,
+    collection,
+    expandedDatabases,
+    collectionsMap,
+  } = useSelector((state) => state.root)
   const { data } = useSWR(`listDatabases/${JSON.stringify(filter)}`, () =>
     runCommand<{
       databases: {
@@ -27,7 +27,6 @@ export function DatabaseNav() {
       }[]
     }>('admin', { listDatabases: 1, filter }),
   )
-  const [links, setLinks] = useState<INavLink[]>([])
   const dispatch = useDispatch()
   const listCollections = useCallback(async (_database: string) => {
     const {
@@ -41,17 +40,15 @@ export function DatabaseNav() {
     return firstBatch.map(({ name }) => name)
   }, [])
   useEffect(() => {
-    setLinks(
-      data
-        ? data.databases.map(({ name }) => ({
-            key: name,
-            name,
-            links: [loadingLink],
-            url: '',
-          }))
-        : [loadingLink],
+    Promise.all(
+      expandedDatabases.map(async (_database) => {
+        const collections = await listCollections(_database)
+        dispatch(
+          actions.root.setCollectionsMap({ database: _database, collections }),
+        )
+      }) || [],
     )
-  }, [data])
+  }, [expandedDatabases, listCollections])
 
   return (
     <div
@@ -84,8 +81,24 @@ export function DatabaseNav() {
         <Nav
           groups={[
             {
-              links: links.length
-                ? links
+              links: data?.databases.length
+                ? data.databases.map(({ name }) => ({
+                    key: name,
+                    name,
+                    url: '',
+                    isExpanded: expandedDatabases.includes(name),
+                    links: collectionsMap[name]?.map((_collection) => ({
+                      name: _collection,
+                      key: `${name}${splitter}${_collection}`,
+                      url: '',
+                    })) || [
+                      {
+                        name: '...',
+                        url: '',
+                        disabled: true,
+                      },
+                    ],
+                  }))
                 : [
                     {
                       name: _.isEmpty(filter) ? '' : 'No Database',
@@ -103,22 +116,14 @@ export function DatabaseNav() {
               dispatch(actions.root.setCollection(_collection))
             }
           }}
-          onLinkExpandClick={async (_ev, item) => {
-            if (item) {
-              const collections = await listCollections(item.name)
-              setLinks(
-                links.map((link) => {
-                  return link.name === item.name
-                    ? {
-                        ...link,
-                        links: collections.map((name) => ({
-                          key: `${link.name}${splitter}${name}`,
-                          name,
-                          url: '',
-                        })),
-                      }
-                    : link
-                }),
+          onLinkExpandClick={(_ev, item) => {
+            if (item?.key) {
+              dispatch(
+                actions.root.setExpandedDatabases(
+                  item.isExpanded
+                    ? _.difference(expandedDatabases, [item.key])
+                    : _.union(expandedDatabases, [item.key]),
+                ),
               )
             }
           }}

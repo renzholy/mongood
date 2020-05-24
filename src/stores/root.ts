@@ -5,10 +5,14 @@ export default createSlice({
   initialState: {
     database: '',
     collection: '',
+    expandedDatabases: [],
+    collectionsMap: {},
     filter: {},
   } as {
     database: string
     collection: string
+    expandedDatabases: string[]
+    collectionsMap: { [database: string]: string[] }
     filter: {
       name?: {
         $regex: string
@@ -23,6 +27,20 @@ export default createSlice({
     setCollection: (state, { payload }: PayloadAction<string>) => ({
       ...state,
       collection: payload,
+    }),
+    setExpandedDatabases: (state, { payload }: PayloadAction<string[]>) => ({
+      ...state,
+      expandedDatabases: payload,
+    }),
+    setCollectionsMap: (
+      state,
+      { payload }: PayloadAction<{ database: string; collections: string[] }>,
+    ) => ({
+      ...state,
+      collectionsMap: {
+        ...state.collectionsMap,
+        [payload.database]: payload.collections,
+      },
     }),
     setFilter: (
       state,
