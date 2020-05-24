@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
@@ -17,6 +17,7 @@ const loadingLink = {
 export function DatabaseNav() {
   const theme = getTheme()
   const filter = useSelector((state) => state.root.filter)
+  const { database, collection } = useSelector((state) => state.root)
   const { data } = useSWR(`listDatabases/${JSON.stringify(filter)}`, () =>
     runCommand<{
       databases: {
@@ -28,7 +29,17 @@ export function DatabaseNav() {
   )
   const [links, setLinks] = useState<INavLink[]>([])
   const dispatch = useDispatch()
-  const { database, collection } = useSelector((state) => state.root)
+  const listCollections = useCallback(async (_database: string) => {
+    const {
+      cursor: { firstBatch },
+    } = await runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
+      _database,
+      {
+        listCollections: 1,
+      },
+    )
+    return firstBatch.map(({ name }) => name)
+  }, [])
   useEffect(() => {
     setLinks(
       data
@@ -92,29 +103,23 @@ export function DatabaseNav() {
               dispatch(actions.root.setCollection(_collection))
             }
           }}
-          onLinkExpandClick={(_ev, item) => {
+          onLinkExpandClick={async (_ev, item) => {
             if (item) {
-              runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
-                item.name,
-                {
-                  listCollections: 1,
-                },
-              ).then(({ cursor: { firstBatch } }) => {
-                setLinks(
-                  links.map((link) => {
-                    return link.name === item.name
-                      ? {
-                          ...link,
-                          links: firstBatch.map(({ name }) => ({
-                            key: `${link.name}${splitter}${name}`,
-                            name,
-                            url: '',
-                          })),
-                        }
-                      : link
-                  }),
-                )
-              })
+              const collections = await listCollections(item.name)
+              setLinks(
+                links.map((link) => {
+                  return link.name === item.name
+                    ? {
+                        ...link,
+                        links: collections.map((name) => ({
+                          key: `${link.name}${splitter}${name}`,
+                          name,
+                          url: '',
+                        })),
+                      }
+                    : link
+                }),
+              )
             }
           }}
         />
