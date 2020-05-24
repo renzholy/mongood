@@ -12,7 +12,7 @@ import { FilterInput } from '@/components/FilterInput'
 const examples: { [key: string]: object } = {
   'Slow Operations': {
     active: true,
-    microsecs_running: { $gte: 100 },
+    microsecs_running: { $gte: 100 * 1000 },
   },
   'Queries not using any index': {
     op: 'query',
