@@ -52,7 +52,7 @@ export default () => {
       runCommand<{ inprog: any[] }>('admin', {
         currentOp: 1,
         ...filter,
-        ns: parse(`/^${database || '.*'}\\.${collection || '.*'}$/`),
+        ns: database && collection ? `${database}.${collection}` : undefined,
       }),
     { refreshInterval: 1000 },
   )

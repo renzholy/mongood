@@ -30,6 +30,7 @@ export function FilterStack() {
         styles={{ root: { height: 52 } }}>
         <FilterInput
           autoFocus={true}
+          value={filter}
           onChange={(value) => {
             dispatch(actions.docs.setFilter(value as {}))
           }}
