@@ -12,7 +12,11 @@ import { FilterInput } from '@/components/FilterInput'
 const examples: { [key: string]: object } = {
   'Slow Operations': {
     active: true,
-    secs_running: { $gte: 0.1 },
+    microsecs_running: { $gte: 100 },
+  },
+  'Queries not using any index': {
+    op: 'query',
+    planSummary: 'COLLSCAN',
   },
   'Write Operations': {
     $or: [
@@ -23,10 +27,12 @@ const examples: { [key: string]: object } = {
   'Waiting for a Lock': {
     waitingForLock: true,
   },
-  'Active Operations with no Yields': {
-    active: true,
+  'Operations with no Yields': {
     numYields: 0,
     waitingForLock: false,
+  },
+  'Operations with high numYields': {
+    numYields: { $gte: 100 },
   },
   'Indexing Operations': {
     $or: [
