@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { Table } from '@/components/Table'
+import { DocumentTable } from '@/components/DocumentTable'
 import { IndexesStack } from '@/components/IndexesStack'
 import { FilterStack } from '@/components/FilterStack'
 
@@ -15,7 +15,7 @@ export default () => {
     <>
       <IndexesStack />
       <FilterStack />
-      <Table />
+      <DocumentTable />
     </>
   )
 }

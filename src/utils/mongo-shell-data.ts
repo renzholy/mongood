@@ -65,7 +65,9 @@ export function stringify(
     return val.$numberLong
   }
   if ('$regularExpression' in val) {
-    return `/${val.$regularExpression.pattern}/${val.$regularExpression.options}`
+    return `/${val.$regularExpression.pattern}/${
+      val.$regularExpression.options || ''
+    }`
   }
   if ('$timestamp' in val) {
     return `Timestamp(${val.$timestamp.t}, ${val.$timestamp.i})`
