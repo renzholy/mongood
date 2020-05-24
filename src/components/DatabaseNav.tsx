@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
+import React, { useEffect, useCallback } from 'react'
+import { SearchBox, Nav, getTheme } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
 import _ from 'lodash'
@@ -8,15 +8,16 @@ import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
 
 const splitter = '/'
-const loadingLink = {
-  name: '...',
-  url: '',
-  disabled: true,
-}
 
 export function DatabaseNav() {
   const theme = getTheme()
-  const filter = useSelector((state) => state.root.filter)
+  const {
+    filter,
+    database,
+    collection,
+    expandedDatabases,
+    collectionsMap,
+  } = useSelector((state) => state.root)
   const { data } = useSWR(`listDatabases/${JSON.stringify(filter)}`, () =>
     runCommand<{
       databases: {
@@ -26,21 +27,28 @@ export function DatabaseNav() {
       }[]
     }>('admin', { listDatabases: 1, filter }),
   )
-  const [links, setLinks] = useState<INavLink[]>([])
   const dispatch = useDispatch()
-  const { database, collection } = useSelector((state) => state.root)
-  useEffect(() => {
-    setLinks(
-      data
-        ? data.databases.map(({ name }) => ({
-            key: name,
-            name,
-            links: [loadingLink],
-            url: '',
-          }))
-        : [loadingLink],
+  const listCollections = useCallback(async (_database: string) => {
+    const {
+      cursor: { firstBatch },
+    } = await runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
+      _database,
+      {
+        listCollections: 1,
+      },
     )
-  }, [data])
+    return firstBatch.map(({ name }) => name)
+  }, [])
+  useEffect(() => {
+    Promise.all(
+      expandedDatabases.map(async (_database) => {
+        const collections = await listCollections(_database)
+        dispatch(
+          actions.root.setCollectionsMap({ database: _database, collections }),
+        )
+      }) || [],
+    )
+  }, [expandedDatabases, listCollections])
 
   return (
     <div
@@ -73,8 +81,24 @@ export function DatabaseNav() {
         <Nav
           groups={[
             {
-              links: links.length
-                ? links
+              links: data?.databases.length
+                ? data.databases.map(({ name }) => ({
+                    key: name,
+                    name,
+                    url: '',
+                    isExpanded: expandedDatabases.includes(name),
+                    links: collectionsMap[name]?.map((_collection) => ({
+                      name: _collection,
+                      key: `${name}${splitter}${_collection}`,
+                      url: '',
+                    })) || [
+                      {
+                        name: '...',
+                        url: '',
+                        disabled: true,
+                      },
+                    ],
+                  }))
                 : [
                     {
                       name: _.isEmpty(filter) ? '' : 'No Database',
@@ -93,28 +117,14 @@ export function DatabaseNav() {
             }
           }}
           onLinkExpandClick={(_ev, item) => {
-            if (item) {
-              runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
-                item.name,
-                {
-                  listCollections: 1,
-                },
-              ).then(({ cursor: { firstBatch } }) => {
-                setLinks(
-                  links.map((link) => {
-                    return link.name === item.name
-                      ? {
-                          ...link,
-                          links: firstBatch.map(({ name }) => ({
-                            key: `${link.name}${splitter}${name}`,
-                            name,
-                            url: '',
-                          })),
-                        }
-                      : link
-                  }),
-                )
-              })
+            if (item?.key) {
+              dispatch(
+                actions.root.setExpandedDatabases(
+                  item.isExpanded
+                    ? _.difference(expandedDatabases, [item.key])
+                    : _.union(expandedDatabases, [item.key]),
+                ),
+              )
             }
           }}
         />
