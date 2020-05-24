@@ -72,11 +72,16 @@ export function Table(props: {
     return (
       <div
         style={{
-          borderTop: `1px solid ${theme.palette.yellow}`,
+          borderTop: `1px solid ${theme.palette.neutralLight}`,
           display: 'flex',
           justifyContent: 'center',
-        }}
-      />
+        }}>
+        <MessageBar
+          messageBarType={MessageBarType.info}
+          styles={{ root: { margin: 10 } }}>
+          No Data
+        </MessageBar>
+      </div>
     )
   }
   return (
