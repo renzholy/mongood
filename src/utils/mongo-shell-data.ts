@@ -6,7 +6,7 @@ import saferEval from 'safer-eval'
 import _ from 'lodash'
 
 function wrapKey(key: string) {
-  if (key.includes('-') || key.includes('.')) {
+  if (key.toString().includes('-') || key.toString().includes('.')) {
     return `"${key}"`
   }
   return key
