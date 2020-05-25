@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 
 import { runCommand } from '@/utils/fetcher'
-import { JsonSchema } from '@/types'
+import { JsonSchema } from '@/types/schema'
 
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
