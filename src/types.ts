@@ -34,3 +34,5 @@ export type StatDetail = {
   type: string
   uri: string
 }
+
+export type JsonSchema = {}
