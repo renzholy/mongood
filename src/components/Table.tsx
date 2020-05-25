@@ -53,7 +53,7 @@ export function Table(props: {
   const onRenderItemColumn = useCallback(
     (_item?: any, _index?: number, column?: IColumn) => {
       const str = stringify(_item[column?.key!], 2)
-      return str.length > 100 ? (
+      return str.length >= 40 ? (
         <HoverCard
           type={HoverCardType.plain}
           plainCardProps={{
