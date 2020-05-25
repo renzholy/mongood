@@ -34,5 +34,9 @@ export default () => {
   if (!database || !collection) {
     return null
   }
-  return <pre>{JSON.stringify(data, null, 2)}</pre>
+  return (
+    <pre style={{ overflow: 'scroll' }}>
+      {JSON.stringify(data?.cursor.firstBatch[0], null, 2)}
+    </pre>
+  )
 }
