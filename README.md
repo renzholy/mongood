@@ -2,6 +2,7 @@
 
 MongoDB Operation Dashboard
 
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 [![](https://img.shields.io/docker/cloud/build/renzholy/mongood)](https://hub.docker.com/r/renzholy/mongood)
 
 ## 🔮 Features:
@@ -23,22 +24,28 @@ MongoDB Operation Dashboard
 
 ## 🔧 Usage:
 
-### Client Mode:
+### Run as client:
 
 ```shell
-npm run build && cd client && MONGO_URL="mongodb://localhost:27017" go run main.go
+npm ci
+npm run build
+cd client
+MONGO_URL="mongodb://localhost:27017" go run main.go
 ```
 
-### Server Mode:
+### Run as server:
 
 ```shell
 docker run -p 3000:3000 -e MONGO_URL="mongodb://localhost:27017" renzholy/mongood
 ```
 
-### Dev dev:
+### Dev mode:
 
 ```shell
-npm run dev & cd server && go run main.go
+npm ci
+npm run dev
+cd server
+go run main.go
 ```
 
 ## 📷 Screenshots:

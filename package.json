@@ -15,8 +15,8 @@
     "type": "git",
     "url": "git+https://github.com/RenzHoly/Mongood.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "RenzHoly <renzholy@gmail.com>",
+  "license": "MPL-2.0",
   "bugs": {
     "url": "https://github.com/RenzHoly/Mongood/issues"
   },
@@ -67,8 +67,7 @@
   },
   "lint-staged": {
     "*": [
-      "npm run format",
-      "git add"
+      "npm run format"
     ]
   }
 }
