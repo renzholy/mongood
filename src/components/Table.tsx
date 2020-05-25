@@ -64,6 +64,8 @@ export function Table(props: {
             host: {
               cursor: 'pointer',
               color: theme.palette.neutralSecondary,
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
             },
           }}
           instantOpenOnClick={true}>
