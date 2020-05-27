@@ -64,15 +64,8 @@ func main() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		var str map[string]interface{}
-		bson.Unmarshal(raw, &str)
-		json, err := json.Marshal(str)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/bson")
-		w.Write(json)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(raw.String()))
 	})
 	go http.ListenAndServe(":"+strconv.Itoa(port), nil)
 	w := webview.NewWebview(webview.Settings{
