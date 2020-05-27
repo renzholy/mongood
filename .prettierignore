@@ -15,6 +15,5 @@ Dockerfile
 *.ico
 *.svg
 *.xml
-server/
-client/
+go/
 LICENCE
