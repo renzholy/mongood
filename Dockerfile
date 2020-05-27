@@ -6,7 +6,7 @@ ADD .npmrc .
 RUN npm ci
 ADD .umirc.ts .
 ADD tsconfig.json .
-ADD src .
+ADD src ./src
 RUN npm run build
 
 FROM golang:alpine AS golang-builder
@@ -18,7 +18,7 @@ COPY go/go.mod go/go.sum ./
 RUN go mod download
 COPY go/. .
 COPY --from=node-builder /src/node/dist /src/golang/dist
-RUN go build -tags headless -o go .
+RUN go build -tags headless -o mongood .
 
 FROM alpine
 ENV TZ=Asia/Shanghai
