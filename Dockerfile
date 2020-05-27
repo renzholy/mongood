@@ -11,7 +11,6 @@ FROM node:slim AS node-builder
 WORKDIR /src/node
 ADD package.json .
 ADD package-lock.json .
-ADD .npmrc .
 RUN npm ci
 ADD .umirc.ts .
 ADD tsconfig.json .
