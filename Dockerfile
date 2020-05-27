@@ -2,8 +2,11 @@ FROM node:slim AS node-builder
 WORKDIR /src/node
 ADD package.json .
 ADD package-lock.json .
+ADD .npmrc .
 RUN npm ci
-ADD . .
+ADD .umirc.ts .
+ADD tsconfig.json .
+ADD src .
 RUN npm run build
 
 FROM golang:alpine AS golang-builder
@@ -21,5 +24,5 @@ FROM alpine
 ENV TZ=Asia/Shanghai
 ENV PORT=3000
 EXPOSE 3000
-COPY --from=golang-builder /src/golang/server /usr/local/bin/app/server
-CMD ["/usr/local/bin/app/server"]
+COPY --from=golang-builder /src/golang/mongood /usr/local/bin/app/mongood
+CMD ["/usr/local/bin/app/mongood"]
