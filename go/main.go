@@ -68,8 +68,7 @@ func main() {
 	if root == "" {
 		root = "../dist"
 	}
-	folder := packr.NewBox(root)
-	http.Handle("/", http.FileServer(folder))
+	http.Handle("/", http.FileServer(packr.NewBox(root)))
 
 	// handle runCommand
 	http.HandleFunc("/api/runCommand", runCommand)
