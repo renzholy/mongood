@@ -10,7 +10,6 @@ import (
 
 	"github.com/gobuffalo/packr"
 	"github.com/phayes/freeport"
-	"github.com/wailsapp/wails/lib/renderer/webview"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -72,14 +71,5 @@ func main() {
 	folder := packr.NewBox(root)
 	http.Handle("/", http.FileServer(folder))
 	http.HandleFunc("/api/runCommand", runCommand)
-	go http.ListenAndServe(":"+strconv.Itoa(port), nil)
-	w := webview.NewWebview(webview.Settings{
-		Title:     "Mongood",
-		URL:       "http://localhost:" + strconv.Itoa(port),
-		Width:     1280,
-		Height:    800,
-		Resizable: true,
-	})
-	w.Run()
-	defer w.Terminate()
+	startService(strconv.Itoa(port))
 }
