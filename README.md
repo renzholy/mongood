@@ -30,8 +30,9 @@ MongoDB Operation Dashboard
 ```shell
 npm ci
 npm run build
-cd client
-MONGO_URL="mongodb://localhost:27017" go run main.go
+cd go
+go build .
+MONGO_URL="mongodb://localhost:27017" ./mongood
 ```
 
 ### Run as server:
@@ -45,8 +46,8 @@ docker run -p 3000:3000 -e MONGO_URL="mongodb://localhost:27017" renzholy/mongoo
 ```shell
 npm ci
 npm run dev
-cd server
-go run main.go
+cd go
+go run main.go headless.go
 ```
 
 ## 📷 Screenshots:
