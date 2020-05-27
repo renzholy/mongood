@@ -47,18 +47,12 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	port, err := freeport.GetFreePort()
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
+	var err error
+
+	// connect mongodb
 	url := os.Getenv("MONGO_URL")
 	if url == "" {
 		url = "mongodb://localhost:27017"
-	}
-	root := os.Getenv("ROOT")
-	if root == "" {
-		root = "../dist"
 	}
 	client, err = mongo.NewClient(options.Client().ApplyURI(url))
 	if err != nil {
@@ -68,8 +62,29 @@ func main() {
 	ctx = context.Background()
 	client.Connect(ctx)
 	defer client.Disconnect(ctx)
+
+	// serve root dir
+	root := os.Getenv("ROOT")
+	if root == "" {
+		root = "../dist"
+	}
 	folder := packr.NewBox(root)
 	http.Handle("/", http.FileServer(folder))
+
+	// handle runCommand
 	http.HandleFunc("/api/runCommand", runCommand)
-	startService(strconv.Itoa(port))
+
+	// setup port
+	port := os.Getenv("PORT")
+	if port == "" {
+		intPort, err := freeport.GetFreePort()
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		port = strconv.Itoa(intPort)
+	}
+
+	// start service
+	startService(port)
 }
