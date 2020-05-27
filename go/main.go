@@ -6,10 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/gobuffalo/packr"
-	"github.com/phayes/freeport"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -73,17 +71,6 @@ func main() {
 	// handle runCommand
 	http.HandleFunc("/api/runCommand", runCommand)
 
-	// setup port
-	port := os.Getenv("PORT")
-	if port == "" {
-		intPort, err := freeport.GetFreePort()
-		if err != nil {
-			log.Fatal(err)
-			return
-		}
-		port = strconv.Itoa(intPort)
-	}
-
 	// start service
-	startService(port)
+	startService()
 }
