@@ -1,8 +1,15 @@
 /* eslint-disable react/jsx-indent */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Card } from '@uifabric/react-cards'
-import { Text, getTheme, Icon, Stack } from '@fluentui/react'
+import {
+  Text,
+  getTheme,
+  Icon,
+  Stack,
+  HoverCard,
+  HoverCardType,
+} from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
 import { IndexSpecification, WiredTigerData } from 'mongodb'
@@ -14,14 +21,63 @@ export function IndexCard(props: {
 }) {
   const theme = getTheme()
   const features = _.compact([
-    props.value.background ? 'BACKGROUND' : null,
-    props.value.unique ? 'UNIQUE' : null,
-    props.value.sparse ? 'SPARSE' : null,
-    props.value.partialFilterExpression ? 'PARTIAL' : null,
-    'expireAfterSeconds' in props.value ? 'TTL' : null,
-    '2dsphereIndexVersion' in props.value ? 'GEOSPATIAL' : null,
-    'textIndexVersion' in props.value ? 'TEXT' : null,
+    props.value.background ? { text: 'BACKGROUND' } : null,
+    props.value.unique ? { text: 'UNIQUE' } : null,
+    props.value.sparse ? { text: 'SPARSE' } : null,
+    props.value.partialFilterExpression
+      ? {
+          text: 'PARTIAL',
+          data: {
+            partialFilterExpression: props.value.partialFilterExpression,
+          },
+        }
+      : null,
+    'expireAfterSeconds' in props.value
+      ? {
+          text: 'TTL',
+          data: {
+            expireAfterSeconds: props.value.expireAfterSeconds,
+          },
+        }
+      : null,
+    '2dsphereIndexVersion' in props.value
+      ? {
+          text: 'GEOSPATIAL',
+          data: {
+            '2dsphereIndexVersion': props.value['2dsphereIndexVersion'],
+          },
+        }
+      : null,
+    'textIndexVersion' in props.value
+      ? {
+          text: 'TEXT',
+          data: {
+            textIndexVersion: props.value.textIndexVersion,
+            default_language: props.value.default_language,
+            language_override: props.value.language_override,
+            weights: props.value.weights,
+          },
+        }
+      : null,
   ])
+  const onRenderPlainCard = useCallback((obj: object) => {
+    return (
+      <div
+        style={{
+          paddingLeft: 10,
+          paddingRight: 10,
+          maxWidth: 500,
+          maxHeight: 500,
+          overflowY: 'scroll',
+        }}>
+        <Text>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+            {JSON.stringify(obj, null, 2)}
+          </pre>
+        </Text>
+      </div>
+    )
+  }, [])
 
   return (
     <Card
@@ -83,17 +139,43 @@ export function IndexCard(props: {
       {features.length ? (
         <Card.Item>
           <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
-            {features.map((feature) => (
-              <Text
-                key={feature}
-                styles={{
-                  root: {
-                    color: theme.palette.neutralSecondary,
-                  },
-                }}>
-                {feature}
-              </Text>
-            ))}
+            {features.map((feature) =>
+              'data' in feature ? (
+                <HoverCard
+                  key={feature.text}
+                  type={HoverCardType.plain}
+                  plainCardProps={{
+                    onRenderPlainCard,
+                    renderData: feature.data,
+                  }}
+                  styles={{
+                    host: {
+                      display: 'inherit',
+                      cursor: 'pointer',
+                    },
+                  }}
+                  instantOpenOnClick={true}>
+                  <Text
+                    styles={{
+                      root: {
+                        color: theme.palette.neutralSecondary,
+                      },
+                    }}>
+                    {feature.text}
+                  </Text>
+                </HoverCard>
+              ) : (
+                <Text
+                  key={feature.text}
+                  styles={{
+                    root: {
+                      color: theme.palette.neutralSecondary,
+                    },
+                  }}>
+                  {feature.text}
+                </Text>
+              ),
+            )}
           </Stack>
         </Card.Item>
       ) : null}
