@@ -5,13 +5,12 @@ import { Card } from '@uifabric/react-cards'
 import { Text, getTheme, Icon, Stack } from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
-
-import { Index, StatDetail } from '@/types'
+import { IndexSpecification, WiredTigerData } from 'mongodb'
 
 export function IndexCard(props: {
-  value: Index
+  value: IndexSpecification
   size: number
-  statDetail: StatDetail
+  statDetail: WiredTigerData
 }) {
   const theme = getTheme()
   const features = _.compact([

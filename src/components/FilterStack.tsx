@@ -52,7 +52,7 @@ export function FilterStack() {
       tokens={{ childrenGap: 10, padding: 10 }}
       styles={{ root: { height: 52 } }}>
       {'textIndexVersion' in index ? (
-        <FilterInput
+        <FilterInput<string>
           autoFocus={true}
           prefix="Text Search"
           onChange={(value) => {
@@ -80,7 +80,11 @@ export function FilterStack() {
                 },
           }
           const disableFilter = i > 0 && !filter[keys[i - 1]]
-          if (index.partialFilterExpression?.[key]) {
+          if (
+            index.partialFilterExpression?.[
+              key as keyof typeof index.partialFilterExpression
+            ]
+          ) {
             return (
               <FilterInput
                 key={key}
@@ -88,7 +92,11 @@ export function FilterStack() {
                 disabled={disableFilter}
                 prefix={`${key}:`}
                 iconProps={iconProps}
-                value={index.partialFilterExpression[key]}
+                value={
+                  index.partialFilterExpression[
+                    key as keyof typeof index.partialFilterExpression
+                  ]
+                }
                 onChange={(value) => {
                   dispatch(
                     actions.docs.setFilter({
@@ -125,7 +133,11 @@ export function FilterStack() {
             key={key}
             disabled={true}
             prefix={`${key}:`}
-            value={index.partialFilterExpression?.[key]}
+            value={
+              index.partialFilterExpression?.[
+                key as keyof typeof index.partialFilterExpression
+              ]
+            }
             onChange={() => {}}
           />
         )

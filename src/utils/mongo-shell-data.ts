@@ -110,7 +110,7 @@ export function stringify(
   ).join(',\n')}\n${spaces}}`
 }
 
-export function parse(str: string): object {
+export function parse(str: string): object | string {
   if (/\{\s*_\s*\}/.test(str)) {
     // special for global lodash
     throw new Error('ParseError')

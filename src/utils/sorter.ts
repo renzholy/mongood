@@ -3,7 +3,7 @@
 import _ from 'lodash'
 
 function checkSort(
-  index: { [key: string]: 1 | -1 | 'text' },
+  index: object,
   sorter: { [key: string]: 1 | -1 | undefined },
 ): boolean {
   // check if sorter keys are continuous
@@ -23,9 +23,9 @@ function checkSort(
     (prev, curr, key) => {
       return (
         prev +
-        (curr === undefined || index[key] === 'text'
+        (curr === undefined || index[key as keyof typeof index] === 'text'
           ? 0
-          : (index[key] as 1 | -1) * curr)
+          : (index[key as keyof typeof index] as 1 | -1) * curr)
       )
     },
     0,
@@ -35,11 +35,11 @@ function checkSort(
 
 export function nextSorter(
   currentIndex: number,
-  index: { [key: string]: 1 | -1 | 'text' },
+  index: object,
   sorter: { [key: string]: 1 | -1 | undefined },
 ): { [key: string]: 1 | -1 | undefined } {
   const keys = Object.keys(index)
-  const key = keys[currentIndex]
+  const key = keys[currentIndex] as keyof typeof index
   let newSorter: { [key: string]: 1 | -1 | undefined } = {}
   // first sorter switches bewteen 3 states: [1, -1, undefined]
   if (currentIndex === 0 || sorter[keys[currentIndex - 1]] === undefined) {
@@ -55,9 +55,9 @@ export function nextSorter(
           : undefined,
     }
     // tail sorter switches bewteen 2 states: [1 or -1, undefined]
-  } else if (index[keys[currentIndex - 1]] !== 'text') {
+  } else if (index[keys[currentIndex - 1] as keyof typeof index] !== 'text') {
     const isReverseOrder =
-      (index[keys[currentIndex - 1]] as 1 | -1) +
+      (index[keys[currentIndex - 1] as keyof typeof index] as 1 | -1) +
         sorter[keys[currentIndex - 1]]! ===
       0
     if (isReverseOrder) {
