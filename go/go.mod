@@ -1,4 +1,4 @@
-module github.com/renzholy/mongood/client
+module github.com/renzholy/mongood
 
 go 1.14
 
