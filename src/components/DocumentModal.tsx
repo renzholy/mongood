@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+
 import {
   Modal,
   IconButton,
@@ -5,8 +7,8 @@ import {
   getTheme,
   Text,
 } from '@fluentui/react'
-import React from 'react'
-import Editor, { monaco } from '@monaco-editor/react'
+import React, { useState, useEffect } from 'react'
+import { monaco, ControlledEditor } from '@monaco-editor/react'
 
 import { stringify, MongoData } from '@/utils/mongo-shell-data'
 
@@ -18,9 +20,15 @@ monaco.init().then((_monaco) => {
 
 export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
   value?: T
-  onChange(value?: T): void
+  onDismiss(): void
 }) {
   const theme = getTheme()
+  const [value, setValue] = useState('')
+  useEffect(() => {
+    if (props.value) {
+      setValue(stringify(props.value, 2))
+    }
+  }, [props.value])
 
   return (
     <Modal
@@ -35,9 +43,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
         },
       }}
       isOpen={!!props.value}
-      onDismiss={() => {
-        props.onChange(undefined)
-      }}>
+      onDismiss={props.onDismiss}>
       <div
         style={{
           display: 'flex',
@@ -57,21 +63,31 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
               overflow: 'hidden',
             },
           }}>
-          {stringify(props.value?._id)}
+          {props.value?._id ? stringify(props.value._id) : 'View Document'}
         </Text>
         <IconButton
           styles={{ root: { marginLeft: 10 } }}
           iconProps={{ iconName: 'Cancel' }}
-          onClick={() => {
-            props.onChange(undefined)
-          }}
+          onClick={props.onDismiss}
         />
       </div>
-      <Editor
+      <ControlledEditor
         language="javascript"
-        value={stringify(props.value, 2)}
+        value={value}
+        onChange={(_ev, _value) => {
+          setValue(_value || '')
+        }}
+        editorDidMount={(_getEditorValue, editor) => {
+          editor.onKeyDown((e) => {
+            if (e.keyCode === 9) {
+              e.stopPropagation()
+            }
+          })
+        }}
         options={{
+          quickSuggestions: false,
           wordWrap: 'on',
+          lineNumbers: 'off',
           scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
         }}
       />
