@@ -54,6 +54,8 @@ go run main.go headless.go
 
 ![](/screenshots/docs.png)
 
+![](/screenshots/editor.png)
+
 ![](/screenshots/indexes.png)
 
 ![](/screenshots/ops.png)
