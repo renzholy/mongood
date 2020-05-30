@@ -19,7 +19,9 @@ import {
   MessageBar,
   MessageBarType,
   IColumn,
+  Modal,
 } from '@fluentui/react'
+import Editor from '@monaco-editor/react'
 import _ from 'lodash'
 
 import { stringify } from '@/utils/mongo-shell-data'
@@ -187,6 +189,22 @@ export function Table<T extends object>(props: {
           setEvent(undefined)
         }}
       />
+      <Modal
+        styles={{ main: { width: '50vw', height: '50vh' } }}
+        isOpen={!!selectedItem}
+        onDismiss={() => {
+          setSelectedItem(undefined)
+        }}>
+        <Editor
+          width="50vw"
+          height="50vh"
+          language="javascript"
+          value={`doc = ${stringify(selectedItem, 2)}`}
+          options={{
+            minimap: { enabled: false },
+          }}
+        />
+      </Modal>
       <ScrollablePane
         styles={{
           root: { maxWidth: '100%' },
