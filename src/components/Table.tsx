@@ -12,17 +12,15 @@ import {
   IDetailsHeaderProps,
   ProgressIndicator,
   getTheme,
-  HoverCard,
-  Text,
-  HoverCardType,
   MessageBar,
   MessageBarType,
   IColumn,
 } from '@fluentui/react'
 import _ from 'lodash'
 
-import { stringify, MongoData } from '@/utils/mongo-shell-data'
+import { MongoData } from '@/utils/mongo-shell-data'
 import { DocumentModal } from './DocumentModal'
+import { TableRow } from './TableRow'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
@@ -54,51 +52,6 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
         })),
     )
   }, [props.items])
-  const onRenderPlainCard = useCallback((str: string) => {
-    return (
-      <div
-        style={{
-          paddingLeft: 10,
-          paddingRight: 10,
-          maxWidth: 500,
-          maxHeight: 500,
-          overflowY: 'scroll',
-        }}>
-        <Text>
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-            {str}
-          </pre>
-        </Text>
-      </div>
-    )
-  }, [])
-  const onRenderItemColumn = useCallback(
-    (item: T, _index?: number, column?: IColumn) => {
-      const str = stringify(item[column?.key as keyof typeof item], 2)
-      return str.length >= 40 ? (
-        <HoverCard
-          type={HoverCardType.plain}
-          plainCardProps={{
-            onRenderPlainCard,
-            renderData: str,
-          }}
-          styles={{
-            host: {
-              cursor: 'pointer',
-              color: theme.palette.neutralSecondary,
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-            },
-          }}
-          instantOpenOnClick={true}>
-          {str}
-        </HoverCard>
-      ) : (
-        str
-      )
-    },
-    [onRenderPlainCard, theme],
-  )
   const onRenderDetailsHeader = useCallback(
     (detailsHeaderProps?: IDetailsHeaderProps) => (
       <Sticky>
@@ -181,7 +134,9 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
           layoutMode={DetailsListLayoutMode.justified}
           onShouldVirtualize={() => false}
           items={items || []}
-          onRenderItemColumn={onRenderItemColumn}
+          onRenderItemColumn={(item, _index, column) => (
+            <TableRow value={item} column={column} />
+          )}
           onRenderDetailsHeader={onRenderDetailsHeader}
           onItemInvoked={onItemInvoked}
         />
