@@ -26,6 +26,11 @@ import _ from 'lodash'
 
 import { stringify } from '@/utils/mongo-shell-data'
 
+enum Action {
+  COPY = 'COPY',
+  EDIT = 'EDIT',
+}
+
 export function Table<T extends object>(props: {
   items?: T[]
   error: any
@@ -33,15 +38,17 @@ export function Table<T extends object>(props: {
 }) {
   const theme = getTheme()
   const [event, setEvent] = useState<MouseEvent>()
+  const [action, setAction] = useState<Action>()
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<T>()
   const [columns, setColumns] = useState<IColumn[]>([])
   const { items, error, isValidating } = props
   useEffect(() => {
-    const keys: { [key: string]: number } = { _id: 1 }
+    const keys: { [key: string]: number } = {}
     props.items?.forEach((item) => {
       Object.keys(item).forEach((key) => {
         if (!keys[key]) {
-          keys[key] = 0
+          keys[key] = key === '_id' ? 1 : 0
         }
         keys[key] += 1
       })
@@ -57,6 +64,21 @@ export function Table<T extends object>(props: {
         })),
     )
   }, [props.items])
+  useEffect(() => {
+    switch (action) {
+      case Action.COPY: {
+        window.navigator.clipboard.writeText(stringify(selectedItem, 2))
+        break
+      }
+      case Action.EDIT: {
+        setIsOpen(true)
+        break
+      }
+      // eslint-disable-next-line no-empty
+      default: {
+      }
+    }
+  }, [action, selectedItem])
   const onRenderPlainCard = useCallback((str: string) => {
     return (
       <div
@@ -129,6 +151,7 @@ export function Table<T extends object>(props: {
   const onItemContextMenu = useCallback(
     (item?: any, _index?: number, ev?: Event) => {
       setEvent(ev as MouseEvent)
+      setAction(undefined)
       setSelectedItem(item)
     },
     [],
@@ -173,16 +196,18 @@ export function Table<T extends object>(props: {
       <ContextualMenu
         items={[
           {
-            key: 'copy',
+            key: Action.COPY,
             text: 'Copy Document',
-            onClick: () => {
-              window.navigator.clipboard.writeText(stringify(selectedItem, 2))
-            },
+          },
+          {
+            key: Action.EDIT,
+            text: 'Update Document',
           },
         ]}
         hidden={!event}
         target={event}
-        onItemClick={() => {
+        onItemClick={(_ev, item) => {
+          setAction(item?.key as Action | undefined)
           setEvent(undefined)
         }}
         onDismiss={() => {
@@ -191,9 +216,9 @@ export function Table<T extends object>(props: {
       />
       <Modal
         styles={{ main: { width: '50vw', height: '50vh' } }}
-        isOpen={!!selectedItem}
+        isOpen={isOpen}
         onDismiss={() => {
-          setSelectedItem(undefined)
+          setIsOpen(false)
         }}>
         <Editor
           width="50vw"
