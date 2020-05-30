@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 
 import { parse, stringify } from '@/utils/mongo-shell-data'
 
-export function FilterInput<T extends string | object>(props: {
+export function FilterInput<T extends string | object | undefined>(props: {
   autoFocus?: boolean
   disabled?: boolean
   prefix?: string
@@ -37,6 +37,7 @@ export function FilterInput<T extends string | object>(props: {
       onChange={(_ev, newValue) => {
         setValue(newValue || '')
         if (!newValue) {
+          props.onChange(undefined as T)
           setErrorMessage(undefined)
           return
         }
