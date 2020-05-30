@@ -33,7 +33,7 @@ export type MongoData =
 
 export function stringify(val: MongoData, indent = 0, depth = 0): string {
   if (typeof val === 'string') {
-    return `"${val.replaceAll('"', '\\"').replaceAll('\n', '\\n')}"`
+    return JSON.stringify(val)
   }
   if (typeof val === 'number') {
     return val.toString()

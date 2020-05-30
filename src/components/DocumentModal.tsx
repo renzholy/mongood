@@ -30,14 +30,17 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
   const theme = getTheme()
   const [value, setValue] = useState('')
   const [error, setError] = useState('')
+  const [isUpdating, setIsUpdating] = useState(false)
   const [isUpdateSucceed, setIsUpdateSucceed] = useState(false)
   useEffect(() => {
     if (props.value) {
       setValue(stringify(props.value, 2))
+      setError('')
     }
   }, [props.value])
   const handleUpdate = useCallback(async () => {
     try {
+      setIsUpdating(true)
       const doc = parse(value)
       const { value: newDoc } = await runCommand<{
         value: T
@@ -59,6 +62,8 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
       setIsUpdateSucceed(true)
     } catch (err) {
       setError(err.message)
+    } finally {
+      setIsUpdating(false)
     }
   }, [database, collection, value])
   useEffect(() => {
@@ -138,6 +143,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
       />
       <div
         style={{
+          height: 52,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -145,6 +151,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
           padding: 10,
         }}>
         <DefaultButton
+          disabled={isUpdating}
           primary={true}
           onClick={handleUpdate}
           styles={{ root: { flexShrink: 0, marginLeft: 10 } }}>
