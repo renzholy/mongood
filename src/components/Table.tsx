@@ -11,7 +11,6 @@ import {
   DetailsHeader,
   IDetailsHeaderProps,
   ProgressIndicator,
-  ContextualMenu,
   getTheme,
   HoverCard,
   Text,
@@ -21,27 +20,26 @@ import {
   IColumn,
   Modal,
   IconButton,
+  DefaultButton,
 } from '@fluentui/react'
-import Editor from '@monaco-editor/react'
+import Editor, { monaco } from '@monaco-editor/react'
 import _ from 'lodash'
 
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify, MongoData } from '@/utils/mongo-shell-data'
 
-enum Action {
-  COPY = 'COPY',
-  EDIT = 'EDIT',
-}
+monaco.init().then((_monaco) => {
+  _monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+    diagnosticCodesToIgnore: [1005, 1128, 7028],
+  })
+})
 
-export function Table<T extends object>(props: {
+export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
   error: any
   isValidating: boolean
 }) {
   const theme = getTheme()
-  const [event, setEvent] = useState<MouseEvent>()
-  const [action, setAction] = useState<Action>()
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<T>()
+  const [invokedItem, setInvokedItem] = useState<T>()
   const [columns, setColumns] = useState<IColumn[]>([])
   const { items, error, isValidating } = props
   useEffect(() => {
@@ -65,21 +63,6 @@ export function Table<T extends object>(props: {
         })),
     )
   }, [props.items])
-  useEffect(() => {
-    switch (action) {
-      case Action.COPY: {
-        window.navigator.clipboard.writeText(stringify(selectedItem, 2))
-        break
-      }
-      case Action.EDIT: {
-        setIsOpen(true)
-        break
-      }
-      // eslint-disable-next-line no-empty
-      default: {
-      }
-    }
-  }, [action, selectedItem])
   const onRenderPlainCard = useCallback((str: string) => {
     return (
       <div
@@ -99,8 +82,8 @@ export function Table<T extends object>(props: {
     )
   }, [])
   const onRenderItemColumn = useCallback(
-    (item?: any, _index?: number, column?: IColumn) => {
-      const str = stringify(item[column?.key!], 2)
+    (item: T, _index?: number, column?: IColumn) => {
+      const str = stringify(item[column?.key as keyof typeof item], 2)
       return str.length >= 40 ? (
         <HoverCard
           type={HoverCardType.plain}
@@ -149,14 +132,9 @@ export function Table<T extends object>(props: {
     ),
     [isValidating, theme],
   )
-  const onItemContextMenu = useCallback(
-    (item?: any, _index?: number, ev?: Event) => {
-      setEvent(ev as MouseEvent)
-      setAction(undefined)
-      setSelectedItem(item)
-    },
-    [],
-  )
+  const onItemInvoked = useCallback((item: T) => {
+    setInvokedItem(item)
+  }, [])
 
   if (error) {
     return (
@@ -194,27 +172,6 @@ export function Table<T extends object>(props: {
   }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
-      <ContextualMenu
-        items={[
-          {
-            key: Action.COPY,
-            text: 'Copy Document',
-          },
-          {
-            key: Action.EDIT,
-            text: 'Update Document',
-          },
-        ]}
-        hidden={!event}
-        target={event}
-        onItemClick={(_ev, item) => {
-          setAction(item?.key as Action | undefined)
-          setEvent(undefined)
-        }}
-        onDismiss={() => {
-          setEvent(undefined)
-        }}
-      />
       <Modal
         styles={{
           scrollableContent: {
@@ -226,9 +183,9 @@ export function Table<T extends object>(props: {
             flexDirection: 'column',
           },
         }}
-        isOpen={isOpen}
+        isOpen={!!invokedItem}
         onDismiss={() => {
-          setIsOpen(false)
+          setInvokedItem(undefined)
         }}>
         <div
           style={{
@@ -239,25 +196,44 @@ export function Table<T extends object>(props: {
           }}>
           <Text
             variant="xLarge"
+            block={true}
             styles={{
-              root: { height: 32, display: 'flex', alignItems: 'center' },
+              root: {
+                height: 32,
+                alignItems: 'center',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+              },
             }}>
-            Update Document
+            {stringify(invokedItem?._id)}
           </Text>
           <IconButton
+            styles={{ root: { marginLeft: 10 } }}
             iconProps={{ iconName: 'Cancel' }}
             onClick={() => {
-              setIsOpen(false)
+              setInvokedItem(undefined)
             }}
           />
         </div>
         <Editor
           language="javascript"
-          value={stringify(selectedItem, 2)}
+          value={stringify(invokedItem, 2)}
           options={{
             wordWrap: 'on',
+            scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
           }}
         />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexDirection: 'row-reverse',
+            padding: 10,
+          }}>
+          <DefaultButton primary={true}>Update One</DefaultButton>
+        </div>
       </Modal>
       <ScrollablePane
         styles={{
@@ -273,7 +249,7 @@ export function Table<T extends object>(props: {
           items={items || []}
           onRenderItemColumn={onRenderItemColumn}
           onRenderDetailsHeader={onRenderDetailsHeader}
-          onItemContextMenu={onItemContextMenu}
+          onItemInvoked={onItemInvoked}
         />
       </ScrollablePane>
     </div>
