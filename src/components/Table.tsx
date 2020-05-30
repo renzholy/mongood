@@ -20,32 +20,39 @@ import {
   MessageBarType,
   IColumn,
 } from '@fluentui/react'
+import _ from 'lodash'
 
 import { stringify } from '@/utils/mongo-shell-data'
 
-export function Table(props: {
-  items?: any[]
+export function Table<T extends object>(props: {
+  items?: T[]
   error: any
   isValidating: boolean
 }) {
   const theme = getTheme()
   const [event, setEvent] = useState<MouseEvent>()
-  const [selectedItem, setSelectedItem] = useState<any>()
+  const [selectedItem, setSelectedItem] = useState<T>()
   const [columns, setColumns] = useState<IColumn[]>([])
   const { items, error, isValidating } = props
   useEffect(() => {
-    const keys: { [key: string]: 1 } = { _id: 1 }
+    const keys: { [key: string]: number } = { _id: 1 }
     props.items?.forEach((item) => {
       Object.keys(item).forEach((key) => {
-        keys[key] = 1
+        if (!keys[key]) {
+          keys[key] = 0
+        }
+        keys[key] += 1
       })
     })
     setColumns(
-      Object.keys(keys).map((key) => ({
-        key,
-        name: key,
-        minWidth: 240,
-      })),
+      _.sortBy(Object.entries(keys), '1')
+        .reverse()
+        .map(([key]) => ({
+          key,
+          name: key,
+          minWidth: 240,
+          isResizable: true,
+        })),
     )
   }, [props.items])
   const onRenderPlainCard = useCallback((str: string) => {

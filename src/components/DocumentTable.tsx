@@ -20,7 +20,7 @@ export function DocumentTable() {
         )}/${JSON.stringify(sort)}`
       : null,
     () => {
-      return runCommand<{ cursor: { firstBatch: unknown[] } }>(
+      return runCommand<{ cursor: { firstBatch: object[] } }>(
         database,
         {
           find: collection,
