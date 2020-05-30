@@ -24,6 +24,7 @@ import { TableRow } from './TableRow'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
+  order?: string[]
   error: any
   isValidating: boolean
 }) {
@@ -32,11 +33,14 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   const [columns, setColumns] = useState<IColumn[]>([])
   const { items, error, isValidating } = props
   useEffect(() => {
+    // calc columns order
     const keys: { [key: string]: number } = {}
+    const order = props.order?.reverse() || []
     props.items?.forEach((item) => {
       Object.keys(item).forEach((key) => {
         if (!keys[key]) {
-          keys[key] = key === '_id' ? 1 : 0
+          const index = order.indexOf(key)
+          keys[key] = index >= 0 ? index + 1 : 0
         }
         keys[key] += 1
       })
@@ -51,7 +55,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
           isResizable: true,
         })),
     )
-  }, [props.items])
+  }, [props.items, props.order])
   const onRenderDetailsHeader = useCallback(
     (detailsHeaderProps?: IDetailsHeaderProps) => (
       <Sticky>

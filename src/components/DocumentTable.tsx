@@ -45,6 +45,7 @@ export function DocumentTable() {
   return (
     <Table
       items={data?.cursor.firstBatch}
+      order={['_id', ...Object.keys(index?.key || {})]}
       error={error}
       isValidating={isValidating}
     />
