@@ -165,8 +165,8 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
       <DocumentModal
         value={invokedItem}
-        onDismiss={() => {
-          setInvokedItem(undefined)
+        onChange={(_invokedItem) => {
+          setInvokedItem(_invokedItem)
         }}
       />
       <ScrollablePane

@@ -7,10 +7,12 @@ import {
   getTheme,
   Text,
 } from '@fluentui/react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { monaco, ControlledEditor } from '@monaco-editor/react'
 
-import { stringify, MongoData } from '@/utils/mongo-shell-data'
+import { stringify, MongoData, parse } from '@/utils/mongo-shell-data'
+import { runCommand } from '@/utils/fetcher'
+import { useSelector } from 'react-redux'
 
 monaco.init().then((_monaco) => {
   _monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
@@ -20,8 +22,9 @@ monaco.init().then((_monaco) => {
 
 export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
   value?: T
-  onDismiss(): void
+  onChange(value?: T): void
 }) {
+  const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const [value, setValue] = useState('')
   useEffect(() => {
@@ -29,6 +32,26 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
       setValue(stringify(props.value, 2))
     }
   }, [props.value])
+  const handleUpdate = useCallback(async () => {
+    const doc = parse(value)
+    const { value: newDoc } = await runCommand<{
+      value: T
+    }>(
+      database,
+      {
+        findAndModify: collection,
+        new: true,
+        query: {
+          _id: (doc as { _id: unknown })._id,
+        },
+        update: {
+          $set: doc,
+        },
+      },
+      { canonical: true },
+    )
+    props.onChange(newDoc)
+  }, [database, collection, value])
 
   return (
     <Modal
@@ -43,7 +66,9 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
         },
       }}
       isOpen={!!props.value}
-      onDismiss={props.onDismiss}>
+      onDismiss={() => {
+        props.onChange(undefined)
+      }}>
       <div
         style={{
           display: 'flex',
@@ -68,7 +93,9 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
         <IconButton
           styles={{ root: { marginLeft: 10 } }}
           iconProps={{ iconName: 'Cancel' }}
-          onClick={props.onDismiss}
+          onClick={() => {
+            props.onChange(undefined)
+          }}
         />
       </div>
       <ControlledEditor
@@ -99,7 +126,13 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
           flexDirection: 'row-reverse',
           padding: 10,
         }}>
-        <DefaultButton primary={true}>Update One</DefaultButton>
+        <DefaultButton
+          primary={true}
+          onClick={() => {
+            handleUpdate()
+          }}>
+          Update Document
+        </DefaultButton>
       </div>
     </Modal>
   )
