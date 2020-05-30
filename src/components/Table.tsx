@@ -11,7 +11,6 @@ import {
   DetailsHeader,
   IDetailsHeaderProps,
   ProgressIndicator,
-  ContextualMenu,
   getTheme,
   HoverCard,
   Text,
@@ -22,24 +21,24 @@ import {
 } from '@fluentui/react'
 import _ from 'lodash'
 
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify, MongoData } from '@/utils/mongo-shell-data'
+import { DocumentModal } from './DocumentModal'
 
-export function Table<T extends object>(props: {
+export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
   error: any
   isValidating: boolean
 }) {
   const theme = getTheme()
-  const [event, setEvent] = useState<MouseEvent>()
-  const [selectedItem, setSelectedItem] = useState<T>()
+  const [invokedItem, setInvokedItem] = useState<T>()
   const [columns, setColumns] = useState<IColumn[]>([])
   const { items, error, isValidating } = props
   useEffect(() => {
-    const keys: { [key: string]: number } = { _id: 1 }
+    const keys: { [key: string]: number } = {}
     props.items?.forEach((item) => {
       Object.keys(item).forEach((key) => {
         if (!keys[key]) {
-          keys[key] = 0
+          keys[key] = key === '_id' ? 1 : 0
         }
         keys[key] += 1
       })
@@ -74,8 +73,8 @@ export function Table<T extends object>(props: {
     )
   }, [])
   const onRenderItemColumn = useCallback(
-    (item?: any, _index?: number, column?: IColumn) => {
-      const str = stringify(item[column?.key!], 2)
+    (item: T, _index?: number, column?: IColumn) => {
+      const str = stringify(item[column?.key as keyof typeof item], 2)
       return str.length >= 40 ? (
         <HoverCard
           type={HoverCardType.plain}
@@ -124,13 +123,9 @@ export function Table<T extends object>(props: {
     ),
     [isValidating, theme],
   )
-  const onItemContextMenu = useCallback(
-    (item?: any, _index?: number, ev?: Event) => {
-      setEvent(ev as MouseEvent)
-      setSelectedItem(item)
-    },
-    [],
-  )
+  const onItemInvoked = useCallback((item: T) => {
+    setInvokedItem(item)
+  }, [])
 
   if (error) {
     return (
@@ -168,23 +163,10 @@ export function Table<T extends object>(props: {
   }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
-      <ContextualMenu
-        items={[
-          {
-            key: 'copy',
-            text: 'Copy Document',
-            onClick: () => {
-              window.navigator.clipboard.writeText(stringify(selectedItem, 2))
-            },
-          },
-        ]}
-        hidden={!event}
-        target={event}
-        onItemClick={() => {
-          setEvent(undefined)
-        }}
-        onDismiss={() => {
-          setEvent(undefined)
+      <DocumentModal
+        value={invokedItem}
+        onChange={(_invokedItem) => {
+          setInvokedItem(_invokedItem)
         }}
       />
       <ScrollablePane
@@ -201,7 +183,7 @@ export function Table<T extends object>(props: {
           items={items || []}
           onRenderItemColumn={onRenderItemColumn}
           onRenderDetailsHeader={onRenderDetailsHeader}
-          onItemContextMenu={onItemContextMenu}
+          onItemInvoked={onItemInvoked}
         />
       </ScrollablePane>
     </div>

@@ -13,29 +13,27 @@ function wrapKey(key: string) {
   return key
 }
 
-export function stringify(
-  val:
-    | string
-    | number
-    | boolean
-    | undefined
-    | null
-    | { $oid: string }
-    | { $date: { $numberLong: string } }
-    | { $numberDecimal: string }
-    | { $numberDouble: string }
-    | { $numberInt: string }
-    | { $numberLong: string }
-    | { $regularExpression: { pattern: string; options: string } }
-    | { $timestamp: { t: number; i: number } }
-    | { $binary: { base64: string; subType: string } }
-    | any[]
-    | object,
-  indent = 0,
-  depth = 0,
-): string {
+export type MongoData =
+  | string
+  | number
+  | boolean
+  | undefined
+  | null
+  | { $oid: string }
+  | { $date: { $numberLong: string } }
+  | { $numberDecimal: string }
+  | { $numberDouble: string }
+  | { $numberInt: string }
+  | { $numberLong: string }
+  | { $regularExpression: { pattern: string; options: string } }
+  | { $timestamp: { t: number; i: number } }
+  | { $binary: { base64: string; subType: string } }
+  | any[]
+  | object
+
+export function stringify(val: MongoData, indent = 0, depth = 0): string {
   if (typeof val === 'string') {
-    return `"${val}"`
+    return JSON.stringify(val)
   }
   if (typeof val === 'number') {
     return val.toString()
