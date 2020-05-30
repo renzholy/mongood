@@ -58,6 +58,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.7",
     "lodash": "^4.17.15",
+    "monaco-editor": "^0.20.0",
     "prettier": "^2.0.5",
     "typescript": "^3.9.3",
     "umi": "^3.2.3"

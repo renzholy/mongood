@@ -20,6 +20,7 @@ import {
   MessageBarType,
   IColumn,
   Modal,
+  IconButton,
 } from '@fluentui/react'
 import Editor from '@monaco-editor/react'
 import _ from 'lodash'
@@ -215,18 +216,46 @@ export function Table<T extends object>(props: {
         }}
       />
       <Modal
-        styles={{ main: { width: '50vw', height: '50vh' } }}
+        styles={{
+          scrollableContent: {
+            width: '50vw',
+            height: '50vh',
+            borderTop: `4px solid ${theme.palette.themePrimary}`,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        }}
         isOpen={isOpen}
         onDismiss={() => {
           setIsOpen(false)
         }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: 10,
+          }}>
+          <Text
+            variant="xLarge"
+            styles={{
+              root: { height: 32, display: 'flex', alignItems: 'center' },
+            }}>
+            Update Document
+          </Text>
+          <IconButton
+            iconProps={{ iconName: 'Cancel' }}
+            onClick={() => {
+              setIsOpen(false)
+            }}
+          />
+        </div>
         <Editor
-          width="50vw"
-          height="50vh"
           language="javascript"
-          value={`doc = ${stringify(selectedItem, 2)}`}
+          value={stringify(selectedItem, 2)}
           options={{
-            minimap: { enabled: false },
+            wordWrap: 'on',
           }}
         />
       </Modal>
