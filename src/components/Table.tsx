@@ -189,7 +189,7 @@ export function Table(props: {
           columns={columns}
           selectionMode={SelectionMode.none}
           constrainMode={ConstrainMode.unconstrained}
-          layoutMode={DetailsListLayoutMode.fixedColumns}
+          layoutMode={DetailsListLayoutMode.justified}
           onShouldVirtualize={() => false}
           items={items || []}
           onRenderItemColumn={onRenderItemColumn}
