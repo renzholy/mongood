@@ -6,6 +6,8 @@ import {
   DefaultButton,
   getTheme,
   Text,
+  MessageBar,
+  MessageBarType,
 } from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
 import { monaco, ControlledEditor } from '@monaco-editor/react'
@@ -27,36 +29,52 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const [value, setValue] = useState('')
+  const [error, setError] = useState('')
+  const [isUpdateSucceed, setIsUpdateSucceed] = useState(false)
   useEffect(() => {
     if (props.value) {
       setValue(stringify(props.value, 2))
     }
   }, [props.value])
   const handleUpdate = useCallback(async () => {
-    const doc = parse(value)
-    const { value: newDoc } = await runCommand<{
-      value: T
-    }>(
-      database,
-      {
-        findAndModify: collection,
-        new: true,
-        query: {
-          _id: (doc as { _id: unknown })._id,
+    try {
+      const doc = parse(value)
+      const { value: newDoc } = await runCommand<{
+        value: T
+      }>(
+        database,
+        {
+          findAndModify: collection,
+          new: true,
+          query: {
+            _id: (doc as { _id: unknown })._id,
+          },
+          update: {
+            $set: doc,
+          },
         },
-        update: {
-          $set: doc,
-        },
-      },
-      { canonical: true },
-    )
-    props.onChange(newDoc)
+        { canonical: true },
+      )
+      props.onChange(newDoc)
+      setIsUpdateSucceed(true)
+    } catch (err) {
+      setError(err.message)
+    }
   }, [database, collection, value])
+  useEffect(() => {
+    if (isUpdateSucceed) {
+      setTimeout(() => {
+        setIsUpdateSucceed(false)
+      }, 2 * 1000)
+    }
+  }, [isUpdateSucceed])
 
   return (
     <Modal
       styles={{
         scrollableContent: {
+          minWidth: 600,
+          minHeight: 400,
           width: '50vw',
           height: '50vh',
           borderTop: `4px solid ${theme.palette.themePrimary}`,
@@ -128,11 +146,22 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
         }}>
         <DefaultButton
           primary={true}
-          onClick={() => {
-            handleUpdate()
-          }}>
+          onClick={handleUpdate}
+          styles={{ root: { flexShrink: 0, marginLeft: 10 } }}>
           Update Document
         </DefaultButton>
+        {isUpdateSucceed ? (
+          <MessageBar
+            messageBarType={MessageBarType.success}
+            isMultiline={false}>
+            Update succeed
+          </MessageBar>
+        ) : null}
+        {error ? (
+          <MessageBar messageBarType={MessageBarType.error} isMultiline={false}>
+            {error}
+          </MessageBar>
+        ) : null}
       </div>
     </Modal>
   )
