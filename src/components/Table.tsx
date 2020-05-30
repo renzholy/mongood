@@ -18,20 +18,11 @@ import {
   MessageBar,
   MessageBarType,
   IColumn,
-  Modal,
-  IconButton,
-  DefaultButton,
 } from '@fluentui/react'
-import Editor, { monaco } from '@monaco-editor/react'
 import _ from 'lodash'
 
 import { stringify, MongoData } from '@/utils/mongo-shell-data'
-
-monaco.init().then((_monaco) => {
-  _monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-    diagnosticCodesToIgnore: [1005, 1128, 7028],
-  })
-})
+import { DocumentModal } from './DocumentModal'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
@@ -172,69 +163,12 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
-      <Modal
-        styles={{
-          scrollableContent: {
-            width: '50vw',
-            height: '50vh',
-            borderTop: `4px solid ${theme.palette.themePrimary}`,
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
-          },
+      <DocumentModal
+        value={invokedItem}
+        onChange={(_invokedItem) => {
+          setInvokedItem(_invokedItem)
         }}
-        isOpen={!!invokedItem}
-        onDismiss={() => {
-          setInvokedItem(undefined)
-        }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: 10,
-          }}>
-          <Text
-            variant="xLarge"
-            block={true}
-            styles={{
-              root: {
-                height: 32,
-                alignItems: 'center',
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-              },
-            }}>
-            {stringify(invokedItem?._id)}
-          </Text>
-          <IconButton
-            styles={{ root: { marginLeft: 10 } }}
-            iconProps={{ iconName: 'Cancel' }}
-            onClick={() => {
-              setInvokedItem(undefined)
-            }}
-          />
-        </div>
-        <Editor
-          language="javascript"
-          value={stringify(invokedItem, 2)}
-          options={{
-            wordWrap: 'on',
-            scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
-          }}
-        />
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexDirection: 'row-reverse',
-            padding: 10,
-          }}>
-          <DefaultButton primary={true}>Update One</DefaultButton>
-        </div>
-      </Modal>
+      />
       <ScrollablePane
         styles={{
           root: { maxWidth: '100%' },
