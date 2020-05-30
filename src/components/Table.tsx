@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   DetailsList,
   SelectionMode,
@@ -30,8 +30,24 @@ export function Table(props: {
 }) {
   const theme = getTheme()
   const [event, setEvent] = useState<MouseEvent>()
-  const [item, setItem] = useState<any>()
+  const [selectedItem, setSelectedItem] = useState<any>()
+  const [columns, setColumns] = useState<IColumn[]>([])
   const { items, error, isValidating } = props
+  useEffect(() => {
+    const keys: { [key: string]: 1 } = { _id: 1 }
+    props.items?.forEach((item) => {
+      Object.keys(item).forEach((key) => {
+        keys[key] = 1
+      })
+    })
+    setColumns(
+      Object.keys(keys).map((key) => ({
+        key,
+        name: key,
+        minWidth: 240,
+      })),
+    )
+  }, [props.items])
   const onRenderPlainCard = useCallback((str: string) => {
     return (
       <div
@@ -51,8 +67,8 @@ export function Table(props: {
     )
   }, [])
   const onRenderItemColumn = useCallback(
-    (_item?: any, _index?: number, column?: IColumn) => {
-      const str = stringify(_item[column?.key!], 2)
+    (item?: any, _index?: number, column?: IColumn) => {
+      const str = stringify(item[column?.key!], 2)
       return str.length >= 40 ? (
         <HoverCard
           type={HoverCardType.plain}
@@ -102,9 +118,9 @@ export function Table(props: {
     [isValidating, theme],
   )
   const onItemContextMenu = useCallback(
-    (_item?: any, _index?: number, ev?: Event) => {
+    (item?: any, _index?: number, ev?: Event) => {
       setEvent(ev as MouseEvent)
-      setItem(_item)
+      setSelectedItem(item)
     },
     [],
   )
@@ -151,7 +167,7 @@ export function Table(props: {
             key: 'copy',
             text: 'Copy Document',
             onClick: () => {
-              window.navigator.clipboard.writeText(stringify(item, 2))
+              window.navigator.clipboard.writeText(stringify(selectedItem, 2))
             },
           },
         ]}
@@ -170,6 +186,7 @@ export function Table(props: {
           stickyBelow: { display: 'none' },
         }}>
         <DetailsList
+          columns={columns}
           selectionMode={SelectionMode.none}
           constrainMode={ConstrainMode.unconstrained}
           layoutMode={DetailsListLayoutMode.fixedColumns}
