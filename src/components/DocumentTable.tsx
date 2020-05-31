@@ -24,7 +24,7 @@ export function DocumentTable() {
       return runCommand<{
         cursor: { firstBatch: { [key: string]: MongoData }[] }
       }>(
-        database,
+        database!,
         {
           find: collection,
           filter,

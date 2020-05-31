@@ -38,7 +38,7 @@ export default () => {
   const { data: stats } = useSWR(
     database && collection ? `collStats/${database}/${collection}` : null,
     () => {
-      return runCommand<CollStats>(database, {
+      return runCommand<CollStats>(database!, {
         collStats: collection,
       })
     },
