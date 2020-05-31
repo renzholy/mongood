@@ -55,7 +55,7 @@ export default () => {
     return null
   }
   return (
-    <div style={{ overflowY: 'scroll' }}>
+    <div style={{ overflowY: 'scroll', padding: 10 }}>
       <Stack
         tokens={{ padding: 10, childrenGap: 20 }}
         horizontal={true}

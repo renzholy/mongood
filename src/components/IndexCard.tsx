@@ -128,7 +128,7 @@ export function IndexCard(props: {
       tokens={{
         childrenGap: 10,
         padding: 20,
-        maxWidth: 675,
+        maxWidth: 676,
         minHeight: 'unset',
       }}>
       <Card.Item>
