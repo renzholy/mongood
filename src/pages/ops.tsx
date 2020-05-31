@@ -94,13 +94,13 @@ export default () => {
         error={error}
         isValidating={isValidating}
         order={[
+          'host',
           'ns',
           'op',
           'client',
-          'host',
-          'secs_running',
           'command',
           'desc',
+          'microsecs_running',
         ]}
       />
     </>
