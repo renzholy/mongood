@@ -2,9 +2,9 @@ import React from 'react'
 import useSWR from 'swr'
 import { Stack, DefaultButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
+import { IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
-import { Index } from '@/types'
 import { actions } from '@/stores'
 import { IndexButton } from './IndexButton'
 import { Pagination } from './Pagination'
@@ -14,9 +14,12 @@ export function IndexesStack() {
   const { data: indexes } = useSWR(
     database && collection ? `listIndexes/${database}/${collection}` : null,
     () => {
-      return runCommand<{ cursor: { firstBatch: Index[] } }>(database, {
-        listIndexes: collection,
-      })
+      return runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
+        database,
+        {
+          listIndexes: collection,
+        },
+      )
     },
   )
   const index = useSelector((state) => state.docs.index)

@@ -1,27 +1,120 @@
+/* eslint-disable react/no-danger */
 /* eslint-disable react/jsx-indent */
 
-import React from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { Card } from '@uifabric/react-cards'
-import { Text, getTheme, Icon, Stack } from '@fluentui/react'
+import {
+  Text,
+  getTheme,
+  Icon,
+  Stack,
+  HoverCard,
+  HoverCardType,
+} from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
+import { IndexSpecification, WiredTigerData } from 'mongodb'
 
-import { Index, StatDetail } from '@/types'
+import { colorize } from '@/utils/editor'
+import { useDarkMode } from '@/utils/theme'
+
+function IndexCardFeature(props: { value: { text: string; data?: object } }) {
+  const theme = getTheme()
+  const isDarkMode = useDarkMode()
+  const str = JSON.stringify(props.value.data, null, 2)
+  const [html, setHtml] = useState(str)
+  useEffect(() => {
+    colorize(str, isDarkMode).then(setHtml)
+  }, [str, isDarkMode])
+  const onRenderPlainCard = useCallback(() => {
+    return (
+      <div
+        style={{
+          paddingLeft: 10,
+          paddingRight: 10,
+          maxWidth: 500,
+          maxHeight: 500,
+          overflowY: 'scroll',
+        }}>
+        <pre
+          style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </div>
+    )
+  }, [html])
+
+  return (
+    <HoverCard
+      key={props.value.text}
+      type={HoverCardType.plain}
+      plainCardProps={{
+        onRenderPlainCard,
+      }}
+      styles={{
+        host: {
+          display: 'inherit',
+          cursor: 'pointer',
+        },
+      }}
+      instantOpenOnClick={true}>
+      <Text
+        styles={{
+          root: {
+            color: theme.palette.neutralSecondary,
+          },
+        }}>
+        {props.value.text}
+      </Text>
+    </HoverCard>
+  )
+}
 
 export function IndexCard(props: {
-  value: Index
+  value: IndexSpecification
   size: number
-  statDetail: StatDetail
+  statDetail: WiredTigerData
 }) {
   const theme = getTheme()
   const features = _.compact([
-    props.value.background ? 'BACKGROUND' : null,
-    props.value.unique ? 'UNIQUE' : null,
-    props.value.sparse ? 'SPARSE' : null,
-    props.value.partialFilterExpression ? 'PARTIAL' : null,
-    'expireAfterSeconds' in props.value ? 'TTL' : null,
-    '2dsphereIndexVersion' in props.value ? 'GEOSPATIAL' : null,
-    'textIndexVersion' in props.value ? 'TEXT' : null,
+    props.value.background ? { text: 'BACKGROUND' } : null,
+    props.value.unique ? { text: 'UNIQUE' } : null,
+    props.value.sparse ? { text: 'SPARSE' } : null,
+    props.value.partialFilterExpression
+      ? {
+          text: 'PARTIAL',
+          data: {
+            partialFilterExpression: props.value.partialFilterExpression,
+          },
+        }
+      : null,
+    'expireAfterSeconds' in props.value
+      ? {
+          text: 'TTL',
+          data: {
+            expireAfterSeconds: props.value.expireAfterSeconds,
+          },
+        }
+      : null,
+    '2dsphereIndexVersion' in props.value
+      ? {
+          text: 'GEOSPATIAL',
+          data: {
+            '2dsphereIndexVersion': props.value['2dsphereIndexVersion'],
+          },
+        }
+      : null,
+    'textIndexVersion' in props.value
+      ? {
+          text: 'TEXT',
+          data: {
+            textIndexVersion: props.value.textIndexVersion,
+            default_language: props.value.default_language,
+            language_override: props.value.language_override,
+            weights: props.value.weights,
+          },
+        }
+      : null,
   ])
 
   return (
@@ -33,7 +126,11 @@ export function IndexCard(props: {
         minHeight: 'unset',
       }}>
       <Card.Item>
-        <Text variant="xLarge">{props.value.name}&nbsp;</Text>
+        <Text
+          variant="xLarge"
+          styles={{ root: { color: theme.palette.neutralPrimary } }}>
+          {props.value.name}&nbsp;
+        </Text>
         <Text styles={{ root: { color: theme.palette.neutralPrimaryAlt } }}>
           ({bytes(props.size, { unitSeparator: ' ' })})
         </Text>
@@ -84,17 +181,21 @@ export function IndexCard(props: {
       {features.length ? (
         <Card.Item>
           <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
-            {features.map((feature) => (
-              <Text
-                key={feature}
-                styles={{
-                  root: {
-                    color: theme.palette.neutralSecondary,
-                  },
-                }}>
-                {feature}
-              </Text>
-            ))}
+            {features.map((feature) =>
+              'data' in feature ? (
+                <IndexCardFeature value={feature} />
+              ) : (
+                <Text
+                  key={feature.text}
+                  styles={{
+                    root: {
+                      color: theme.palette.neutralSecondary,
+                    },
+                  }}>
+                  {feature.text}
+                </Text>
+              ),
+            )}
           </Stack>
         </Card.Item>
       ) : null}

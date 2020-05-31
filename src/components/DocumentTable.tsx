@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import _ from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
+import { MongoData } from '@/utils/mongo-shell-data'
 import { Table } from './Table'
 
 export function DocumentTable() {
@@ -20,7 +21,9 @@ export function DocumentTable() {
         )}/${JSON.stringify(sort)}`
       : null,
     () => {
-      return runCommand<{ cursor: { firstBatch: unknown[] } }>(
+      return runCommand<{
+        cursor: { firstBatch: { [key: string]: MongoData }[] }
+      }>(
         database,
         {
           find: collection,
@@ -42,6 +45,7 @@ export function DocumentTable() {
   return (
     <Table
       items={data?.cursor.firstBatch}
+      order={['_id', ...Object.keys(index?.key || {})]}
       error={error}
       isValidating={isValidating}
     />

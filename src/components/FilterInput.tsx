@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react'
 
 import { parse, stringify } from '@/utils/mongo-shell-data'
 
-export function FilterInput(props: {
+export function FilterInput<T extends string | object | undefined>(props: {
   autoFocus?: boolean
   disabled?: boolean
   prefix?: string
   iconProps?: IIconProps
-  value?: object
-  onChange(value?: object): void
+  value?: T
+  onChange(value: T): void
 }) {
   const [errorMessage, setErrorMessage] = useState<string>()
   const [value, setValue] = useState('')
@@ -37,12 +37,12 @@ export function FilterInput(props: {
       onChange={(_ev, newValue) => {
         setValue(newValue || '')
         if (!newValue) {
-          props.onChange(undefined)
+          props.onChange(undefined as T)
           setErrorMessage(undefined)
           return
         }
         try {
-          props.onChange(parse(newValue))
+          props.onChange(parse(newValue) as T)
           setErrorMessage(undefined)
         } catch (err) {
           setErrorMessage(' ')

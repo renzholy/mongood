@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   DetailsList,
   SelectionMode,
@@ -11,72 +11,50 @@ import {
   DetailsHeader,
   IDetailsHeaderProps,
   ProgressIndicator,
-  ContextualMenu,
   getTheme,
-  HoverCard,
-  Text,
-  HoverCardType,
   MessageBar,
   MessageBarType,
   IColumn,
 } from '@fluentui/react'
+import _ from 'lodash'
 
-import { stringify } from '@/utils/mongo-shell-data'
+import { MongoData } from '@/utils/mongo-shell-data'
+import { DocumentModal } from './DocumentModal'
+import { TableRow } from './TableRow'
 
-export function Table(props: {
-  items?: any[]
+export function Table<T extends { [key: string]: MongoData }>(props: {
+  items?: T[]
+  order?: string[]
   error: any
   isValidating: boolean
 }) {
   const theme = getTheme()
-  const [event, setEvent] = useState<MouseEvent>()
-  const [item, setItem] = useState<any>()
+  const [invokedItem, setInvokedItem] = useState<T>()
+  const [columns, setColumns] = useState<IColumn[]>([])
   const { items, error, isValidating } = props
-  const onRenderPlainCard = useCallback((str: string) => {
-    return (
-      <div
-        style={{
-          paddingLeft: 10,
-          paddingRight: 10,
-          maxWidth: 500,
-          maxHeight: 500,
-          overflowY: 'scroll',
-        }}>
-        <Text>
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-            {str}
-          </pre>
-        </Text>
-      </div>
+  useEffect(() => {
+    // calc columns order
+    const keys: { [key: string]: number } = {}
+    const order = props.order?.reverse() || []
+    props.items?.forEach((item) => {
+      Object.keys(item).forEach((key) => {
+        if (!keys[key]) {
+          const index = order.indexOf(key)
+          keys[key] = index >= 0 ? index + 1 : 0
+        }
+        keys[key] += 1
+      })
+    })
+    setColumns(
+      _.sortBy(Object.entries(keys), '1')
+        .reverse()
+        .map(([key]) => ({
+          key,
+          name: key,
+          minWidth: 240,
+        })),
     )
-  }, [])
-  const onRenderItemColumn = useCallback(
-    (_item?: any, _index?: number, column?: IColumn) => {
-      const str = stringify(_item[column?.key!], 2)
-      return str.length >= 40 ? (
-        <HoverCard
-          type={HoverCardType.plain}
-          plainCardProps={{
-            onRenderPlainCard,
-            renderData: str,
-          }}
-          styles={{
-            host: {
-              cursor: 'pointer',
-              color: theme.palette.neutralSecondary,
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-            },
-          }}
-          instantOpenOnClick={true}>
-          {str}
-        </HoverCard>
-      ) : (
-        str
-      )
-    },
-    [onRenderPlainCard, theme],
-  )
+  }, [props.items, props.order])
   const onRenderDetailsHeader = useCallback(
     (detailsHeaderProps?: IDetailsHeaderProps) => (
       <Sticky>
@@ -101,13 +79,9 @@ export function Table(props: {
     ),
     [isValidating, theme],
   )
-  const onItemContextMenu = useCallback(
-    (_item?: any, _index?: number, ev?: Event) => {
-      setEvent(ev as MouseEvent)
-      setItem(_item)
-    },
-    [],
-  )
+  const onItemInvoked = useCallback((item: T) => {
+    setInvokedItem(item)
+  }, [])
 
   if (error) {
     return (
@@ -145,23 +119,10 @@ export function Table(props: {
   }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
-      <ContextualMenu
-        items={[
-          {
-            key: 'copy',
-            text: 'Copy Document',
-            onClick: () => {
-              window.navigator.clipboard.writeText(stringify(item, 2))
-            },
-          },
-        ]}
-        hidden={!event}
-        target={event}
-        onItemClick={() => {
-          setEvent(undefined)
-        }}
-        onDismiss={() => {
-          setEvent(undefined)
+      <DocumentModal
+        value={invokedItem}
+        onChange={(_invokedItem) => {
+          setInvokedItem(_invokedItem)
         }}
       />
       <ScrollablePane
@@ -170,14 +131,17 @@ export function Table(props: {
           stickyBelow: { display: 'none' },
         }}>
         <DetailsList
+          columns={columns}
           selectionMode={SelectionMode.none}
           constrainMode={ConstrainMode.unconstrained}
-          layoutMode={DetailsListLayoutMode.fixedColumns}
+          layoutMode={DetailsListLayoutMode.justified}
           onShouldVirtualize={() => false}
           items={items || []}
-          onRenderItemColumn={onRenderItemColumn}
+          onRenderItemColumn={(item, _index, column) => (
+            <TableRow value={item} column={column} />
+          )}
           onRenderDetailsHeader={onRenderDetailsHeader}
-          onItemContextMenu={onItemContextMenu}
+          onItemInvoked={onItemInvoked}
         />
       </ScrollablePane>
     </div>

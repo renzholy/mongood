@@ -1,12 +1,11 @@
 import React from 'react'
 import { DefaultButton } from '@fluentui/react'
-
-import { Index } from '@/types'
+import { IndexSpecification } from 'mongodb'
 
 export function IndexButton(props: {
   selected?: boolean
   onSelect?(): void
-  value: Index
+  value: IndexSpecification
 }) {
   return (
     <DefaultButton

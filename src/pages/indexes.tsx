@@ -4,10 +4,10 @@ import useSWR from 'swr'
 import { Stack, Text, getTheme } from '@fluentui/react'
 import { Card } from '@uifabric/react-cards'
 import bytes from 'bytes'
+import { CollStats } from 'mongodb'
 
 import { IndexCardList } from '@/components/IndexCardList'
 import { runCommand } from '@/utils/fetcher'
-import { StatDetail } from '@/types'
 import { Number } from '@/utils/formatter'
 
 function InfoCard(props: { title: string; content: string }) {
@@ -23,7 +23,11 @@ function InfoCard(props: { title: string; content: string }) {
         </Text>
       </Card.Section>
       <Card.Section>
-        <Text variant="xLarge">{props.content}</Text>
+        <Text
+          variant="xLarge"
+          styles={{ root: { color: theme.palette.neutralPrimary } }}>
+          {props.content}
+        </Text>
       </Card.Section>
     </Card>
   )
@@ -34,21 +38,7 @@ export default () => {
   const { data: stats } = useSWR(
     database && collection ? `collStats/${database}/${collection}` : null,
     () => {
-      return runCommand<{
-        avgObjSize?: number
-        capped: boolean
-        count: number
-        indexDetails: { [key: string]: StatDetail }
-        indexSizes: { [key: string]: number }
-        nindexes: number
-        ns: string
-        ok: number
-        scaleFactor: number
-        size: number
-        storageSize: number
-        totalIndexSize: number
-        wiredTiger: StatDetail
-      }>(database, {
+      return runCommand<CollStats>(database, {
         collStats: collection,
       })
     },

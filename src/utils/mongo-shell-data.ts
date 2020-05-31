@@ -13,29 +13,27 @@ function wrapKey(key: string) {
   return key
 }
 
-export function stringify(
-  val:
-    | string
-    | number
-    | boolean
-    | undefined
-    | null
-    | { $oid: string }
-    | { $date: { $numberLong: string } }
-    | { $numberDecimal: string }
-    | { $numberDouble: string }
-    | { $numberInt: string }
-    | { $numberLong: string }
-    | { $regularExpression: { pattern: string; options: string } }
-    | { $timestamp: { t: number; i: number } }
-    | { $binary: { base64: string; subType: string } }
-    | any[]
-    | object,
-  indent = 0,
-  depth = 0,
-): string {
+export type MongoData =
+  | string
+  | number
+  | boolean
+  | undefined
+  | null
+  | { $oid: string }
+  | { $date: { $numberLong: string } }
+  | { $numberDecimal: string }
+  | { $numberDouble: string }
+  | { $numberInt: string }
+  | { $numberLong: string }
+  | { $regularExpression: { pattern: string; options: string } }
+  | { $timestamp: { t: number; i: number } }
+  | { $binary: { base64: string; subType: string } }
+  | any[]
+  | object
+
+export function stringify(val: MongoData, indent = 0, depth = 0): string {
   if (typeof val === 'string') {
-    return `"${val}"`
+    return JSON.stringify(val)
   }
   if (typeof val === 'number') {
     return val.toString()
@@ -97,11 +95,14 @@ export function stringify(
       : '[]'
   }
   if (indent === 0) {
-    return `{${_.map(
+    if (_.size(val) === 0) {
+      return '{}'
+    }
+    return `{ ${_.map(
       val,
       (value, key) =>
         `${wrapKey(key)}: ${stringify(value, indent, depth + indent)}`,
-    ).join(', ')}}`
+    ).join(', ')} }`
   }
   return `{\n${_.map(
     val,
@@ -110,7 +111,7 @@ export function stringify(
   ).join(',\n')}\n${spaces}}`
 }
 
-export function parse(str: string): object {
+export function parse(str: string): object | string {
   if (/\{\s*_\s*\}/.test(str)) {
     // special for global lodash
     throw new Error('ParseError')

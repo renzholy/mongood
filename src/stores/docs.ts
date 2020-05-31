@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-import { Index } from '@/types'
+import { IndexSpecification, FilterQuery } from 'mongodb'
 
 export default createSlice({
   name: 'docs',
@@ -12,22 +11,22 @@ export default createSlice({
     limit: 25,
     count: 0,
   } as {
-    index?: Index
-    filter: { [key: string]: object | undefined }
+    index?: IndexSpecification
+    filter: FilterQuery<unknown>
     sort: { [key: string]: 1 | -1 | undefined }
     skip: number
     limit: number
     count: number
   },
   reducers: {
-    setIndex: (state, { payload }: PayloadAction<Index | undefined>) => ({
+    setIndex: (
+      state,
+      { payload }: PayloadAction<IndexSpecification | undefined>,
+    ) => ({
       ...state,
       index: payload,
     }),
-    setFilter: (
-      state,
-      { payload }: PayloadAction<{ [key: string]: object | undefined }>,
-    ) => ({
+    setFilter: (state, { payload }: PayloadAction<FilterQuery<unknown>>) => ({
       ...state,
       filter: payload,
     }),
