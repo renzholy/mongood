@@ -72,10 +72,6 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
 
   return (
     <>
-      <div style={{ display: 'none' }}>
-        {/* init colorize */}
-        <ControlledEditor />
-      </div>
       <Modal
         styles={{
           scrollableContent: {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { initializeIcons, loadTheme, getTheme, ITheme } from '@fluentui/react'
 import { Provider } from 'react-redux'
+import { ControlledEditor } from '@monaco-editor/react'
 
 import { DatabaseNav } from '@/components/DatabaseNav'
 import { store } from '@/stores/index'
@@ -70,6 +71,10 @@ export default (props: RouteComponentProps & { children: React.ReactNode }) => {
 
   return (
     <Provider store={store}>
+      <div style={{ display: 'none' }}>
+        {/* init colorize */}
+        <ControlledEditor />
+      </div>
       <div
         style={{
           height: '100vh',

@@ -1,6 +1,7 @@
+/* eslint-disable react/no-danger */
 /* eslint-disable react/jsx-indent */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { Card } from '@uifabric/react-cards'
 import {
   Text,
@@ -13,6 +14,61 @@ import {
 import _ from 'lodash'
 import bytes from 'bytes'
 import { IndexSpecification, WiredTigerData } from 'mongodb'
+
+import { colorize } from '@/utils/editor'
+import { useDarkMode } from '@/utils/theme'
+
+function IndexCardFeature(props: { value: { text: string; data?: object } }) {
+  const theme = getTheme()
+  const isDarkMode = useDarkMode()
+  const str = JSON.stringify(props.value.data, null, 2)
+  const [html, setHtml] = useState(str)
+  useEffect(() => {
+    colorize(str, isDarkMode).then(setHtml)
+  }, [str, isDarkMode])
+  const onRenderPlainCard = useCallback(() => {
+    return (
+      <div
+        style={{
+          paddingLeft: 10,
+          paddingRight: 10,
+          maxWidth: 500,
+          maxHeight: 500,
+          overflowY: 'scroll',
+        }}>
+        <pre
+          style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </div>
+    )
+  }, [html])
+
+  return (
+    <HoverCard
+      key={props.value.text}
+      type={HoverCardType.plain}
+      plainCardProps={{
+        onRenderPlainCard,
+      }}
+      styles={{
+        host: {
+          display: 'inherit',
+          cursor: 'pointer',
+        },
+      }}
+      instantOpenOnClick={true}>
+      <Text
+        styles={{
+          root: {
+            color: theme.palette.neutralSecondary,
+          },
+        }}>
+        {props.value.text}
+      </Text>
+    </HoverCard>
+  )
+}
 
 export function IndexCard(props: {
   value: IndexSpecification
@@ -60,22 +116,6 @@ export function IndexCard(props: {
         }
       : null,
   ])
-  const onRenderPlainCard = useCallback((obj: object) => {
-    return (
-      <div
-        style={{
-          paddingLeft: 10,
-          paddingRight: 10,
-          maxWidth: 500,
-          maxHeight: 500,
-          overflowY: 'scroll',
-        }}>
-        <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-          {JSON.stringify(obj, null, 2)}
-        </pre>
-      </div>
-    )
-  }, [])
 
   return (
     <Card
@@ -143,29 +183,7 @@ export function IndexCard(props: {
           <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
             {features.map((feature) =>
               'data' in feature ? (
-                <HoverCard
-                  key={feature.text}
-                  type={HoverCardType.plain}
-                  plainCardProps={{
-                    onRenderPlainCard,
-                    renderData: feature.data,
-                  }}
-                  styles={{
-                    host: {
-                      display: 'inherit',
-                      cursor: 'pointer',
-                    },
-                  }}
-                  instantOpenOnClick={true}>
-                  <Text
-                    styles={{
-                      root: {
-                        color: theme.palette.neutralSecondary,
-                      },
-                    }}>
-                    {feature.text}
-                  </Text>
-                </HoverCard>
+                <IndexCardFeature value={feature} />
               ) : (
                 <Text
                   key={feature.text}
