@@ -95,11 +95,14 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
       : '[]'
   }
   if (indent === 0) {
-    return `{${_.map(
+    if (_.size(val) === 0) {
+      return '{}'
+    }
+    return `{ ${_.map(
       val,
       (value, key) =>
         `${wrapKey(key)}: ${stringify(value, indent, depth + indent)}`,
-    ).join(', ')}}`
+    ).join(', ')} }`
   }
   return `{\n${_.map(
     val,

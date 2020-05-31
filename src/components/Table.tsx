@@ -52,7 +52,6 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
           key,
           name: key,
           minWidth: 240,
-          isResizable: true,
         })),
     )
   }, [props.items, props.order])

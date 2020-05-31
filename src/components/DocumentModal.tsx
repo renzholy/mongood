@@ -135,8 +135,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
           }}
           options={{
             quickSuggestions: false,
-            wordWrap: 'bounded',
-            lineNumbers: 'off',
+            wordWrap: 'on',
             contextmenu: false,
             scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
           }}

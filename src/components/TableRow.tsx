@@ -1,21 +1,15 @@
 /* eslint-disable react/no-danger */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import {
-  HoverCard,
-  HoverCardType,
-  IColumn,
-  Text,
-  getTheme,
-} from '@fluentui/react'
+import { HoverCard, HoverCardType, IColumn, getTheme } from '@fluentui/react'
 
 import { colorize } from '@/utils/editor'
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
 
-function PlainCard(props: { value: string }) {
-  const [html, setHtml] = useState(props.value)
+function PlainCard(props: { value: MongoData }) {
+  const [html, setHtml] = useState('')
   useEffect(() => {
-    colorize(props.value).then(setHtml)
+    colorize(stringify(props.value, 2)).then(setHtml)
   }, [props.value])
 
   return (
@@ -27,12 +21,10 @@ function PlainCard(props: { value: string }) {
         maxHeight: 500,
         overflowY: 'scroll',
       }}>
-      <Text>
-        <pre
-          style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-      </Text>
+      <pre
+        style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     </div>
   )
 }
@@ -42,34 +34,41 @@ export function TableRow<T extends { [key: string]: MongoData }>(props: {
   column?: IColumn
 }) {
   const theme = getTheme()
-  const str = stringify(
-    props.value[props.column?.key as keyof typeof props.value],
-    2,
-  )
-
-  const onRenderPlainCard = useCallback(() => {
-    return <PlainCard value={str} />
+  const value = props.value[props.column?.key as keyof typeof props.value]
+  const str = stringify(value)
+  const [html, setHtml] = useState(str)
+  useEffect(() => {
+    colorize(str.substr(0, 100)).then(setHtml)
   }, [str])
+  const onRenderPlainCard = useCallback(() => {
+    return <PlainCard value={value} />
+  }, [value])
 
-  return str.length >= 40 ? (
+  return str.length >= 24 ? (
     <HoverCard
       type={HoverCardType.plain}
       plainCardProps={{
         onRenderPlainCard,
-        renderData: str,
       }}
       styles={{
         host: {
           cursor: 'pointer',
+          userSelect: 'none',
           color: theme.palette.neutralSecondary,
           textOverflow: 'ellipsis',
           overflow: 'hidden',
         },
       }}
       instantOpenOnClick={true}>
-      {str}
+      <span
+        style={{ cursor: 'default', userSelect: 'none' }}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     </HoverCard>
   ) : (
-    <>{str}</>
+    <span
+      style={{ cursor: 'default', userSelect: 'none' }}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   )
 }
