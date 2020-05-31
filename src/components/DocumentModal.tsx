@@ -145,7 +145,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
         />
         <div
           style={{
-            height: 52,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
