@@ -31,13 +31,13 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
   const [isUpdateSucceed, setIsUpdateSucceed] = useState(false)
   useEffect(() => {
     setIsOpen(!!props.value)
-    setValue(stringify(props.value, 2))
+    setValue(`return ${stringify(props.value, 2)}\n`)
     setError('')
   }, [props.value])
   const handleUpdate = useCallback(async () => {
     try {
       setIsUpdating(true)
-      const doc = parse(value)
+      const doc = parse(value.replace(/^return/, ''))
       const { value: newDoc } = await runCommand<{
         value: T
       }>(

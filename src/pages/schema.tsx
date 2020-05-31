@@ -12,7 +12,7 @@ import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
-import { parse } from '@/utils/mongo-shell-data'
+import { stringify, parse } from '@/utils/mongo-shell-data'
 
 enum ValidationAction {
   ERROR = 'error',
@@ -76,7 +76,7 @@ export default () => {
         validationAction,
         validationLevel,
         validator: {
-          $jsonSchema: parse(value),
+          $jsonSchema: parse(value.replace(/^return/, '')),
         },
       })
       setIsUpdateSucceed(true)
@@ -101,7 +101,7 @@ export default () => {
     const { options } = data.cursor.firstBatch[0]
     setValidationAction(options.validationAction || null)
     setValidationLevel(options.validationLevel || null)
-    setValue(JSON.stringify(options.validator?.$jsonSchema, null, 2))
+    setValue(`return ${stringify(options.validator?.$jsonSchema, 2)}\n`)
   }, [data])
   useEffect(() => {
     if (isUpdateSucceed) {
@@ -117,7 +117,7 @@ export default () => {
   return (
     <>
       <ControlledEditor
-        language="json"
+        language="javascript"
         theme={isDarkMode ? 'vs-dark' : 'vs'}
         value={value}
         onChange={(_ev, _value) => {
