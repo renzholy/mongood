@@ -52,10 +52,9 @@ go run main.go headless.go
 
 ## 📷 Screenshots:
 
-![](/screenshots/docs.png)
-
-![](/screenshots/editor.png)
-
-![](/screenshots/indexes.png)
-
-![](/screenshots/ops.png)
+<div>
+  <img src="./screenshots/light/docs.png" width="50%"/><img src="./screenshots/dark/docs.png" width="50%"/>
+  <img src="./screenshots/light/editor.png" width="50%"/><img src="./screenshots/dark/editor.png" width="50%"/>
+  <img src="./screenshots/light/indexes.png" width="50%"/><img src="./screenshots/dark/indexes.png" width="50%"/>
+  <img src="./screenshots/light/ops.png" width="50%"/><img src="./screenshots/dark/ops.png" width="50%"/>
+</div>
