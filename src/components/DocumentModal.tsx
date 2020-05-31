@@ -98,13 +98,13 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: 10,
+            paddingLeft: 20,
           }}>
           <Text
             variant="xLarge"
-            block={true}
             styles={{
               root: {
-                height: 32,
+                display: 'contents',
                 alignItems: 'center',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
