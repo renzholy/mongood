@@ -12,6 +12,7 @@ MongoDB Operation Dashboard
 - [x] Edit documents with [monaco editor](https://microsoft.github.io/monaco-editor/index.html)
 - [x] [Mongo-shell data types](https://docs.mongodb.com/manual/core/shell-types/) query grammar
 - [x] Smart query & sort using [indexes](https://docs.mongodb.com/manual/tutorial/sort-results-with-indexes/)
+- [x] Json schema
 - [x] Designed with [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui)
 - [x] Auto **dark** mode
 
@@ -22,6 +23,7 @@ MongoDB Operation Dashboard
   <img src="./screenshots/light/editor.png" width="50%"/><img src="./screenshots/dark/editor.png" width="50%"/>
   <img src="./screenshots/light/indexes.png" width="50%"/><img src="./screenshots/dark/indexes.png" width="50%"/>
   <img src="./screenshots/light/ops.png" width="50%"/><img src="./screenshots/dark/ops.png" width="50%"/>
+  <img src="./screenshots/light/schema.png" width="50%"/><img src="./screenshots/dark/schema.png" width="50%"/>
 </div>
 
 ## 🔧 Usage:
@@ -56,6 +58,5 @@ go run main.go headless.go
 - [ ] doc insert and delete
 - [ ] index create and drop
 - [ ] geo search
-- [ ] json schema
 - [ ] role management
 - [ ] and so on...
