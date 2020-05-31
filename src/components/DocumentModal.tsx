@@ -83,6 +83,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
+            backgroundColor: theme.palette.neutralLighterAlt,
           },
         }}
         isOpen={isOpen}
