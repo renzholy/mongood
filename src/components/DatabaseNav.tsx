@@ -112,8 +112,13 @@ export function DatabaseNav() {
           onLinkClick={(_ev, item) => {
             if (!item?.links && item?.key) {
               const [_database, _collection] = item.key.split(splitter)
-              dispatch(actions.root.setDatabase(_database))
-              dispatch(actions.root.setCollection(_collection))
+              if (database === _database && collection === _collection) {
+                dispatch(actions.root.setDatabase(undefined))
+                dispatch(actions.root.setCollection(undefined))
+              } else {
+                dispatch(actions.root.setDatabase(_database))
+                dispatch(actions.root.setCollection(_collection))
+              }
             }
           }}
           onLinkExpandClick={(_ev, item) => {

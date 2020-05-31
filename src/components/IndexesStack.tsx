@@ -15,7 +15,7 @@ export function IndexesStack() {
     database && collection ? `listIndexes/${database}/${collection}` : null,
     () => {
       return runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
-        database,
+        database!,
         {
           listIndexes: collection,
         },

@@ -24,7 +24,7 @@ export function DocumentTable() {
       return runCommand<{
         cursor: { firstBatch: { [key: string]: MongoData }[] }
       }>(
-        database,
+        database!,
         {
           find: collection,
           filter,
@@ -45,7 +45,11 @@ export function DocumentTable() {
   return (
     <Table
       items={data?.cursor.firstBatch}
-      order={['_id', ...Object.keys(index?.key || {})]}
+      order={[
+        '_id',
+        ...Object.keys(index?.key || {}),
+        ...Object.keys(index?.weights || {}),
+      ]}
       error={error}
       isValidating={isValidating}
     />

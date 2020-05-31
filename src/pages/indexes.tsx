@@ -14,7 +14,13 @@ function InfoCard(props: { title: string; content: string }) {
   const theme = getTheme()
 
   return (
-    <Card tokens={{ padding: 20, childrenGap: 10 }}>
+    <Card
+      styles={{
+        root: {
+          backgroundColor: theme.palette.neutralLighterAlt,
+        },
+      }}
+      tokens={{ padding: 20, childrenGap: 10 }}>
       <Card.Section>
         <Text
           block={true}
@@ -38,7 +44,7 @@ export default () => {
   const { data: stats } = useSWR(
     database && collection ? `collStats/${database}/${collection}` : null,
     () => {
-      return runCommand<CollStats>(database, {
+      return runCommand<CollStats>(database!, {
         collStats: collection,
       })
     },

@@ -40,7 +40,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
       Object.keys(item).forEach((key) => {
         if (!keys[key]) {
           const index = order.indexOf(key)
-          keys[key] = index >= 0 ? index + 1 : 0
+          keys[key] = index >= 0 ? (index + 1) * 10 : 0
         }
         keys[key] += 1
       })

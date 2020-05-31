@@ -35,6 +35,7 @@ function IndexCardFeature(props: { value: { text: string; data?: object } }) {
           maxWidth: 500,
           maxHeight: 500,
           overflowY: 'scroll',
+          backgroundColor: theme.palette.neutralLighterAlt,
         }}>
         <pre
           style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
@@ -42,7 +43,7 @@ function IndexCardFeature(props: { value: { text: string; data?: object } }) {
         />
       </div>
     )
-  }, [html])
+  }, [html, theme])
 
   return (
     <HoverCard
@@ -119,6 +120,11 @@ export function IndexCard(props: {
 
   return (
     <Card
+      styles={{
+        root: {
+          backgroundColor: theme.palette.neutralLighterAlt,
+        },
+      }}
       tokens={{
         childrenGap: 10,
         padding: 20,

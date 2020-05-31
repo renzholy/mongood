@@ -41,7 +41,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
       const { value: newDoc } = await runCommand<{
         value: T
       }>(
-        database,
+        database!,
         {
           findAndModify: collection,
           new: true,
@@ -98,13 +98,13 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: 10,
+            paddingLeft: 20,
           }}>
           <Text
             variant="xLarge"
-            block={true}
             styles={{
               root: {
-                height: 32,
+                display: 'contents',
                 alignItems: 'center',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
@@ -136,6 +136,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             })
           }}
           options={{
+            readOnly: !props.value?._id,
             quickSuggestions: false,
             wordWrap: 'on',
             contextmenu: false,
@@ -152,7 +153,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             padding: 10,
           }}>
           <DefaultButton
-            disabled={isUpdating}
+            disabled={isUpdating || !props.value?._id}
             primary={true}
             onClick={handleUpdate}
             styles={{ root: { flexShrink: 0, marginLeft: 10 } }}>

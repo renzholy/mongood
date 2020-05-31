@@ -89,7 +89,20 @@ export default () => {
           }}
         />
       </Stack>
-      <Table items={data?.inprog} error={error} isValidating={isValidating} />
+      <Table
+        items={data?.inprog}
+        error={error}
+        isValidating={isValidating}
+        order={[
+          'host',
+          'ns',
+          'op',
+          'client',
+          'command',
+          'desc',
+          'microsecs_running',
+        ]}
+      />
     </>
   )
 }
