@@ -5,12 +5,14 @@ import { HoverCard, HoverCardType, IColumn, getTheme } from '@fluentui/react'
 
 import { colorize } from '@/utils/editor'
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
+import { useDarkMode } from '@/utils/theme'
 
 function PlainCard(props: { value: MongoData }) {
   const [html, setHtml] = useState('')
+  const isDarkMode = useDarkMode()
   useEffect(() => {
-    colorize(stringify(props.value, 2)).then(setHtml)
-  }, [props.value])
+    colorize(stringify(props.value, 2), isDarkMode).then(setHtml)
+  }, [props.value, isDarkMode])
 
   return (
     <div
@@ -34,12 +36,13 @@ export function TableRow<T extends { [key: string]: MongoData }>(props: {
   column?: IColumn
 }) {
   const theme = getTheme()
+  const isDarkMode = useDarkMode()
   const value = props.value[props.column?.key as keyof typeof props.value]
   const str = stringify(value)
   const [html, setHtml] = useState(str)
   useEffect(() => {
-    colorize(str.substr(0, 100)).then(setHtml)
-  }, [str])
+    colorize(str.substr(0, 100), isDarkMode).then(setHtml)
+  }, [str, isDarkMode])
   const onRenderPlainCard = useCallback(() => {
     return <PlainCard value={value} />
   }, [value])

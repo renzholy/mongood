@@ -70,11 +70,9 @@ export function IndexCard(props: {
           maxHeight: 500,
           overflowY: 'scroll',
         }}>
-        <Text>
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-            {JSON.stringify(obj, null, 2)}
-          </pre>
-        </Text>
+        <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+          {JSON.stringify(obj, null, 2)}
+        </pre>
       </div>
     )
   }, [])
@@ -88,7 +86,11 @@ export function IndexCard(props: {
         minHeight: 'unset',
       }}>
       <Card.Item>
-        <Text variant="xLarge">{props.value.name}&nbsp;</Text>
+        <Text
+          variant="xLarge"
+          styles={{ root: { color: theme.palette.neutralPrimary } }}>
+          {props.value.name}&nbsp;
+        </Text>
         <Text styles={{ root: { color: theme.palette.neutralPrimaryAlt } }}>
           ({bytes(props.size, { unitSeparator: ' ' })})
         </Text>

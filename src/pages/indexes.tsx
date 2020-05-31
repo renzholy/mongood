@@ -23,7 +23,11 @@ function InfoCard(props: { title: string; content: string }) {
         </Text>
       </Card.Section>
       <Card.Section>
-        <Text variant="xLarge">{props.content}</Text>
+        <Text
+          variant="xLarge"
+          styles={{ root: { color: theme.palette.neutralPrimary } }}>
+          {props.content}
+        </Text>
       </Card.Section>
     </Card>
   )
