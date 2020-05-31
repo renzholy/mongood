@@ -14,7 +14,13 @@ function InfoCard(props: { title: string; content: string }) {
   const theme = getTheme()
 
   return (
-    <Card tokens={{ padding: 20, childrenGap: 10 }}>
+    <Card
+      styles={{
+        root: {
+          backgroundColor: theme.palette.neutralLighterAlt,
+        },
+      }}
+      tokens={{ padding: 20, childrenGap: 10 }}>
       <Card.Section>
         <Text
           block={true}

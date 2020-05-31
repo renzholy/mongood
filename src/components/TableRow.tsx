@@ -10,6 +10,7 @@ import { useDarkMode } from '@/utils/theme'
 function PlainCard(props: { value: MongoData }) {
   const [html, setHtml] = useState('')
   const isDarkMode = useDarkMode()
+  const theme = getTheme()
   useEffect(() => {
     colorize(stringify(props.value, 2), isDarkMode).then(setHtml)
   }, [props.value, isDarkMode])
@@ -22,6 +23,7 @@ function PlainCard(props: { value: MongoData }) {
         maxWidth: 500,
         maxHeight: 500,
         overflowY: 'scroll',
+        backgroundColor: theme.palette.neutralLighterAlt,
       }}>
       <pre
         style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
