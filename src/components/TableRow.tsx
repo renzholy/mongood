@@ -47,7 +47,7 @@ export function TableRow<T extends { [key: string]: MongoData }>(props: {
     return <PlainCard value={value} />
   }, [value])
 
-  return str.length >= 24 ? (
+  return str.length > 36 ? (
     <HoverCard
       type={HoverCardType.plain}
       plainCardProps={{
