@@ -45,7 +45,11 @@ export function DocumentTable() {
   return (
     <Table
       items={data?.cursor.firstBatch}
-      order={['_id', ...Object.keys(index?.key || {})]}
+      order={[
+        '_id',
+        ...Object.keys(index?.key || {}),
+        ...Object.keys(index?.weights || {}),
+      ]}
       error={error}
       isValidating={isValidating}
     />
