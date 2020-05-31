@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux'
 import { stringify, MongoData, parse } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
+import { useDarkMode } from '@/utils/theme'
 
 export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
   value?: T
@@ -22,6 +23,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
 }) {
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
+  const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
   const [error, setError] = useState('')
   const [isUpdating, setIsUpdating] = useState(false)
@@ -126,6 +128,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
           onChange={(_ev, _value) => {
             setValue(_value || '')
           }}
+          theme={isDarkMode ? 'vs-dark' : 'vs'}
           editorDidMount={(_getEditorValue, editor) => {
             editor.onKeyDown((e) => {
               if (e.keyCode === 9) {
