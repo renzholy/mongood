@@ -136,6 +136,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             })
           }}
           options={{
+            readOnly: !props.value?._id,
             quickSuggestions: false,
             wordWrap: 'on',
             contextmenu: false,
@@ -152,7 +153,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             padding: 10,
           }}>
           <DefaultButton
-            disabled={isUpdating}
+            disabled={isUpdating || !props.value?._id}
             primary={true}
             onClick={handleUpdate}
             styles={{ root: { flexShrink: 0, marginLeft: 10 } }}>
