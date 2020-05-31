@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useEffect } from 'react'
-import { Stack, IIconProps } from '@fluentui/react'
+import { Stack, IIconProps, getTheme } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import _ from 'lodash'
 
@@ -11,6 +11,7 @@ import { FilterInput } from './FilterInput'
 
 export function FilterStack() {
   const dispatch = useDispatch()
+  const theme = getTheme()
   const { database, collection } = useSelector((state) => state.root)
   const { index, filter, sort } = useSelector((state) => state.docs)
   useEffect(() => {
@@ -68,6 +69,9 @@ export function FilterStack() {
               sort[key] === 1 ? 'Up' : sort[key] === -1 ? 'Down' : 'Sort',
             styles: {
               root: {
+                color: disableSort
+                  ? theme.palette.neutralTertiary
+                  : theme.palette.neutralSecondary,
                 userSelect: 'none',
                 pointerEvents: 'unset',
                 cursor: disableSort ? 'not-allowed' : 'pointer',
