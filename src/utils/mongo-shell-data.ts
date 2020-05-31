@@ -59,16 +59,13 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
     return `NumberDecimal("${val.$numberDecimal}")`
   }
   if ('$numberDouble' in val) {
-    if (['Infinity', '-Infinity', 'NaN'].includes(val.$numberDouble)) {
-      return `NumberDouble("${val.$numberDouble}")`
-    }
     return val.$numberDouble
   }
   if ('$numberInt' in val) {
     return val.$numberInt
   }
   if ('$numberLong' in val) {
-    return val.$numberLong
+    return `NumberLong("${val.$numberLong}")`
   }
   if ('$regularExpression' in val) {
     return `/${val.$regularExpression.pattern}/${
