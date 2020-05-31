@@ -1,13 +1,28 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import { DefaultButton, MessageBar, MessageBarType } from '@fluentui/react'
+import {
+  DefaultButton,
+  MessageBar,
+  MessageBarType,
+  Dropdown,
+} from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
 import { parse } from '@/utils/mongo-shell-data'
+
+enum ValidationAction {
+  ERROR = 'error',
+  WARN = 'warn',
+}
+
+enum ValidationLevel {
+  STRICT = 'strict',
+  MODERATE = 'moderate',
+}
 
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
@@ -16,16 +31,18 @@ export default () => {
     () =>
       runCommand<{
         cursor: {
-          firstBatch: {
-            name: string
-            options: {
-              validationAction: 'error'
-              validationLevel: 'strict'
-              validator: {
-                $jsonSchema: JsonSchema
+          firstBatch: [
+            {
+              name: string
+              options: {
+                validationAction?: ValidationAction
+                validationLevel?: ValidationLevel
+                validator?: {
+                  $jsonSchema: JsonSchema
+                }
               }
-            }
-          }[]
+            },
+          ]
         }
       }>(database!, {
         listCollections: 1,
@@ -39,6 +56,14 @@ export default () => {
     },
   )
   const isDarkMode = useDarkMode()
+  const [
+    validationAction,
+    setValidationAction,
+  ] = useState<ValidationAction | null>(null)
+  const [
+    validationLevel,
+    setValidationLevel,
+  ] = useState<ValidationLevel | null>(null)
   const [value, setValue] = useState('')
   const [error, setError] = useState('')
   const [isUpdating, setIsUpdating] = useState(false)
@@ -48,6 +73,8 @@ export default () => {
       setIsUpdating(true)
       await runCommand(database!, {
         collMod: collection,
+        validationAction,
+        validationLevel,
         validator: {
           $jsonSchema: parse(value),
         },
@@ -59,15 +86,22 @@ export default () => {
     } finally {
       setIsUpdating(false)
     }
-  }, [database, collection, value, revalidate])
+  }, [
+    database,
+    collection,
+    value,
+    validationAction,
+    validationLevel,
+    revalidate,
+  ])
   useEffect(() => {
-    setValue(
-      JSON.stringify(
-        data?.cursor.firstBatch[0].options.validator.$jsonSchema,
-        null,
-        2,
-      ),
-    )
+    if (!data) {
+      return
+    }
+    const { options } = data.cursor.firstBatch[0]
+    setValidationAction(options.validationAction || null)
+    setValidationLevel(options.validationLevel || null)
+    setValue(JSON.stringify(options.validator?.$jsonSchema, null, 2))
   }, [data])
   useEffect(() => {
     if (isUpdateSucceed) {
@@ -124,6 +158,32 @@ export default () => {
             {error}
           </MessageBar>
         ) : null}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Dropdown
+            selectedKey={validationAction}
+            onChange={(_ev, option) => {
+              setValidationAction(option?.key as ValidationAction | null)
+            }}
+            styles={{ root: { marginRight: 10, width: 140 } }}
+            options={[
+              { key: ValidationAction.WARN, text: ValidationAction.WARN },
+              { key: ValidationAction.ERROR, text: ValidationAction.ERROR },
+            ]}
+            placeholder="validation action"
+          />
+          <Dropdown
+            selectedKey={validationLevel}
+            onChange={(_ev, option) => {
+              setValidationLevel(option?.key as ValidationLevel | null)
+            }}
+            styles={{ root: { marginRight: 10, width: 140 } }}
+            options={[
+              { key: ValidationLevel.MODERATE, text: ValidationLevel.MODERATE },
+              { key: ValidationLevel.STRICT, text: ValidationLevel.STRICT },
+            ]}
+            placeholder="validation level"
+          />
+        </div>
       </div>
     </>
   )
