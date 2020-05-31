@@ -11,7 +11,7 @@ import { parse } from '@/utils/mongo-shell-data'
 
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
-  const { data } = useSWR(
+  const { data, revalidate } = useSWR(
     database && collection ? `listCollections/${database}/${collection}` : null,
     () =>
       runCommand<{
@@ -33,6 +33,10 @@ export default () => {
           name: collection,
         },
       }),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
   )
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
@@ -49,12 +53,13 @@ export default () => {
         },
       })
       setIsUpdateSucceed(true)
+      revalidate()
     } catch (err) {
       setError(err.message)
     } finally {
       setIsUpdating(false)
     }
-  }, [database, collection, value])
+  }, [database, collection, value, revalidate])
   useEffect(() => {
     setValue(
       JSON.stringify(
