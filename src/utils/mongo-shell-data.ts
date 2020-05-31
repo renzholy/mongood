@@ -91,10 +91,10 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
           .join(',\n')}\n${spaces}]`
       : '[]'
   }
+  if (_.size(val) === 0) {
+    return '{}'
+  }
   if (indent === 0) {
-    if (_.size(val) === 0) {
-      return '{}'
-    }
     return `{ ${_.map(
       val,
       (value, key) =>

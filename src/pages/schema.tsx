@@ -99,9 +99,10 @@ export default () => {
       return
     }
     const { options } = data.cursor.firstBatch[0]
+    const str = stringify(options.validator?.$jsonSchema, 2)
     setValidationAction(options.validationAction || null)
     setValidationLevel(options.validationLevel || null)
-    setValue(`return ${stringify(options.validator?.$jsonSchema, 2)}\n`)
+    setValue(str ? `return ${str}\n` : '')
   }, [data])
   useEffect(() => {
     if (isUpdateSucceed) {
