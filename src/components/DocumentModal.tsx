@@ -24,15 +24,15 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const isDarkMode = useDarkMode()
+  const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState('')
   const [error, setError] = useState('')
   const [isUpdating, setIsUpdating] = useState(false)
   const [isUpdateSucceed, setIsUpdateSucceed] = useState(false)
   useEffect(() => {
-    if (props.value) {
-      setValue(stringify(props.value, 2))
-      setError('')
-    }
+    setIsOpen(!!props.value)
+    setValue(stringify(props.value, 2))
+    setError('')
   }, [props.value])
   const handleUpdate = useCallback(async () => {
     try {
@@ -85,9 +85,12 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             flexDirection: 'column',
           },
         }}
-        isOpen={!!props.value}
-        onDismiss={() => {
+        isOpen={isOpen}
+        onDismissed={() => {
           props.onChange(undefined)
+        }}
+        onDismiss={() => {
+          setIsOpen(false)
         }}>
         <div
           style={{
