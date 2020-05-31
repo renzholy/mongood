@@ -20,7 +20,7 @@ export function Pagination() {
       ? `count/${database}/${collection}/${JSON.stringify(filter)}`
       : null,
     () => {
-      return runCommand<{ n: number }>(database, {
+      return runCommand<{ n: number }>(database!, {
         count: collection,
         query: filter,
         hint: _.isEmpty(filter) ? undefined : index?.name,

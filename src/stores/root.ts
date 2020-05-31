@@ -3,14 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export default createSlice({
   name: 'root',
   initialState: {
-    database: '',
-    collection: '',
     expandedDatabases: [],
     collectionsMap: {},
     filter: {},
   } as {
-    database: string
-    collection: string
+    database?: string
+    collection?: string
     expandedDatabases: string[]
     collectionsMap: { [database: string]: string[] }
     filter: {
@@ -20,11 +18,11 @@ export default createSlice({
     }
   },
   reducers: {
-    setDatabase: (state, { payload }: PayloadAction<string>) => ({
+    setDatabase: (state, { payload }: PayloadAction<string | undefined>) => ({
       ...state,
       database: payload,
     }),
-    setCollection: (state, { payload }: PayloadAction<string>) => ({
+    setCollection: (state, { payload }: PayloadAction<string | undefined>) => ({
       ...state,
       collection: payload,
     }),

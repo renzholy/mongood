@@ -41,7 +41,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
       const { value: newDoc } = await runCommand<{
         value: T
       }>(
-        database,
+        database!,
         {
           findAndModify: collection,
           new: true,
