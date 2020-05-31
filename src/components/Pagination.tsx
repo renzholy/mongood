@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Stack, IconButton, Text } from '@fluentui/react'
+import { Stack, IconButton, Text, getTheme } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@/stores'
 import useSWR from 'swr'
@@ -14,6 +14,7 @@ export function Pagination() {
     (state) => state.docs,
   )
   const dispatch = useDispatch()
+  const theme = getTheme()
   const { data } = useSWR(
     database && collection
       ? `count/${database}/${collection}/${JSON.stringify(filter)}`
@@ -40,11 +41,13 @@ export function Pagination() {
   return (
     <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
       {count ? (
-        <Text style={{ marginRight: 20 }}>
+        <Text style={{ marginRight: 20, color: theme.palette.neutralPrimary }}>
           {skip + 1} ~ {Math.min(skip + limit, count)} of {Number.format(count)}
         </Text>
       ) : (
-        <Text style={{ marginRight: 20 }}>No Data</Text>
+        <Text style={{ marginRight: 20, color: theme.palette.neutralPrimary }}>
+          No Data
+        </Text>
       )}
       <IconButton
         iconProps={{ iconName: 'Back' }}
