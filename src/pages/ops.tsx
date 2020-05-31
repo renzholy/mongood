@@ -10,7 +10,7 @@ import { Table } from '@/components/Table'
 import { FilterInput } from '@/components/FilterInput'
 
 const examples: { [key: string]: object } = {
-  'Slow Operations': {
+  'Slow operations': {
     active: true,
     microsecs_running: { $gte: 100 * 1000 },
   },
@@ -18,7 +18,7 @@ const examples: { [key: string]: object } = {
     op: 'query',
     planSummary: 'COLLSCAN',
   },
-  'Write Operations': {
+  'Write operations': {
     $or: [
       { op: { $in: ['insert', 'update', 'remove'] } },
       { 'command.findandmodify': { $exists: true } },
@@ -27,14 +27,14 @@ const examples: { [key: string]: object } = {
   'Waiting for a Lock': {
     waitingForLock: true,
   },
-  'Operations with no Yields': {
+  'Operations with no yields': {
     numYields: 0,
     waitingForLock: false,
   },
-  'Operations with high numYields': {
+  'Operations with high yields num': {
     numYields: { $gte: 100 },
   },
-  'Indexing Operations': {
+  'Indexing operations': {
     $or: [
       { op: 'command', 'command.createIndexes': { $exists: true } },
       { op: 'none', msg: parse('/^Index Build/') },
