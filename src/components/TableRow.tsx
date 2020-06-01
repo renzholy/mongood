@@ -65,11 +65,19 @@ export function TableRow<T extends { [key: string]: MongoData }>(props: {
         },
       }}
       instantOpenOnClick={true}>
-      <span dangerouslySetInnerHTML={{ __html: html }} />
+      <span
+        style={{ display: 'inline-block', verticalAlign: 'sub' }}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     </HoverCard>
   ) : (
     <span
-      style={{ cursor: 'default', userSelect: 'none' }}
+      style={{
+        display: 'inline-block',
+        verticalAlign: 'sub',
+        cursor: 'default',
+        userSelect: 'none',
+      }}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
