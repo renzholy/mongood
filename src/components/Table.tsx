@@ -12,9 +12,8 @@ import {
   IDetailsHeaderProps,
   ProgressIndicator,
   getTheme,
-  MessageBar,
-  MessageBarType,
   IColumn,
+  Text,
 } from '@fluentui/react'
 import _ from 'lodash'
 
@@ -88,15 +87,16 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
       <div
         style={{
           borderTop: `1px solid ${theme.palette.red}`,
-          display: 'flex',
-          justifyContent: 'center',
+          padding: 10,
         }}>
         {error.message ? (
-          <MessageBar
-            messageBarType={MessageBarType.error}
-            styles={{ root: { margin: 10 } }}>
+          <Text
+            variant="large"
+            styles={{
+              root: { color: theme.palette.neutralPrimaryAlt },
+            }}>
             {error.message}
-          </MessageBar>
+          </Text>
         ) : null}
       </div>
     )
@@ -106,14 +106,15 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
       <div
         style={{
           borderTop: `1px solid ${theme.palette.neutralLight}`,
-          display: 'flex',
-          justifyContent: 'center',
+          padding: 10,
         }}>
-        <MessageBar
-          messageBarType={MessageBarType.info}
-          styles={{ root: { margin: 10 } }}>
+        <Text
+          variant="large"
+          styles={{
+            root: { color: theme.palette.neutralPrimaryAlt },
+          }}>
           No Data
-        </MessageBar>
+        </Text>
       </div>
     )
   }
