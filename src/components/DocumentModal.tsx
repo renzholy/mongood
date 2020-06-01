@@ -1,14 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
-import {
-  Modal,
-  IconButton,
-  DefaultButton,
-  getTheme,
-  Text,
-  MessageBar,
-  MessageBarType,
-} from '@fluentui/react'
+import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -16,6 +8,7 @@ import { stringify, MongoData, parse } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
+import { ActionButton } from './ActionButton'
 
 export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
   value?: T
@@ -26,49 +19,30 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
   const isDarkMode = useDarkMode()
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState('')
-  const [error, setError] = useState('')
-  const [isUpdating, setIsUpdating] = useState(false)
-  const [isUpdateSucceed, setIsUpdateSucceed] = useState(false)
   useEffect(() => {
     setIsOpen(!!props.value)
     setValue(`return ${stringify(props.value, 2)}\n`)
-    setError('')
   }, [props.value])
   const handleUpdate = useCallback(async () => {
-    try {
-      setIsUpdating(true)
-      const doc = parse(value.replace(/^return/, ''))
-      const { value: newDoc } = await runCommand<{
-        value: T
-      }>(
-        database!,
-        {
-          findAndModify: collection,
-          new: true,
-          query: {
-            _id: (doc as { _id: unknown })._id,
-          },
-          update: {
-            $set: doc,
-          },
+    const doc = parse(value.replace(/^return/, ''))
+    const { value: newDoc } = await runCommand<{
+      value: T
+    }>(
+      database!,
+      {
+        findAndModify: collection,
+        new: true,
+        query: {
+          _id: (doc as { _id: unknown })._id,
         },
-        { canonical: true },
-      )
-      props.onChange(newDoc)
-      setIsUpdateSucceed(true)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setIsUpdating(false)
-    }
+        update: {
+          $set: doc,
+        },
+      },
+      { canonical: true },
+    )
+    props.onChange(newDoc)
   }, [database, collection, value])
-  useEffect(() => {
-    if (isUpdateSucceed) {
-      setTimeout(() => {
-        setIsUpdateSucceed(false)
-      }, 2 * 1000)
-    }
-  }, [isUpdateSucceed])
 
   return (
     <>
@@ -153,27 +127,13 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             flexDirection: 'row-reverse',
             padding: 10,
           }}>
-          <DefaultButton
-            disabled={isUpdating || !props.value?._id}
+          <ActionButton
+            text="Update Document"
+            disabled={!props.value?._id}
             primary={true}
             onClick={handleUpdate}
-            styles={{ root: { flexShrink: 0, marginLeft: 10 } }}>
-            Update Document
-          </DefaultButton>
-          {isUpdateSucceed ? (
-            <MessageBar
-              messageBarType={MessageBarType.success}
-              isMultiline={false}>
-              Update succeed
-            </MessageBar>
-          ) : null}
-          {error ? (
-            <MessageBar
-              messageBarType={MessageBarType.error}
-              isMultiline={false}>
-              {error}
-            </MessageBar>
-          ) : null}
+            style={{ flexShrink: 0, marginLeft: 10 }}
+          />
         </div>
       </Modal>
     </>

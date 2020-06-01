@@ -1,18 +1,14 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import {
-  DefaultButton,
-  MessageBar,
-  MessageBarType,
-  Dropdown,
-} from '@fluentui/react'
+import { Dropdown } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
 import { stringify, parse } from '@/utils/mongo-shell-data'
+import { ActionButton } from '@/components/ActionButton'
 
 enum ValidationAction {
   ERROR = 'error',
@@ -65,27 +61,16 @@ export default () => {
     setValidationLevel,
   ] = useState<ValidationLevel | null>(null)
   const [value, setValue] = useState('')
-  const [error, setError] = useState('')
-  const [isUpdating, setIsUpdating] = useState(false)
-  const [isUpdateSucceed, setIsUpdateSucceed] = useState(false)
   const handleUpdate = useCallback(async () => {
-    try {
-      setIsUpdating(true)
-      await runCommand(database!, {
-        collMod: collection,
-        validationAction,
-        validationLevel,
-        validator: {
-          $jsonSchema: parse(value.replace(/^return/, '')),
-        },
-      })
-      setIsUpdateSucceed(true)
-      revalidate()
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setIsUpdating(false)
-    }
+    await runCommand(database!, {
+      collMod: collection,
+      validationAction,
+      validationLevel,
+      validator: {
+        $jsonSchema: parse(value.replace(/^return/, '')),
+      },
+    })
+    revalidate()
   }, [
     database,
     collection,
@@ -104,13 +89,6 @@ export default () => {
     setValidationLevel(options.validationLevel || null)
     setValue(str ? `return ${str}\n` : '')
   }, [data])
-  useEffect(() => {
-    if (isUpdateSucceed) {
-      setTimeout(() => {
-        setIsUpdateSucceed(false)
-      }, 2 * 1000)
-    }
-  }, [isUpdateSucceed])
 
   if (!database || !collection) {
     return null
@@ -140,25 +118,12 @@ export default () => {
           flexDirection: 'row-reverse',
           padding: 10,
         }}>
-        <DefaultButton
-          disabled={isUpdating}
+        <ActionButton
+          text="Update Schema"
           primary={true}
           onClick={handleUpdate}
-          styles={{ root: { flexShrink: 0, marginLeft: 10 } }}>
-          Update Schema
-        </DefaultButton>
-        {isUpdateSucceed ? (
-          <MessageBar
-            messageBarType={MessageBarType.success}
-            isMultiline={false}>
-            Update succeed
-          </MessageBar>
-        ) : null}
-        {error ? (
-          <MessageBar messageBarType={MessageBarType.error} isMultiline={false}>
-            {error}
-          </MessageBar>
-        ) : null}
+          style={{ flexShrink: 0, marginLeft: 10 }}
+        />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Dropdown
             selectedKey={validationAction}
