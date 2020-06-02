@@ -84,6 +84,9 @@ export default () => {
         variant="xxLarge"
         block={true}
         styles={{ root: { padding: 10, color: theme.palette.neutralPrimary } }}>
+        <span style={{ color: theme.palette.neutralSecondary }}>
+          Database:&nbsp;
+        </span>
         {dbStats.db}
       </Text>
       <Stack
@@ -113,14 +116,17 @@ export default () => {
           content={bytes(dbStats.avgObjSize || 0, { unitSeparator: ' ' })}
         />
         <InfoCard
-          title="Collections:"
-          content={Number.format(dbStats.collections)}
+          title="Collections + Views:"
+          content={Number.format(dbStats.collections + dbStats.views)}
         />
       </Stack>
       <Text
         variant="xxLarge"
         block={true}
         styles={{ root: { padding: 10, color: theme.palette.neutralPrimary } }}>
+        <span style={{ color: theme.palette.neutralSecondary }}>
+          Collection:&nbsp;
+        </span>
         {collection}
       </Text>
       <Stack
