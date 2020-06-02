@@ -35,9 +35,7 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
         query: {
           _id: (doc as { _id: unknown })._id,
         },
-        update: {
-          $set: doc,
-        },
+        update: doc,
       },
       { canonical: true },
     )

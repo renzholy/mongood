@@ -31,7 +31,7 @@ export function ActionButton(props: {
     if (succeed) {
       setTimeout(() => {
         setSucceed(false)
-      }, 2 * 1000)
+      }, 1000)
     }
   }, [succeed])
 
