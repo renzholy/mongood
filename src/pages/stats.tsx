@@ -55,7 +55,7 @@ export default () => {
     return <LargeMessage iconName="Back" title="Select collection" />
   }
   return (
-    <div style={{ overflowY: 'scroll', padding: 10 }}>
+    <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
       <Stack
         tokens={{ padding: 10, childrenGap: 20 }}
         horizontal={true}

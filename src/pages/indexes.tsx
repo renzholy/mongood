@@ -23,7 +23,7 @@ export default () => {
     return <LargeMessage iconName="Back" title="Select collection" />
   }
   return (
-    <div style={{ overflowY: 'scroll', padding: 10 }}>
+    <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
       <IndexCardList
         indexDetails={stats.indexDetails}
         indexSizes={stats.indexSizes}
