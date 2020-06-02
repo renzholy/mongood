@@ -40,8 +40,9 @@ function InfoCard(props: { title: string; content: string }) {
 }
 
 export default () => {
+  const theme = getTheme()
   const { database, collection } = useSelector((state) => state.root)
-  const { data: stats } = useSWR(
+  const { data: collStats } = useSWR(
     database && collection ? `collStats/${database}/${collection}` : null,
     () => {
       return runCommand<CollStats>(database!, {
@@ -50,39 +51,105 @@ export default () => {
     },
     { refreshInterval: 5 * 1000 },
   )
+  const { data: dbStats } = useSWR(
+    database ? `dbStats/${database}` : null,
+    () => {
+      return runCommand<{
+        avgObjSize: number
+        collections: number
+        dataSize: number
+        db: string
+        fileSize: number
+        indexSize: number
+        indexes: number
+        nsSizeMB: number
+        numExtents: number
+        objects: number
+        ok: number
+        storageSize: number
+        views: number
+      }>(database!, {
+        dbStats: 1,
+      })
+    },
+    { refreshInterval: 5 * 1000 },
+  )
 
-  if (!stats) {
+  if (!collStats || !dbStats) {
     return <LargeMessage iconName="Back" title="Select collection" />
   }
   return (
     <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
+      <Text
+        variant="xxLarge"
+        block={true}
+        styles={{ root: { padding: 10, color: theme.palette.neutralPrimary } }}>
+        {dbStats.db}
+      </Text>
       <Stack
         tokens={{ padding: 10, childrenGap: 20 }}
         horizontal={true}
         styles={{ root: { overflowX: 'scroll' } }}>
         <InfoCard
           title="Size:"
-          content={bytes(stats.size, { unitSeparator: ' ' })}
+          content={bytes(dbStats.dataSize, { unitSeparator: ' ' })}
         />
-        <InfoCard title="Count:" content={Number.format(stats.count)} />
         <InfoCard
-          title="Total Index Size:"
-          content={bytes(stats.totalIndexSize, { unitSeparator: ' ' })}
+          title="Index Size:"
+          content={bytes(dbStats.indexSize, { unitSeparator: ' ' })}
+        />
+        <InfoCard
+          title="Storage Size:"
+          content={bytes(dbStats.storageSize, { unitSeparator: ' ' })}
         />
       </Stack>
       <Stack
         tokens={{ padding: 10, childrenGap: 20 }}
         horizontal={true}
         styles={{ root: { overflowX: 'scroll' } }}>
-        <InfoCard
-          title="Storage Size:"
-          content={bytes(stats.storageSize, { unitSeparator: ' ' })}
-        />
+        <InfoCard title="Count:" content={Number.format(dbStats.objects)} />
         <InfoCard
           title="Average Object Size:"
-          content={bytes(stats.avgObjSize || 0, { unitSeparator: ' ' })}
+          content={bytes(dbStats.avgObjSize || 0, { unitSeparator: ' ' })}
         />
-        <InfoCard title="Capped:" content={stats.capped ? 'Yes' : 'No'} />
+        <InfoCard
+          title="Collections:"
+          content={Number.format(dbStats.collections)}
+        />
+      </Stack>
+      <Text
+        variant="xxLarge"
+        block={true}
+        styles={{ root: { padding: 10, color: theme.palette.neutralPrimary } }}>
+        {collection}
+      </Text>
+      <Stack
+        tokens={{ padding: 10, childrenGap: 20 }}
+        horizontal={true}
+        styles={{ root: { overflowX: 'scroll' } }}>
+        <InfoCard
+          title="Size:"
+          content={bytes(collStats.size, { unitSeparator: ' ' })}
+        />
+        <InfoCard
+          title="Index Size:"
+          content={bytes(collStats.totalIndexSize, { unitSeparator: ' ' })}
+        />
+        <InfoCard
+          title="Storage Size:"
+          content={bytes(collStats.storageSize, { unitSeparator: ' ' })}
+        />
+      </Stack>
+      <Stack
+        tokens={{ padding: 10, childrenGap: 20 }}
+        horizontal={true}
+        styles={{ root: { overflowX: 'scroll' } }}>
+        <InfoCard title="Count:" content={Number.format(collStats.count)} />
+        <InfoCard
+          title="Average Object Size:"
+          content={bytes(collStats.avgObjSize || 0, { unitSeparator: ' ' })}
+        />
+        <InfoCard title="Capped:" content={collStats.capped ? 'Yes' : 'No'} />
       </Stack>
     </div>
   )
