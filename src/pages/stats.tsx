@@ -116,6 +116,7 @@ export default () => {
       }>('admin', {
         serverStatus: 1,
       }),
+    { refreshInterval: 5 * 1000 },
   )
 
   if (!collStats || !dbStats) {
@@ -243,24 +244,15 @@ export default () => {
             styles={{ root: { overflowX: 'scroll' } }}>
             <InfoCard
               title="Insert:"
-              content={Number.format(
-                serverStatus.opcountersRepl?.insert ||
-                  serverStatus.opcounters?.insert,
-              )}
+              content={Number.format(serverStatus.opcounters.insert)}
             />
             <InfoCard
               title="Query:"
-              content={Number.format(
-                serverStatus.opcountersRepl?.query ||
-                  serverStatus.opcounters?.query,
-              )}
+              content={Number.format(serverStatus.opcounters.query)}
             />
             <InfoCard
               title="Update:"
-              content={Number.format(
-                serverStatus.opcountersRepl?.update ||
-                  serverStatus.opcounters?.update,
-              )}
+              content={Number.format(serverStatus.opcounters.update)}
             />
           </Stack>
           <Stack
@@ -269,26 +261,63 @@ export default () => {
             styles={{ root: { overflowX: 'scroll' } }}>
             <InfoCard
               title="Delete:"
-              content={Number.format(
-                serverStatus.opcountersRepl?.delete ||
-                  serverStatus.opcounters?.delete,
-              )}
+              content={Number.format(serverStatus.opcounters.delete)}
             />
             <InfoCard
               title="Get More:"
-              content={Number.format(
-                serverStatus.opcountersRepl?.getmore ||
-                  serverStatus.opcounters?.getmore,
-              )}
+              content={Number.format(serverStatus.opcounters.getmore)}
             />
             <InfoCard
               title="Command:"
-              content={Number.format(
-                serverStatus.opcountersRepl?.command ||
-                  serverStatus.opcounters?.command,
-              )}
+              content={Number.format(serverStatus.opcounters.command)}
             />
           </Stack>
+          {serverStatus.opcountersRepl ? (
+            <>
+              <Text
+                variant="xxLarge"
+                block={true}
+                styles={{
+                  root: { padding: 10, color: theme.palette.neutralPrimary },
+                }}>
+                Op Counters Repl
+              </Text>
+              <Stack
+                tokens={{ padding: 10, childrenGap: 20 }}
+                horizontal={true}
+                styles={{ root: { overflowX: 'scroll' } }}>
+                <InfoCard
+                  title="Insert:"
+                  content={Number.format(serverStatus.opcountersRepl.insert)}
+                />
+                <InfoCard
+                  title="Query:"
+                  content={Number.format(serverStatus.opcountersRepl.query)}
+                />
+                <InfoCard
+                  title="Update:"
+                  content={Number.format(serverStatus.opcountersRepl.update)}
+                />
+              </Stack>
+              <Stack
+                tokens={{ padding: 10, childrenGap: 20 }}
+                horizontal={true}
+                styles={{ root: { overflowX: 'scroll' } }}>
+                <InfoCard
+                  title="Delete:"
+                  content={Number.format(serverStatus.opcountersRepl.delete)}
+                />
+                <InfoCard
+                  title="Get More:"
+                  content={Number.format(serverStatus.opcountersRepl.getmore)}
+                />
+                <InfoCard
+                  title="Command:"
+                  content={Number.format(serverStatus.opcountersRepl.command)}
+                />
+              </Stack>
+            </>
+          ) : null}
         </div>
       )
     }
