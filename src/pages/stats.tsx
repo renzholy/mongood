@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import { Stack, Text, getTheme } from '@fluentui/react'
 import { Card } from '@uifabric/react-cards'
 import bytes from 'bytes'
+import prettyMilliseconds from 'pretty-ms'
 import { CollStats } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
@@ -80,6 +81,7 @@ export default () => {
     () =>
       runCommand<{
         host: string
+        uptimeMillis: number
         repl?: {
           setName: string
           hosts: string[]
@@ -130,6 +132,17 @@ export default () => {
               Host:&nbsp;
             </span>
             {serverStatus.host}
+          </Text>
+          <Text
+            variant="xxLarge"
+            block={true}
+            styles={{
+              root: { padding: 10, color: theme.palette.neutralPrimary },
+            }}>
+            <span style={{ color: theme.palette.neutralSecondary }}>
+              Uptime:&nbsp;
+            </span>
+            {prettyMilliseconds(serverStatus.uptimeMillis)}
           </Text>
           {serverStatus.repl ? (
             <>
