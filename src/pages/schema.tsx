@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import { Dropdown } from '@fluentui/react'
+import { Dropdown, getTheme } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
@@ -52,6 +52,7 @@ export default () => {
     },
   )
   const isDarkMode = useDarkMode()
+  const theme = getTheme()
   const [
     validationAction,
     setValidationAction,
@@ -117,6 +118,7 @@ export default () => {
           justifyContent: 'space-between',
           flexDirection: 'row-reverse',
           padding: 10,
+          backgroundColor: theme.palette.neutralLighterAlt,
         }}>
         <ActionButton
           text="Update Schema"
