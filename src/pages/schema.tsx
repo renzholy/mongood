@@ -132,7 +132,8 @@ export default () => {
             onChange={(_ev, option) => {
               setValidationAction(option?.key as ValidationAction | null)
             }}
-            styles={{ root: { marginRight: 10, width: 140 } }}
+            errorMessage={value && !validationAction ? ' ' : undefined}
+            styles={{ root: { marginRight: 10, width: 140, height: 32 } }}
             options={[
               { key: ValidationAction.WARN, text: ValidationAction.WARN },
               { key: ValidationAction.ERROR, text: ValidationAction.ERROR },
@@ -144,7 +145,8 @@ export default () => {
             onChange={(_ev, option) => {
               setValidationLevel(option?.key as ValidationLevel | null)
             }}
-            styles={{ root: { marginRight: 10, width: 140 } }}
+            errorMessage={value && !validationLevel ? ' ' : undefined}
+            styles={{ root: { marginRight: 10, width: 140, height: 32 } }}
             options={[
               { key: ValidationLevel.MODERATE, text: ValidationLevel.MODERATE },
               { key: ValidationLevel.STRICT, text: ValidationLevel.STRICT },
