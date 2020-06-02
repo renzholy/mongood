@@ -1,5 +1,11 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { DefaultButton, Dialog, IStyle, DialogType } from '@fluentui/react'
+import {
+  DefaultButton,
+  Dialog,
+  IStyle,
+  DialogType,
+  getTheme,
+} from '@fluentui/react'
 
 export function ActionButton(props: {
   text: string
@@ -8,6 +14,7 @@ export function ActionButton(props: {
   onClick(): Promise<void>
   style?: IStyle
 }) {
+  const theme = getTheme()
   const [hidden, setHidden] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -21,12 +28,10 @@ export function ActionButton(props: {
       setSucceed(true)
     } catch (err) {
       setError(err.message)
+      setHidden(false)
     }
     setLoading(false)
   }, [props.onClick])
-  useEffect(() => {
-    setHidden(!error)
-  }, [error])
   useEffect(() => {
     if (succeed) {
       setTimeout(() => {
@@ -48,6 +53,12 @@ export function ActionButton(props: {
           },
         }}
         modalProps={{
+          styles: {
+            scrollableContent: {
+              borderTop: `4px solid ${theme.palette.red}`,
+              backgroundColor: theme.palette.neutralLighterAlt,
+            },
+          },
           onDismiss() {
             setHidden(true)
           },
