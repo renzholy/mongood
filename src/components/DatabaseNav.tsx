@@ -85,11 +85,13 @@ export function DatabaseNav() {
                 ? data.databases.map(({ name }) => ({
                     key: name,
                     name,
+                    title: name,
                     url: '',
                     isExpanded: expandedDatabases.includes(name),
                     links: collectionsMap[name]?.map((_collection) => ({
-                      name: _collection,
                       key: `${name}${splitter}${_collection}`,
+                      name: _collection,
+                      title: _collection,
                       url: '',
                     })) || [
                       {
