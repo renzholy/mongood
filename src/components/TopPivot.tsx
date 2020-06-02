@@ -20,6 +20,7 @@ export function TopPivot() {
       }}>
       <PivotItem headerText="Documents" itemKey="/docs" />
       <PivotItem headerText="Indexes" itemKey="/indexes" />
+      <PivotItem headerText="Stats" itemKey="/stats" />
       <PivotItem headerText="Operations" itemKey="/ops" />
       <PivotItem headerText="Schema" itemKey="/schema" />
     </Pivot>
