@@ -4,7 +4,7 @@ import { useHistory } from 'umi'
 export default () => {
   const history = useHistory()
   useEffect(() => {
-    history.replace('/docs')
+    history.replace('/stats')
   }, [])
   return <div />
 }

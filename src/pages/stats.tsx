@@ -54,7 +54,7 @@ export default () => {
       runCommand<CollStats>(database!, {
         collStats: collection,
       }),
-    { refreshInterval: 5 * 1000 },
+    { refreshInterval: 1000 },
   )
   const { data: dbStats } = useSWR(
     database ? `dbStats/${database}` : null,
@@ -74,7 +74,7 @@ export default () => {
       }>(database!, {
         dbStats: 1,
       }),
-    { refreshInterval: 5 * 1000 },
+    { refreshInterval: 1000 },
   )
   const { data: serverStatus } = useSWR(
     database && collection ? null : 'serverStatus',
@@ -116,7 +116,7 @@ export default () => {
       }>('admin', {
         serverStatus: 1,
       }),
-    { refreshInterval: 5 * 1000 },
+    { refreshInterval: 1000 },
   )
 
   if (!collStats || !dbStats) {
