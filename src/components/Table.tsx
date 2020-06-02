@@ -107,23 +107,6 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
       </div>
     )
   }
-  if (items?.length === 0) {
-    return (
-      <div
-        style={{
-          borderTop: `1px solid ${theme.palette.neutralLight}`,
-          padding: 10,
-        }}>
-        <Text
-          variant="large"
-          styles={{
-            root: { color: theme.palette.neutralPrimaryAlt },
-          }}>
-          No Data
-        </Text>
-      </div>
-    )
-  }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
       <DocumentInsertModal
@@ -139,25 +122,41 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
           dispatch(actions.docs.setIsUpdateOpen(false))
         }}
       />
-      <ScrollablePane
-        styles={{
-          root: { maxWidth: '100%' },
-          stickyBelow: { display: 'none' },
-        }}>
-        <DetailsList
-          columns={columns}
-          selectionMode={SelectionMode.none}
-          constrainMode={ConstrainMode.unconstrained}
-          layoutMode={DetailsListLayoutMode.justified}
-          onShouldVirtualize={() => false}
-          items={items || []}
-          onRenderItemColumn={(item, _index, column) => (
-            <TableRow value={item} column={column} />
-          )}
-          onRenderDetailsHeader={onRenderDetailsHeader}
-          onItemInvoked={onItemInvoked}
-        />
-      </ScrollablePane>
+      {items?.length === 0 ? (
+        <div
+          style={{
+            borderTop: `1px solid ${theme.palette.neutralLight}`,
+            padding: 10,
+          }}>
+          <Text
+            variant="large"
+            styles={{
+              root: { color: theme.palette.neutralPrimaryAlt },
+            }}>
+            No Data
+          </Text>
+        </div>
+      ) : (
+        <ScrollablePane
+          styles={{
+            root: { maxWidth: '100%' },
+            stickyBelow: { display: 'none' },
+          }}>
+          <DetailsList
+            columns={columns}
+            selectionMode={SelectionMode.none}
+            constrainMode={ConstrainMode.unconstrained}
+            layoutMode={DetailsListLayoutMode.justified}
+            onShouldVirtualize={() => false}
+            items={items || []}
+            onRenderItemColumn={(item, _index, column) => (
+              <TableRow value={item} column={column} />
+            )}
+            onRenderDetailsHeader={onRenderDetailsHeader}
+            onItemInvoked={onItemInvoked}
+          />
+        </ScrollablePane>
+      )}
     </div>
   )
 }
