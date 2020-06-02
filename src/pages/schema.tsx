@@ -9,6 +9,7 @@ import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
 import { stringify, parse } from '@/utils/mongo-shell-data'
 import { ActionButton } from '@/components/ActionButton'
+import { LargeMessage } from '@/components/LargeMessage'
 
 enum ValidationAction {
   ERROR = 'error',
@@ -92,7 +93,7 @@ export default () => {
   }, [data])
 
   if (!database || !collection) {
-    return null
+    return <LargeMessage iconName="Back" title="Select collection" />
   }
   return (
     <>

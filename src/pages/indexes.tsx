@@ -9,6 +9,7 @@ import { CollStats } from 'mongodb'
 import { IndexCardList } from '@/components/IndexCardList'
 import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
+import { LargeMessage } from '@/components/LargeMessage'
 
 function InfoCard(props: { title: string; content: string }) {
   const theme = getTheme()
@@ -52,7 +53,7 @@ export default () => {
   )
 
   if (!stats) {
-    return null
+    return <LargeMessage iconName="Back" title="Select collection" />
   }
   return (
     <div style={{ overflowY: 'scroll', padding: 10 }}>

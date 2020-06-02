@@ -13,7 +13,6 @@ import {
   ProgressIndicator,
   getTheme,
   IColumn,
-  Text,
 } from '@fluentui/react'
 import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
@@ -23,6 +22,7 @@ import { actions } from '@/stores'
 import { DocumentUpdateModal } from './DocumentUpdateModal'
 import { TableRow } from './TableRow'
 import { DocumentInsertModal } from './DocumentInsertModal'
+import { LargeMessage } from './LargeMessage'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
@@ -90,21 +90,14 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
 
   if (error) {
     return (
-      <div
+      <LargeMessage
         style={{
           borderTop: `1px solid ${theme.palette.red}`,
-          padding: 10,
-        }}>
-        {error.message ? (
-          <Text
-            variant="large"
-            styles={{
-              root: { color: theme.palette.neutralPrimaryAlt },
-            }}>
-            {error.message}
-          </Text>
-        ) : null}
-      </div>
+        }}
+        iconName="Error"
+        title="Error"
+        content={error.message}
+      />
     )
   }
   return (
@@ -123,19 +116,13 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
         }}
       />
       {items?.length === 0 ? (
-        <div
+        <LargeMessage
           style={{
             borderTop: `1px solid ${theme.palette.neutralLight}`,
-            padding: 10,
-          }}>
-          <Text
-            variant="large"
-            styles={{
-              root: { color: theme.palette.neutralPrimaryAlt },
-            }}>
-            No Data
-          </Text>
-        </div>
+          }}
+          iconName="Database"
+          title="No Data"
+        />
       ) : (
         <ScrollablePane
           styles={{
