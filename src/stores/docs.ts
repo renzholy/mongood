@@ -4,12 +4,12 @@ import { IndexSpecification, FilterQuery } from 'mongodb'
 export default createSlice({
   name: 'docs',
   initialState: {
-    index: undefined,
     filter: {},
     sort: {},
     skip: 0,
     limit: 25,
     count: 0,
+    isInsertOpen: false,
   } as {
     index?: IndexSpecification
     filter: FilterQuery<unknown>
@@ -17,6 +17,7 @@ export default createSlice({
     skip: number
     limit: number
     count: number
+    isInsertOpen: boolean
   },
   reducers: {
     setIndex: (
@@ -44,6 +45,10 @@ export default createSlice({
     setCount: (state, { payload }: PayloadAction<number>) => ({
       ...state,
       count: payload,
+    }),
+    setIsInsertOpen: (state, { payload }: PayloadAction<boolean>) => ({
+      ...state,
+      isInsertOpen: payload,
     }),
   },
 })

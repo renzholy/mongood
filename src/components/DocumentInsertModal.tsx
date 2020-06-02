@@ -1,45 +1,32 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { stringify, MongoData, parse } from '@/utils/mongo-shell-data'
+import { MongoData, parse } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
 import { ActionButton } from './ActionButton'
 
-export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
-  value?: T
-  onChange(value?: T): void
-}) {
+export function DocumentInsertModal<
+  T extends { [key: string]: MongoData }
+>(props: { isOpen: boolean; onDismiss(): void }) {
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const isDarkMode = useDarkMode()
-  const [isOpen, setIsOpen] = useState(false)
-  const [value, setValue] = useState('')
-  useEffect(() => {
-    setIsOpen(!!props.value)
-    setValue(`return ${stringify(props.value, 2)}\n`)
-  }, [props.value])
-  const handleUpdate = useCallback(async () => {
+  const [value, setValue] = useState('{}')
+  const handleInsert = useCallback(async () => {
     const doc = parse(value.replace(/^return/, ''))
-    const { value: newDoc } = await runCommand<{
+    await runCommand<{
       value: T
-    }>(
-      database!,
-      {
-        findAndModify: collection,
-        new: true,
-        query: {
-          _id: (doc as { _id: unknown })._id,
-        },
-        update: doc,
-      },
-      { canonical: true },
-    )
-    props.onChange(newDoc)
+    }>(database!, {
+      insert: collection,
+      documents: [doc],
+    })
+    setValue('{}')
+    props.onDismiss()
   }, [database, collection, value])
 
   return (
@@ -58,13 +45,8 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             backgroundColor: theme.palette.neutralLighterAlt,
           },
         }}
-        isOpen={isOpen}
-        onDismissed={() => {
-          props.onChange(undefined)
-        }}
-        onDismiss={() => {
-          setIsOpen(false)
-        }}>
+        isOpen={props.isOpen}
+        onDismiss={props.onDismiss}>
         <div
           style={{
             display: 'flex',
@@ -84,14 +66,12 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
                 overflow: 'hidden',
               },
             }}>
-            {props.value?._id ? stringify(props.value._id) : 'View Document'}
+            New Document
           </Text>
           <IconButton
             styles={{ root: { marginLeft: 10 } }}
             iconProps={{ iconName: 'Cancel' }}
-            onClick={() => {
-              props.onChange(undefined)
-            }}
+            onClick={props.onDismiss}
           />
         </div>
         <ControlledEditor
@@ -109,7 +89,6 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             })
           }}
           options={{
-            readOnly: !props.value?._id,
             quickSuggestions: false,
             wordWrap: 'on',
             contextmenu: false,
@@ -126,10 +105,9 @@ export function DocumentModal<T extends { [key: string]: MongoData }>(props: {
             padding: 10,
           }}>
           <ActionButton
-            text="Update Document"
-            disabled={!props.value?._id}
+            text="Insert Document"
             primary={true}
-            onClick={handleUpdate}
+            onClick={handleInsert}
             style={{ flexShrink: 0, marginLeft: 10 }}
           />
         </div>

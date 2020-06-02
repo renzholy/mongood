@@ -7,10 +7,11 @@ import _ from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
+import { DocumentInsertModal } from './DocumentInsertModal'
 
 export function Pagination() {
   const { database, collection } = useSelector((state) => state.root)
-  const { index, filter, skip, limit, count } = useSelector(
+  const { index, filter, skip, limit, count, isInsertOpen } = useSelector(
     (state) => state.docs,
   )
   const dispatch = useDispatch()
@@ -39,30 +40,47 @@ export function Pagination() {
   }, [database, collection])
 
   return (
-    <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
-      {count ? (
-        <Text style={{ marginRight: 20, color: theme.palette.neutralPrimary }}>
-          {skip + 1} ~ {Math.min(skip + limit, count)} of {Number.format(count)}
-        </Text>
-      ) : (
-        <Text style={{ marginRight: 20, color: theme.palette.neutralPrimary }}>
-          No Data
-        </Text>
-      )}
-      <IconButton
-        iconProps={{ iconName: 'Back' }}
-        disabled={skip <= 0}
-        onClick={() => {
-          dispatch(actions.docs.setSkip(Math.max(skip - limit, 0)))
+    <>
+      <DocumentInsertModal
+        isOpen={isInsertOpen}
+        onDismiss={() => {
+          dispatch(actions.docs.setIsInsertOpen(false))
         }}
       />
-      <IconButton
-        iconProps={{ iconName: 'Forward' }}
-        disabled={skip + limit >= count}
-        onClick={() => {
-          dispatch(actions.docs.setSkip(Math.min(skip + limit, count)))
-        }}
-      />
-    </Stack>
+      <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
+        {count ? (
+          <Text
+            style={{ marginRight: 20, color: theme.palette.neutralPrimary }}>
+            {skip + 1} ~ {Math.min(skip + limit, count)} of{' '}
+            {Number.format(count)}
+          </Text>
+        ) : (
+          <Text
+            style={{ marginRight: 20, color: theme.palette.neutralPrimary }}>
+            No Data
+          </Text>
+        )}
+        <IconButton
+          iconProps={{ iconName: 'Back' }}
+          disabled={skip <= 0}
+          onClick={() => {
+            dispatch(actions.docs.setSkip(Math.max(skip - limit, 0)))
+          }}
+        />
+        <IconButton
+          iconProps={{ iconName: 'Forward' }}
+          disabled={skip + limit >= count}
+          onClick={() => {
+            dispatch(actions.docs.setSkip(Math.min(skip + limit, count)))
+          }}
+        />
+        <IconButton
+          iconProps={{ iconName: 'Add' }}
+          onClick={() => {
+            dispatch(actions.docs.setIsInsertOpen(true))
+          }}
+        />
+      </Stack>
+    </>
   )
 }

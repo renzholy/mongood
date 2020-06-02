@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 import _ from 'lodash'
@@ -11,10 +11,10 @@ import { Table } from './Table'
 
 export function DocumentTable() {
   const { database, collection } = useSelector((state) => state.root)
-  const { index, filter, sort, skip, limit } = useSelector(
+  const { index, filter, sort, skip, limit, isInsertOpen } = useSelector(
     (state) => state.docs,
   )
-  const { data, error, isValidating } = useSWR(
+  const { data, error, isValidating, revalidate } = useSWR(
     database && collection
       ? `find/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
@@ -41,6 +41,11 @@ export function DocumentTable() {
       errorRetryCount: 0,
     },
   )
+  useEffect(() => {
+    if (!isInsertOpen) {
+      revalidate()
+    }
+  }, [isInsertOpen])
 
   return (
     <Table

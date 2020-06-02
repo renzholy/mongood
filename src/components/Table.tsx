@@ -18,7 +18,7 @@ import {
 import _ from 'lodash'
 
 import { MongoData } from '@/utils/mongo-shell-data'
-import { DocumentModal } from './DocumentModal'
+import { DocumentUpdateModal } from './DocumentUpdateModal'
 import { TableRow } from './TableRow'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
@@ -120,7 +120,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
-      <DocumentModal
+      <DocumentUpdateModal
         value={invokedItem}
         onChange={(_invokedItem) => {
           setInvokedItem(_invokedItem)
