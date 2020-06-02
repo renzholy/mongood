@@ -18,10 +18,11 @@ export function TopPivot() {
           backgroundColor: theme.palette.neutralLight,
         },
       }}>
+      <PivotItem headerText="Stats" itemKey="/stats" />
       <PivotItem headerText="Documents" itemKey="/docs" />
       <PivotItem headerText="Indexes" itemKey="/indexes" />
-      <PivotItem headerText="Operations" itemKey="/ops" />
       <PivotItem headerText="Schema" itemKey="/schema" />
+      <PivotItem headerText="Operations" itemKey="/ops" />
     </Pivot>
   )
 }
