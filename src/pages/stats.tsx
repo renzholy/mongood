@@ -20,7 +20,7 @@ function InfoCard(props: { title: string; content: string }) {
           backgroundColor: theme.palette.neutralLighterAlt,
         },
       }}
-      tokens={{ padding: 20, childrenGap: 10 }}>
+      tokens={{ padding: 20, childrenGap: 10, minWidth: 200 }}>
       <Card.Section>
         <Text
           block={true}
@@ -44,39 +44,113 @@ export default () => {
   const { database, collection } = useSelector((state) => state.root)
   const { data: collStats } = useSWR(
     database && collection ? `collStats/${database}/${collection}` : null,
-    () => {
-      return runCommand<CollStats>(database!, {
+    () =>
+      runCommand<CollStats>(database!, {
         collStats: collection,
-      })
-    },
+      }),
     { refreshInterval: 5 * 1000 },
   )
   const { data: dbStats } = useSWR(
     database ? `dbStats/${database}` : null,
-    () => {
-      return runCommand<{
+    () =>
+      runCommand<{
         avgObjSize: number
         collections: number
         dataSize: number
         db: string
-        fileSize: number
         indexSize: number
         indexes: number
-        nsSizeMB: number
-        numExtents: number
+        fsUsedSize: number
+        fsTotalSize: number
         objects: number
-        ok: number
         storageSize: number
         views: number
       }>(database!, {
         dbStats: 1,
-      })
-    },
+      }),
     { refreshInterval: 5 * 1000 },
+  )
+  const { data: serverStatus } = useSWR(
+    database && collection ? null : 'serverStatus',
+    () =>
+      runCommand<{
+        connections: {
+          available: number
+          current: number
+          totalCreated: number
+        }
+        network: {
+          bytesIn: number
+          bytesOut: number
+          numRequests: number
+        }
+      }>('admin', {
+        serverStatus: 1,
+      }),
   )
 
   if (!collStats || !dbStats) {
-    return <LargeMessage iconName="Back" title="Select collection" />
+    if (serverStatus) {
+      return (
+        <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
+          <Text
+            variant="xxLarge"
+            block={true}
+            styles={{
+              root: { padding: 10, color: theme.palette.neutralPrimary },
+            }}>
+            Connections
+          </Text>
+          <Stack
+            tokens={{ padding: 10, childrenGap: 20 }}
+            horizontal={true}
+            styles={{ root: { overflowX: 'scroll' } }}>
+            <InfoCard
+              title="Available:"
+              content={Number.format(serverStatus.connections.available)}
+            />
+            <InfoCard
+              title="Current:"
+              content={Number.format(serverStatus.connections.current)}
+            />
+            <InfoCard
+              title="Total Created:"
+              content={Number.format(serverStatus.connections.totalCreated)}
+            />
+          </Stack>
+          <Text
+            variant="xxLarge"
+            block={true}
+            styles={{
+              root: { padding: 10, color: theme.palette.neutralPrimary },
+            }}>
+            Network
+          </Text>
+          <Stack
+            tokens={{ padding: 10, childrenGap: 20 }}
+            horizontal={true}
+            styles={{ root: { overflowX: 'scroll' } }}>
+            <InfoCard
+              title="In:"
+              content={bytes(serverStatus.network.bytesIn, {
+                unitSeparator: ' ',
+              })}
+            />
+            <InfoCard
+              title="Out:"
+              content={bytes(serverStatus.network.bytesOut, {
+                unitSeparator: ' ',
+              })}
+            />
+            <InfoCard
+              title="Requests:"
+              content={Number.format(serverStatus.network.numRequests)}
+            />
+          </Stack>
+        </div>
+      )
+    }
+    return <LargeMessage iconName="SearchData" title="Loading" />
   }
   return (
     <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
@@ -118,6 +192,20 @@ export default () => {
         <InfoCard
           title="Collections + Views:"
           content={Number.format(dbStats.collections + dbStats.views)}
+        />
+      </Stack>
+      <Stack
+        tokens={{ padding: 10, childrenGap: 20 }}
+        horizontal={true}
+        styles={{ root: { overflowX: 'scroll' } }}>
+        <InfoCard title="Indexes:" content={Number.format(dbStats.indexes)} />
+        <InfoCard
+          title="FS Used Size:"
+          content={bytes(dbStats.fsUsedSize || 0, { unitSeparator: ' ' })}
+        />
+        <InfoCard
+          title="FS Total Size:"
+          content={bytes(dbStats.fsTotalSize || 0, { unitSeparator: ' ' })}
         />
       </Stack>
       <Text
