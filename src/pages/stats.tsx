@@ -20,7 +20,7 @@ function InfoCard(props: { title: string; content: string }) {
           backgroundColor: theme.palette.neutralLighterAlt,
         },
       }}
-      tokens={{ padding: 20, childrenGap: 10, minWidth: 200 }}>
+      tokens={{ padding: 20, childrenGap: 10, minWidth: 210, maxWidth: 210 }}>
       <Card.Section>
         <Text
           block={true}
@@ -31,7 +31,12 @@ function InfoCard(props: { title: string; content: string }) {
       <Card.Section>
         <Text
           variant="xLarge"
-          styles={{ root: { color: theme.palette.neutralPrimary } }}>
+          styles={{
+            root: {
+              color: theme.palette.neutralPrimary,
+              wordBreak: 'break-all',
+            },
+          }}>
           {props.content}
         </Text>
       </Card.Section>
@@ -74,6 +79,12 @@ export default () => {
     database && collection ? null : 'serverStatus',
     () =>
       runCommand<{
+        host: string
+        repl?: {
+          setName: string
+          hosts: string[]
+          primary: string
+        }
         connections: {
           available: number
           current: number
@@ -93,6 +104,48 @@ export default () => {
     if (serverStatus) {
       return (
         <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
+          <Text
+            variant="xxLarge"
+            block={true}
+            styles={{
+              root: { padding: 10, color: theme.palette.neutralPrimary },
+            }}>
+            <span style={{ color: theme.palette.neutralSecondary }}>
+              Host:&nbsp;
+            </span>
+            {serverStatus.host}
+          </Text>
+          {serverStatus.repl ? (
+            <>
+              <Text
+                variant="xxLarge"
+                block={true}
+                styles={{
+                  root: { padding: 10, color: theme.palette.neutralPrimary },
+                }}>
+                <span style={{ color: theme.palette.neutralSecondary }}>
+                  Repl:&nbsp;
+                </span>
+                {serverStatus.repl.setName}
+              </Text>
+              <Stack
+                tokens={{ padding: 10, childrenGap: 20 }}
+                horizontal={true}
+                styles={{ root: { overflowX: 'scroll' } }}>
+                {serverStatus.repl.hosts.map((host) => (
+                  <InfoCard
+                    key={host}
+                    title={
+                      host === serverStatus.repl!.primary
+                        ? 'Primary:'
+                        : 'Secondary:'
+                    }
+                    content={host}
+                  />
+                ))}
+              </Stack>
+            </>
+          ) : null}
           <Text
             variant="xxLarge"
             block={true}
