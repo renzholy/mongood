@@ -10,6 +10,7 @@ export default createSlice({
     limit: 25,
     count: 0,
     isInsertOpen: false,
+    isUpdateOpen: false,
   } as {
     index?: IndexSpecification
     filter: FilterQuery<unknown>
@@ -18,6 +19,7 @@ export default createSlice({
     limit: number
     count: number
     isInsertOpen: boolean
+    isUpdateOpen: boolean
   },
   reducers: {
     setIndex: (
@@ -49,6 +51,10 @@ export default createSlice({
     setIsInsertOpen: (state, { payload }: PayloadAction<boolean>) => ({
       ...state,
       isInsertOpen: payload,
+    }),
+    setIsUpdateOpen: (state, { payload }: PayloadAction<boolean>) => ({
+      ...state,
+      isUpdateOpen: payload,
     }),
   },
 })

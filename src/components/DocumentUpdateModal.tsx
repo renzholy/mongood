@@ -12,33 +12,24 @@ import { ActionButton } from './ActionButton'
 
 export function DocumentUpdateModal<
   T extends { [key: string]: MongoData }
->(props: { value?: T; onChange(value?: T): void }) {
+>(props: { value?: T; isOpen: boolean; onDismiss(): void }) {
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const isDarkMode = useDarkMode()
-  const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState('')
   useEffect(() => {
-    setIsOpen(!!props.value)
     setValue(`return ${stringify(props.value, 2)}\n`)
   }, [props.value])
   const handleUpdate = useCallback(async () => {
     const doc = parse(value.replace(/^return/, ''))
-    const { value: newDoc } = await runCommand<{
-      value: T
-    }>(
-      database!,
-      {
-        findAndModify: collection,
-        new: true,
-        query: {
-          _id: (doc as { _id: unknown })._id,
-        },
-        update: doc,
+    await runCommand(database!, {
+      findAndModify: collection,
+      query: {
+        _id: (doc as { _id: unknown })._id,
       },
-      { canonical: true },
-    )
-    props.onChange(newDoc)
+      update: doc,
+    })
+    props.onDismiss()
   }, [database, collection, value])
 
   return (
@@ -57,13 +48,8 @@ export function DocumentUpdateModal<
             backgroundColor: theme.palette.neutralLighterAlt,
           },
         }}
-        isOpen={isOpen}
-        onDismissed={() => {
-          props.onChange(undefined)
-        }}
-        onDismiss={() => {
-          setIsOpen(false)
-        }}>
+        isOpen={props.isOpen}
+        onDismiss={props.onDismiss}>
         <div
           style={{
             display: 'flex',
@@ -88,9 +74,7 @@ export function DocumentUpdateModal<
           <IconButton
             styles={{ root: { marginLeft: 10 } }}
             iconProps={{ iconName: 'Cancel' }}
-            onClick={() => {
-              props.onChange(undefined)
-            }}
+            onClick={props.onDismiss}
           />
         </div>
         <ControlledEditor
