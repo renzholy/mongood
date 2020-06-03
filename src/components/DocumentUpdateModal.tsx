@@ -60,9 +60,9 @@ export function DocumentUpdateModal<
           }}>
           <Text
             variant="xLarge"
+            block={true}
             styles={{
               root: {
-                display: 'contents',
                 alignItems: 'center',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
