@@ -39,12 +39,11 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   useEffect(() => {
     // calc columns order
     const keys: { [key: string]: number } = {}
-    const order = _.reverse(props.order || [])
     props.items?.forEach((item) => {
       Object.keys(item).forEach((key) => {
-        if (!keys[key]) {
-          const index = order.indexOf(key)
-          keys[key] = index >= 0 ? (index + 1) * 10 : 0
+        if (!keys[key] && props.order) {
+          const index = props.order.indexOf(key)
+          keys[key] = index >= 0 ? (props.order.length - index) * 10 : 0
         }
         keys[key] += 1
       })
