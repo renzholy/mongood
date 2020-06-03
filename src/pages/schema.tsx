@@ -98,14 +98,13 @@ export default () => {
   return (
     <>
       <ControlledEditor
-        language="javascript"
+        language="typescript"
         theme={isDarkMode ? 'vs-dark' : 'vs'}
         value={value}
         onChange={(_ev, _value) => {
           setValue(_value || '')
         }}
         options={{
-          quickSuggestions: false,
           wordWrap: 'on',
           contextmenu: false,
           scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },

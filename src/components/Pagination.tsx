@@ -8,7 +8,7 @@ import _ from 'lodash'
 import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 
-export function Pagination() {
+export function Pagination(props: { allowInsert: boolean }) {
   const { database, collection } = useSelector((state) => state.root)
   const { index, filter, skip, limit, count } = useSelector(
     (state) => state.docs,
@@ -63,12 +63,14 @@ export function Pagination() {
           dispatch(actions.docs.setSkip(Math.min(skip + limit, count)))
         }}
       />
-      <IconButton
-        iconProps={{ iconName: 'Add' }}
-        onClick={() => {
-          dispatch(actions.docs.setIsInsertOpen(true))
-        }}
-      />
+      {props.allowInsert ? (
+        <IconButton
+          iconProps={{ iconName: 'Add' }}
+          onClick={() => {
+            dispatch(actions.docs.setIsInsertOpen(true))
+          }}
+        />
+      ) : null}
     </Stack>
   )
 }

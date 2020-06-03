@@ -50,7 +50,7 @@ export function IndexesStack() {
         <DefaultButton disabled={true} text="No Index" />
       )}
       <Stack.Item grow={1}>&nbsp;</Stack.Item>
-      <Pagination />
+      <Pagination allowInsert={true} />
     </Stack>
   )
 }

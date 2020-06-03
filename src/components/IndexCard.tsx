@@ -10,6 +10,11 @@ import {
   Stack,
   HoverCard,
   HoverCardType,
+  IconButton,
+  Dialog,
+  DialogType,
+  DialogFooter,
+  DefaultButton,
 } from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
@@ -17,6 +22,8 @@ import { IndexSpecification, WiredTigerData } from 'mongodb'
 
 import { colorize } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
+import { runCommand } from '@/utils/fetcher'
+import { useSelector } from 'react-redux'
 
 function IndexCardFeature(props: { value: { text: string; data?: object } }) {
   const theme = getTheme()
@@ -73,6 +80,7 @@ function IndexCardFeature(props: { value: { text: string; data?: object } }) {
 
 export function IndexCard(props: {
   value: IndexSpecification
+  onDrop(): void
   size: number
   statDetail: WiredTigerData
 }) {
@@ -117,9 +125,23 @@ export function IndexCard(props: {
         }
       : null,
   ])
+  const [hidden, setHidden] = useState(true)
+  const { database, collection } = useSelector((state) => state.root)
+  const handleDropIndex = useCallback(async () => {
+    if (!database || !collection) {
+      return
+    }
+    await runCommand(database, {
+      dropIndexes: collection,
+      index: props.value.name,
+    })
+    setHidden(true)
+    props.onDrop()
+  }, [database, collection, props.value])
 
   return (
     <Card
+      horizontal={true}
       styles={{
         root: {
           backgroundColor: theme.palette.neutralLighterAlt,
@@ -131,80 +153,133 @@ export function IndexCard(props: {
         minWidth: 676,
         minHeight: 'unset',
       }}>
-      <Card.Item>
-        <Text
-          variant="xLarge"
-          styles={{ root: { color: theme.palette.neutralPrimary } }}>
-          {props.value.name}&nbsp;
-        </Text>
-        <Text styles={{ root: { color: theme.palette.neutralPrimaryAlt } }}>
-          ({bytes(props.size, { unitSeparator: ' ' })})
-        </Text>
-      </Card.Item>
-      <Card.Item>
-        <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
-          {'textIndexVersion' in props.value
-            ? _.map(props.value.weights, (v, k) => (
-                <Text
-                  key={k}
-                  styles={{
-                    root: { display: 'flex', alignItems: 'center' },
-                  }}>
-                  {k}:&nbsp;
-                  {v}
-                </Text>
-              ))
-            : _.map(props.value.key, (v, k) => (
-                <Text
-                  key={k}
-                  styles={{
-                    root: {
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: theme.palette.neutralPrimaryAlt,
-                    },
-                  }}>
-                  {k}:&nbsp;
-                  {v === 1 ? (
-                    <Icon
-                      iconName="Up"
-                      styles={{
-                        root: { color: theme.palette.neutralPrimaryAlt },
-                      }}
-                    />
-                  ) : (
-                    <Icon
-                      iconName="Down"
-                      styles={{
-                        root: { color: theme.palette.neutralPrimaryAlt },
-                      }}
-                    />
-                  )}
-                </Text>
-              ))}
-        </Stack>
-      </Card.Item>
-      {features.length ? (
+      <Card.Section styles={{ root: { flex: 1 } }}>
+        <Card.Item>
+          <Text
+            variant="xLarge"
+            styles={{ root: { color: theme.palette.neutralPrimary } }}>
+            {props.value.name}&nbsp;
+          </Text>
+          <Text styles={{ root: { color: theme.palette.neutralPrimaryAlt } }}>
+            ({bytes(props.size, { unitSeparator: ' ' })})
+          </Text>
+        </Card.Item>
         <Card.Item>
           <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
-            {features.map((feature) =>
-              'data' in feature ? (
-                <IndexCardFeature value={feature} />
-              ) : (
-                <Text
-                  key={feature.text}
-                  styles={{
-                    root: {
-                      color: theme.palette.neutralSecondary,
-                    },
-                  }}>
-                  {feature.text}
-                </Text>
-              ),
-            )}
+            {'textIndexVersion' in props.value
+              ? _.map(props.value.weights, (v, k) => (
+                  <Text
+                    key={k}
+                    styles={{
+                      root: { display: 'flex', alignItems: 'center' },
+                    }}>
+                    {k}:&nbsp;
+                    {v}
+                  </Text>
+                ))
+              : _.map(props.value.key, (v, k) => (
+                  <Text
+                    key={k}
+                    styles={{
+                      root: {
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: theme.palette.neutralPrimaryAlt,
+                      },
+                    }}>
+                    {k}:&nbsp;
+                    {v === 1 ? (
+                      <Icon
+                        iconName="Up"
+                        styles={{
+                          root: { color: theme.palette.neutralPrimaryAlt },
+                        }}
+                      />
+                    ) : (
+                      <Icon
+                        iconName="Down"
+                        styles={{
+                          root: { color: theme.palette.neutralPrimaryAlt },
+                        }}
+                      />
+                    )}
+                  </Text>
+                ))}
           </Stack>
         </Card.Item>
-      ) : null}
+        {features.length ? (
+          <Card.Item>
+            <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
+              {features.map((feature) =>
+                'data' in feature ? (
+                  <IndexCardFeature key={feature.text} value={feature} />
+                ) : (
+                  <Text
+                    key={feature.text}
+                    styles={{
+                      root: {
+                        color: theme.palette.neutralSecondary,
+                      },
+                    }}>
+                    {feature.text}
+                  </Text>
+                ),
+              )}
+            </Stack>
+          </Card.Item>
+        ) : null}
+      </Card.Section>
+      <Card.Section
+        styles={{
+          root: {
+            alignSelf: 'flex-end',
+            marginBottom: -10,
+            marginRight: -10,
+          },
+        }}>
+        <Dialog
+          hidden={hidden}
+          dialogContentProps={{
+            type: DialogType.normal,
+            title: 'Drop index',
+            subText: props.value.name,
+            onDismiss() {
+              setHidden(true)
+            },
+          }}
+          modalProps={{
+            styles: {
+              main: {
+                minHeight: 0,
+                borderTop: `4px solid ${theme.palette.yellow}`,
+                backgroundColor: theme.palette.neutralLighterAlt,
+              },
+            },
+            onDismiss() {
+              setHidden(true)
+            },
+          }}>
+          <DialogFooter>
+            <DefaultButton onClick={handleDropIndex} text="Drop" />
+          </DialogFooter>
+        </Dialog>
+        <IconButton
+          menuIconProps={{ iconName: 'MoreVertical' }}
+          menuProps={{
+            alignTargetEdge: true,
+            items: [
+              {
+                key: 'Drop index',
+                text: 'Drop index',
+                onClick() {
+                  setHidden(false)
+                },
+              },
+            ],
+          }}
+          styles={{ root: { color: theme.palette.themePrimary } }}
+        />
+      </Card.Section>
     </Card>
   )
 }

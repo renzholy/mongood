@@ -9,7 +9,7 @@ import { runCommand } from '@/utils/fetcher'
 import { MongoData } from '@/utils/mongo-shell-data'
 import { Table } from './Table'
 
-export function DocumentTable() {
+export function DocumentTable(props: { order?: string[] }) {
   const { database, collection } = useSelector((state) => state.root)
   const {
     index,
@@ -56,11 +56,13 @@ export function DocumentTable() {
   return (
     <Table
       items={data?.cursor.firstBatch}
-      order={[
-        '_id',
-        ...Object.keys(index?.key || {}),
-        ...Object.keys(index?.weights || {}),
-      ]}
+      order={
+        props.order || [
+          '_id',
+          ...Object.keys(index?.key || {}),
+          ...Object.keys(index?.weights || {}),
+        ]
+      }
       error={error}
       isValidating={isValidating}
     />

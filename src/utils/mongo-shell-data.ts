@@ -76,7 +76,9 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
     return `Timestamp(${val.$timestamp.t}, ${val.$timestamp.i})`
   }
   if ('$binary' in val) {
-    return `Binary("${val.$binary.base64}", "${val.$binary.subType}")`
+    return `BinData(${parseInt(val.$binary.subType, 16)}, "${
+      val.$binary.base64
+    }")`
   }
   const spaces = _.repeat(' ', depth)
   if (Array.isArray(val)) {
@@ -117,19 +119,18 @@ export function parse(str: string): object | string {
     JSON.stringify(
       saferEval(str, {
         ObjectId: (s: string) => ({ $oid: s }),
-        Date: (s: string) => ({
+        Date: (s: string | number) => ({
           $date: { $numberLong: new Date(s).getTime().toString() },
         }),
         ISODate: (s: string) => ({
           $date: { $numberLong: new Date(s).getTime().toString() },
         }),
         NumberDecimal: (s: string) => ({ $numberDecimal: s }),
-        NumberDouble: (s: string) => ({ $numberDouble: s }),
         NumberInt: (s: string) => ({ $numberInt: s }),
         NumberLong: (s: string) => ({ $numberLong: s }),
         Timestamp: (t: number, i: number) => ({ $timestamp: { t, i } }),
-        Binary: (base64: string, subType: string) => ({
-          $binary: { base64, subType },
+        BinData: (subType: number, base64: string) => ({
+          $binary: { base64, subType: subType.toString(16) },
         }),
       }),
       (_key, value) => {

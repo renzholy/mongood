@@ -19,7 +19,7 @@ export default () => {
     },
     { refreshInterval: 5 * 1000 },
   )
-  const { data: indexes } = useSWR(
+  const { data: indexes, revalidate } = useSWR(
     database && collection ? `listIndexes/${database}/${collection}` : null,
     () => {
       return runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
@@ -44,6 +44,7 @@ export default () => {
           <IndexCard
             key={item.name}
             value={item}
+            onDrop={revalidate}
             size={stats.indexSizes[item.name!]}
             statDetail={stats.indexDetails[item.name!]}
           />

@@ -60,9 +60,9 @@ export function DocumentUpdateModal<
           }}>
           <Text
             variant="xLarge"
+            block={true}
             styles={{
               root: {
-                display: 'contents',
                 alignItems: 'center',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
@@ -78,7 +78,7 @@ export function DocumentUpdateModal<
           />
         </div>
         <ControlledEditor
-          language="javascript"
+          language="typescript"
           value={value}
           onChange={(_ev, _value) => {
             setValue(_value || '')
@@ -93,7 +93,6 @@ export function DocumentUpdateModal<
           }}
           options={{
             readOnly: !props.value?._id,
-            quickSuggestions: false,
             wordWrap: 'on',
             contextmenu: false,
             scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },

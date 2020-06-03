@@ -16,7 +16,7 @@ export function DocumentInsertModal<
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const isDarkMode = useDarkMode()
-  const [value, setValue] = useState('{}')
+  const [value, setValue] = useState('return {\n}')
   const handleInsert = useCallback(async () => {
     const doc = parse(value.replace(/^return/, ''))
     await runCommand<{
@@ -57,9 +57,9 @@ export function DocumentInsertModal<
           }}>
           <Text
             variant="xLarge"
+            block={true}
             styles={{
               root: {
-                display: 'contents',
                 alignItems: 'center',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
@@ -75,7 +75,7 @@ export function DocumentInsertModal<
           />
         </div>
         <ControlledEditor
-          language="javascript"
+          language="typescript"
           value={value}
           onChange={(_ev, _value) => {
             setValue(_value || '')
@@ -89,7 +89,6 @@ export function DocumentInsertModal<
             })
           }}
           options={{
-            quickSuggestions: false,
             wordWrap: 'on',
             contextmenu: false,
             scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
