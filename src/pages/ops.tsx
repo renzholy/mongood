@@ -1,19 +1,16 @@
-/* eslint-disable no-nested-ternary */
-
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useSWR from 'swr'
 import _ from 'lodash'
-import { DefaultButton, Stack, SpinButton } from '@fluentui/react'
+import { DefaultButton, Stack } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { parse } from '@/utils/mongo-shell-data'
 import { Table } from '@/components/Table'
 import { FilterInput } from '@/components/FilterInput'
-import { DocumentTable } from '@/components/DocumentTable'
 import { actions } from '@/stores'
 import { Pagination } from '@/components/Pagination'
-import { LargeMessage } from '@/components/LargeMessage'
+import { SystemProfile } from '@/components/SystemProfile'
 
 enum Type {
   CURRENT = 'Current Op',
@@ -79,25 +76,6 @@ export default () => {
   useEffect(() => {
     setType(collection === 'system.profile' ? Type.PROFILE : Type.CURRENT)
   }, [collection])
-  const { data: profile } = useSWR(
-    type === Type.PROFILE && database ? `profile/${database}` : null,
-    () =>
-      runCommand<{ was: number; slowms: number; sampleRate: number }>(
-        database!,
-        { profile: -1 },
-      ),
-  )
-  const [was, setWas] = useState(0)
-  const [slowms, setSlowms] = useState('')
-  const [sampleRate, setSampleRate] = useState('')
-  useEffect(() => {
-    if (!profile) {
-      return
-    }
-    setWas(profile.was)
-    setSlowms(profile.slowms.toString())
-    setSampleRate(profile.sampleRate.toString())
-  }, [profile])
 
   return (
     <>
@@ -174,40 +152,7 @@ export default () => {
           />
         </>
       ) : null}
-      {type === Type.PROFILE ? (
-        database ? (
-          <>
-            <Stack
-              horizontal={true}
-              tokens={{ childrenGap: 10, padding: 10 }}
-              styles={{ root: { height: 52 } }}>
-              <SpinButton
-                label="Slow Ms:"
-                min={0}
-                max={100}
-                step={1}
-                value={slowms}
-                onIncrement={setSlowms}
-                onDecrement={setSlowms}
-              />
-              <SpinButton
-                label="Sample Rate:"
-                min={0}
-                max={1}
-                step={0.1}
-                value={sampleRate}
-                onIncrement={setSampleRate}
-                onDecrement={setSampleRate}
-              />
-            </Stack>
-            <DocumentTable
-              order={['ns', 'op', 'client', 'command', 'millis']}
-            />
-          </>
-        ) : (
-          <LargeMessage iconName="Back" title="Select database" />
-        )
-      ) : null}
+      {type === Type.PROFILE ? <SystemProfile /> : null}
     </>
   )
 }
