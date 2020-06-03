@@ -162,119 +162,135 @@ export default () => {
   if (!collStats || !dbStats) {
     if (serverStatus) {
       return (
-        <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
-          <InfoArea title="Host: " subtitle={serverStatus.host} />
-          <InfoArea
-            title="Uptime: "
-            subtitle={prettyMilliseconds(serverStatus.uptimeMillis)}
-          />
-          {serverStatus.repl ? (
+        <div
+          style={{
+            overflowY: 'scroll',
+          }}>
+          <div style={{ padding: 10, margin: '0 auto', width: 'fit-content' }}>
+            <InfoArea title="Host: " subtitle={serverStatus.host} />
             <InfoArea
-              title="Repl: "
-              subtitle={serverStatus.repl.setName}
-              data={serverStatus.repl.hosts.reduce((prev, curr, index) => {
-                // eslint-disable-next-line no-param-reassign
-                prev[
-                  `${
-                    curr === serverStatus.repl!.primary
-                      ? 'Primary'
-                      : 'Secondary'
-                  } ${index}`
-                ] = curr
-                return prev
-              }, {} as { [key: string]: string })}
+              title="Uptime: "
+              subtitle={prettyMilliseconds(serverStatus.uptimeMillis)}
             />
-          ) : null}
-          <InfoArea
-            title="Connections"
-            data={{
-              Available: Number.format(serverStatus.connections.available),
-              Current: Number.format(serverStatus.connections.current),
-              'Total Created': Number.format(
-                serverStatus.connections.totalCreated,
-              ),
-            }}
-          />
-          <InfoArea
-            title="Network"
-            data={{
-              In: bytes(serverStatus.network.bytesIn, {
-                unitSeparator: ' ',
-              }),
-              Out: bytes(serverStatus.network.bytesOut, {
-                unitSeparator: ' ',
-              }),
-              Requests: Number.format(serverStatus.network.numRequests),
-            }}
-          />
-          <InfoArea
-            title="Op Counters"
-            data={{
-              Insert: Number.format(serverStatus.opcounters.insert),
-              Query: Number.format(serverStatus.opcounters.query),
-              Update: Number.format(serverStatus.opcounters.update),
-              Delete: Number.format(serverStatus.opcounters.delete),
-              'Get More': Number.format(serverStatus.opcounters.getmore),
-              Command: Number.format(serverStatus.opcounters.command),
-            }}
-          />
-          {serverStatus.opcountersRepl ? (
+            {serverStatus.repl ? (
+              <InfoArea
+                title="Repl: "
+                subtitle={serverStatus.repl.setName}
+                data={serverStatus.repl.hosts.reduce((prev, curr, index) => {
+                  // eslint-disable-next-line no-param-reassign
+                  prev[
+                    `${
+                      curr === serverStatus.repl!.primary
+                        ? 'Primary'
+                        : 'Secondary'
+                    } ${index}`
+                  ] = curr
+                  return prev
+                }, {} as { [key: string]: string })}
+              />
+            ) : null}
             <InfoArea
-              title="Op Counters Repl"
+              title="Connections"
               data={{
-                Insert: Number.format(serverStatus.opcountersRepl.insert),
-                Query: Number.format(serverStatus.opcountersRepl.query),
-                Update: Number.format(serverStatus.opcountersRepl.update),
-                Delete: Number.format(serverStatus.opcountersRepl.delete),
-                'Get More': Number.format(serverStatus.opcountersRepl.getmore),
-                Command: Number.format(serverStatus.opcountersRepl.command),
+                Available: Number.format(serverStatus.connections.available),
+                Current: Number.format(serverStatus.connections.current),
+                'Total Created': Number.format(
+                  serverStatus.connections.totalCreated,
+                ),
               }}
             />
-          ) : null}
+            <InfoArea
+              title="Network"
+              data={{
+                In: bytes(serverStatus.network.bytesIn, {
+                  unitSeparator: ' ',
+                }),
+                Out: bytes(serverStatus.network.bytesOut, {
+                  unitSeparator: ' ',
+                }),
+                Requests: Number.format(serverStatus.network.numRequests),
+              }}
+            />
+            <InfoArea
+              title="Op Counters"
+              data={{
+                Insert: Number.format(serverStatus.opcounters.insert),
+                Query: Number.format(serverStatus.opcounters.query),
+                Update: Number.format(serverStatus.opcounters.update),
+                Delete: Number.format(serverStatus.opcounters.delete),
+                'Get More': Number.format(serverStatus.opcounters.getmore),
+                Command: Number.format(serverStatus.opcounters.command),
+              }}
+            />
+            {serverStatus.opcountersRepl ? (
+              <InfoArea
+                title="Op Counters Repl"
+                data={{
+                  Insert: Number.format(serverStatus.opcountersRepl.insert),
+                  Query: Number.format(serverStatus.opcountersRepl.query),
+                  Update: Number.format(serverStatus.opcountersRepl.update),
+                  Delete: Number.format(serverStatus.opcountersRepl.delete),
+                  'Get More': Number.format(
+                    serverStatus.opcountersRepl.getmore,
+                  ),
+                  Command: Number.format(serverStatus.opcountersRepl.command),
+                }}
+              />
+            ) : null}
+          </div>
         </div>
       )
     }
     return <LargeMessage iconName="SearchData" title="Loading" />
   }
   return (
-    <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
-      <InfoArea
-        title="Database: "
-        subtitle={dbStats.db}
-        data={{
-          Size: bytes(dbStats.dataSize, { unitSeparator: ' ' }),
-          'Index Size': bytes(dbStats.indexSize, { unitSeparator: ' ' }),
-          'Storage Size': bytes(dbStats.storageSize, { unitSeparator: ' ' }),
-          Count: Number.format(dbStats.objects),
-          'Average Object Size': bytes(dbStats.avgObjSize || 0, {
-            unitSeparator: ' ',
-          }),
-          'Collections + Views': Number.format(
-            dbStats.collections + dbStats.views,
-          ),
-          Indexes: Number.format(dbStats.indexes),
-          'FS Used Size': bytes(dbStats.fsUsedSize || 0, {
-            unitSeparator: ' ',
-          }),
-          'FS Total Size': bytes(dbStats.fsTotalSize || 0, {
-            unitSeparator: ' ',
-          }),
-        }}
-      />
-      <InfoArea
-        title="Collection: "
-        subtitle={collection}
-        data={{
-          Size: bytes(collStats.size, { unitSeparator: ' ' }),
-          'Index Size': bytes(collStats.totalIndexSize, { unitSeparator: ' ' }),
-          'Storage Size': bytes(collStats.storageSize, { unitSeparator: ' ' }),
-          Count: Number.format(collStats.count),
-          'Average Object Size': bytes(collStats.avgObjSize || 0, {
-            unitSeparator: ' ',
-          }),
-          Capped: collStats.capped ? 'Yes' : 'No',
-        }}
-      />
+    <div
+      style={{
+        overflowY: 'scroll',
+      }}>
+      <div style={{ padding: 10, margin: '0 auto', width: 'fit-content' }}>
+        <InfoArea
+          title="Database: "
+          subtitle={dbStats.db}
+          data={{
+            Size: bytes(dbStats.dataSize, { unitSeparator: ' ' }),
+            'Index Size': bytes(dbStats.indexSize, { unitSeparator: ' ' }),
+            'Storage Size': bytes(dbStats.storageSize, { unitSeparator: ' ' }),
+            Count: Number.format(dbStats.objects),
+            'Average Object Size': bytes(dbStats.avgObjSize || 0, {
+              unitSeparator: ' ',
+            }),
+            'Collections + Views': Number.format(
+              dbStats.collections + dbStats.views,
+            ),
+            Indexes: Number.format(dbStats.indexes),
+            'FS Used Size': bytes(dbStats.fsUsedSize || 0, {
+              unitSeparator: ' ',
+            }),
+            'FS Total Size': bytes(dbStats.fsTotalSize || 0, {
+              unitSeparator: ' ',
+            }),
+          }}
+        />
+        <InfoArea
+          title="Collection: "
+          subtitle={collection}
+          data={{
+            Size: bytes(collStats.size, { unitSeparator: ' ' }),
+            'Index Size': bytes(collStats.totalIndexSize, {
+              unitSeparator: ' ',
+            }),
+            'Storage Size': bytes(collStats.storageSize, {
+              unitSeparator: ' ',
+            }),
+            Count: Number.format(collStats.count),
+            'Average Object Size': bytes(collStats.avgObjSize || 0, {
+              unitSeparator: ' ',
+            }),
+            Capped: collStats.capped ? 'Yes' : 'No',
+          }}
+        />
+      </div>
     </div>
   )
 }
