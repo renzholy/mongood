@@ -117,14 +117,13 @@ export function parse(str: string): object | string {
     JSON.stringify(
       saferEval(str, {
         ObjectId: (s: string) => ({ $oid: s }),
-        Date: (s: string) => ({
+        Date: (s: string | number) => ({
           $date: { $numberLong: new Date(s).getTime().toString() },
         }),
         ISODate: (s: string) => ({
           $date: { $numberLong: new Date(s).getTime().toString() },
         }),
         NumberDecimal: (s: string) => ({ $numberDecimal: s }),
-        NumberDouble: (s: string) => ({ $numberDouble: s }),
         NumberInt: (s: string) => ({ $numberInt: s }),
         NumberLong: (s: string) => ({ $numberLong: s }),
         Timestamp: (t: number, i: number) => ({ $timestamp: { t, i } }),

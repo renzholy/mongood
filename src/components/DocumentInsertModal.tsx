@@ -75,7 +75,7 @@ export function DocumentInsertModal<
           />
         </div>
         <ControlledEditor
-          language="javascript"
+          language="typescript"
           value={value}
           onChange={(_ev, _value) => {
             setValue(_value || '')
@@ -89,7 +89,6 @@ export function DocumentInsertModal<
             })
           }}
           options={{
-            quickSuggestions: false,
             wordWrap: 'on',
             contextmenu: false,
             scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
