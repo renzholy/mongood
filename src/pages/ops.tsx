@@ -9,7 +9,6 @@ import { parse } from '@/utils/mongo-shell-data'
 import { Table } from '@/components/Table'
 import { FilterInput } from '@/components/FilterInput'
 import { actions } from '@/stores'
-import { Pagination } from '@/components/Pagination'
 import { SystemProfile } from '@/components/SystemProfile'
 
 enum Type {
@@ -99,10 +98,6 @@ export default () => {
             }}
           />
         ))}
-        <Stack.Item grow={true}>
-          <div />
-        </Stack.Item>
-        {type === Type.PROFILE ? <Pagination allowInsert={false} /> : null}
       </Stack>
       {type === Type.CURRENT ? (
         <>
