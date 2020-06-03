@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useSWR from 'swr'
@@ -11,6 +13,7 @@ import { FilterInput } from '@/components/FilterInput'
 import { DocumentTable } from '@/components/DocumentTable'
 import { actions } from '@/stores'
 import { Pagination } from '@/components/Pagination'
+import { LargeMessage } from '@/components/LargeMessage'
 
 enum Type {
   CURRENT = 'Current Op',
@@ -74,9 +77,7 @@ export default () => {
     }
   }, [type])
   useEffect(() => {
-    if (collection !== 'system.profile') {
-      setType(Type.CURRENT)
-    }
+    setType(collection === 'system.profile' ? Type.PROFILE : Type.CURRENT)
   }, [collection])
 
   return (
@@ -152,15 +153,21 @@ export default () => {
         </>
       ) : null}
       {type === Type.PROFILE ? (
-        <div
-          style={{
-            paddingTop: 10,
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-          }}>
-          <DocumentTable order={['ns', 'op', 'client', 'command', 'millis']} />
-        </div>
+        database ? (
+          <div
+            style={{
+              paddingTop: 10,
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+            }}>
+            <DocumentTable
+              order={['ns', 'op', 'client', 'command', 'millis']}
+            />
+          </div>
+        ) : (
+          <LargeMessage iconName="Back" title="Select database" />
+        )
       ) : null}
     </>
   )
