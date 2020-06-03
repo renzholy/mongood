@@ -11,6 +11,10 @@ import {
   HoverCard,
   HoverCardType,
   IconButton,
+  Dialog,
+  DialogType,
+  DialogFooter,
+  DefaultButton,
 } from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
@@ -18,6 +22,8 @@ import { IndexSpecification, WiredTigerData } from 'mongodb'
 
 import { colorize } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
+import { runCommand } from '@/utils/fetcher'
+import { useSelector } from 'react-redux'
 
 function IndexCardFeature(props: { value: { text: string; data?: object } }) {
   const theme = getTheme()
@@ -74,6 +80,7 @@ function IndexCardFeature(props: { value: { text: string; data?: object } }) {
 
 export function IndexCard(props: {
   value: IndexSpecification
+  onDrop(): void
   size: number
   statDetail: WiredTigerData
 }) {
@@ -118,6 +125,19 @@ export function IndexCard(props: {
         }
       : null,
   ])
+  const [hidden, setHidden] = useState(true)
+  const { database, collection } = useSelector((state) => state.root)
+  const handleDropIndex = useCallback(async () => {
+    if (!database || !collection) {
+      return
+    }
+    await runCommand(database, {
+      dropIndexes: collection,
+      index: props.value.name,
+    })
+    setHidden(true)
+    props.onDrop()
+  }, [database, collection, props.value])
 
   return (
     <Card
@@ -216,8 +236,44 @@ export function IndexCard(props: {
             borderLeft: `1px solid ${theme.palette.neutralLighter}`,
           },
         }}>
+        <Dialog
+          hidden={hidden}
+          dialogContentProps={{
+            type: DialogType.normal,
+            title: 'Drop index',
+            subText: props.value.name,
+            onDismiss() {
+              setHidden(true)
+            },
+          }}
+          modalProps={{
+            styles: {
+              scrollableContent: {
+                borderTop: `4px solid ${theme.palette.yellow}`,
+                backgroundColor: theme.palette.neutralLighterAlt,
+              },
+            },
+            onDismiss() {
+              setHidden(true)
+            },
+          }}>
+          <DialogFooter>
+            <DefaultButton onClick={handleDropIndex} text="Drop" />
+          </DialogFooter>
+        </Dialog>
         <IconButton
-          iconProps={{ iconName: 'MoreVertical' }}
+          menuIconProps={{ iconName: 'MoreVertical' }}
+          menuProps={{
+            items: [
+              {
+                key: 'Drop index',
+                text: 'Drop index',
+                onClick() {
+                  setHidden(false)
+                },
+              },
+            ],
+          }}
           styles={{ root: { color: theme.palette.themePrimary } }}
         />
       </Card.Section>
