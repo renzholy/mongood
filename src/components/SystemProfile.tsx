@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Stack, SpinButton, Slider, Label } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
@@ -28,20 +28,25 @@ export function SystemProfile() {
     setSampleRate(profile.sampleRate)
   }, [profile])
   const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    if (!database) {
-      return
-    }
-    setLoading(true)
-    runCommand(database, {
-      profile: 0,
-      slowms,
-      sampleRate: { $numberDouble: sampleRate.toString() },
-    }).finally(() => {
-      setLoading(false)
-      revalidate()
-    })
-  }, [database, slowms, sampleRate])
+  const handleSetProfile = useCallback(
+    async (_slowms: number, _sampleRate: number) => {
+      if (!database) {
+        return
+      }
+      setLoading(true)
+      try {
+        await runCommand(database, {
+          profile: 0,
+          slowms: _slowms,
+          sampleRate: { $numberDouble: _sampleRate.toString() },
+        })
+      } finally {
+        setLoading(false)
+        revalidate()
+      }
+    },
+    [database],
+  )
 
   if (!database) {
     return <LargeMessage iconName="Back" title="Select database" />
@@ -62,13 +67,19 @@ export function SystemProfile() {
           value={slowms.toString()}
           step={10}
           onBlur={(ev) => {
-            setSlowms(Math.max(parseInt(ev.target.value, 10), 0))
+            const _slowms = Math.max(parseInt(ev.target.value, 10), 0)
+            setSlowms(_slowms)
+            handleSetProfile(_slowms, sampleRate)
           }}
           onIncrement={(value) => {
-            setSlowms(Math.max(parseInt(value, 10) + 10, 0))
+            const _slowms = Math.max(parseInt(value, 10) + 10, 0)
+            setSlowms(_slowms)
+            handleSetProfile(_slowms, sampleRate)
           }}
           onDecrement={(value) => {
-            setSlowms(Math.max(parseInt(value, 10) - 10, 0))
+            const _slowms = Math.max(parseInt(value, 10) - 10, 0)
+            setSlowms(_slowms)
+            handleSetProfile(_slowms, sampleRate)
           }}
         />
         <Label disabled={loading} styles={{ root: { marginTop: 3 } }}>
@@ -85,7 +96,10 @@ export function SystemProfile() {
           step={0.01}
           valueFormat={(value) => `${Math.round(value * 100)}%`}
           value={sampleRate}
-          onChanged={(_ev, value) => setSampleRate(value)}
+          onChanged={(_ev, value) => {
+            setSampleRate(value)
+            handleSetProfile(slowms, value)
+          }}
         />
         <Stack.Item grow={true}>
           <div />
