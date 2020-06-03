@@ -60,11 +60,15 @@ export function SystemProfile() {
             root: { width: 'fit-content', marginRight: 10 },
           }}
           value={slowms.toString()}
+          step={10}
+          onBlur={(ev) => {
+            setSlowms(Math.max(parseInt(ev.target.value, 10), 0))
+          }}
           onIncrement={(value) => {
-            setSlowms(Math.max(parseInt(value, 10) + 1, 0))
+            setSlowms(Math.max(parseInt(value, 10) + 10, 0))
           }}
           onDecrement={(value) => {
-            setSlowms(Math.max(parseInt(value, 10) - 1, 0))
+            setSlowms(Math.max(parseInt(value, 10) - 10, 0))
           }}
         />
         <Label disabled={loading} styles={{ root: { marginTop: 3 } }}>
