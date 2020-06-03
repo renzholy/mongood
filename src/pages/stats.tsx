@@ -174,16 +174,16 @@ export default () => {
             />
             {serverStatus.repl ? (
               <InfoArea
-                title="Repl: "
+                title="Replica: "
                 subtitle={serverStatus.repl.setName}
                 data={serverStatus.repl.hosts.reduce((prev, curr, index) => {
                   // eslint-disable-next-line no-param-reassign
                   prev[
-                    `${
+                    `${index} ${
                       curr === serverStatus.repl!.primary
                         ? 'Primary'
                         : 'Secondary'
-                    } ${index}`
+                    }`
                   ] = curr
                   return prev
                 }, {} as { [key: string]: string })}
@@ -212,7 +212,7 @@ export default () => {
               }}
             />
             <InfoArea
-              title="Op Counters"
+              title="Operation Counters"
               data={{
                 Insert: Number.format(serverStatus.opcounters.insert),
                 Query: Number.format(serverStatus.opcounters.query),
@@ -222,9 +222,9 @@ export default () => {
                 Command: Number.format(serverStatus.opcounters.command),
               }}
             />
-            {serverStatus.opcountersRepl ? (
+            {serverStatus.opcountersRepl && serverStatus.repl ? (
               <InfoArea
-                title="Op Counters Repl"
+                title="Replica Operation Counters"
                 data={{
                   Insert: Number.format(serverStatus.opcountersRepl.insert),
                   Query: Number.format(serverStatus.opcountersRepl.query),
