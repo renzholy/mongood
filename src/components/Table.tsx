@@ -50,7 +50,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
       })
     })
     setColumns(
-      _.sortBy(Object.entries(keys), '1')
+      _.sortBy(Object.entries(keys), (k) => k[1])
         .reverse()
         .map(([key]) => ({
           key,
