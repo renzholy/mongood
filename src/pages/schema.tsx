@@ -82,7 +82,7 @@ export default () => {
     revalidate,
   ])
   useEffect(() => {
-    if (!data) {
+    if (!data?.cursor.firstBatch[0]) {
       return
     }
     const { options } = data.cursor.firstBatch[0]

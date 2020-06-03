@@ -87,7 +87,10 @@ export default () => {
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{
-          root: { marginBottom: -10, justifyContent: 'space-between' },
+          root: {
+            marginBottom: type === Type.CURRENT ? -10 : 0,
+            justifyContent: 'space-between',
+          },
         }}>
         {_.map(Type, (v, k: Type) => (
           <DefaultButton
@@ -154,17 +157,7 @@ export default () => {
       ) : null}
       {type === Type.PROFILE ? (
         database ? (
-          <div
-            style={{
-              paddingTop: 10,
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-            }}>
-            <DocumentTable
-              order={['ns', 'op', 'client', 'command', 'millis']}
-            />
-          </div>
+          <DocumentTable order={['ns', 'op', 'client', 'command', 'millis']} />
         ) : (
           <LargeMessage iconName="Back" title="Select database" />
         )
