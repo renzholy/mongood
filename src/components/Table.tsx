@@ -133,7 +133,6 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             selectionMode={SelectionMode.none}
             constrainMode={ConstrainMode.unconstrained}
             layoutMode={DetailsListLayoutMode.justified}
-            onShouldVirtualize={() => false}
             items={items || []}
             onRenderItemColumn={(item, _index, column) => (
               <TableRow value={item} column={column} />
