@@ -9,6 +9,11 @@ import { parse } from '@/utils/mongo-shell-data'
 import { Table } from '@/components/Table'
 import { FilterInput } from '@/components/FilterInput'
 
+enum Type {
+  CURRENT = 'Current Op',
+  PROFILE = 'System Profile',
+}
+
 const examples: { [key: string]: object } = {
   'Slow operations': {
     active: true,
@@ -56,9 +61,26 @@ export default () => {
       }),
     { refreshInterval: 1000 },
   )
+  const [type, setType] = useState(Type.CURRENT)
 
   return (
     <>
+      <Stack
+        wrap={true}
+        horizontal={true}
+        tokens={{ childrenGap: 10, padding: 10 }}
+        styles={{ root: { marginBottom: -10 } }}>
+        {_.map(Type, (v, k: Type) => (
+          <DefaultButton
+            key={k}
+            text={v}
+            primary={type === v}
+            onClick={() => {
+              setType(v)
+            }}
+          />
+        ))}
+      </Stack>
       <Stack
         wrap={true}
         horizontal={true}
