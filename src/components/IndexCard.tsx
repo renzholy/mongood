@@ -233,7 +233,8 @@ export function IndexCard(props: {
         styles={{
           root: {
             alignSelf: 'flex-end',
-            borderLeft: `1px solid ${theme.palette.neutralLighter}`,
+            marginBottom: -10,
+            marginRight: -10,
           },
         }}>
         <Dialog
@@ -264,6 +265,7 @@ export function IndexCard(props: {
         <IconButton
           menuIconProps={{ iconName: 'MoreVertical' }}
           menuProps={{
+            alignTargetEdge: true,
             items: [
               {
                 key: 'Drop index',
