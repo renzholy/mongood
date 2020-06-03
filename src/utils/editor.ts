@@ -40,10 +40,10 @@ monaco.init().then((_m) => {
   function Timestamp(t: number, i: number): { $timestamp: { t: number, i: number } }
 
   /**
+   * @param {number} subType BSON binary subtype. See the extended bson documentation http://bsonspec.org/spec.html for subtypes available.
    * @param {string} base64 Base64 encoded (with padding as “=”) payload string.
-   * @param {string} subType A one- or two-character hex string that corresponds to a BSON binary subtype. See the extended bson documentation http://bsonspec.org/spec.html for subtypes available.
    */
-  function Binary(base64: string, subType: string): { $binary: { base64: string, subType: string } }
+  function BinData(subType: number, base64: string): { $binary: { base64: string, subType: string } }
   `)
 })
 
