@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { SearchBox, Nav, getTheme } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
@@ -39,12 +39,32 @@ export function DatabaseNav() {
     )
     return firstBatch.map(({ name }) => name)
   }, [])
+  const [databases, setDatabases] = useState<string[]>([])
+  useEffect(() => {
+    const _databases = data?.databases.map(({ name }) => name) || []
+    const systemDatabases = _databases.filter(
+      (d) => d === 'admin' || d === 'local',
+    )
+    setDatabases([
+      ...systemDatabases.sort(),
+      ..._.pullAll(_databases.sort(), systemDatabases),
+    ])
+  }, [data])
   useEffect(() => {
     Promise.all(
       expandedDatabases.map(async (_database) => {
         const collections = await listCollections(_database)
+        const systemCollections = collections.filter((c) =>
+          c.startsWith('system.'),
+        )
         dispatch(
-          actions.root.setCollectionsMap({ database: _database, collections }),
+          actions.root.setCollectionsMap({
+            database: _database,
+            collections: [
+              ...systemCollections.sort(),
+              ..._.pullAll(collections.sort(), systemCollections),
+            ],
+          }),
         )
       }) || [],
     )
@@ -81,15 +101,15 @@ export function DatabaseNav() {
         <Nav
           groups={[
             {
-              links: data?.databases.length
-                ? data.databases.map(({ name }) => ({
-                    key: name,
-                    name,
-                    title: name,
+              links: databases.length
+                ? databases.map((_database) => ({
+                    key: _database,
+                    name: _database,
+                    title: _database,
                     url: '',
-                    isExpanded: expandedDatabases.includes(name),
-                    links: collectionsMap[name]?.map((_collection) => ({
-                      key: `${name}${splitter}${_collection}`,
+                    isExpanded: expandedDatabases.includes(_database),
+                    links: collectionsMap[_database]?.map((_collection) => ({
+                      key: `${_database}${splitter}${_collection}`,
                       name: _collection,
                       title: _collection,
                       url: '',
