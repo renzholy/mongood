@@ -249,7 +249,8 @@ export function IndexCard(props: {
           }}
           modalProps={{
             styles: {
-              scrollableContent: {
+              main: {
+                minHeight: 0,
                 borderTop: `4px solid ${theme.palette.yellow}`,
                 backgroundColor: theme.palette.neutralLighterAlt,
               },

@@ -5,6 +5,7 @@ import {
   IStyle,
   DialogType,
   getTheme,
+  DialogFooter,
 } from '@fluentui/react'
 
 export function ActionButton(props: {
@@ -45,7 +46,7 @@ export function ActionButton(props: {
       <Dialog
         hidden={hidden}
         dialogContentProps={{
-          type: DialogType.close,
+          type: DialogType.normal,
           title: 'Error',
           subText: error,
           onDismiss() {
@@ -54,7 +55,8 @@ export function ActionButton(props: {
         }}
         modalProps={{
           styles: {
-            scrollableContent: {
+            main: {
+              minHeight: 0,
               borderTop: `4px solid ${theme.palette.red}`,
               backgroundColor: theme.palette.neutralLighterAlt,
             },
@@ -62,8 +64,16 @@ export function ActionButton(props: {
           onDismiss() {
             setHidden(true)
           },
-        }}
-      />
+        }}>
+        <DialogFooter>
+          <DefaultButton
+            onClick={() => {
+              setHidden(true)
+            }}
+            text="Ok"
+          />
+        </DialogFooter>
+      </Dialog>
       <DefaultButton
         text={props.text}
         disabled={succeed || props.disabled || loading}
