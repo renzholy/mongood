@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useSWR from 'swr'
@@ -10,10 +8,8 @@ import { runCommand } from '@/utils/fetcher'
 import { parse } from '@/utils/mongo-shell-data'
 import { Table } from '@/components/Table'
 import { FilterInput } from '@/components/FilterInput'
-import { DocumentTable } from '@/components/DocumentTable'
 import { actions } from '@/stores'
-import { Pagination } from '@/components/Pagination'
-import { LargeMessage } from '@/components/LargeMessage'
+import { SystemProfile } from '@/components/SystemProfile'
 
 enum Type {
   CURRENT = 'Current Op',
@@ -88,7 +84,7 @@ export default () => {
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{
           root: {
-            marginBottom: type === Type.CURRENT ? -10 : 0,
+            marginBottom: -10,
             justifyContent: 'space-between',
           },
         }}>
@@ -102,10 +98,6 @@ export default () => {
             }}
           />
         ))}
-        <Stack.Item grow={true}>
-          <div />
-        </Stack.Item>
-        {type === Type.PROFILE ? <Pagination allowInsert={false} /> : null}
       </Stack>
       {type === Type.CURRENT ? (
         <>
@@ -155,13 +147,7 @@ export default () => {
           />
         </>
       ) : null}
-      {type === Type.PROFILE ? (
-        database ? (
-          <DocumentTable order={['ns', 'op', 'client', 'command', 'millis']} />
-        ) : (
-          <LargeMessage iconName="Back" title="Select database" />
-        )
-      ) : null}
+      {type === Type.PROFILE ? <SystemProfile /> : null}
     </>
   )
 }

@@ -35,7 +35,7 @@ export function DocumentInsertModal<
         styles={{
           scrollableContent: {
             minWidth: 600,
-            minHeight: 400,
+            minHeight: 600,
             width: '50vw',
             height: '50vh',
             borderTop: `4px solid ${theme.palette.themePrimary}`,
