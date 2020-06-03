@@ -16,7 +16,7 @@ export function DocumentInsertModal<
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const isDarkMode = useDarkMode()
-  const [value, setValue] = useState('{}')
+  const [value, setValue] = useState('return {\n}')
   const handleInsert = useCallback(async () => {
     const doc = parse(value.replace(/^return/, ''))
     await runCommand<{
