@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/jsx-indent */
 
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
 import {
   Text,
@@ -25,7 +25,55 @@ import { useDarkMode } from '@/utils/theme'
 import { runCommand } from '@/utils/fetcher'
 import { useSelector } from 'react-redux'
 
-function IndexCardFeature(props: { value: { text: string; data?: object } }) {
+function IndexInfo(props: { value: IndexSpecification }) {
+  const theme = getTheme()
+
+  return (
+    <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
+      {'textIndexVersion' in props.value
+        ? _.map(props.value.weights, (v, k) => (
+            <Text
+              key={k}
+              styles={{
+                root: { display: 'flex', alignItems: 'center' },
+              }}>
+              {k}:&nbsp;
+              {v}
+            </Text>
+          ))
+        : _.map(props.value.key, (v, k) => (
+            <Text
+              key={k}
+              styles={{
+                root: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: theme.palette.neutralPrimaryAlt,
+                },
+              }}>
+              {k}:&nbsp;
+              {v === 1 ? (
+                <Icon
+                  iconName="Up"
+                  styles={{
+                    root: { color: theme.palette.neutralPrimaryAlt },
+                  }}
+                />
+              ) : (
+                <Icon
+                  iconName="Down"
+                  styles={{
+                    root: { color: theme.palette.neutralPrimaryAlt },
+                  }}
+                />
+              )}
+            </Text>
+          ))}
+    </Stack>
+  )
+}
+
+function IndexFeature(props: { value: { text: string; data?: object } }) {
   const theme = getTheme()
   const isDarkMode = useDarkMode()
   const str = JSON.stringify(props.value.data, null, 2)
@@ -78,53 +126,8 @@ function IndexCardFeature(props: { value: { text: string; data?: object } }) {
   )
 }
 
-export function IndexCard(props: {
-  value: IndexSpecification
-  onDrop(): void
-  size: number
-  statDetail: WiredTigerData
-}) {
+function IndexDrop(props: { value: IndexSpecification; onDrop(): void }) {
   const theme = getTheme()
-  const features = _.compact([
-    props.value.background ? { text: 'BACKGROUND' } : null,
-    props.value.unique ? { text: 'UNIQUE' } : null,
-    props.value.sparse ? { text: 'SPARSE' } : null,
-    props.value.partialFilterExpression
-      ? {
-          text: 'PARTIAL',
-          data: {
-            partialFilterExpression: props.value.partialFilterExpression,
-          },
-        }
-      : null,
-    'expireAfterSeconds' in props.value
-      ? {
-          text: 'TTL',
-          data: {
-            expireAfterSeconds: props.value.expireAfterSeconds,
-          },
-        }
-      : null,
-    '2dsphereIndexVersion' in props.value
-      ? {
-          text: 'GEOSPATIAL',
-          data: {
-            '2dsphereIndexVersion': props.value['2dsphereIndexVersion'],
-          },
-        }
-      : null,
-    'textIndexVersion' in props.value
-      ? {
-          text: 'TEXT',
-          data: {
-            textIndexVersion: props.value.textIndexVersion,
-            default_language: props.value.default_language,
-            language_override: props.value.language_override,
-            weights: props.value.weights,
-          },
-        }
-      : null,
-  ])
   const [hidden, setHidden] = useState(true)
   const { database, collection } = useSelector((state) => state.root)
   const handleDropIndex = useCallback(async () => {
@@ -138,6 +141,106 @@ export function IndexCard(props: {
     setHidden(true)
     props.onDrop()
   }, [database, collection, props.value])
+
+  return (
+    <>
+      <Dialog
+        hidden={hidden}
+        dialogContentProps={{
+          type: DialogType.normal,
+          title: 'Drop index',
+          subText: props.value.name,
+          onDismiss() {
+            setHidden(true)
+          },
+        }}
+        modalProps={{
+          styles: {
+            main: {
+              minHeight: 0,
+              borderTop: `4px solid ${theme.palette.yellow}`,
+              backgroundColor: theme.palette.neutralLighterAlt,
+            },
+          },
+          onDismiss() {
+            setHidden(true)
+          },
+        }}>
+        <DialogFooter>
+          <DefaultButton onClick={handleDropIndex} text="Drop" />
+        </DialogFooter>
+      </Dialog>
+      <IconButton
+        menuIconProps={{ iconName: 'MoreVertical' }}
+        menuProps={{
+          alignTargetEdge: true,
+          items: [
+            {
+              key: 'Drop index',
+              text: 'Drop index',
+              onClick() {
+                setHidden(false)
+              },
+            },
+          ],
+        }}
+        styles={{ root: { color: theme.palette.themePrimary } }}
+      />
+    </>
+  )
+}
+
+export function IndexCard(props: {
+  value: IndexSpecification
+  onDrop(): void
+  size: number
+  statDetail: WiredTigerData
+}) {
+  const theme = getTheme()
+  const features = useMemo(
+    () =>
+      _.compact([
+        props.value.background ? { text: 'BACKGROUND' } : null,
+        props.value.unique ? { text: 'UNIQUE' } : null,
+        props.value.sparse ? { text: 'SPARSE' } : null,
+        props.value.partialFilterExpression
+          ? {
+              text: 'PARTIAL',
+              data: {
+                partialFilterExpression: props.value.partialFilterExpression,
+              },
+            }
+          : null,
+        'expireAfterSeconds' in props.value
+          ? {
+              text: 'TTL',
+              data: {
+                expireAfterSeconds: props.value.expireAfterSeconds,
+              },
+            }
+          : null,
+        '2dsphereIndexVersion' in props.value
+          ? {
+              text: 'GEOSPATIAL',
+              data: {
+                '2dsphereIndexVersion': props.value['2dsphereIndexVersion'],
+              },
+            }
+          : null,
+        'textIndexVersion' in props.value
+          ? {
+              text: 'TEXT',
+              data: {
+                textIndexVersion: props.value.textIndexVersion,
+                default_language: props.value.default_language,
+                language_override: props.value.language_override,
+                weights: props.value.weights,
+              },
+            }
+          : null,
+      ]),
+    [props.value],
+  )
 
   return (
     <Card
@@ -165,54 +268,14 @@ export function IndexCard(props: {
           </Text>
         </Card.Item>
         <Card.Item>
-          <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
-            {'textIndexVersion' in props.value
-              ? _.map(props.value.weights, (v, k) => (
-                  <Text
-                    key={k}
-                    styles={{
-                      root: { display: 'flex', alignItems: 'center' },
-                    }}>
-                    {k}:&nbsp;
-                    {v}
-                  </Text>
-                ))
-              : _.map(props.value.key, (v, k) => (
-                  <Text
-                    key={k}
-                    styles={{
-                      root: {
-                        display: 'flex',
-                        alignItems: 'center',
-                        color: theme.palette.neutralPrimaryAlt,
-                      },
-                    }}>
-                    {k}:&nbsp;
-                    {v === 1 ? (
-                      <Icon
-                        iconName="Up"
-                        styles={{
-                          root: { color: theme.palette.neutralPrimaryAlt },
-                        }}
-                      />
-                    ) : (
-                      <Icon
-                        iconName="Down"
-                        styles={{
-                          root: { color: theme.palette.neutralPrimaryAlt },
-                        }}
-                      />
-                    )}
-                  </Text>
-                ))}
-          </Stack>
+          <IndexInfo value={props.value} />
         </Card.Item>
         {features.length ? (
           <Card.Item>
             <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
               {features.map((feature) =>
                 'data' in feature ? (
-                  <IndexCardFeature key={feature.text} value={feature} />
+                  <IndexFeature key={feature.text} value={feature} />
                 ) : (
                   <Text
                     key={feature.text}
@@ -237,48 +300,7 @@ export function IndexCard(props: {
             marginRight: -10,
           },
         }}>
-        <Dialog
-          hidden={hidden}
-          dialogContentProps={{
-            type: DialogType.normal,
-            title: 'Drop index',
-            subText: props.value.name,
-            onDismiss() {
-              setHidden(true)
-            },
-          }}
-          modalProps={{
-            styles: {
-              main: {
-                minHeight: 0,
-                borderTop: `4px solid ${theme.palette.yellow}`,
-                backgroundColor: theme.palette.neutralLighterAlt,
-              },
-            },
-            onDismiss() {
-              setHidden(true)
-            },
-          }}>
-          <DialogFooter>
-            <DefaultButton onClick={handleDropIndex} text="Drop" />
-          </DialogFooter>
-        </Dialog>
-        <IconButton
-          menuIconProps={{ iconName: 'MoreVertical' }}
-          menuProps={{
-            alignTargetEdge: true,
-            items: [
-              {
-                key: 'Drop index',
-                text: 'Drop index',
-                onClick() {
-                  setHidden(false)
-                },
-              },
-            ],
-          }}
-          styles={{ root: { color: theme.palette.themePrimary } }}
-        />
+        <IndexDrop value={props.value} onDrop={props.onDrop} />
       </Card.Section>
     </Card>
   )
