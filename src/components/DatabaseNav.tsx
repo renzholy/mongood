@@ -43,7 +43,7 @@ export function DatabaseNav() {
   useEffect(() => {
     const _databases = data?.databases.map(({ name }) => name) || []
     const systemDatabases = _databases.filter(
-      (d) => d === 'admin' || d === 'local',
+      (d) => d === 'admin' || d === 'local' || d === 'config',
     )
     setDatabases([
       ...systemDatabases.sort(),
