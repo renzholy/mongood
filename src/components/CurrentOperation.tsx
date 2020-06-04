@@ -4,7 +4,7 @@ import _ from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
-import { parse } from '@/utils/mongo-shell-data'
+import { parse, MongoData } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { FilterInput } from './FilterInput'
 import { Table } from './Table'
@@ -50,7 +50,7 @@ export function CurrentOperation() {
   const { data, error, isValidating } = useSWR(
     `currentOp/${ns}/${JSON.stringify(filter)}`,
     () =>
-      runCommand<{ inprog: any[] }>('admin', {
+      runCommand<{ inprog: { [key: string]: MongoData }[] }>('admin', {
         currentOp: 1,
         ...filter,
         ns,

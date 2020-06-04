@@ -11,6 +11,7 @@ import _ from 'lodash'
 import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 import { LargeMessage } from '@/components/LargeMessage'
+import { ServerStats, DbStats } from '@/types'
 
 function InfoCard(props: { title: string; content: string }) {
   const theme = getTheme()
@@ -99,19 +100,7 @@ export default () => {
   const { data: dbStats } = useSWR(
     database ? `dbStats/${database}` : null,
     () =>
-      runCommand<{
-        avgObjSize: number
-        collections: number
-        dataSize: number
-        db: string
-        indexSize: number
-        indexes: number
-        fsUsedSize: number
-        fsTotalSize: number
-        objects: number
-        storageSize: number
-        views: number
-      }>(database!, {
+      runCommand<DbStats>(database!, {
         dbStats: 1,
       }),
     { refreshInterval: 1000 },
@@ -119,41 +108,7 @@ export default () => {
   const { data: serverStatus } = useSWR(
     database && collection ? null : 'serverStatus',
     () =>
-      runCommand<{
-        host: string
-        uptimeMillis: number
-        repl?: {
-          setName: string
-          hosts: string[]
-          primary: string
-        }
-        connections: {
-          available: number
-          current: number
-          totalCreated: number
-        }
-        network: {
-          bytesIn: number
-          bytesOut: number
-          numRequests: number
-        }
-        opcounters: {
-          insert: number
-          query: number
-          update: number
-          delete: number
-          getmore: number
-          command: number
-        }
-        opcountersRepl?: {
-          insert: number
-          query: number
-          update: number
-          delete: number
-          getmore: number
-          command: number
-        }
-      }>('admin', {
+      runCommand<ServerStats>('admin', {
         serverStatus: 1,
       }),
     { refreshInterval: 1000 },

@@ -27,7 +27,7 @@ import { LargeMessage } from './LargeMessage'
 export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
   order?: string[]
-  error: any
+  error: Error
   isValidating: boolean
 }) {
   const theme = getTheme()

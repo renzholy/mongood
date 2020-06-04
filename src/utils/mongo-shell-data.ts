@@ -28,7 +28,7 @@ export type MongoData =
   | { $regularExpression: { pattern: string; options: string } }
   | { $timestamp: { t: number; i: number } }
   | { $binary: { base64: string; subType: string } }
-  | any[]
+  | object[]
   | object
 
 export function stringify(val: MongoData, indent = 0, depth = 0): string {
