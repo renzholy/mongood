@@ -4,18 +4,6 @@ let _monaco: Monaco | undefined
 
 monaco.init().then((_m) => {
   _monaco = _m
-  _monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-    validate: true,
-    schemas: [
-      {
-        uri:
-          'https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/',
-        schema: {
-          type: 'object',
-        },
-      },
-    ],
-  })
   _monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
     diagnosticCodesToIgnore: [1108],
   })
