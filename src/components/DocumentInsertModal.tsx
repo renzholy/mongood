@@ -107,7 +107,7 @@ export function DocumentInsertModal<
             padding: 10,
           }}>
           <ActionButton
-            text="Insert Document"
+            text="Insert"
             primary={true}
             onClick={handleInsert}
             style={{ flexShrink: 0, marginLeft: 10 }}

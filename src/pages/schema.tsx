@@ -121,7 +121,7 @@ export default () => {
           backgroundColor: theme.palette.neutralLight,
         }}>
         <ActionButton
-          text="Update Schema"
+          text="Update"
           primary={true}
           onClick={handleUpdate}
           style={{ flexShrink: 0, marginLeft: 10 }}
