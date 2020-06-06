@@ -6,10 +6,12 @@ import {
   DialogType,
   getTheme,
   DialogFooter,
+  IconButton,
 } from '@fluentui/react'
 
 export function ActionButton(props: {
-  text: string
+  text?: string
+  icon?: string
   disabled?: boolean
   primary?: boolean
   danger?: boolean
@@ -41,6 +43,29 @@ export function ActionButton(props: {
       }, 1000)
     }
   }, [succeed])
+  const menuProps = props.danger
+    ? {
+        items: [
+          {
+            key: '1',
+            text: 'Operation cannot rollback',
+            style: { color: theme.palette.red },
+            subMenuProps: {
+              items: [
+                {
+                  key: '2',
+                  text: props.text,
+                  style: { color: theme.palette.red },
+                  onClick() {
+                    handleClick()
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }
+    : undefined
 
   return (
     <div>
@@ -75,39 +100,26 @@ export function ActionButton(props: {
           />
         </DialogFooter>
       </Dialog>
-      <DefaultButton
-        menuProps={
-          props.danger
-            ? {
-                items: [
-                  {
-                    key: '1',
-                    text: 'Operation cannot rollback',
-                    style: { color: theme.palette.red },
-                    subMenuProps: {
-                      items: [
-                        {
-                          key: '2',
-                          text: props.text,
-                          style: { color: theme.palette.red },
-                          onClick() {
-                            handleClick()
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              }
-            : undefined
-        }
-        text={props.text}
-        disabled={succeed || props.disabled || loading}
-        primary={props.primary}
-        onClick={props.danger ? undefined : handleClick}
-        styles={{ root: props.style }}
-        iconProps={succeed ? { iconName: 'CheckMark' } : {}}
-      />
+      {props.icon ? (
+        <IconButton
+          menuProps={menuProps}
+          disabled={succeed || props.disabled || loading}
+          primary={props.primary}
+          onClick={props.danger ? undefined : handleClick}
+          styles={{ root: props.style }}
+          menuIconProps={{ iconName: succeed ? 'CheckMark' : props.icon }}
+        />
+      ) : (
+        <DefaultButton
+          menuProps={menuProps}
+          text={props.text}
+          disabled={succeed || props.disabled || loading}
+          primary={props.primary}
+          onClick={props.danger ? undefined : handleClick}
+          styles={{ root: props.style }}
+          iconProps={succeed ? { iconName: 'CheckMark' } : {}}
+        />
+      )}
     </div>
   )
 }

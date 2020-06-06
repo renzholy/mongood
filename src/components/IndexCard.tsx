@@ -10,11 +10,6 @@ import {
   Stack,
   HoverCard,
   HoverCardType,
-  IconButton,
-  Dialog,
-  DialogType,
-  DialogFooter,
-  DefaultButton,
 } from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
@@ -24,6 +19,7 @@ import { colorize } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
 import { runCommand } from '@/utils/fetcher'
 import { useSelector } from 'react-redux'
+import { ActionButton } from './ActionButton'
 
 function IndexInfo(props: { value: IndexSpecification }) {
   const theme = getTheme()
@@ -126,70 +122,6 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
   )
 }
 
-function IndexDrop(props: { value: IndexSpecification; onDrop(): void }) {
-  const theme = getTheme()
-  const [hidden, setHidden] = useState(true)
-  const { database, collection } = useSelector((state) => state.root)
-  const handleDropIndex = useCallback(async () => {
-    if (!database || !collection) {
-      return
-    }
-    await runCommand(database, {
-      dropIndexes: collection,
-      index: props.value.name,
-    })
-    setHidden(true)
-    props.onDrop()
-  }, [database, collection, props.value])
-
-  return (
-    <>
-      <Dialog
-        hidden={hidden}
-        dialogContentProps={{
-          type: DialogType.normal,
-          title: 'Drop index',
-          subText: props.value.name,
-          onDismiss() {
-            setHidden(true)
-          },
-        }}
-        modalProps={{
-          styles: {
-            main: {
-              minHeight: 0,
-              borderTop: `4px solid ${theme.palette.yellow}`,
-              backgroundColor: theme.palette.neutralLighterAlt,
-            },
-          },
-          onDismiss() {
-            setHidden(true)
-          },
-        }}>
-        <DialogFooter>
-          <DefaultButton onClick={handleDropIndex} text="Drop" />
-        </DialogFooter>
-      </Dialog>
-      <IconButton
-        menuIconProps={{ iconName: 'MoreVertical' }}
-        menuProps={{
-          alignTargetEdge: true,
-          items: [
-            {
-              key: 'Drop index',
-              text: 'Drop index',
-              onClick() {
-                setHidden(false)
-              },
-            },
-          ],
-        }}
-        styles={{ root: { color: theme.palette.themePrimary } }}
-      />
-    </>
-  )
-}
-
 export function IndexCard(props: {
   value: IndexSpecification
   onDrop(): void
@@ -241,6 +173,17 @@ export function IndexCard(props: {
       ]),
     [props.value],
   )
+  const { database, collection } = useSelector((state) => state.root)
+  const handleDropIndex = useCallback(async () => {
+    if (!database || !collection) {
+      return
+    }
+    await runCommand(database, {
+      dropIndexes: collection,
+      index: props.value.name,
+    })
+    props.onDrop()
+  }, [database, collection, props.value])
 
   return (
     <Card
@@ -300,7 +243,12 @@ export function IndexCard(props: {
             marginRight: -10,
           },
         }}>
-        <IndexDrop value={props.value} onDrop={props.onDrop} />
+        <ActionButton
+          icon="Delete"
+          text="Drop"
+          danger={true}
+          onClick={handleDropIndex}
+        />
       </Card.Section>
     </Card>
   )
