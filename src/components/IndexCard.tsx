@@ -253,7 +253,7 @@ export function IndexCard(props: {
       tokens={{
         childrenGap: 10,
         padding: 20,
-        minWidth: 676,
+        minWidth: 600,
         minHeight: 'unset',
       }}>
       <Card.Section styles={{ root: { flex: 1 } }}>
