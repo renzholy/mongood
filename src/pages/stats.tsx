@@ -125,7 +125,9 @@ export default () => {
             <InfoArea title="Host: " subtitle={serverStatus.host} />
             <InfoArea
               title="Uptime: "
-              subtitle={prettyMilliseconds(serverStatus.uptimeMillis)}
+              subtitle={prettyMilliseconds(serverStatus.uptimeMillis, {
+                secondsDecimalDigits: 0,
+              })}
             />
             {serverStatus.repl ? (
               <InfoArea
