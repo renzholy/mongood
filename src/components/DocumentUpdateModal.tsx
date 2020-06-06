@@ -34,6 +34,15 @@ export function DocumentUpdateModal<
     dispatch(actions.docs.setShouldRevalidate())
     props.onDismiss()
   }, [database, collection, value])
+  const handleDelete = useCallback(async () => {
+    const doc = parse(value.replace(/^return/, ''))
+    await runCommand(database!, {
+      delete: collection,
+      deletes: [{ q: { _id: (doc as { _id: unknown })._id }, limit: 1 }],
+    })
+    dispatch(actions.docs.setShouldRevalidate())
+    props.onDismiss()
+  }, [database, collection, value])
 
   return (
     <>
@@ -106,15 +115,21 @@ export function DocumentUpdateModal<
             height: 32,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
             flexDirection: 'row-reverse',
             padding: 10,
           }}>
           <ActionButton
-            text="Update Document"
+            text="Update"
             disabled={!props.value?._id}
             primary={true}
             onClick={handleUpdate}
+            style={{ flexShrink: 0, marginLeft: 10 }}
+          />
+          <ActionButton
+            text="Delete"
+            disabled={!props.value?._id}
+            danger={true}
+            onClick={handleDelete}
             style={{ flexShrink: 0, marginLeft: 10 }}
           />
         </div>

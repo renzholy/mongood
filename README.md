@@ -55,8 +55,7 @@ go run main.go headless.go
 
 ## 🚧 Roadmap:
 
-- [ ] doc insert and delete
-- [ ] index create and drop
+- [ ] index create
 - [ ] geo search
 - [ ] role management
 - [ ] and so on...

@@ -12,6 +12,7 @@ export function ActionButton(props: {
   text: string
   disabled?: boolean
   primary?: boolean
+  danger?: boolean
   onClick(): Promise<void>
   style?: IStyle
 }) {
@@ -75,10 +76,35 @@ export function ActionButton(props: {
         </DialogFooter>
       </Dialog>
       <DefaultButton
+        menuProps={
+          props.danger
+            ? {
+                items: [
+                  {
+                    key: '1',
+                    text: 'Operation cannot rollback',
+                    style: { color: theme.palette.red },
+                    subMenuProps: {
+                      items: [
+                        {
+                          key: '2',
+                          text: props.text,
+                          style: { color: theme.palette.red },
+                          onClick() {
+                            handleClick()
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              }
+            : undefined
+        }
         text={props.text}
         disabled={succeed || props.disabled || loading}
         primary={props.primary}
-        onClick={handleClick}
+        onClick={props.danger ? undefined : handleClick}
         styles={{ root: props.style }}
         iconProps={succeed ? { iconName: 'CheckMark' } : {}}
       />
