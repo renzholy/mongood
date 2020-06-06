@@ -56,7 +56,7 @@ export function SystemProfile() {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52 } }}>
+        styles={{ root: { height: 52, alignItems: 'center' } }}>
         <SpinButton
           disabled={loading}
           label="Slow Ms:"
@@ -104,7 +104,7 @@ export function SystemProfile() {
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
-        <Pagination allowInsert={false} />
+        <Pagination />
       </Stack>
       <DocumentTable order={['ns', 'op', 'client', 'command', 'millis']} />
     </>

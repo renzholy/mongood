@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Stack, IconButton, Text, getTheme } from '@fluentui/react'
+import { IconButton, Text, getTheme, Stack } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@/stores'
 import useSWR from 'swr'
@@ -8,7 +8,7 @@ import _ from 'lodash'
 import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 
-export function Pagination(props: { allowInsert: boolean }) {
+export function Pagination() {
   const { database, collection } = useSelector((state) => state.root)
   const { index, filter, skip, limit, count } = useSelector(
     (state) => state.docs,
@@ -63,14 +63,6 @@ export function Pagination(props: { allowInsert: boolean }) {
           dispatch(actions.docs.setSkip(Math.min(skip + limit, count)))
         }}
       />
-      {props.allowInsert ? (
-        <IconButton
-          iconProps={{ iconName: 'Add' }}
-          onClick={() => {
-            dispatch(actions.docs.setIsInsertOpen(true))
-          }}
-        />
-      ) : null}
     </Stack>
   )
 }

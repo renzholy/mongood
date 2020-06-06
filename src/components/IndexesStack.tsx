@@ -1,6 +1,6 @@
 import React from 'react'
 import useSWR from 'swr'
-import { Stack, DefaultButton } from '@fluentui/react'
+import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { IndexSpecification } from 'mongodb'
 
@@ -30,7 +30,9 @@ export function IndexesStack() {
       wrap={true}
       horizontal={true}
       tokens={{ childrenGap: 10, padding: 10 }}
-      styles={{ root: { minHeight: 52, marginBottom: -10 } }}>
+      styles={{
+        root: { minHeight: 52, marginBottom: -10 },
+      }}>
       {indexes?.cursor.firstBatch.length ? (
         indexes.cursor.firstBatch.map((item) => (
           <IndexButton
@@ -50,7 +52,13 @@ export function IndexesStack() {
         <DefaultButton disabled={true} text="No Index" />
       )}
       <Stack.Item grow={1}>&nbsp;</Stack.Item>
-      <Pagination allowInsert={true} />
+      <IconButton
+        iconProps={{ iconName: 'Add' }}
+        onClick={() => {
+          dispatch(actions.docs.setIsInsertOpen(true))
+        }}
+      />
+      <Pagination />
     </Stack>
   )
 }
