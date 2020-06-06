@@ -6,12 +6,10 @@ import {
   DialogType,
   getTheme,
   DialogFooter,
-  IconButton,
 } from '@fluentui/react'
 
 export function ActionButton(props: {
   text?: string
-  icon?: string
   disabled?: boolean
   primary?: boolean
   danger?: boolean
@@ -100,26 +98,15 @@ export function ActionButton(props: {
           />
         </DialogFooter>
       </Dialog>
-      {props.icon ? (
-        <IconButton
-          menuProps={menuProps}
-          disabled={succeed || props.disabled || loading}
-          primary={props.primary}
-          onClick={props.danger ? undefined : handleClick}
-          styles={{ root: props.style }}
-          menuIconProps={{ iconName: succeed ? 'CheckMark' : props.icon }}
-        />
-      ) : (
-        <DefaultButton
-          menuProps={menuProps}
-          text={props.text}
-          disabled={succeed || props.disabled || loading}
-          primary={props.primary}
-          onClick={props.danger ? undefined : handleClick}
-          styles={{ root: props.style }}
-          iconProps={succeed ? { iconName: 'CheckMark' } : {}}
-        />
-      )}
+      <DefaultButton
+        menuProps={menuProps}
+        text={props.text}
+        disabled={succeed || props.disabled || loading}
+        primary={props.primary}
+        onClick={props.danger ? undefined : handleClick}
+        styles={{ root: props.style }}
+        iconProps={succeed ? { iconName: 'CheckMark' } : {}}
+      />
     </div>
   )
 }

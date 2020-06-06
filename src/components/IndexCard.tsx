@@ -17,9 +17,7 @@ import { IndexSpecification, WiredTigerData } from 'mongodb'
 
 import { colorize } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
-import { runCommand } from '@/utils/fetcher'
-import { useSelector } from 'react-redux'
-import { ActionButton } from './ActionButton'
+import { IndexViewModal } from './IndexViewModal'
 
 function IndexInfo(props: { value: IndexSpecification }) {
   const theme = getTheme()
@@ -173,20 +171,13 @@ export function IndexCard(props: {
       ]),
     [props.value],
   )
-  const { database, collection } = useSelector((state) => state.root)
-  const handleDropIndex = useCallback(async () => {
-    if (!database || !collection) {
-      return
-    }
-    await runCommand(database, {
-      dropIndexes: collection,
-      index: props.value.name,
-    })
-    props.onDrop()
-  }, [database, collection, props.value])
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <Card
+      onDoubleClick={() => {
+        setIsOpen(true)
+      }}
       horizontal={true}
       styles={{
         root: {
@@ -201,6 +192,14 @@ export function IndexCard(props: {
       }}>
       <Card.Section styles={{ root: { flex: 1 } }}>
         <Card.Item>
+          <IndexViewModal
+            value={props.value}
+            isOpen={isOpen}
+            onDismiss={() => {
+              setIsOpen(false)
+            }}
+            onDrop={props.onDrop}
+          />
           <Text
             variant="xLarge"
             styles={{ root: { color: theme.palette.neutralPrimary } }}>
@@ -234,21 +233,6 @@ export function IndexCard(props: {
             </Stack>
           </Card.Item>
         ) : null}
-      </Card.Section>
-      <Card.Section
-        styles={{
-          root: {
-            alignSelf: 'flex-end',
-            marginBottom: -10,
-            marginRight: -10,
-          },
-        }}>
-        <ActionButton
-          icon="Delete"
-          text="Drop"
-          danger={true}
-          onClick={handleDropIndex}
-        />
       </Card.Section>
     </Card>
   )
