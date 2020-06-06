@@ -40,15 +40,18 @@ export function Pagination() {
 
   return (
     <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
-      {count ? (
-        <Text style={{ marginRight: 20, color: theme.palette.neutralPrimary }}>
-          {skip + 1} ~ {Math.min(skip + limit, count)} of {Number.format(count)}
-        </Text>
-      ) : (
-        <Text style={{ marginRight: 20, color: theme.palette.neutralPrimary }}>
-          No Data
-        </Text>
-      )}
+      <Text
+        style={{
+          marginLeft: 20,
+          marginRight: 20,
+          color: theme.palette.neutralPrimary,
+        }}>
+        {count
+          ? `${skip + 1} ~ ${Math.min(skip + limit, count)} of ${Number.format(
+              count,
+            )}`
+          : 'No Data'}
+      </Text>
       <IconButton
         iconProps={{ iconName: 'Back' }}
         disabled={skip <= 0}

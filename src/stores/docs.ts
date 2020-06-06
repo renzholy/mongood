@@ -1,9 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IndexSpecification, FilterQuery } from 'mongodb'
 
+export enum DisplayMode {
+  TABLE,
+  DOCUMENT,
+}
+
 export default createSlice({
   name: 'docs',
   initialState: {
+    displayMode: 0,
     filter: {},
     sort: {},
     skip: 0,
@@ -12,6 +18,7 @@ export default createSlice({
     isInsertOpen: false,
     isUpdateOpen: false,
   } as {
+    displayMode: DisplayMode
     index?: IndexSpecification
     filter: FilterQuery<unknown>
     sort: { [key: string]: 1 | -1 | undefined }
@@ -22,6 +29,13 @@ export default createSlice({
     isUpdateOpen: boolean
   },
   reducers: {
+    nextDisplayMode: (state) => ({
+      ...state,
+      displayMode: {
+        [DisplayMode.TABLE]: DisplayMode.DOCUMENT,
+        [DisplayMode.DOCUMENT]: DisplayMode.TABLE,
+      }[state.displayMode],
+    }),
     setIndex: (
       state,
       { payload }: PayloadAction<IndexSpecification | undefined>,
