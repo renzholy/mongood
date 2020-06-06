@@ -7,7 +7,7 @@ import _ from 'lodash'
 
 function wrapKey(key: string) {
   const strKey = key.toString()
-  if (strKey.includes('-') || strKey.includes('.')) {
+  if (strKey.includes('-') || strKey.includes('.') || /^\d/.test(strKey)) {
     return `"${key}"`
   }
   return key
