@@ -15,13 +15,10 @@ import {
   IColumn,
 } from '@fluentui/react'
 import _ from 'lodash'
-import { useSelector, useDispatch } from 'react-redux'
 
 import { MongoData } from '@/utils/mongo-shell-data'
-import { actions } from '@/stores'
 import { DocumentUpdateModal } from './DocumentUpdateModal'
 import { TableRow } from './TableRow'
-import { DocumentInsertModal } from './DocumentInsertModal'
 import { LargeMessage } from './LargeMessage'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
@@ -32,9 +29,8 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
 }) {
   const theme = getTheme()
   const [invokedItem, setInvokedItem] = useState<T>()
-  const { isInsertOpen, isUpdateOpen } = useSelector((state) => state.docs)
-  const dispatch = useDispatch()
   const [columns, setColumns] = useState<IColumn[]>([])
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const { items, error, isValidating } = props
   useEffect(() => {
     // calc columns order
@@ -84,7 +80,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   )
   const onItemInvoked = useCallback((item: T) => {
     setInvokedItem(item)
-    dispatch(actions.docs.setIsUpdateOpen(true))
+    setIsUpdateOpen(true)
   }, [])
 
   if (error) {
@@ -101,17 +97,11 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
-      <DocumentInsertModal
-        isOpen={isInsertOpen}
-        onDismiss={() => {
-          dispatch(actions.docs.setIsInsertOpen(false))
-        }}
-      />
       <DocumentUpdateModal
         value={invokedItem}
         isOpen={isUpdateOpen}
         onDismiss={() => {
-          dispatch(actions.docs.setIsUpdateOpen(false))
+          setIsUpdateOpen(false)
         }}
       />
       {items?.length === 0 ? (

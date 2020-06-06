@@ -2,12 +2,13 @@
 
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
 import React, { useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { MongoData, parse } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
+import { actions } from '@/stores'
 import { ActionButton } from './ActionButton'
 
 export function DocumentInsertModal<
@@ -17,6 +18,7 @@ export function DocumentInsertModal<
   const theme = getTheme()
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('return {\n}')
+  const dispatch = useDispatch()
   const handleInsert = useCallback(async () => {
     const doc = parse(value.replace(/^return/, ''))
     await runCommand<{
@@ -26,6 +28,7 @@ export function DocumentInsertModal<
       documents: [doc],
     })
     setValue('{}')
+    dispatch(actions.docs.setShouldRevalidate())
     props.onDismiss()
   }, [database, collection, value])
 

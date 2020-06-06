@@ -11,15 +11,9 @@ import { Table } from './Table'
 
 export function DocumentTable(props: { order?: string[] }) {
   const { database, collection } = useSelector((state) => state.root)
-  const {
-    index,
-    filter,
-    sort,
-    skip,
-    limit,
-    isInsertOpen,
-    isUpdateOpen,
-  } = useSelector((state) => state.docs)
+  const { index, filter, sort, skip, limit, shouldRevalidate } = useSelector(
+    (state) => state.docs,
+  )
   const { data, error, isValidating, revalidate } = useSWR(
     database && collection
       ? `find/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
@@ -48,10 +42,8 @@ export function DocumentTable(props: { order?: string[] }) {
     },
   )
   useEffect(() => {
-    if (!isInsertOpen && !isUpdateOpen) {
-      revalidate()
-    }
-  }, [isInsertOpen, isUpdateOpen, revalidate])
+    revalidate()
+  }, [shouldRevalidate])
 
   return (
     <Table

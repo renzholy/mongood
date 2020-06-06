@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useSWR from 'swr'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -9,6 +9,7 @@ import { actions } from '@/stores'
 import { DisplayMode } from '@/stores/docs'
 import { IndexButton } from './IndexButton'
 import { Pagination } from './Pagination'
+import { DocumentInsertModal } from './DocumentInsertModal'
 
 export function DocumentControlStack() {
   const { database, collection } = useSelector((state) => state.root)
@@ -25,6 +26,7 @@ export function DocumentControlStack() {
   )
   const { displayMode, index } = useSelector((state) => state.docs)
   const dispatch = useDispatch()
+  const [isInsertOpen, setIsInsertOpen] = useState(false)
 
   return (
     <Stack
@@ -52,12 +54,19 @@ export function DocumentControlStack() {
       ) : (
         <DefaultButton disabled={true} text="No Index" />
       )}
-      <Stack.Item grow={1}>&nbsp;</Stack.Item>
+      <Stack.Item grow={1}>
+        <DocumentInsertModal
+          isOpen={isInsertOpen}
+          onDismiss={() => {
+            setIsInsertOpen(false)
+          }}
+        />
+      </Stack.Item>
       <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
         <IconButton
           iconProps={{ iconName: 'Add' }}
           onClick={() => {
-            dispatch(actions.docs.setIsInsertOpen(true))
+            setIsInsertOpen(true)
           }}
         />
         <IconButton

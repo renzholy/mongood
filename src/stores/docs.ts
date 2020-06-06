@@ -15,8 +15,7 @@ export default createSlice({
     skip: 0,
     limit: 25,
     count: 0,
-    isInsertOpen: false,
-    isUpdateOpen: false,
+    shouldRevalidate: new Date(),
   } as {
     displayMode: DisplayMode
     index?: IndexSpecification
@@ -25,8 +24,7 @@ export default createSlice({
     skip: number
     limit: number
     count: number
-    isInsertOpen: boolean
-    isUpdateOpen: boolean
+    shouldRevalidate: Date
   },
   reducers: {
     nextDisplayMode: (state) => ({
@@ -62,13 +60,9 @@ export default createSlice({
       ...state,
       count: payload,
     }),
-    setIsInsertOpen: (state, { payload }: PayloadAction<boolean>) => ({
+    setShouldRevalidate: (state) => ({
       ...state,
-      isInsertOpen: payload,
-    }),
-    setIsUpdateOpen: (state, { payload }: PayloadAction<boolean>) => ({
-      ...state,
-      isUpdateOpen: payload,
+      shouldRevalidate: new Date(),
     }),
   },
 })
