@@ -9,7 +9,7 @@ import { actions } from '@/stores'
 import { IndexButton } from './IndexButton'
 import { Pagination } from './Pagination'
 
-export function IndexesStack() {
+export function DocumentControlStack() {
   const { database, collection } = useSelector((state) => state.root)
   const { data: indexes } = useSWR(
     database && collection ? `listIndexes/${database}/${collection}` : null,

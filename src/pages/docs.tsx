@@ -2,8 +2,8 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { DocumentTable } from '@/components/DocumentTable'
-import { IndexesStack } from '@/components/IndexesStack'
-import { FilterStack } from '@/components/FilterStack'
+import { DocumentControlStack } from '@/components/DocumentControlStack'
+import { DocumentFilterStack } from '@/components/DocumentFilterStack'
 import { LargeMessage } from '@/components/LargeMessage'
 
 export default () => {
@@ -14,8 +14,8 @@ export default () => {
   }
   return (
     <>
-      <IndexesStack />
-      <FilterStack />
+      <DocumentControlStack />
+      <DocumentFilterStack />
       <DocumentTable />
     </>
   )

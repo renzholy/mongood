@@ -9,7 +9,7 @@ import { actions } from '@/stores'
 import { nextSorter } from '@/utils/sorter'
 import { FilterInput } from './FilterInput'
 
-export function FilterStack() {
+export function DocumentFilterStack() {
   const dispatch = useDispatch()
   const theme = getTheme()
   const { database, collection } = useSelector((state) => state.root)
