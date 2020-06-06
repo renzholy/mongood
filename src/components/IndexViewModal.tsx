@@ -1,36 +1,39 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
-import React, { useState, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useState, useEffect, useCallback } from 'react'
+import { useSelector } from 'react-redux'
+import { IndexSpecification } from 'mongodb'
 
-import { MongoData, parse } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
-import { actions } from '@/stores'
 import { ActionButton } from './ActionButton'
 
-export function DocumentInsertModal<
-  T extends { [key: string]: MongoData }
->(props: { isOpen: boolean; onDismiss(): void }) {
+export function IndexViewModal(props: {
+  value: IndexSpecification
+  isOpen: boolean
+  onDismiss(): void
+  onDrop(): void
+}) {
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const isDarkMode = useDarkMode()
-  const [value, setValue] = useState('return {\n  \n}')
-  const dispatch = useDispatch()
-  const handleInsert = useCallback(async () => {
-    const doc = parse(value.replace(/^return/, ''))
-    await runCommand<{
-      value: T
-    }>(database!, {
-      insert: collection,
-      documents: [doc],
+  const [value, setValue] = useState('')
+  useEffect(() => {
+    setValue(`return ${stringify(props.value, 2)}\n`)
+  }, [props.value])
+  const handleDrop = useCallback(async () => {
+    if (!database || !collection) {
+      return
+    }
+    await runCommand(database, {
+      dropIndexes: collection,
+      index: props.value.name,
     })
-    setValue('return {\n  \n}')
-    dispatch(actions.docs.setShouldRevalidate())
-    props.onDismiss()
-  }, [database, collection, value])
+    props.onDrop()
+  }, [database, collection, props.value])
 
   return (
     <>
@@ -69,7 +72,7 @@ export function DocumentInsertModal<
                 overflow: 'hidden',
               },
             }}>
-            New Document
+            View Index
           </Text>
           <IconButton
             styles={{ root: { marginLeft: 10 } }}
@@ -92,6 +95,7 @@ export function DocumentInsertModal<
             })
           }}
           options={{
+            readOnly: true,
             wordWrap: 'on',
             contextmenu: false,
             scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
@@ -102,16 +106,10 @@ export function DocumentInsertModal<
             height: 32,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
             flexDirection: 'row-reverse',
             padding: 10,
           }}>
-          <ActionButton
-            text="Insert"
-            primary={true}
-            onClick={handleInsert}
-            style={{ flexShrink: 0, marginLeft: 10 }}
-          />
+          <ActionButton text="Drop" danger={true} onClick={handleDrop} />
         </div>
       </Modal>
     </>

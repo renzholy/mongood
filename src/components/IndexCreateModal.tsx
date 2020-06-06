@@ -2,33 +2,29 @@
 
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
 import React, { useState, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import { MongoData, parse } from '@/utils/mongo-shell-data'
+import { parse } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
-import { actions } from '@/stores'
 import { ActionButton } from './ActionButton'
 
-export function DocumentInsertModal<
-  T extends { [key: string]: MongoData }
->(props: { isOpen: boolean; onDismiss(): void }) {
+export function IndexCreateModal(props: {
+  isOpen: boolean
+  onDismiss(): void
+}) {
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const isDarkMode = useDarkMode()
-  const [value, setValue] = useState('return {\n  \n}')
-  const dispatch = useDispatch()
-  const handleInsert = useCallback(async () => {
+  const [value, setValue] = useState('return {\n  background: true,\n}')
+  const handleCreate = useCallback(async () => {
     const doc = parse(value.replace(/^return/, ''))
-    await runCommand<{
-      value: T
-    }>(database!, {
-      insert: collection,
-      documents: [doc],
+    await runCommand(database!, {
+      createIndexes: collection,
+      indexes: [doc],
     })
-    setValue('return {\n  \n}')
-    dispatch(actions.docs.setShouldRevalidate())
+    setValue('return {\n  background: true,\n}')
     props.onDismiss()
   }, [database, collection, value])
 
@@ -69,7 +65,7 @@ export function DocumentInsertModal<
                 overflow: 'hidden',
               },
             }}>
-            New Document
+            Create Index
           </Text>
           <IconButton
             styles={{ root: { marginLeft: 10 } }}
@@ -102,14 +98,13 @@ export function DocumentInsertModal<
             height: 32,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
             flexDirection: 'row-reverse',
             padding: 10,
           }}>
           <ActionButton
-            text="Insert"
+            text="Create"
             primary={true}
-            onClick={handleInsert}
+            onClick={handleCreate}
             style={{ flexShrink: 0, marginLeft: 10 }}
           />
         </div>

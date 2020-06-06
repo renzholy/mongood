@@ -55,7 +55,6 @@ go run main.go headless.go
 
 ## 🚧 Roadmap:
 
-- [ ] index create
 - [ ] geo search
 - [ ] role management
 - [ ] and so on...

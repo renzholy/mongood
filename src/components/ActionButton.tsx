@@ -9,7 +9,7 @@ import {
 } from '@fluentui/react'
 
 export function ActionButton(props: {
-  text: string
+  text?: string
   disabled?: boolean
   primary?: boolean
   danger?: boolean
@@ -41,6 +41,29 @@ export function ActionButton(props: {
       }, 1000)
     }
   }, [succeed])
+  const menuProps = props.danger
+    ? {
+        items: [
+          {
+            key: '1',
+            text: 'Operation cannot rollback',
+            style: { color: theme.palette.red },
+            subMenuProps: {
+              items: [
+                {
+                  key: '2',
+                  text: props.text,
+                  style: { color: theme.palette.red },
+                  onClick() {
+                    handleClick()
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }
+    : undefined
 
   return (
     <div>
@@ -76,31 +99,7 @@ export function ActionButton(props: {
         </DialogFooter>
       </Dialog>
       <DefaultButton
-        menuProps={
-          props.danger
-            ? {
-                items: [
-                  {
-                    key: '1',
-                    text: 'Operation cannot rollback',
-                    style: { color: theme.palette.red },
-                    subMenuProps: {
-                      items: [
-                        {
-                          key: '2',
-                          text: props.text,
-                          style: { color: theme.palette.red },
-                          onClick() {
-                            handleClick()
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              }
-            : undefined
-        }
+        menuProps={menuProps}
         text={props.text}
         disabled={succeed || props.disabled || loading}
         primary={props.primary}

@@ -218,13 +218,6 @@ export default () => {
               'Collections + Views': Number.format(
                 dbStats.collections + dbStats.views,
               ),
-              Indexes: Number.format(dbStats.indexes),
-              'FS Used Size': bytes(dbStats.fsUsedSize || 0, {
-                unitSeparator: ' ',
-              }),
-              'FS Total Size': bytes(dbStats.fsTotalSize || 0, {
-                unitSeparator: ' ',
-              }),
             }}
           />
           <StatsArea
