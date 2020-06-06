@@ -6,7 +6,7 @@ import { IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
-import { DisplayMode } from '@/stores/docs'
+import { DisplayMode } from '@/types.d'
 import { IndexButton } from './IndexButton'
 import { Pagination } from './Pagination'
 import { DocumentInsertModal } from './DocumentInsertModal'

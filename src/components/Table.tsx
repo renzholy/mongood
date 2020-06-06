@@ -17,11 +17,14 @@ import {
 import _ from 'lodash'
 
 import { MongoData } from '@/utils/mongo-shell-data'
+import { DisplayMode } from '@/types.d'
 import { DocumentUpdateModal } from './DocumentUpdateModal'
 import { TableRow } from './TableRow'
 import { LargeMessage } from './LargeMessage'
+import { DocumentRow } from './DocumentRow'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
+  displayMode?: DisplayMode
   items?: T[]
   order?: string[]
   error: Error
@@ -118,18 +121,39 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             root: { maxWidth: '100%' },
             stickyBelow: { display: 'none' },
           }}>
-          <DetailsList
-            columns={columns}
-            selectionMode={SelectionMode.none}
-            constrainMode={ConstrainMode.unconstrained}
-            layoutMode={DetailsListLayoutMode.justified}
-            items={items || []}
-            onRenderItemColumn={(item, _index, column) => (
-              <TableRow value={item} column={column} />
-            )}
-            onRenderDetailsHeader={onRenderDetailsHeader}
-            onItemInvoked={onItemInvoked}
-          />
+          {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
+            <DetailsList
+              columns={columns}
+              selectionMode={SelectionMode.none}
+              constrainMode={ConstrainMode.unconstrained}
+              layoutMode={DetailsListLayoutMode.justified}
+              items={items || []}
+              onRenderItemColumn={(item, _index, column) => (
+                <TableRow value={item} column={column} />
+              )}
+              onRenderDetailsHeader={onRenderDetailsHeader}
+              onItemInvoked={onItemInvoked}
+            />
+          ) : null}
+          {props.displayMode === DisplayMode.DOCUMENT ? (
+            <DetailsList
+              columns={[
+                {
+                  key: '',
+                  name: 'Document',
+                  minWidth: 100,
+                  isMultiline: true,
+                },
+              ]}
+              selectionMode={SelectionMode.none}
+              constrainMode={ConstrainMode.unconstrained}
+              layoutMode={DetailsListLayoutMode.justified}
+              items={items || []}
+              onRenderItemColumn={(item) => <DocumentRow value={item} />}
+              onRenderDetailsHeader={onRenderDetailsHeader}
+              onItemInvoked={onItemInvoked}
+            />
+          ) : null}
         </ScrollablePane>
       )}
     </div>

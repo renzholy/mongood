@@ -11,9 +11,15 @@ import { Table } from './Table'
 
 export function DocumentTable(props: { order?: string[] }) {
   const { database, collection } = useSelector((state) => state.root)
-  const { index, filter, sort, skip, limit, shouldRevalidate } = useSelector(
-    (state) => state.docs,
-  )
+  const {
+    index,
+    filter,
+    sort,
+    skip,
+    limit,
+    shouldRevalidate,
+    displayMode,
+  } = useSelector((state) => state.docs)
   const { data, error, isValidating, revalidate } = useSWR(
     database && collection
       ? `find/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
@@ -47,6 +53,7 @@ export function DocumentTable(props: { order?: string[] }) {
 
   return (
     <Table
+      displayMode={displayMode}
       items={data?.cursor.firstBatch}
       order={
         props.order || [

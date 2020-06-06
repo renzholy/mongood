@@ -47,3 +47,8 @@ export type DbStats = {
   storageSize: number
   views: number
 }
+
+export enum DisplayMode {
+  TABLE,
+  DOCUMENT,
+}

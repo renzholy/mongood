@@ -1,10 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IndexSpecification, FilterQuery } from 'mongodb'
 
-export enum DisplayMode {
-  TABLE,
-  DOCUMENT,
-}
+import { DisplayMode } from '@/types.d'
 
 export default createSlice({
   name: 'docs',
