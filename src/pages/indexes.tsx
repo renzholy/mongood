@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 import { CollStats, IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
 import { LargeMessage } from '@/components/LargeMessage'
-import { Stack } from '@fluentui/react'
+import { Stack, DefaultButton } from '@fluentui/react'
 import { IndexCard } from '@/components/IndexCard'
+import { IndexCreateModal } from '@/components/IndexCreateModal'
 
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
@@ -30,6 +31,7 @@ export default () => {
       )
     },
   )
+  const [isOpen, setIsOpen] = useState(false)
 
   if (!stats) {
     return <LargeMessage iconName="Back" title="Select collection" />
@@ -50,6 +52,20 @@ export default () => {
           />
         ))}
       </Stack>
+      <IndexCreateModal
+        isOpen={isOpen}
+        onDismiss={() => {
+          setIsOpen(false)
+          revalidate()
+        }}
+      />
+      <DefaultButton
+        styles={{ root: { margin: 10 } }}
+        onClick={() => {
+          setIsOpen(true)
+        }}>
+        Create
+      </DefaultButton>
     </div>
   )
 }
