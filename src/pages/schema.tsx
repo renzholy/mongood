@@ -7,6 +7,7 @@ import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
+import { stringify, parse } from '@/utils/mongo-shell-data'
 import { ActionButton } from '@/components/ActionButton'
 import { LargeMessage } from '@/components/LargeMessage'
 
@@ -68,7 +69,7 @@ export default () => {
       validationAction,
       validationLevel,
       validator: {
-        $jsonSchema: JSON.parse(value),
+        $jsonSchema: parse(value.replace(/^return/, '')),
       },
     })
     revalidate()
@@ -85,10 +86,10 @@ export default () => {
       return
     }
     const { options } = data.cursor.firstBatch[0]
-    const str = JSON.stringify(options.validator?.$jsonSchema, null, 2)
+    const str = stringify(options.validator?.$jsonSchema, 2)
     setValidationAction(options.validationAction || null)
     setValidationLevel(options.validationLevel || null)
-    setValue(str)
+    setValue(str ? `return ${str}\n` : '')
   }, [data])
 
   if (!database || !collection) {
@@ -97,7 +98,7 @@ export default () => {
   return (
     <>
       <ControlledEditor
-        language="json"
+        language="typescript"
         theme={isDarkMode ? 'vs-dark' : 'vs'}
         value={value}
         onChange={(_ev, _value) => {
