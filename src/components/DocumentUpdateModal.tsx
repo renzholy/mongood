@@ -2,12 +2,13 @@
 
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { stringify, MongoData, parse } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
+import { actions } from '@/stores'
 import { ActionButton } from './ActionButton'
 
 export function DocumentUpdateModal<
@@ -16,6 +17,7 @@ export function DocumentUpdateModal<
   const { database, collection } = useSelector((state) => state.root)
   const theme = getTheme()
   const isDarkMode = useDarkMode()
+  const dispatch = useDispatch()
   const [value, setValue] = useState('')
   useEffect(() => {
     setValue(`return ${stringify(props.value, 2)}\n`)
@@ -29,6 +31,7 @@ export function DocumentUpdateModal<
       },
       update: doc,
     })
+    dispatch(actions.docs.setShouldRevalidate())
     props.onDismiss()
   }, [database, collection, value])
 

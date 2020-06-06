@@ -118,7 +118,7 @@ export default () => {
           justifyContent: 'space-between',
           flexDirection: 'row-reverse',
           padding: 10,
-          backgroundColor: theme.palette.neutralLighterAlt,
+          backgroundColor: theme.palette.neutralLight,
         }}>
         <ActionButton
           text="Update Schema"

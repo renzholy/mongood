@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useSWR from 'swr'
-import { Stack, DefaultButton } from '@fluentui/react'
+import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
+import { DisplayMode } from '@/types.d'
 import { IndexButton } from './IndexButton'
 import { Pagination } from './Pagination'
+import { DocumentInsertModal } from './DocumentInsertModal'
 
-export function IndexesStack() {
+export function DocumentControlStack() {
   const { database, collection } = useSelector((state) => state.root)
   const { data: indexes } = useSWR(
     database && collection ? `listIndexes/${database}/${collection}` : null,
@@ -22,15 +24,18 @@ export function IndexesStack() {
       )
     },
   )
-  const index = useSelector((state) => state.docs.index)
+  const { displayMode, index } = useSelector((state) => state.docs)
   const dispatch = useDispatch()
+  const [isInsertOpen, setIsInsertOpen] = useState(false)
 
   return (
     <Stack
       wrap={true}
       horizontal={true}
       tokens={{ childrenGap: 10, padding: 10 }}
-      styles={{ root: { minHeight: 52, marginBottom: -10 } }}>
+      styles={{
+        root: { minHeight: 52, marginBottom: -10 },
+      }}>
       {indexes?.cursor.firstBatch.length ? (
         indexes.cursor.firstBatch.map((item) => (
           <IndexButton
@@ -49,8 +54,34 @@ export function IndexesStack() {
       ) : (
         <DefaultButton disabled={true} text="No Index" />
       )}
-      <Stack.Item grow={1}>&nbsp;</Stack.Item>
-      <Pagination allowInsert={true} />
+      <Stack.Item grow={1}>
+        <DocumentInsertModal
+          isOpen={isInsertOpen}
+          onDismiss={() => {
+            setIsInsertOpen(false)
+          }}
+        />
+      </Stack.Item>
+      <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
+        <IconButton
+          iconProps={{ iconName: 'Add' }}
+          onClick={() => {
+            setIsInsertOpen(true)
+          }}
+        />
+        <IconButton
+          iconProps={{
+            iconName: {
+              [DisplayMode.TABLE]: 'Table',
+              [DisplayMode.DOCUMENT]: 'Documentation',
+            }[displayMode],
+          }}
+          onClick={() => {
+            dispatch(actions.docs.nextDisplayMode())
+          }}
+        />
+        <Pagination />
+      </Stack>
     </Stack>
   )
 }

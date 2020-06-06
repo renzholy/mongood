@@ -17,8 +17,8 @@ export function DocumentTable(props: { order?: string[] }) {
     sort,
     skip,
     limit,
-    isInsertOpen,
-    isUpdateOpen,
+    shouldRevalidate,
+    displayMode,
   } = useSelector((state) => state.docs)
   const { data, error, isValidating, revalidate } = useSWR(
     database && collection
@@ -48,13 +48,12 @@ export function DocumentTable(props: { order?: string[] }) {
     },
   )
   useEffect(() => {
-    if (!isInsertOpen && !isUpdateOpen) {
-      revalidate()
-    }
-  }, [isInsertOpen, isUpdateOpen, revalidate])
+    revalidate()
+  }, [shouldRevalidate])
 
   return (
     <Table
+      displayMode={displayMode}
       items={data?.cursor.firstBatch}
       order={
         props.order || [

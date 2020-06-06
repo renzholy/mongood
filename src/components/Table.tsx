@@ -15,16 +15,16 @@ import {
   IColumn,
 } from '@fluentui/react'
 import _ from 'lodash'
-import { useSelector, useDispatch } from 'react-redux'
 
 import { MongoData } from '@/utils/mongo-shell-data'
-import { actions } from '@/stores'
+import { DisplayMode } from '@/types.d'
 import { DocumentUpdateModal } from './DocumentUpdateModal'
 import { TableRow } from './TableRow'
-import { DocumentInsertModal } from './DocumentInsertModal'
 import { LargeMessage } from './LargeMessage'
+import { DocumentRow } from './DocumentRow'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
+  displayMode?: DisplayMode
   items?: T[]
   order?: string[]
   error: Error
@@ -32,9 +32,8 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
 }) {
   const theme = getTheme()
   const [invokedItem, setInvokedItem] = useState<T>()
-  const { isInsertOpen, isUpdateOpen } = useSelector((state) => state.docs)
-  const dispatch = useDispatch()
   const [columns, setColumns] = useState<IColumn[]>([])
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const { items, error, isValidating } = props
   useEffect(() => {
     // calc columns order
@@ -84,7 +83,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   )
   const onItemInvoked = useCallback((item: T) => {
     setInvokedItem(item)
-    dispatch(actions.docs.setIsUpdateOpen(true))
+    setIsUpdateOpen(true)
   }, [])
 
   if (error) {
@@ -101,17 +100,11 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
-      <DocumentInsertModal
-        isOpen={isInsertOpen}
-        onDismiss={() => {
-          dispatch(actions.docs.setIsInsertOpen(false))
-        }}
-      />
       <DocumentUpdateModal
         value={invokedItem}
         isOpen={isUpdateOpen}
         onDismiss={() => {
-          dispatch(actions.docs.setIsUpdateOpen(false))
+          setIsUpdateOpen(false)
         }}
       />
       {items?.length === 0 ? (
@@ -128,18 +121,39 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             root: { maxWidth: '100%' },
             stickyBelow: { display: 'none' },
           }}>
-          <DetailsList
-            columns={columns}
-            selectionMode={SelectionMode.none}
-            constrainMode={ConstrainMode.unconstrained}
-            layoutMode={DetailsListLayoutMode.justified}
-            items={items || []}
-            onRenderItemColumn={(item, _index, column) => (
-              <TableRow value={item} column={column} />
-            )}
-            onRenderDetailsHeader={onRenderDetailsHeader}
-            onItemInvoked={onItemInvoked}
-          />
+          {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
+            <DetailsList
+              columns={columns}
+              selectionMode={SelectionMode.none}
+              constrainMode={ConstrainMode.unconstrained}
+              layoutMode={DetailsListLayoutMode.justified}
+              items={items || []}
+              onRenderItemColumn={(item, _index, column) => (
+                <TableRow value={item} column={column} />
+              )}
+              onRenderDetailsHeader={onRenderDetailsHeader}
+              onItemInvoked={onItemInvoked}
+            />
+          ) : null}
+          {props.displayMode === DisplayMode.DOCUMENT ? (
+            <DetailsList
+              columns={[
+                {
+                  key: '',
+                  name: 'Document',
+                  minWidth: 100,
+                  isMultiline: true,
+                },
+              ]}
+              selectionMode={SelectionMode.none}
+              constrainMode={ConstrainMode.unconstrained}
+              layoutMode={DetailsListLayoutMode.justified}
+              items={items || []}
+              onRenderItemColumn={(item) => <DocumentRow value={item} />}
+              onRenderDetailsHeader={onRenderDetailsHeader}
+              onItemInvoked={onItemInvoked}
+            />
+          ) : null}
         </ScrollablePane>
       )}
     </div>
