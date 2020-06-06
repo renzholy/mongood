@@ -27,7 +27,7 @@ export function DocumentInsertModal<
       insert: collection,
       documents: [doc],
     })
-    setValue('{}')
+    setValue('return {\n  \n}')
     dispatch(actions.docs.setShouldRevalidate())
     props.onDismiss()
   }, [database, collection, value])

@@ -24,6 +24,7 @@ export function IndexCreateModal(props: {
       createIndexes: collection,
       indexes: [doc],
     })
+    setValue('return {\n  background: true,\n}')
     props.onDismiss()
   }, [database, collection, value])
 
