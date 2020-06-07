@@ -12,7 +12,7 @@ export default createSlice({
     skip: 0,
     limit: 25,
     count: 0,
-    shouldRevalidate: new Date(),
+    shouldRevalidate: Date.now(),
   } as {
     displayMode: DisplayMode
     index?: IndexSpecification
@@ -21,7 +21,7 @@ export default createSlice({
     skip: number
     limit: number
     count: number
-    shouldRevalidate: Date
+    shouldRevalidate: number
   },
   reducers: {
     nextDisplayMode: (state) => ({
@@ -49,9 +49,17 @@ export default createSlice({
       ...state,
       sort: payload,
     }),
-    setSkip: (state, { payload }: PayloadAction<number>) => ({
+    resetPage: (state) => ({
       ...state,
-      skip: payload,
+      skip: 0,
+    }),
+    prevPage: (state) => ({
+      ...state,
+      skip: Math.max(state.skip - state.limit, 0),
+    }),
+    nextPage: (state) => ({
+      ...state,
+      skip: Math.min(state.skip + state.limit, state.count),
     }),
     setCount: (state, { payload }: PayloadAction<number>) => ({
       ...state,
@@ -59,7 +67,7 @@ export default createSlice({
     }),
     setShouldRevalidate: (state) => ({
       ...state,
-      shouldRevalidate: new Date(),
+      shouldRevalidate: Date.now(),
     }),
   },
 })

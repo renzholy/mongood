@@ -35,7 +35,7 @@ export function Pagination() {
     dispatch(actions.docs.setCount(data?.n || 0))
   }, [data])
   useEffect(() => {
-    dispatch(actions.docs.setSkip(0))
+    dispatch(actions.docs.resetPage())
   }, [database, collection])
 
   return (
@@ -56,14 +56,14 @@ export function Pagination() {
         iconProps={{ iconName: 'Back' }}
         disabled={skip <= 0}
         onClick={() => {
-          dispatch(actions.docs.setSkip(Math.max(skip - limit, 0)))
+          dispatch(actions.docs.prevPage())
         }}
       />
       <IconButton
         iconProps={{ iconName: 'Forward' }}
         disabled={skip + limit >= count}
         onClick={() => {
-          dispatch(actions.docs.setSkip(Math.min(skip + limit, count)))
+          dispatch(actions.docs.nextPage())
         }}
       />
     </Stack>
