@@ -152,7 +152,6 @@ export default () => {
           disabled={!validationAction || !validationLevel || !value}
           primary={true}
           onClick={handleUpdate}
-          style={{ flexShrink: 0, marginLeft: 10 }}
         />
       </div>
     </>

@@ -130,7 +130,6 @@ export function DocumentUpdateModal<
             disabled={!props.value?._id}
             danger={true}
             onClick={handleDelete}
-            style={{ flexShrink: 0, marginLeft: 10 }}
           />
         </div>
       </Modal>

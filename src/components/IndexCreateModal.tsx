@@ -101,12 +101,7 @@ export function IndexCreateModal(props: {
             flexDirection: 'row-reverse',
             padding: 10,
           }}>
-          <ActionButton
-            text="Create"
-            primary={true}
-            onClick={handleCreate}
-            style={{ flexShrink: 0, marginLeft: 10 }}
-          />
+          <ActionButton text="Create" primary={true} onClick={handleCreate} />
         </div>
       </Modal>
     </>

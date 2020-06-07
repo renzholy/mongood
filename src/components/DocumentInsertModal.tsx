@@ -106,12 +106,7 @@ export function DocumentInsertModal<
             flexDirection: 'row-reverse',
             padding: 10,
           }}>
-          <ActionButton
-            text="Insert"
-            primary={true}
-            onClick={handleInsert}
-            style={{ flexShrink: 0, marginLeft: 10 }}
-          />
+          <ActionButton text="Insert" primary={true} onClick={handleInsert} />
         </div>
       </Modal>
     </>
