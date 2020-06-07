@@ -89,7 +89,7 @@ export default () => {
     const str = stringify(options.validator?.$jsonSchema, 2)
     setValidationAction(options.validationAction || null)
     setValidationLevel(options.validationLevel || null)
-    setValue(str ? `return ${str}\n` : '')
+    setValue(str ? `return ${str}` : 'return {\n  \n}')
   }, [data])
 
   if (!database || !collection) {
@@ -116,16 +116,9 @@ export default () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          flexDirection: 'row-reverse',
           padding: 10,
           backgroundColor: theme.palette.neutralLight,
         }}>
-        <ActionButton
-          text="Update"
-          primary={true}
-          onClick={handleUpdate}
-          style={{ flexShrink: 0, marginLeft: 10 }}
-        />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Dropdown
             selectedKey={validationAction}
@@ -154,6 +147,13 @@ export default () => {
             placeholder="validation level"
           />
         </div>
+        <ActionButton
+          text="Update"
+          disabled={!validationAction || !validationLevel || !value}
+          primary={true}
+          onClick={handleUpdate}
+          style={{ flexShrink: 0, marginLeft: 10 }}
+        />
       </div>
     </>
   )
