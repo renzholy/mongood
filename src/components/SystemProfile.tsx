@@ -82,14 +82,11 @@ export function SystemProfile() {
             handleSetProfile(_slowms, sampleRate)
           }}
         />
-        <Label disabled={loading} styles={{ root: { marginTop: 3 } }}>
-          Sample Rate:
-        </Label>
+        <Label disabled={loading}>Sample Rate:</Label>
         <Slider
           disabled={loading}
           styles={{
             slideBox: { width: 100 },
-            root: { marginTop: 3 },
           }}
           min={0}
           max={1}
