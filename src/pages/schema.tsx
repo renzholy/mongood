@@ -12,13 +12,14 @@ import { ActionButton } from '@/components/ActionButton'
 import { LargeMessage } from '@/components/LargeMessage'
 
 enum ValidationAction {
-  ERROR = 'error',
   WARN = 'warn',
+  ERROR = 'error',
 }
 
 enum ValidationLevel {
-  STRICT = 'strict',
+  OFF = 'off',
   MODERATE = 'moderate',
+  STRICT = 'strict',
 }
 
 export default () => {
@@ -141,6 +142,7 @@ export default () => {
             errorMessage={value && !validationLevel ? ' ' : undefined}
             styles={{ root: { marginRight: 10, width: 140, height: 32 } }}
             options={[
+              { key: ValidationLevel.OFF, text: ValidationLevel.OFF },
               { key: ValidationLevel.MODERATE, text: ValidationLevel.MODERATE },
               { key: ValidationLevel.STRICT, text: ValidationLevel.STRICT },
             ]}
