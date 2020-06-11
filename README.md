@@ -19,11 +19,11 @@ MongoDB Operation Dashboard
 ## 📷 Screenshots:
 
 <div>
-  <img src="./screenshots/light/docs.png" width="50%"/><img src="./screenshots/dark/docs.png" width="50%"/>
-  <img src="./screenshots/light/editor.png" width="50%"/><img src="./screenshots/dark/editor.png" width="50%"/>
-  <img src="./screenshots/light/indexes.png" width="50%"/><img src="./screenshots/dark/indexes.png" width="50%"/>
-  <img src="./screenshots/light/ops.png" width="50%"/><img src="./screenshots/dark/ops.png" width="50%"/>
-  <img src="./screenshots/light/schema.png" width="50%"/><img src="./screenshots/dark/schema.png" width="50%"/>
+  <img src="./screenshot/light/docs.png" width="50%"/><img src="./screenshot/dark/docs.png" width="50%"/>
+  <img src="./screenshot/light/editor.png" width="50%"/><img src="./screenshot/dark/editor.png" width="50%"/>
+  <img src="./screenshot/light/indexes.png" width="50%"/><img src="./screenshot/dark/indexes.png" width="50%"/>
+  <img src="./screenshot/light/ops.png" width="50%"/><img src="./screenshot/dark/ops.png" width="50%"/>
+  <img src="./screenshot/light/schema.png" width="50%"/><img src="./screenshot/dark/schema.png" width="50%"/>
 </div>
 
 ## 🔧 Usage:
