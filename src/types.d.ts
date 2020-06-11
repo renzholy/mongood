@@ -1,6 +1,7 @@
 export type ServerStats = {
   host: string
   uptimeMillis: number
+  version: string
   repl?: {
     setName: string
     hosts: string[]

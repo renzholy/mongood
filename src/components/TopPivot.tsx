@@ -23,6 +23,7 @@ export function TopPivot() {
       <PivotItem headerText="Indexes" itemKey="/indexes" />
       <PivotItem headerText="Schema" itemKey="/schema" />
       <PivotItem headerText="Operations" itemKey="/ops" />
+      <PivotItem headerText="Users" itemKey="/users" />
     </Pivot>
   )
 }
