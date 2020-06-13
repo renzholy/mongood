@@ -41,7 +41,7 @@ MONGO_URL="mongodb://localhost:27017" ./mongood
 ### Run as server:
 
 ```shell
-docker run -p 3000:3000 -e MONGO_URL="mongodb://localhost:27017" renzholy/mongood
+docker run -p 3000:3000 -e MONGO_URL="mongodb://host:port" renzholy/mongood
 ```
 
 ### Dev mode:
