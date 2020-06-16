@@ -124,7 +124,7 @@ export function SystemProfile() {
         </Stack.Item>
         <Pagination />
       </Stack>
-      <div style={{ flex: 1, overflowY: 'scroll' }}>
+      <div style={{ flex: 1, overflowY: 'scroll', margin: '0 auto' }}>
         {data.cursor.firstBatch.map((item, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <SystemProfileCard key={`${item.ts}${index}`} value={item} />
