@@ -57,6 +57,8 @@ export enum DisplayMode {
 export type ExecStats = {
   stage: string
   inputStage?: ExecStats
+  executionTimeMillisEstimate: number
+  nReturned: number
 }
 
 export type SystemProfileDoc = {
@@ -65,4 +67,5 @@ export type SystemProfileDoc = {
   millis: number
   client: string
   ts: number
+  nreturned: number
 }

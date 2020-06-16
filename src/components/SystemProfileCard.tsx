@@ -9,17 +9,17 @@ function ExecStage(props: { value: ExecStats }) {
 
   return (
     <>
+      <Icon
+        iconName="Down"
+        styles={{ root: { color: theme.palette.neutralPrimary } }}
+      />
       <Text styles={{ root: { color: theme.palette.neutralPrimary } }}>
-        {props.value.stage}
+        {props.value.stage},&nbsp;{props.value.nReturned},&nbsp;
+        {props.value.executionTimeMillisEstimate}
+        ms
       </Text>
       {props.value.inputStage ? (
-        <>
-          <Icon
-            iconName="Back"
-            styles={{ root: { color: theme.palette.neutralPrimary } }}
-          />
-          <ExecStage value={props.value.inputStage} />
-        </>
+        <ExecStage value={props.value.inputStage} />
       ) : null}
     </>
   )
@@ -42,18 +42,24 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
         minWidth: 600,
         minHeight: 'unset',
       }}>
-      <Card.Item>
+      <Card.Item
+        styles={{
+          root: {
+            display: 'flex',
+            flexDirection: 'column-reverse',
+            flexWrap: 'wrap',
+          },
+        }}>
         <Text
-          variant="large"
+          variant="xLarge"
           styles={{ root: { color: theme.palette.neutralPrimary } }}>
-          {props.value.ns},&nbsp;{props.value.millis}ms
+          {props.value.ns},&nbsp;{props.value.nreturned},&nbsp;
+          {props.value.millis}ms
         </Text>
-      </Card.Item>
-      {props.value.execStats ? (
-        <Card.Item>
+        {props.value.execStats ? (
           <ExecStage value={props.value.execStats} />
-        </Card.Item>
-      ) : null}
+        ) : null}
+      </Card.Item>
     </Card>
   )
 }
