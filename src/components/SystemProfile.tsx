@@ -103,7 +103,9 @@ export function SystemProfile() {
         </Stack.Item>
         <Pagination />
       </Stack>
-      <DocumentTable order={['ns', 'op', 'client', 'command', 'millis']} />
+      <DocumentTable
+        order={['ns', 'op', 'client', 'originatingCommand', 'millis']}
+      />
     </>
   )
 }
