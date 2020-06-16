@@ -56,14 +56,8 @@ export enum DisplayMode {
 
 export type ExecStats = {
   stage: string
-} & (
-  | {
-      inputStage: ExecStats
-    }
-  | {
-      inputStages: ExecStats[]
-    }
-)
+  inputStage?: ExecStats
+}
 
 export type SystemProfileDoc = {
   ns: string

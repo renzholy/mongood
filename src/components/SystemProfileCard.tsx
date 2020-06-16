@@ -12,7 +12,7 @@ function ExecStage(props: { value: ExecStats }) {
       <Text styles={{ root: { color: theme.palette.neutralPrimary } }}>
         {props.value.stage}
       </Text>
-      {'inputStage' in props.value ? (
+      {props.value.inputStage ? (
         <>
           <Icon
             iconName="Back"
@@ -21,19 +21,6 @@ function ExecStage(props: { value: ExecStats }) {
           <ExecStage value={props.value.inputStage} />
         </>
       ) : null}
-      {'inputStages' in props.value
-        ? props.value.inputStages.map((inputStage) => {
-            return (
-              <>
-                <Icon
-                  iconName="Import"
-                  styles={{ root: { color: theme.palette.neutralPrimary } }}
-                />
-                <ExecStage value={inputStage} />
-              </>
-            )
-          })
-        : null}
     </>
   )
 }
