@@ -53,3 +53,22 @@ export enum DisplayMode {
   TABLE,
   DOCUMENT,
 }
+
+export type ExecStats = {
+  stage: string
+} & (
+  | {
+      inputStage: ExecStats
+    }
+  | {
+      inputStages: ExecStats[]
+    }
+)
+
+export type SystemProfileDoc = {
+  ns: string
+  execStats?: ExecStats
+  millis: number
+  client: string
+  ts: number
+}

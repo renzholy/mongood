@@ -4,12 +4,14 @@ import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
-import { DocumentTable } from './DocumentTable'
+import { SystemProfileDoc } from '@/types'
 import { LargeMessage } from './LargeMessage'
 import { Pagination } from './Pagination'
+import { SystemProfileCard } from './SystemProfileCard'
 
 export function SystemProfile() {
   const { database } = useSelector((state) => state.root)
+  const { filter } = useSelector((state) => state.docs)
   const { data: profile, revalidate } = useSWR(
     database ? `profile/${database}` : null,
     () =>
@@ -27,6 +29,25 @@ export function SystemProfile() {
     setSlowms(profile.slowms)
     setSampleRate(profile.sampleRate)
   }, [profile])
+  const { data } = useSWR(
+    database ? `systemProfile/${database}/${JSON.stringify(filter)}` : null,
+    () => {
+      return runCommand<{
+        cursor: { firstBatch: SystemProfileDoc[] }
+      }>(
+        database!,
+        {
+          find: 'system.profile',
+          filter,
+        },
+        { canonical: false },
+      )
+    },
+    {
+      refreshInterval: 20 * 1000,
+      errorRetryCount: 0,
+    },
+  )
   const [loading, setLoading] = useState(false)
   const handleSetProfile = useCallback(
     async (_slowms: number, _sampleRate: number) => {
@@ -48,7 +69,7 @@ export function SystemProfile() {
     [database],
   )
 
-  if (!database) {
+  if (!data) {
     return <LargeMessage iconName="Back" title="Select database" />
   }
   return (
@@ -103,9 +124,12 @@ export function SystemProfile() {
         </Stack.Item>
         <Pagination />
       </Stack>
-      <DocumentTable
-        order={['ns', 'op', 'client', 'originatingCommand', 'millis']}
-      />
+      <div style={{ flex: 1, overflowY: 'scroll' }}>
+        {data.cursor.firstBatch.map((item, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <SystemProfileCard key={`${item.ts}${index}`} value={item} />
+        ))}
+      </div>
     </>
   )
 }
