@@ -59,6 +59,9 @@ export type ExecStats = {
   inputStage?: ExecStats
   executionTimeMillisEstimate: number
   nReturned: number
+  docsExamined?: number
+  keysExamined?: number
+  memUsage?: number
 }
 
 export type SystemProfileDoc = {

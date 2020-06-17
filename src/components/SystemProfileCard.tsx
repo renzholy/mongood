@@ -22,12 +22,24 @@ function ExecStage(props: { value: ExecStats }) {
         <CompoundButton
           styles={{
             description: { whiteSpace: 'pre-wrap' },
-            root: { paddingTop: 10, paddingBottom: 10 },
+            root: { paddingTop: 10, paddingBottom: 10, minHeight: 'unset' },
           }}
-          secondaryText={`${props.value.nReturned} returned\n${
-            props.value.executionTimeMillisEstimate -
-            (props.value.inputStage?.executionTimeMillisEstimate || 0)
-          } ms`}>
+          secondaryText={_.compact([
+            `${
+              props.value.executionTimeMillisEstimate -
+              (props.value.inputStage?.executionTimeMillisEstimate || 0)
+            } ms`,
+            `${props.value.nReturned} returned`,
+            props.value.docsExamined === undefined
+              ? undefined
+              : `${props.value.docsExamined} docs examined`,
+            props.value.keysExamined === undefined
+              ? undefined
+              : `${props.value.keysExamined} keys examined`,
+            props.value.memUsage === undefined
+              ? undefined
+              : `${props.value.memUsage} mem usage`,
+          ]).join('\n')}>
           {props.value.stage}
         </CompoundButton>
       </TooltipHost>
@@ -38,8 +50,7 @@ function ExecStage(props: { value: ExecStats }) {
             styles={{
               root: {
                 color: theme.palette.neutralPrimary,
-                marginLeft: 10,
-                marginRight: 10,
+                margin: 8,
               },
             }}
           />
@@ -81,7 +92,6 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
           root: {
             display: 'flex',
             flexDirection: 'row-reverse',
-            alignItems: 'center',
             flexWrap: 'wrap',
             width: 'fit-content',
           },
