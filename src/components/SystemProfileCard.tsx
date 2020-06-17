@@ -1,13 +1,14 @@
 /* eslint-disable react/no-danger */
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { Card } from '@uifabric/react-cards'
 import {
   Text,
   getTheme,
   Icon,
-  TooltipHost,
   CompoundButton,
+  HoverCard,
+  HoverCardType,
 } from '@fluentui/react'
 import _ from 'lodash'
 
@@ -26,12 +27,22 @@ function ExecStage(props: { value: ExecStats }) {
   useEffect(() => {
     colorize(str, isDarkMode).then(setHtml)
   }, [str, isDarkMode])
+  const onRenderPlainCard = useCallback(() => {
+    return <pre dangerouslySetInnerHTML={{ __html: html }} />
+  }, [html])
 
   return (
     <>
-      <TooltipHost
-        content={<pre dangerouslySetInnerHTML={{ __html: html }} />}
-        tooltipProps={{ maxWidth: null }}>
+      <HoverCard
+        type={HoverCardType.plain}
+        plainCardProps={{ onRenderPlainCard }}
+        styles={{
+          host: {
+            display: 'inherit',
+            cursor: 'pointer',
+          },
+        }}
+        instantOpenOnClick={true}>
         <CompoundButton
           styles={{
             description: { whiteSpace: 'pre-wrap', lineHeight: '1.2em' },
@@ -59,7 +70,7 @@ function ExecStage(props: { value: ExecStats }) {
           ]).join('\n')}>
           {props.value.stage}
         </CompoundButton>
-      </TooltipHost>
+      </HoverCard>
       {props.value.inputStage ? (
         <>
           <Icon
