@@ -100,8 +100,15 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
         <Text
           variant="xLarge"
           styles={{ root: { color: theme.palette.neutralPrimary } }}>
-          {props.value.ns},&nbsp;{props.value.nreturned},&nbsp;
-          {props.value.millis}ms
+          {props.value.ns}
+        </Text>
+      </Card.Item>
+      <Card.Item>
+        <Text
+          variant="large"
+          styles={{ root: { color: theme.palette.neutralSecondary } }}>
+          {props.value.nreturned}&nbsp;returned,&nbsp;
+          {props.value.millis}&nbsp;ms
         </Text>
       </Card.Item>
       <Card.Item
