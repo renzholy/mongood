@@ -1,4 +1,6 @@
-import React from 'react'
+/* eslint-disable react/no-danger */
+
+import React, { useEffect, useState, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
 import {
   Text,
@@ -11,18 +13,33 @@ import _ from 'lodash'
 
 import { SystemProfileDoc, ExecStats } from '@/types'
 import { stringify } from '@/utils/mongo-shell-data'
+import { colorize } from '@/utils/editor'
+import { useDarkMode } from '@/utils/theme'
 
 function ExecStage(props: { value: ExecStats }) {
   const theme = getTheme()
+  const isDarkMode = useDarkMode()
+  const str = useMemo(() => stringify(_.omit(props.value, 'inputStage'), 2), [
+    props.value,
+  ])
+  const [html, setHtml] = useState(str)
+  useEffect(() => {
+    colorize(str, isDarkMode).then(setHtml)
+  }, [str, isDarkMode])
 
   return (
     <>
       <TooltipHost
-        content={<pre>{stringify(_.omit(props.value, 'inputStage'), 2)}</pre>}>
+        content={<pre dangerouslySetInnerHTML={{ __html: html }} />}
+        tooltipProps={{ maxWidth: null }}>
         <CompoundButton
           styles={{
-            description: { whiteSpace: 'pre-wrap' },
-            root: { paddingTop: 10, paddingBottom: 10, minHeight: 'unset' },
+            description: { whiteSpace: 'pre-wrap', lineHeight: '1.2em' },
+            root: {
+              paddingTop: 10,
+              paddingBottom: 10,
+              minHeight: 'unset',
+            },
           }}
           secondaryText={_.compact([
             `${

@@ -70,7 +70,9 @@ function IndexInfo(props: { value: IndexSpecification }) {
 function IndexFeature(props: { value: { text: string; data?: object } }) {
   const theme = getTheme()
   const isDarkMode = useDarkMode()
-  const str = JSON.stringify(props.value.data, null, 2)
+  const str = useMemo(() => JSON.stringify(props.value.data, null, 2), [
+    props.value.data,
+  ])
   const [html, setHtml] = useState(str)
   useEffect(() => {
     colorize(str, isDarkMode).then(setHtml)
