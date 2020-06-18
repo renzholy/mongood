@@ -143,7 +143,6 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
       styles={{
         root: {
           backgroundColor: theme.palette.neutralLighterAlt,
-          marginBottom: 10,
         },
       }}
       tokens={{
@@ -194,15 +193,20 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
       <Card.Item
         styles={{
           root: {
-            display: 'flex',
-            flexDirection: 'row-reverse',
-            flexWrap: 'wrap',
-            width: 'fit-content',
+            overflowX: 'scroll',
+            width: '100%',
           },
         }}>
-        {props.value.execStats ? (
-          <ExecStage value={props.value.execStats} />
-        ) : null}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row-reverse',
+            justifyContent: 'flex-end',
+          }}>
+          {props.value.execStats ? (
+            <ExecStage value={props.value.execStats} />
+          ) : null}
+        </div>
       </Card.Item>
     </Card>
   )
