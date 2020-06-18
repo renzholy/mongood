@@ -79,7 +79,7 @@ function ExecStage(props: { value: ExecStats }) {
               : `${bytes(props.value.memUsage, {
                   unitSeparator: ' ',
                 }).toLocaleLowerCase()} mem used`,
-            `${props.value.nReturned} returned`,
+            `${Number.format(props.value.nReturned)} returned`,
           ]).join('\n')}>
           {props.value.stage}
         </CompoundButton>
