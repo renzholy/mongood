@@ -79,7 +79,7 @@ export function SystemProfile() {
   )
 
   if (!database) {
-    return <LargeMessage iconName="Back" title="Select database" />
+    return <LargeMessage iconName="Back" title="Select collection" />
   }
   return (
     <>
