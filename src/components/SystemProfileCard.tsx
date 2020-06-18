@@ -175,7 +175,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
           <Text
             variant="xLarge"
             styles={{ root: { color: theme.palette.neutralPrimary } }}>
-            {_.tail(props.value.ns.split('.')).join('.')}
+            {_.tail(props.value.ns.split('.')).join('.') || props.value.ns}
           </Text>
           &nbsp;
           <Text
@@ -187,7 +187,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
         <Text
           variant="medium"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {new Date(props.value.ts).toISOString()}
+          {props.value.ts.toISOString()}
         </Text>
       </Card.Item>
       <Card.Item>

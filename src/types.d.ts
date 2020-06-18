@@ -72,7 +72,7 @@ export type SystemProfileDoc = {
   execStats?: ExecStats
   millis: number
   client: string
-  ts: number
+  ts: Date
   nreturned?: number
   docsExamined?: number
   keysExamined?: number
