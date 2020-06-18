@@ -33,7 +33,7 @@ export function SystemProfile() {
   }, [profile])
   const { data } = useSWR(
     database
-      ? `systemProfile/${JSON.stringify(filter)}/${skip}/${limit}`
+      ? `systemProfile/${database}/${JSON.stringify(filter)}/${skip}/${limit}`
       : null,
     () => {
       return runCommand<{
