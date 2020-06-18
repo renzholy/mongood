@@ -22,9 +22,10 @@ import { SystemProfileModal } from './SystemProfileModal'
 function ExecStage(props: { value: ExecStats }) {
   const theme = getTheme()
   const isDarkMode = useDarkMode()
-  const str = useMemo(() => stringify(_.omit(props.value, 'inputStage'), 2), [
-    props.value,
-  ])
+  const str = useMemo(
+    () => stringify(_.omit(props.value, ['inputStage', 'inputStages']), 2),
+    [props.value],
+  )
   const [html, setHtml] = useState(str)
   useEffect(() => {
     colorize(str, isDarkMode).then(setHtml)
@@ -47,7 +48,10 @@ function ExecStage(props: { value: ExecStats }) {
         instantOpenOnClick={true}>
         <CompoundButton
           styles={{
-            description: { whiteSpace: 'pre-wrap', lineHeight: '1.2em' },
+            description: {
+              whiteSpace: 'pre-wrap',
+              lineHeight: '1.2em',
+            },
             root: {
               paddingTop: 10,
               paddingBottom: 10,
@@ -86,6 +90,35 @@ function ExecStage(props: { value: ExecStats }) {
             }}
           />
           <ExecStage value={props.value.inputStage} />
+        </>
+      ) : null}
+      {props.value.inputStages ? (
+        <>
+          <Icon
+            iconName="Forward"
+            styles={{
+              root: {
+                color: theme.palette.neutralPrimary,
+                margin: 8,
+              },
+            }}
+          />
+          {props.value.inputStages.map((inputStage, index) => (
+            <>
+              {index === 0 ? null : (
+                <Icon
+                  iconName="Pause"
+                  styles={{
+                    root: {
+                      color: theme.palette.neutralPrimary,
+                      margin: 8,
+                    },
+                  }}
+                />
+              )}
+              <ExecStage value={inputStage} />
+            </>
+          ))}
         </>
       ) : null}
     </>

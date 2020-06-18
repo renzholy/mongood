@@ -57,6 +57,7 @@ export enum DisplayMode {
 export type ExecStats = {
   stage: string
   inputStage?: ExecStats
+  inputStages?: ExecStats[]
   executionTimeMillisEstimate: number
   nReturned: number
   docsExamined?: number
