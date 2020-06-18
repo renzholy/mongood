@@ -81,6 +81,9 @@ export function SystemProfile() {
   if (!database) {
     return <LargeMessage iconName="Back" title="Select collection" />
   }
+  if (!data?.cursor.firstBatch.length) {
+    return <LargeMessage iconName="Database" title="No Data" />
+  }
   return (
     <>
       <Stack
@@ -135,10 +138,10 @@ export function SystemProfile() {
       </Stack>
       <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
         <Stack tokens={{ childrenGap: 20, padding: 10 }}>
-          {data?.cursor.firstBatch.map((item, index) => (
+          {data.cursor.firstBatch.map((item, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <SystemProfileCard key={`${item.ts}${index}`} value={item} />
-          )) || null}
+          ))}
         </Stack>
       </div>
     </>
