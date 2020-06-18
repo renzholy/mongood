@@ -61,10 +61,10 @@ function ExecStage(props: { value: ExecStats }) {
             },
           }}
           secondaryText={_.compact([
-            `${
+            `${Number.format(
               props.value.executionTimeMillisEstimate -
-              (props.value.inputStage?.executionTimeMillisEstimate || 0)
-            } ms`,
+                (props.value.inputStage?.executionTimeMillisEstimate || 0),
+            )} ms`,
             props.value.docsExamined === undefined
               ? undefined
               : `${Number.format(props.value.docsExamined)} docs examined`,
@@ -195,7 +195,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
           variant="large"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {_.compact([
-            `${props.value.millis} ms`,
+            `${Number.format(props.value.millis)} ms`,
             props.value.docsExamined === undefined
               ? undefined
               : `${Number.format(props.value.docsExamined)} docs examined`,
