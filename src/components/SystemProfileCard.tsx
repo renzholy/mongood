@@ -32,7 +32,22 @@ function ExecStage(props: { value: ExecStats }) {
     colorize(str, isDarkMode).then(setHtml)
   }, [str, isDarkMode])
   const onRenderPlainCard = useCallback(() => {
-    return <pre dangerouslySetInnerHTML={{ __html: html }} />
+    return (
+      <div
+        style={{
+          paddingLeft: 10,
+          paddingRight: 10,
+          maxWidth: 500,
+          maxHeight: 500,
+          overflowY: 'scroll',
+          backgroundColor: theme.palette.neutralLighterAlt,
+        }}>
+        <pre
+          style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </div>
+    )
   }, [html])
 
   return (
@@ -175,7 +190,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
           <Text
             variant="xLarge"
             styles={{ root: { color: theme.palette.neutralPrimary } }}>
-            {_.tail(props.value.ns.split('.')).join('.') || props.value.ns}
+            {props.value.ns}
           </Text>
           &nbsp;
           <Text
@@ -187,7 +202,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
         <Text
           variant="medium"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {props.value.ts.toISOString()}
+          {props.value.ts.toLocaleString([], { hour12: false })}
         </Text>
       </Card.Item>
       <Card.Item>
