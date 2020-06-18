@@ -32,7 +32,22 @@ function ExecStage(props: { value: ExecStats }) {
     colorize(str, isDarkMode).then(setHtml)
   }, [str, isDarkMode])
   const onRenderPlainCard = useCallback(() => {
-    return <pre dangerouslySetInnerHTML={{ __html: html }} />
+    return (
+      <div
+        style={{
+          paddingLeft: 10,
+          paddingRight: 10,
+          maxWidth: 500,
+          maxHeight: 500,
+          overflowY: 'scroll',
+          backgroundColor: theme.palette.neutralLighterAlt,
+        }}>
+        <pre
+          style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </div>
+    )
   }, [html])
 
   return (
