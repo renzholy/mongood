@@ -11,6 +11,7 @@ import {
   HoverCardType,
 } from '@fluentui/react'
 import _ from 'lodash'
+import bytes from 'bytes'
 
 import { SystemProfileDoc, ExecStats } from '@/types'
 import { stringify } from '@/utils/mongo-shell-data'
@@ -70,9 +71,14 @@ function ExecStage(props: { value: ExecStats }) {
             props.value.keysExamined === undefined
               ? undefined
               : `${Number.format(props.value.keysExamined)} keys examined`,
+            props.value.nMatched === undefined
+              ? undefined
+              : `${Number.format(props.value.nMatched)} matched`,
             props.value.memUsage === undefined
               ? undefined
-              : `${props.value.memUsage} mem usage`,
+              : `${bytes(props.value.memUsage, {
+                  unitSeparator: ' ',
+                }).toLocaleLowerCase()} mem used`,
             `${props.value.nReturned} returned`,
           ]).join('\n')}>
           {props.value.stage}
@@ -171,8 +177,18 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
         <Text
           variant="large"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {props.value.nreturned}&nbsp;returned,&nbsp;
-          {props.value.millis}&nbsp;ms
+          {_.compact([
+            `${props.value.millis} ms`,
+            props.value.docsExamined === undefined
+              ? undefined
+              : `${Number.format(props.value.docsExamined)} docs examined`,
+            props.value.keysExamined === undefined
+              ? undefined
+              : `${Number.format(props.value.keysExamined)} keys examined`,
+            props.value.nreturned === undefined
+              ? undefined
+              : `${Number.format(props.value.nreturned)} returned`,
+          ]).join(', ')}
         </Text>
       </Card.Item>
       <Card.Item

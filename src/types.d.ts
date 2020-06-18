@@ -60,6 +60,7 @@ export type ExecStats = {
   inputStages?: ExecStats[]
   executionTimeMillisEstimate: number
   nReturned: number
+  nMatched?: number
   docsExamined?: number
   keysExamined?: number
   memUsage?: number
@@ -72,5 +73,7 @@ export type SystemProfileDoc = {
   millis: number
   client: string
   ts: number
-  nreturned: number
+  nreturned?: number
+  docsExamined?: number
+  keysExamined?: number
 }
