@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Stack, SpinButton, Slider, Label } from '@fluentui/react'
 import useSWR from 'swr'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
 import { SystemProfileDoc } from '@/types'
+import { actions } from '@/stores'
 import { LargeMessage } from './LargeMessage'
-import { Pagination } from './Pagination'
+import { SystemProfilePagination } from './SystemProfilePagination'
 import { SystemProfileCard } from './SystemProfileCard'
 
 export function SystemProfile() {
-  const { database } = useSelector((state) => state.root)
-  const { skip, limit } = useSelector((state) => state.docs)
+  const { database, collection } = useSelector((state) => state.root)
+  const { filter, skip, limit } = useSelector((state) => state.docs)
   const { data: profile, revalidate } = useSWR(
     database ? `profile/${database}` : null,
     () =>
@@ -21,6 +22,7 @@ export function SystemProfile() {
       ),
   )
   const [slowms, setSlowms] = useState(0)
+  const dispatch = useDispatch()
   const [sampleRate, setSampleRate] = useState(0)
   useEffect(() => {
     if (!profile) {
@@ -30,17 +32,31 @@ export function SystemProfile() {
     setSampleRate(profile.sampleRate)
   }, [profile])
   const { data } = useSWR(
-    database ? `systemProfile/${database}/${skip}/${limit}` : null,
+    database
+      ? `systemProfile/${JSON.stringify(filter)}/${skip}/${limit}`
+      : null,
     () => {
       return runCommand<{
         cursor: { firstBatch: SystemProfileDoc[] }
       }>(database!, {
         find: 'system.profile',
+        filter,
         skip,
         limit,
       })
     },
   )
+  useEffect(() => {
+    dispatch(
+      actions.docs.setFilter(
+        collection && collection !== 'system.profile'
+          ? {
+              ns: `${database}.${collection}`,
+            }
+          : {},
+      ),
+    )
+  }, [database, collection])
   const [loading, setLoading] = useState(false)
   const handleSetProfile = useCallback(
     async (_slowms: number, _sampleRate: number) => {
@@ -115,7 +131,7 @@ export function SystemProfile() {
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
-        <Pagination />
+        <SystemProfilePagination />
       </Stack>
       <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
         <Stack tokens={{ childrenGap: 20, padding: 10 }}>

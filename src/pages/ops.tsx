@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useState } from 'react'
 import _ from 'lodash'
 import { DefaultButton, Stack } from '@fluentui/react'
 
-import { actions } from '@/stores'
 import { SystemProfile } from '@/components/SystemProfile'
 import { CurrentOperation } from '@/components/CurrentOperation'
 
@@ -13,17 +11,7 @@ enum Type {
 }
 
 export default () => {
-  const { collection } = useSelector((state) => state.root)
   const [type, setType] = useState(Type.CURRENT)
-  const dispatch = useDispatch()
-  useEffect(() => {
-    if (type === Type.PROFILE && collection !== 'system.profile') {
-      dispatch(actions.root.setCollection('system.profile'))
-    }
-  }, [type])
-  useEffect(() => {
-    setType(collection === 'system.profile' ? Type.PROFILE : Type.CURRENT)
-  }, [collection])
 
   return (
     <>
