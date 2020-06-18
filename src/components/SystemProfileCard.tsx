@@ -16,6 +16,8 @@ import { SystemProfileDoc, ExecStats } from '@/types'
 import { stringify } from '@/utils/mongo-shell-data'
 import { colorize } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
+import { Number } from '@/utils/formatter'
+import { SystemProfileModal } from './SystemProfileModal'
 
 function ExecStage(props: { value: ExecStats }) {
   const theme = getTheme()
@@ -50,6 +52,7 @@ function ExecStage(props: { value: ExecStats }) {
               paddingTop: 10,
               paddingBottom: 10,
               minHeight: 'unset',
+              height: 'fit-content',
             },
           }}
           secondaryText={_.compact([
@@ -57,16 +60,16 @@ function ExecStage(props: { value: ExecStats }) {
               props.value.executionTimeMillisEstimate -
               (props.value.inputStage?.executionTimeMillisEstimate || 0)
             } ms`,
-            `${props.value.nReturned} returned`,
             props.value.docsExamined === undefined
               ? undefined
-              : `${props.value.docsExamined} docs examined`,
+              : `${Number.format(props.value.docsExamined)} docs examined`,
             props.value.keysExamined === undefined
               ? undefined
-              : `${props.value.keysExamined} keys examined`,
+              : `${Number.format(props.value.keysExamined)} keys examined`,
             props.value.memUsage === undefined
               ? undefined
               : `${props.value.memUsage} mem usage`,
+            `${props.value.nReturned} returned`,
           ]).join('\n')}>
           {props.value.stage}
         </CompoundButton>
@@ -91,9 +94,13 @@ function ExecStage(props: { value: ExecStats }) {
 
 export function SystemProfileCard(props: { value: SystemProfileDoc }) {
   const theme = getTheme()
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <Card
+      onDoubleClick={() => {
+        setIsOpen(true)
+      }}
       styles={{
         root: {
           backgroundColor: theme.palette.neutralLighterAlt,
@@ -108,10 +115,23 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
         minHeight: 'unset',
       }}>
       <Card.Item>
+        <SystemProfileModal
+          value={props.value}
+          isOpen={isOpen}
+          onDismiss={() => {
+            setIsOpen(false)
+          }}
+        />
         <Text
           variant="xLarge"
           styles={{ root: { color: theme.palette.neutralPrimary } }}>
-          {props.value.ns}
+          {_.tail(props.value.ns.split('.')).join('.')}
+        </Text>
+        &nbsp;
+        <Text
+          variant="xLarge"
+          styles={{ root: { color: theme.palette.neutralSecondary } }}>
+          {props.value.op}
         </Text>
       </Card.Item>
       <Card.Item>

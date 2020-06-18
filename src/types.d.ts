@@ -66,6 +66,7 @@ export type ExecStats = {
 
 export type SystemProfileDoc = {
   ns: string
+  op: string
   execStats?: ExecStats
   millis: number
   client: string
