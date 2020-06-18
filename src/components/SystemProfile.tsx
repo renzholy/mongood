@@ -11,7 +11,7 @@ import { SystemProfileCard } from './SystemProfileCard'
 
 export function SystemProfile() {
   const { database } = useSelector((state) => state.root)
-  const { filter } = useSelector((state) => state.docs)
+  const { skip, limit } = useSelector((state) => state.docs)
   const { data: profile, revalidate } = useSWR(
     database ? `profile/${database}` : null,
     () =>
@@ -30,22 +30,15 @@ export function SystemProfile() {
     setSampleRate(profile.sampleRate)
   }, [profile])
   const { data } = useSWR(
-    database ? `systemProfile/${database}/${JSON.stringify(filter)}` : null,
+    database ? `systemProfile/${database}/${skip}/${limit}` : null,
     () => {
       return runCommand<{
         cursor: { firstBatch: SystemProfileDoc[] }
-      }>(
-        database!,
-        {
-          find: 'system.profile',
-          filter,
-        },
-        { canonical: false },
-      )
-    },
-    {
-      refreshInterval: 20 * 1000,
-      errorRetryCount: 0,
+      }>(database!, {
+        find: 'system.profile',
+        skip,
+        limit,
+      })
     },
   )
   const [loading, setLoading] = useState(false)
@@ -69,7 +62,7 @@ export function SystemProfile() {
     [database],
   )
 
-  if (!data) {
+  if (!database) {
     return <LargeMessage iconName="Back" title="Select database" />
   }
   return (
@@ -124,11 +117,13 @@ export function SystemProfile() {
         </Stack.Item>
         <Pagination />
       </Stack>
-      <div style={{ flex: 1, overflowY: 'scroll', margin: '0 auto' }}>
-        {data.cursor.firstBatch.map((item, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <SystemProfileCard key={`${item.ts}${index}`} value={item} />
-        ))}
+      <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
+        <Stack tokens={{ childrenGap: 20, padding: 10 }}>
+          {data?.cursor.firstBatch.map((item, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <SystemProfileCard key={`${item.ts}${index}`} value={item} />
+          )) || null}
+        </Stack>
       </div>
     </>
   )

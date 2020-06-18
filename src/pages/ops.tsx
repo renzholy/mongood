@@ -17,7 +17,7 @@ export default () => {
   const [type, setType] = useState(Type.CURRENT)
   const dispatch = useDispatch()
   useEffect(() => {
-    if (type === Type.PROFILE) {
+    if (type === Type.PROFILE && collection !== 'system.profile') {
       dispatch(actions.root.setCollection('system.profile'))
     }
   }, [type])
