@@ -152,24 +152,42 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
         maxWidth: 'unset',
         minHeight: 'unset',
       }}>
-      <Card.Item>
-        <SystemProfileModal
-          value={props.value}
-          isOpen={isOpen}
-          onDismiss={() => {
-            setIsOpen(false)
-          }}
-        />
+      <Card.Item
+        styles={{
+          root: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          },
+        }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}>
+          <SystemProfileModal
+            value={props.value}
+            isOpen={isOpen}
+            onDismiss={() => {
+              setIsOpen(false)
+            }}
+          />
+          <Text
+            variant="xLarge"
+            styles={{ root: { color: theme.palette.neutralPrimary } }}>
+            {_.tail(props.value.ns.split('.')).join('.')}
+          </Text>
+          &nbsp;
+          <Text
+            variant="xLarge"
+            styles={{ root: { color: theme.palette.neutralSecondary } }}>
+            {props.value.op}
+          </Text>
+        </div>
         <Text
-          variant="xLarge"
-          styles={{ root: { color: theme.palette.neutralPrimary } }}>
-          {_.tail(props.value.ns.split('.')).join('.')}
-        </Text>
-        &nbsp;
-        <Text
-          variant="xLarge"
+          variant="medium"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {props.value.op}
+          {new Date(props.value.ts).toISOString()}
         </Text>
       </Card.Item>
       <Card.Item>
