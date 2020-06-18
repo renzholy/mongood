@@ -9,7 +9,7 @@ import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 
 export function SystemProfilePagination() {
-  const { database } = useSelector((state) => state.root)
+  const { database, collection } = useSelector((state) => state.root)
   const { index, filter, skip, limit, count } = useSelector(
     (state) => state.docs,
   )
@@ -36,7 +36,7 @@ export function SystemProfilePagination() {
   }, [data])
   useEffect(() => {
     dispatch(actions.docs.resetPage())
-  }, [database])
+  }, [database, collection])
 
   return (
     <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
