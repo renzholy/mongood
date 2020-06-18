@@ -58,8 +58,8 @@ export function DocumentTable(props: { order?: string[] }) {
       order={
         props.order || [
           '_id',
-          ...Object.keys(index?.key || {}),
-          ...Object.keys(index?.weights || {}),
+          ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),
+          ...Object.keys(index?.weights || {}).map((key) => key.split('.')[0]),
         ]
       }
       error={error}

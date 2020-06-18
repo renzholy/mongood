@@ -99,7 +99,7 @@ export function CurrentOperation() {
           'ns',
           'op',
           'client',
-          'command',
+          'originatingCommand',
           'desc',
           'microsecs_running',
         ]}
