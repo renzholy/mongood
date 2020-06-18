@@ -17,7 +17,7 @@ import { SystemProfileDoc, ExecStats } from '@/types'
 import { stringify } from '@/utils/mongo-shell-data'
 import { colorize } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
-import { Number } from '@/utils/formatter'
+import { Number, DateTime } from '@/utils/formatter'
 import { SystemProfileModal } from './SystemProfileModal'
 
 function ExecStage(props: { value: ExecStats }) {
@@ -202,7 +202,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
         <Text
           variant="medium"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {props.value.ts.toISOString()}
+          {props.value.ts.toLocaleString([], { hour12: false })}
         </Text>
       </Card.Item>
       <Card.Item>
