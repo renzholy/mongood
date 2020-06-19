@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-danger */
 /* eslint-disable react/jsx-indent */
 
@@ -53,14 +54,21 @@ function IndexInfo(props: { value: IndexSpecification }) {
                     root: { color: theme.palette.neutralPrimaryAlt },
                   }}
                 />
-              ) : (
+              ) : v === -1 ? (
                 <Icon
                   iconName="Down"
                   styles={{
                     root: { color: theme.palette.neutralPrimaryAlt },
                   }}
                 />
-              )}
+              ) : v === '2dsphere' || v === '2d' ? (
+                <Icon
+                  iconName="MapPin"
+                  styles={{
+                    root: { color: theme.palette.neutralPrimaryAlt },
+                  }}
+                />
+              ) : null}
             </Text>
           ))}
     </Stack>
@@ -204,10 +212,21 @@ export function IndexCard(props: {
           />
           <Text
             variant="xLarge"
-            styles={{ root: { color: theme.palette.neutralPrimary } }}>
+            styles={{
+              root: {
+                color: theme.palette.neutralPrimary,
+                wordBreak: 'break-word',
+              },
+            }}>
             {props.value.name}&nbsp;
           </Text>
-          <Text styles={{ root: { color: theme.palette.neutralPrimaryAlt } }}>
+          <Text
+            styles={{
+              root: {
+                color: theme.palette.neutralPrimaryAlt,
+                whiteSpace: 'nowrap',
+              },
+            }}>
             ({bytes(props.size, { unitSeparator: ' ' })})
           </Text>
         </Card.Item>
