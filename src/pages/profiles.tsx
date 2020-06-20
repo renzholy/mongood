@@ -31,7 +31,7 @@ export default () => {
     setSlowms(profile.slowms)
     setSampleRate(profile.sampleRate)
   }, [profile])
-  const { data } = useSWR(
+  const { data, error } = useSWR(
     database
       ? `systemProfile/${database}/${JSON.stringify(filter)}/${skip}/${limit}`
       : null,
@@ -143,9 +143,19 @@ export default () => {
             alignItems: 'center',
           },
         }}>
-        {data?.cursor.firstBatch.map((item, index) => (
-          <SystemProfileCard key={`${item.ts}${index}`} value={item} />
-        )) || <LargeMessage iconName="Database" title="No Data" />}
+        {error ? (
+          <LargeMessage
+            iconName="Error"
+            title="Error"
+            content={error.message}
+          />
+        ) : data ? (
+          data.cursor.firstBatch.map((item, index) => (
+            <SystemProfileCard key={`${item.ts}${index}`} value={item} />
+          ))
+        ) : (
+          <LargeMessage iconName="Database" title="No Data" />
+        )}
       </Stack>
     </>
   )

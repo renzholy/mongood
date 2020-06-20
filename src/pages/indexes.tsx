@@ -11,7 +11,7 @@ import { IndexCreateModal } from '@/components/IndexCreateModal'
 
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
-  const { data: stats } = useSWR(
+  const { data: stats, error } = useSWR(
     database && collection ? `collStats/${database}/${collection}` : null,
     () => {
       return runCommand<CollStats>(database!, {
@@ -33,6 +33,11 @@ export default () => {
   )
   const [isOpen, setIsOpen] = useState(false)
 
+  if (error) {
+    return (
+      <LargeMessage iconName="Error" title="Error" content={error.message} />
+    )
+  }
   if (!stats) {
     return <LargeMessage iconName="Back" title="Select collection" />
   }
