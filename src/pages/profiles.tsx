@@ -133,14 +133,20 @@ export default () => {
         </Stack.Item>
         <SystemProfilePagination />
       </Stack>
-      <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
-        <Stack tokens={{ childrenGap: 20, padding: 10 }}>
-          {data?.cursor.firstBatch.map((item, index) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <SystemProfileCard key={`${item.ts}${index}`} value={item} />
-          )) || <LargeMessage iconName="Database" title="No Data" />}
-        </Stack>
-      </div>
+      <Stack
+        tokens={{ childrenGap: 20 }}
+        styles={{
+          root: {
+            overflowY: 'scroll',
+            padding: 20,
+            flex: 1,
+            alignItems: 'center',
+          },
+        }}>
+        {data?.cursor.firstBatch.map((item, index) => (
+          <SystemProfileCard key={`${item.ts}${index}`} value={item} />
+        )) || <LargeMessage iconName="Database" title="No Data" />}
+      </Stack>
     </>
   )
 }

@@ -40,8 +40,17 @@ export default () => {
     return <LargeMessage iconName="Database" title="No Index" />
   }
   return (
-    <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
-      <Stack tokens={{ childrenGap: 20, padding: 10 }}>
+    <>
+      <Stack
+        tokens={{ childrenGap: 20 }}
+        styles={{
+          root: {
+            overflowY: 'scroll',
+            padding: 20,
+            flex: 1,
+            alignItems: 'center',
+          },
+        }}>
         {indexes.cursor.firstBatch.map((item) => (
           <IndexCard
             key={item.name}
@@ -51,6 +60,12 @@ export default () => {
             statDetail={stats.indexDetails[item.name!]}
           />
         ))}
+        <DefaultButton
+          onClick={() => {
+            setIsOpen(true)
+          }}>
+          Create
+        </DefaultButton>
       </Stack>
       <IndexCreateModal
         isOpen={isOpen}
@@ -59,13 +74,6 @@ export default () => {
           revalidate()
         }}
       />
-      <DefaultButton
-        styles={{ root: { margin: 10 } }}
-        onClick={() => {
-          setIsOpen(true)
-        }}>
-        Create
-      </DefaultButton>
-    </div>
+    </>
   )
 }
