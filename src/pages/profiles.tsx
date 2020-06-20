@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Stack, SpinButton, Slider, Label } from '@fluentui/react'
+import { Stack, SpinButton, Slider, Label, Dropdown } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -10,6 +10,12 @@ import { LargeMessage } from '@/components/LargeMessage'
 import { SystemProfilePagination } from '@/components/SystemProfilePagination'
 import { SystemProfileCard } from '@/components/SystemProfileCard'
 
+enum ProfilingLevel {
+  OFF = 0,
+  SLOW = 1,
+  ALL = 2,
+}
+
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
   const { filter, skip, limit } = useSelector((state) => state.docs)
@@ -18,6 +24,9 @@ export default () => {
       profile: -1,
     }),
   )
+  const [profilingLevel, setProfilingLevel] = useState<ProfilingLevel>(
+    ProfilingLevel.OFF,
+  )
   const [slowms, setSlowms] = useState(0)
   const dispatch = useDispatch()
   const [sampleRate, setSampleRate] = useState(0)
@@ -25,6 +34,7 @@ export default () => {
     if (!profile) {
       return
     }
+    setProfilingLevel(profile.was)
     setSlowms(profile.slowms)
     setSampleRate(profile.sampleRate)
   }, [profile])
@@ -81,48 +91,67 @@ export default () => {
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height: 52, alignItems: 'center' } }}>
-        <SpinButton
+        <Label disabled={loading}>Profiling Level:</Label>
+        <Dropdown
           disabled={loading}
-          label="Slow Ms:"
-          styles={{
-            spinButtonWrapper: { width: 80 },
-            root: { width: 'fit-content', marginRight: 10 },
+          selectedKey={profilingLevel}
+          styles={{ root: { width: 80 } }}
+          onChange={(_ev, option) => {
+            setProfilingLevel(option?.key as ProfilingLevel)
           }}
-          value={slowms.toString()}
-          step={10}
-          onBlur={(ev) => {
-            const _slowms = Math.max(parseInt(ev.target.value, 10), 0)
-            setSlowms(_slowms)
-            handleSetProfile(_slowms, sampleRate)
-          }}
-          onIncrement={(value) => {
-            const _slowms = Math.max(parseInt(value, 10) + 10, 0)
-            setSlowms(_slowms)
-            handleSetProfile(_slowms, sampleRate)
-          }}
-          onDecrement={(value) => {
-            const _slowms = Math.max(parseInt(value, 10) - 10, 0)
-            setSlowms(_slowms)
-            handleSetProfile(_slowms, sampleRate)
-          }}
+          options={[
+            { key: ProfilingLevel.OFF, text: 'Off' },
+            { key: ProfilingLevel.SLOW, text: 'Slow' },
+            { key: ProfilingLevel.ALL, text: 'All' },
+          ]}
         />
-        <Label disabled={loading}>Sample Rate:</Label>
-        <Slider
-          disabled={loading}
-          styles={{
-            slideBox: { width: 100 },
-          }}
-          min={0}
-          max={1}
-          step={0.01}
-          valueFormat={(value) => `${Math.round(value * 100)}%`}
-          value={sampleRate}
-          onChange={setSampleRate}
-          onChanged={(_ev, value) => {
-            setSampleRate(value)
-            handleSetProfile(slowms, value)
-          }}
-        />
+        {profilingLevel === ProfilingLevel.SLOW ? (
+          <>
+            <SpinButton
+              disabled={loading}
+              label="Slow Ms:"
+              styles={{
+                spinButtonWrapper: { width: 80 },
+                label: { marginLeft: 10 },
+                root: { width: 'fit-content', marginRight: 10 },
+              }}
+              value={slowms.toString()}
+              step={10}
+              onBlur={(ev) => {
+                const _slowms = Math.max(parseInt(ev.target.value, 10), 0)
+                setSlowms(_slowms)
+                handleSetProfile(_slowms, sampleRate)
+              }}
+              onIncrement={(value) => {
+                const _slowms = Math.max(parseInt(value, 10) + 10, 0)
+                setSlowms(_slowms)
+                handleSetProfile(_slowms, sampleRate)
+              }}
+              onDecrement={(value) => {
+                const _slowms = Math.max(parseInt(value, 10) - 10, 0)
+                setSlowms(_slowms)
+                handleSetProfile(_slowms, sampleRate)
+              }}
+            />
+            <Label disabled={loading}>Sample Rate:</Label>
+            <Slider
+              disabled={loading}
+              styles={{
+                slideBox: { width: 100 },
+              }}
+              min={0}
+              max={1}
+              step={0.01}
+              valueFormat={(value) => `${Math.round(value * 100)}%`}
+              value={sampleRate}
+              onChange={setSampleRate}
+              onChanged={(_ev, value) => {
+                setSampleRate(value)
+                handleSetProfile(slowms, value)
+              }}
+            />
+          </>
+        ) : null}
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
