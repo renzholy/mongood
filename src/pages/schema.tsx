@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import { Dropdown, getTheme } from '@fluentui/react'
+import { Dropdown, getTheme, Label } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
@@ -121,6 +121,9 @@ export default () => {
           backgroundColor: theme.palette.neutralLight,
         }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Label styles={{ root: { marginRight: 10 } }}>
+            Validation Action:
+          </Label>
           <Dropdown
             selectedKey={validationAction}
             onChange={(_ev, option) => {
@@ -132,8 +135,11 @@ export default () => {
               { key: ValidationAction.WARN, text: ValidationAction.WARN },
               { key: ValidationAction.ERROR, text: ValidationAction.ERROR },
             ]}
-            placeholder="validation action"
+            placeholder="please select"
           />
+          <Label styles={{ root: { marginRight: 10, marginLeft: 10 } }}>
+            Validation Level:
+          </Label>
           <Dropdown
             selectedKey={validationLevel}
             onChange={(_ev, option) => {
@@ -146,7 +152,7 @@ export default () => {
               { key: ValidationLevel.MODERATE, text: ValidationLevel.MODERATE },
               { key: ValidationLevel.STRICT, text: ValidationLevel.STRICT },
             ]}
-            placeholder="validation level"
+            placeholder="please select"
           />
         </div>
         <ActionButton

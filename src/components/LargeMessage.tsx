@@ -19,7 +19,7 @@ export function LargeMessage(props: {
         justifyContent: 'center',
         ...props.style,
       }}>
-      <div>
+      <div style={{ maxWidth: 600 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Icon
             iconName={props.iconName}
@@ -29,12 +29,12 @@ export function LargeMessage(props: {
                 fontSize: 64,
                 height: 64,
                 margin: 20,
+                wordBreak: 'break-all',
               },
             }}
           />
           <Text
             variant="xLarge"
-            block={true}
             styles={{
               root: {
                 color: theme.palette.neutralSecondary,
@@ -46,12 +46,11 @@ export function LargeMessage(props: {
         </div>
         <Text
           variant="large"
-          block={true}
           styles={{
             root: {
               color: theme.palette.neutralSecondary,
               marginLeft: 20,
-              maxWidth: 600,
+              wordBreak: 'break-all',
             },
           }}>
           {props.content}
