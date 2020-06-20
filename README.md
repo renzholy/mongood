@@ -55,6 +55,7 @@ go run main.go headless.go
 
 ## 🚧 Roadmap:
 
+- [ ] search collection
 - [ ] geo search
 - [ ] role management
 - [ ] and so on...
