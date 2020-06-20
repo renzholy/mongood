@@ -123,6 +123,7 @@ export default () => {
           step={0.01}
           valueFormat={(value) => `${Math.round(value * 100)}%`}
           value={sampleRate}
+          onChange={setSampleRate}
           onChanged={(_ev, value) => {
             setSampleRate(value)
             handleSetProfile(slowms, value)
