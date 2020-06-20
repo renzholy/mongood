@@ -13,13 +13,10 @@ import { SystemProfileCard } from '@/components/SystemProfileCard'
 export default () => {
   const { database, collection } = useSelector((state) => state.root)
   const { filter, skip, limit } = useSelector((state) => state.docs)
-  const { data: profile, revalidate } = useSWR(
-    database ? `profile/${database}` : null,
-    () =>
-      runCommand<{ was: number; slowms: number; sampleRate: number }>(
-        database!,
-        { profile: -1 },
-      ),
+  const { data: profile, revalidate } = useSWR(`profile`, () =>
+    runCommand<{ was: number; slowms: number; sampleRate: number }>('admin', {
+      profile: -1,
+    }),
   )
   const [slowms, setSlowms] = useState(0)
   const dispatch = useDispatch()
@@ -78,9 +75,6 @@ export default () => {
     [database],
   )
 
-  if (!database) {
-    return <LargeMessage iconName="Back" title="Select collection" />
-  }
   return (
     <>
       <Stack
