@@ -6,11 +6,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { runCommand } from '@/utils/fetcher'
 import { SystemProfileDoc } from '@/types'
 import { actions } from '@/stores'
-import { LargeMessage } from './LargeMessage'
-import { SystemProfilePagination } from './SystemProfilePagination'
-import { SystemProfileCard } from './SystemProfileCard'
+import { LargeMessage } from '@/components/LargeMessage'
+import { SystemProfilePagination } from '@/components/SystemProfilePagination'
+import { SystemProfileCard } from '@/components/SystemProfileCard'
 
-export function SystemProfile() {
+export default () => {
   const { database, collection } = useSelector((state) => state.root)
   const { filter, skip, limit } = useSelector((state) => state.docs)
   const { data: profile, revalidate } = useSWR(
