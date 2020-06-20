@@ -164,7 +164,7 @@ export default () => {
             overflowY: 'scroll',
             padding: 20,
             flex: 1,
-            alignItems: 'center',
+            margin: '0 auto',
           },
         }}>
         {error ? (
