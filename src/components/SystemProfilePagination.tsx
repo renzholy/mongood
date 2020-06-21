@@ -26,10 +26,6 @@ export function SystemProfilePagination() {
         hint: _.isEmpty(filter) ? undefined : index?.name,
       })
     },
-    {
-      refreshInterval: 20 * 1000,
-      errorRetryCount: 0,
-    },
   )
   useEffect(() => {
     dispatch(actions.docs.setCount(data?.n || 0))

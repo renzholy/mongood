@@ -42,10 +42,6 @@ export function DocumentTable(props: { order?: string[] }) {
         { canonical: true },
       )
     },
-    {
-      refreshInterval: 20 * 1000,
-      errorRetryCount: 0,
-    },
   )
   useEffect(() => {
     revalidate()

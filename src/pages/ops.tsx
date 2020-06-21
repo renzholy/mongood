@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Stack, DefaultButton } from '@fluentui/react'
+import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
 import _ from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
@@ -47,7 +47,8 @@ export default () => {
   const [filter, setFilter] = useState<object>({})
   const [example, setExample] = useState<string>()
   const ns = database && collection ? `${database}.${collection}` : undefined
-  const { data, error, isValidating } = useSWR(
+  const [refreshInterval, setRefreshInterval] = useState(1000)
+  const { data, error, revalidate, isValidating } = useSWR(
     `currentOp/${ns}/${JSON.stringify(filter)}`,
     () =>
       runCommand<{ inprog: { [key: string]: MongoData }[] }>('admin', {
@@ -55,7 +56,7 @@ export default () => {
         ...filter,
         ns,
       }),
-    { refreshInterval: 1000 },
+    { refreshInterval },
   )
 
   return (
@@ -76,6 +77,28 @@ export default () => {
             }}
           />
         ))}
+        <Stack.Item grow={true}>
+          <div />
+        </Stack.Item>
+        <Toggle
+          inlineLabel={true}
+          label="Auto Refresh"
+          onText=" "
+          offText=" "
+          styles={{
+            root: { marginRight: -5, marginBottom: 5 },
+            container: { display: 'flex', alignItems: 'center' },
+          }}
+          checked={refreshInterval !== 0}
+          onChange={(_ev, v) => {
+            setRefreshInterval(v ? 1000 : 0)
+          }}
+        />
+        <IconButton
+          iconProps={{ iconName: 'Refresh' }}
+          disabled={isValidating}
+          onClick={revalidate}
+        />
       </Stack>
       <Stack
         horizontal={true}

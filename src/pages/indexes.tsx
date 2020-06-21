@@ -18,7 +18,6 @@ export default () => {
         collStats: collection,
       })
     },
-    { refreshInterval: 5 * 1000 },
   )
   const { data: indexes, revalidate } = useSWR(
     database && collection ? `listIndexes/${database}/${collection}` : null,
