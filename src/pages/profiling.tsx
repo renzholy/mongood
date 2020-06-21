@@ -47,6 +47,9 @@ export default () => {
         cursor: { firstBatch: SystemProfileDoc[] }
       }>(database!, {
         find: 'system.profile',
+        sort: {
+          ts: -1,
+        },
         filter,
         skip,
         limit,
