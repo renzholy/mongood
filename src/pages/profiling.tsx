@@ -167,7 +167,9 @@ export default () => {
             margin: '0 auto',
           },
         }}>
-        {error ? (
+        {!database || !collection ? (
+          <LargeMessage iconName="Back" title="Select collection" />
+        ) : error ? (
           <LargeMessage
             iconName="Error"
             title="Error"
