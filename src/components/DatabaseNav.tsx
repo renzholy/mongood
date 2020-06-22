@@ -70,25 +70,46 @@ export function DatabaseNav() {
   const links = useMemo(
     () =>
       databases.length
-        ? databases.map((_database) => ({
-            key: _database,
-            name: _database,
-            title: _database,
-            url: '',
-            isExpanded: expandedDatabases.includes(_database),
-            links: collectionsMap[_database]?.map((_collection) => ({
-              key: `${_database}${splitter}${_collection}`,
-              name: _collection,
-              title: _collection,
-              url: '',
-            })) || [
-              {
-                name: 'No Collection',
-                url: '',
-                disabled: true,
-              },
-            ],
-          }))
+        ? _.compact(
+            databases.map((_database) => {
+              const databaseMatched = _database.includes(keyword)
+              const collectionMatched = _.some(
+                collectionsMap[_database],
+                (_collection) => _collection.includes(keyword),
+              )
+              if (databaseMatched || collectionMatched) {
+                return {
+                  key: _database,
+                  name: _database,
+                  title: _database,
+                  url: '',
+                  isExpanded:
+                    expandedDatabases.includes(_database) ||
+                    (!!keyword && (databaseMatched || collectionMatched)),
+                  links: collectionsMap[_database]
+                    ?.filter(
+                      (_collection) =>
+                        databaseMatched ||
+                        !keyword ||
+                        _collection.includes(keyword),
+                    )
+                    .map((_collection) => ({
+                      key: `${_database}${splitter}${_collection}`,
+                      name: _collection,
+                      title: _collection,
+                      url: '',
+                    })) || [
+                    {
+                      name: 'No Collection',
+                      url: '',
+                      disabled: true,
+                    },
+                  ],
+                }
+              }
+              return undefined
+            }),
+          )
         : [
             {
               name: 'No Database',
@@ -96,7 +117,7 @@ export function DatabaseNav() {
               disabled: true,
             },
           ],
-    [databases, expandedDatabases, collectionsMap],
+    [databases, expandedDatabases, collectionsMap, keyword],
   )
 
   return (
