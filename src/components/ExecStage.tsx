@@ -60,7 +60,7 @@ export function ExecStage(props: { value: ExecStats }) {
         <CompoundButton
           styles={{
             description: {
-              whiteSpace: 'pre-wrap',
+              whiteSpace: 'pre',
               lineHeight: '1.2em',
             },
             root: {
