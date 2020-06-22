@@ -75,12 +75,12 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {_.compact([
             `${Number.format(props.value.millis)} ms`,
-            props.value.docsExamined === undefined
-              ? undefined
-              : `${Number.format(props.value.docsExamined)} docs examined`,
             props.value.keysExamined === undefined
               ? undefined
               : `${Number.format(props.value.keysExamined)} keys examined`,
+            props.value.docsExamined === undefined
+              ? undefined
+              : `${Number.format(props.value.docsExamined)} docs examined`,
             props.value.nreturned === undefined
               ? undefined
               : `${Number.format(props.value.nreturned)} returned`,
