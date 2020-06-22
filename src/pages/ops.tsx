@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
 import _ from 'lodash'
 import useSWR from 'swr'
@@ -58,6 +58,7 @@ export default () => {
       }),
     { refreshInterval },
   )
+  const value = useMemo(() => (ns ? { ns, ...filter } : filter), [ns, filter])
 
   return (
     <>
@@ -106,7 +107,7 @@ export default () => {
         styles={{ root: { height: 52 } }}>
         <FilterInput
           autoFocus={true}
-          value={ns ? { ns, ...filter } : filter}
+          value={value}
           onChange={(value) => {
             setExample(undefined)
             setFilter(value as {})
