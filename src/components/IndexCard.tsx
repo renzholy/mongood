@@ -30,7 +30,11 @@ function IndexInfo(props: { value: IndexSpecification }) {
             <Text
               key={k}
               styles={{
-                root: { display: 'flex', alignItems: 'center' },
+                root: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: theme.palette.neutralPrimaryAlt,
+                },
               }}>
               {k}:&nbsp;
               {v}
