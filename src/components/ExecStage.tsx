@@ -82,12 +82,12 @@ export function ExecStage(props: { value: ExecStats }) {
                   ) ||
                   0),
             )} ms`,
-            props.value.docsExamined === undefined
-              ? undefined
-              : `${Number.format(props.value.docsExamined)} docs examined`,
             props.value.keysExamined === undefined
               ? undefined
               : `${Number.format(props.value.keysExamined)} keys examined`,
+            props.value.docsExamined === undefined
+              ? undefined
+              : `${Number.format(props.value.docsExamined)} docs examined`,
             props.value.nMatched === undefined
               ? undefined
               : `${Number.format(props.value.nMatched)} matched`,
