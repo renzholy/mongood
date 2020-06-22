@@ -152,12 +152,16 @@ export default () => {
             title="Error"
             content={error.message}
           />
-        ) : data?.cursor.firstBatch.length ? (
-          data.cursor.firstBatch.map((item, index) => (
-            <SystemProfileCard key={`${item.ts}${index}`} value={item} />
-          ))
+        ) : data ? (
+          data.cursor.firstBatch.length ? (
+            data.cursor.firstBatch.map((item, index) => (
+              <SystemProfileCard key={`${item.ts}${index}`} value={item} />
+            ))
+          ) : (
+            <LargeMessage iconName="Database" title="No Data" />
+          )
         ) : (
-          <LargeMessage iconName="Database" title="No Data" />
+          <LargeMessage iconName="SearchData" title="Loading" />
         )}
       </Stack>
     </>
