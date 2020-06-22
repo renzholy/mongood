@@ -168,6 +168,7 @@ export default () => {
             padding: 20,
             flex: 1,
             margin: '0 auto',
+            maxWidth: '100%',
           },
         }}>
         {!database || !collection ? (
