@@ -54,13 +54,13 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
           <Text
             variant="xLarge"
             styles={{ root: { color: theme.palette.neutralPrimary } }}>
-            {props.value.ns}
+            {props.value.op}
           </Text>
           &nbsp;
           <Text
             variant="xLarge"
             styles={{ root: { color: theme.palette.neutralSecondary } }}>
-            {props.value.op}
+            {props.value.ns}
           </Text>
         </div>
         <Text
@@ -75,37 +75,51 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {_.compact([
             `${Number.format(props.value.millis)} ms`,
-            props.value.docsExamined === undefined
-              ? undefined
-              : `${Number.format(props.value.docsExamined)} docs examined`,
             props.value.keysExamined === undefined
               ? undefined
               : `${Number.format(props.value.keysExamined)} keys examined`,
+            props.value.docsExamined === undefined
+              ? undefined
+              : `${Number.format(props.value.docsExamined)} docs examined`,
             props.value.nreturned === undefined
               ? undefined
               : `${Number.format(props.value.nreturned)} returned`,
           ]).join(', ')}
         </Text>
       </Card.Item>
-      <Card.Item
-        styles={{
-          root: {
-            overflowX: 'scroll',
-            width: '100%',
-          },
-        }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row-reverse',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
+      {props.value.execStats ? (
+        <Card.Item
+          styles={{
+            root: {
+              overflowX: 'scroll',
+              width: '100%',
+            },
           }}>
-          {props.value.execStats ? (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row-reverse',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
             <ExecStage value={props.value.execStats} />
-          ) : null}
-        </div>
-      </Card.Item>
+          </div>
+        </Card.Item>
+      ) : null}
+      {props.value.errMsg ? (
+        <Card.Item>
+          <Text
+            styles={{
+              root: {
+                color: theme.palette.neutralSecondary,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all',
+              },
+            }}>
+            {props.value.errMsg}
+          </Text>
+        </Card.Item>
+      ) : null}
     </Card>
   )
 }

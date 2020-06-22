@@ -60,7 +60,7 @@ export function ExecStage(props: { value: ExecStats }) {
         <CompoundButton
           styles={{
             description: {
-              whiteSpace: 'pre-wrap',
+              whiteSpace: 'pre',
               lineHeight: '1.2em',
             },
             root: {
@@ -82,12 +82,12 @@ export function ExecStage(props: { value: ExecStats }) {
                   ) ||
                   0),
             )} ms`,
-            props.value.docsExamined === undefined
-              ? undefined
-              : `${Number.format(props.value.docsExamined)} docs examined`,
             props.value.keysExamined === undefined
               ? undefined
               : `${Number.format(props.value.keysExamined)} keys examined`,
+            props.value.docsExamined === undefined
+              ? undefined
+              : `${Number.format(props.value.docsExamined)} docs examined`,
             props.value.nMatched === undefined
               ? undefined
               : `${Number.format(props.value.nMatched)} matched`,
@@ -133,17 +133,16 @@ export function ExecStage(props: { value: ExecStats }) {
               alignItems: 'flex-end',
             }}>
             {props.value.inputStages.map((inputStage, index) => (
-              <>
-                {index === 0 ? null : <div style={{ height: 34 }} />}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'row-reverse',
-                  }}>
-                  <ExecStage value={inputStage} />
-                </div>
-              </>
+              <div
+                key={index.toString()}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexDirection: 'row-reverse',
+                  marginTop: index === 0 ? 0 : 34,
+                }}>
+                <ExecStage value={inputStage} />
+              </div>
             ))}
           </div>
         </>

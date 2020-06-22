@@ -73,6 +73,7 @@ export type SystemProfileDoc = {
   millis: number
   client: string
   ts: Date
+  errMsg?: string
   nreturned?: number
   docsExamined?: number
   keysExamined?: number
