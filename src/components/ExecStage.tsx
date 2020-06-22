@@ -73,7 +73,14 @@ export function ExecStage(props: { value: ExecStats }) {
           secondaryText={_.compact([
             `${Number.format(
               props.value.executionTimeMillisEstimate -
-                (props.value.inputStage?.executionTimeMillisEstimate || 0),
+                (props.value.inputStage?.executionTimeMillisEstimate ||
+                  Math.max(
+                    props.value.inputStages?.[0].executionTimeMillisEstimate ||
+                      0,
+                    props.value.inputStages?.[1].executionTimeMillisEstimate ||
+                      0,
+                  ) ||
+                  0),
             )} ms`,
             props.value.docsExamined === undefined
               ? undefined
@@ -119,22 +126,26 @@ export function ExecStage(props: { value: ExecStats }) {
               },
             }}
           />
-          {props.value.inputStages.map((inputStage, index) => (
-            <>
-              {index === 0 ? null : (
-                <Icon
-                  iconName="Pause"
-                  styles={{
-                    root: {
-                      color: theme.palette.neutralPrimary,
-                      margin: 8,
-                    },
-                  }}
-                />
-              )}
-              <ExecStage value={inputStage} />
-            </>
-          ))}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+            }}>
+            {props.value.inputStages.map((inputStage, index) => (
+              <>
+                {index === 0 ? null : <div style={{ height: 34 }} />}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'row-reverse',
+                  }}>
+                  <ExecStage value={inputStage} />
+                </div>
+              </>
+            ))}
+          </div>
         </>
       ) : null}
     </>

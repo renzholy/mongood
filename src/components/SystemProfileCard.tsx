@@ -99,6 +99,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
             display: 'flex',
             flexDirection: 'row-reverse',
             justifyContent: 'flex-end',
+            alignItems: 'center',
           }}>
           {props.value.execStats ? (
             <ExecStage value={props.value.execStats} />
