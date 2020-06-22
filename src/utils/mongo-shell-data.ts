@@ -111,10 +111,6 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
 }
 
 export function parse(str: string): object | string {
-  if (/\{\s*_\s*\}/.test(str)) {
-    // special for global lodash
-    throw new Error('ParseError')
-  }
   return JSON.parse(
     JSON.stringify(
       saferEval(str, {

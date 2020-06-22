@@ -20,7 +20,6 @@ export function FilterInput<T extends string | object | undefined>(props: {
     try {
       props.onChange((value ? parse(value) : undefined) as T)
     } catch (err) {
-      console.error(value, err)
       setErrorMessage(' ')
     }
   }, [value])
