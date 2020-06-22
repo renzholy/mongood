@@ -133,17 +133,16 @@ export function ExecStage(props: { value: ExecStats }) {
               alignItems: 'flex-end',
             }}>
             {props.value.inputStages.map((inputStage, index) => (
-              <>
-                {index === 0 ? null : <div style={{ height: 34 }} />}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'row-reverse',
-                  }}>
-                  <ExecStage value={inputStage} />
-                </div>
-              </>
+              <div
+                key={index.toString()}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexDirection: 'row-reverse',
+                  marginTop: index === 0 ? 0 : 34,
+                }}>
+                <ExecStage value={inputStage} />
+              </div>
             ))}
           </div>
         </>
