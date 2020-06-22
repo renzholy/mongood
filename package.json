@@ -24,7 +24,7 @@
   "dependencies": {
     "@fluentui/react": "^7.121.1",
     "@monaco-editor/react": "^3.3.2",
-    "@reduxjs/toolkit": "^1.3.6",
+    "@reduxjs/toolkit": "^1.4.0",
     "@uifabric/react-cards": "^0.109.100",
     "bson": "^4.0.4",
     "bytes": "^3.1.0",
@@ -39,7 +39,7 @@
   "devDependencies": {
     "@types/bson": "^4.0.2",
     "@types/bytes": "^3.1.0",
-    "@types/lodash": "^4.14.155",
+    "@types/lodash": "^4.14.156",
     "@types/mongodb": "^3.5.23",
     "@types/react": "^16.9.38",
     "@types/react-dom": "^16.9.8",
