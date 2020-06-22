@@ -1,6 +1,7 @@
 /* eslint-disable react/no-danger */
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
+import useAsyncEffect from 'use-async-effect'
 
 import { colorize } from '@/utils/editor'
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
@@ -12,9 +13,15 @@ export function DocumentRow<T extends { [key: string]: MongoData }>(props: {
   const isDarkMode = useDarkMode()
   const str = useMemo(() => stringify(props.value, 2), [props.value])
   const [html, setHtml] = useState(str)
-  useEffect(() => {
-    colorize(str, isDarkMode).then(setHtml)
-  }, [str, isDarkMode])
+  useAsyncEffect(
+    async (isMounted) => {
+      const _html = await colorize(str, isDarkMode)
+      if (isMounted()) {
+        setHtml(_html)
+      }
+    },
+    [str, isDarkMode],
+  )
 
   return (
     <pre

@@ -2,7 +2,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/jsx-indent */
 
-import React, { useCallback, useState, useEffect, useMemo } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
 import {
   Text,
@@ -15,6 +15,7 @@ import {
 import _ from 'lodash'
 import bytes from 'bytes'
 import { IndexSpecification, WiredTigerData } from 'mongodb'
+import useAsyncEffect from 'use-async-effect'
 
 import { colorize } from '@/utils/editor'
 import { useDarkMode } from '@/utils/theme'
@@ -86,9 +87,15 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
     props.value.data,
   ])
   const [html, setHtml] = useState(str)
-  useEffect(() => {
-    colorize(str, isDarkMode).then(setHtml)
-  }, [str, isDarkMode])
+  useAsyncEffect(
+    async (isMounted) => {
+      const _html = await colorize(str, isDarkMode)
+      if (isMounted()) {
+        setHtml(_html)
+      }
+    },
+    [str, isDarkMode],
+  )
   const onRenderPlainCard = useCallback(() => {
     return (
       <div
