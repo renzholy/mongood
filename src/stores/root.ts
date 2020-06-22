@@ -5,17 +5,11 @@ export default createSlice({
   initialState: {
     expandedDatabases: [],
     collectionsMap: {},
-    filter: {},
   } as {
     database?: string
     collection?: string
     expandedDatabases: string[]
     collectionsMap: { [database: string]: string[] }
-    filter: {
-      name?: {
-        $regex: string
-      }
-    }
   },
   reducers: {
     setDatabase: (state, { payload }: PayloadAction<string | undefined>) => ({
@@ -39,13 +33,6 @@ export default createSlice({
         ...state.collectionsMap,
         [payload.database]: payload.collections,
       },
-    }),
-    setFilter: (
-      state,
-      { payload }: PayloadAction<{ name?: { $regex: string } }>,
-    ) => ({
-      ...state,
-      filter: payload,
     }),
   },
 })

@@ -37,10 +37,13 @@ export default () => {
       <LargeMessage iconName="Error" title="Error" content={error.message} />
     )
   }
-  if (!stats) {
+  if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select collection" />
   }
-  if (!indexes?.cursor.firstBatch.length) {
+  if (!indexes || !stats) {
+    return <LargeMessage iconName="SearchData" title="Loading" />
+  }
+  if (!indexes.cursor.firstBatch.length) {
     return <LargeMessage iconName="Database" title="No Index" />
   }
   return (

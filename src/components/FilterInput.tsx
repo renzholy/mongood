@@ -1,5 +1,5 @@
 import { TextField, IIconProps } from '@fluentui/react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 import { parse, stringify } from '@/utils/mongo-shell-data'
 
@@ -16,6 +16,13 @@ export function FilterInput<T extends string | object | undefined>(props: {
   useEffect(() => {
     setValue(stringify(props.value))
   }, [props.value])
+  const handleChange = useCallback(() => {
+    try {
+      props.onChange((value ? parse(value) : undefined) as T)
+    } catch (err) {
+      setErrorMessage(' ')
+    }
+  }, [value])
 
   return (
     <TextField
@@ -34,19 +41,15 @@ export function FilterInput<T extends string | object | undefined>(props: {
       iconProps={props.iconProps}
       errorMessage={errorMessage}
       value={value}
+      onBlur={handleChange}
+      onKeyDown={(ev) => {
+        if (ev.key === 'Enter') {
+          handleChange()
+        }
+      }}
       onChange={(_ev, newValue) => {
         setValue(newValue || '')
-        if (!newValue) {
-          props.onChange(undefined as T)
-          setErrorMessage(undefined)
-          return
-        }
-        try {
-          props.onChange(parse(newValue) as T)
-          setErrorMessage(undefined)
-        } catch (err) {
-          setErrorMessage(' ')
-        }
+        setErrorMessage(undefined)
       }}
     />
   )

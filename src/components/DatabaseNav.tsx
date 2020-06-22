@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import { SearchBox, Nav, getTheme } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
@@ -12,20 +12,20 @@ const splitter = '/'
 export function DatabaseNav() {
   const theme = getTheme()
   const {
-    filter,
     database,
     collection,
     expandedDatabases,
     collectionsMap,
   } = useSelector((state) => state.root)
-  const { data } = useSWR(`listDatabases/${JSON.stringify(filter)}`, () =>
+  const [keyword, setKeyword] = useState('')
+  const { data } = useSWR(`listDatabases`, () =>
     runCommand<{
       databases: {
         empty: boolean
         name: string
         sizeOnDisk: number
       }[]
-    }>('admin', { listDatabases: 1, filter }),
+    }>('admin', { listDatabases: 1 }),
   )
   const dispatch = useDispatch()
   const listCollections = useCallback(async (_database: string) => {
@@ -51,45 +51,91 @@ export function DatabaseNav() {
     ])
   }, [data])
   useEffect(() => {
-    Promise.all(
-      expandedDatabases.map(async (_database) => {
-        const collections = await listCollections(_database)
-        const systemCollections = collections.filter((c) =>
-          c.startsWith('system.'),
-        )
-        dispatch(
-          actions.root.setCollectionsMap({
-            database: _database,
-            collections: [
-              ...systemCollections.sort(),
-              ..._.pullAll(collections.sort(), systemCollections),
-            ],
-          }),
-        )
-      }) || [],
-    )
-  }, [expandedDatabases, listCollections])
+    databases.forEach(async (_database) => {
+      const collections = await listCollections(_database)
+      const systemCollections = collections.filter((c) =>
+        c.startsWith('system.'),
+      )
+      dispatch(
+        actions.root.setCollectionsMap({
+          database: _database,
+          collections: [
+            ...systemCollections.sort(),
+            ..._.pullAll(collections.sort(), systemCollections),
+          ],
+        }),
+      )
+    })
+  }, [databases, listCollections])
+  const links = useMemo(
+    () =>
+      databases.length
+        ? _.compact(
+            databases.map((_database) => {
+              const databaseMatched = _database.includes(keyword)
+              const collectionMatched = _.some(
+                collectionsMap[_database],
+                (_collection) => _collection.includes(keyword),
+              )
+              if (databaseMatched || collectionMatched) {
+                return {
+                  key: _database,
+                  name: _database,
+                  title: _database,
+                  url: '',
+                  isExpanded:
+                    expandedDatabases.includes(_database) ||
+                    (!!keyword && (databaseMatched || collectionMatched)),
+                  links: collectionsMap[_database]
+                    ?.filter(
+                      (_collection) =>
+                        databaseMatched ||
+                        !keyword ||
+                        _collection.includes(keyword),
+                    )
+                    .map((_collection) => ({
+                      key: `${_database}${splitter}${_collection}`,
+                      name: _collection,
+                      title: _collection,
+                      url: '',
+                    })) || [
+                    {
+                      name: 'No Collection',
+                      url: '',
+                      disabled: true,
+                    },
+                  ],
+                }
+              }
+              return undefined
+            }),
+          )
+        : [
+            {
+              name: 'No Database',
+              url: '',
+              disabled: true,
+            },
+          ],
+    [databases, expandedDatabases, collectionsMap, keyword],
+  )
 
   return (
     <div
       style={{
         backgroundColor: theme.palette.neutralLighterAlt,
-        width: 200,
+        width: 210,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
       }}>
       <SearchBox
         autoFocus={true}
-        placeholder="Search Database"
+        placeholder="Database & Collection"
         styles={{ root: { margin: 10 } }}
-        value={filter.name?.$regex}
+        value={keyword}
         onChange={(_ev, newValue) => {
-          dispatch(
-            actions.root.setFilter(
-              newValue ? { name: { $regex: newValue } } : {},
-            ),
-          )
+          setKeyword(newValue || '')
         }}
       />
       <div
@@ -99,37 +145,7 @@ export function DatabaseNav() {
           overflowY: 'scroll',
         }}>
         <Nav
-          groups={[
-            {
-              links: databases.length
-                ? databases.map((_database) => ({
-                    key: _database,
-                    name: _database,
-                    title: _database,
-                    url: '',
-                    isExpanded: expandedDatabases.includes(_database),
-                    links: collectionsMap[_database]?.map((_collection) => ({
-                      key: `${_database}${splitter}${_collection}`,
-                      name: _collection,
-                      title: _collection,
-                      url: '',
-                    })) || [
-                      {
-                        name: '...',
-                        url: '',
-                        disabled: true,
-                      },
-                    ],
-                  }))
-                : [
-                    {
-                      name: _.isEmpty(filter) ? '...' : 'No Database',
-                      url: '',
-                      disabled: true,
-                    },
-                  ],
-            },
-          ]}
+          groups={[{ links }]}
           selectedKey={`${database}${splitter}${collection}`}
           onLinkClick={(_ev, item) => {
             if (!item?.links && item?.key) {
