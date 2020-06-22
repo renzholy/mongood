@@ -179,7 +179,7 @@ export default () => {
             title="Error"
             content={error.message}
           />
-        ) : data ? (
+        ) : data?.cursor.firstBatch.length ? (
           data.cursor.firstBatch.map((item, index) => (
             <SystemProfileCard key={`${item.ts}${index}`} value={item} />
           ))
