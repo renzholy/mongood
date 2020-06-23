@@ -46,7 +46,7 @@ export function SystemProfilePagination() {
           ? `${skip + 1} ~ ${Math.min(skip + limit, count)} of ${Number.format(
               count,
             )}`
-          : 'No Data'}
+          : 'No Profile'}
       </Text>
       <IconButton
         iconProps={{ iconName: 'Back' }}

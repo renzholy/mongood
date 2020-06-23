@@ -163,7 +163,7 @@ export default () => {
               />
             ))
           ) : (
-            <LargeMessage iconName="Database" title="No Data" />
+            <LargeMessage iconName="Database" title="No Profile" />
           )
         ) : (
           <LargeMessage iconName="SearchData" title="Loading" />
