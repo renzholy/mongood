@@ -15,10 +15,8 @@ import {
 import _ from 'lodash'
 import bytes from 'bytes'
 import { IndexSpecification, WiredTigerData } from 'mongodb'
-import useAsyncEffect from 'use-async-effect'
 
-import { colorize } from '@/utils/editor'
-import { useDarkMode } from '@/utils/theme'
+import { useColorize } from '@/hooks/use-colorize'
 import { IndexViewModal } from './IndexViewModal'
 
 function IndexInfo(props: { value: IndexSpecification }) {
@@ -82,20 +80,10 @@ function IndexInfo(props: { value: IndexSpecification }) {
 
 function IndexFeature(props: { value: { text: string; data?: object } }) {
   const theme = getTheme()
-  const isDarkMode = useDarkMode()
   const str = useMemo(() => JSON.stringify(props.value.data, null, 2), [
     props.value.data,
   ])
-  const [html, setHtml] = useState(str)
-  useAsyncEffect(
-    async (isMounted) => {
-      const _html = await colorize(str, isDarkMode)
-      if (isMounted()) {
-        setHtml(_html)
-      }
-    },
-    [str, isDarkMode],
-  )
+  const html = useColorize(str)
   const onRenderPlainCard = useCallback(() => {
     return (
       <div

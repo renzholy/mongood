@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { stringify, MongoData, parse } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
-import { useDarkMode } from '@/utils/theme'
+import { useDarkMode } from '@/hooks/use-dark-mode'
 import { actions } from '@/stores'
 import { ActionButton } from './ActionButton'
 

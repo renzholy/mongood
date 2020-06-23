@@ -7,7 +7,7 @@ import { ControlledEditor } from '@monaco-editor/react'
 import { DatabaseNav } from '@/components/DatabaseNav'
 import { store } from '@/stores/index'
 import { TopPivot } from '@/components/TopPivot'
-import { useDarkMode } from '@/utils/theme'
+import { useDarkMode } from '@/hooks/use-dark-mode'
 
 initializeIcons()
 
