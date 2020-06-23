@@ -88,27 +88,31 @@ function StatsArea(props: {
 }
 
 export default () => {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const { data: collStats } = useSWR(
-    database && collection ? `collStats/${database}/${collection}` : null,
+    database && collection
+      ? `collStats/${connection}/${database}/${collection}`
+      : null,
     () =>
-      runCommand<CollStats>(database!, {
+      runCommand<CollStats>(connection, database!, {
         collStats: collection,
       }),
     { refreshInterval: 1000 },
   )
   const { data: dbStats } = useSWR(
-    database ? `dbStats/${database}` : null,
+    database ? `dbStats/${connection}/${database}` : null,
     () =>
-      runCommand<DbStats>(database!, {
+      runCommand<DbStats>(connection, database!, {
         dbStats: 1,
       }),
     { refreshInterval: 1000 },
   )
   const { data: serverStatus } = useSWR(
-    database && collection ? null : 'serverStatus',
+    database && collection ? null : `serverStatus/${connection}`,
     () =>
-      runCommand<ServerStats>('admin', {
+      runCommand<ServerStats>(connection, 'admin', {
         serverStatus: 1,
       }),
     { refreshInterval: 1000 },

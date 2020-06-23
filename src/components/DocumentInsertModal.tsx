@@ -14,7 +14,9 @@ import { ActionButton } from './ActionButton'
 export function DocumentInsertModal<
   T extends { [key: string]: MongoData }
 >(props: { isOpen: boolean; onDismiss(): void }) {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const theme = getTheme()
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('return {\n  \n}')
@@ -23,7 +25,7 @@ export function DocumentInsertModal<
     const doc = parse(value.replace(/^return/, ''))
     await runCommand<{
       value: T
-    }>(database!, {
+    }>(connection, database!, {
       insert: collection,
       documents: [doc],
     })

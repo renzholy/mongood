@@ -1,6 +1,7 @@
 import { EJSON } from 'bson'
 
 export async function runCommand<T>(
+  connection: string,
   database: string,
   command: object,
   opts: { canonical?: boolean } = {},
@@ -10,7 +11,11 @@ export async function runCommand<T>(
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ database, command: JSON.stringify(command) }),
+    body: JSON.stringify({
+      connection,
+      database,
+      command: JSON.stringify(command),
+    }),
   })
   if (response.ok) {
     return opts.canonical

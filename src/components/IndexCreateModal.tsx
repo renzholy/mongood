@@ -14,13 +14,15 @@ export function IndexCreateModal(props: {
   isOpen: boolean
   onDismiss(): void
 }) {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const theme = getTheme()
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('return {\n  background: true,\n}')
   const handleCreate = useCallback(async () => {
     const doc = parse(value.replace(/^return/, ''))
-    await runCommand(database!, {
+    await runCommand(connection, database!, {
       createIndexes: collection,
       indexes: [doc],
     })

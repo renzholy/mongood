@@ -10,19 +10,26 @@ import { IndexCard } from '@/components/IndexCard'
 import { IndexCreateModal } from '@/components/IndexCreateModal'
 
 export default () => {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const { data: stats, error } = useSWR(
-    database && collection ? `collStats/${database}/${collection}` : null,
+    database && collection
+      ? `collStats/${connection}/${database}/${collection}`
+      : null,
     () => {
-      return runCommand<CollStats>(database!, {
+      return runCommand<CollStats>(connection, database!, {
         collStats: collection,
       })
     },
   )
   const { data: indexes, revalidate } = useSWR(
-    database && collection ? `listIndexes/${database}/${collection}` : null,
+    database && collection
+      ? `listIndexes/${connection}/${database}/${collection}`
+      : null,
     () => {
       return runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
+        connection,
         database!,
         {
           listIndexes: collection,

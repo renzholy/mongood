@@ -12,26 +12,28 @@ const splitter = '/'
 export function DatabaseNav() {
   const theme = getTheme()
   const {
+    connection,
     database,
     collection,
     expandedDatabases,
     collectionsMap,
   } = useSelector((state) => state.root)
   const [keyword, setKeyword] = useState('')
-  const { data } = useSWR(`listDatabases`, () =>
+  const { data } = useSWR(`listDatabases/${connection}`, () =>
     runCommand<{
       databases: {
         empty: boolean
         name: string
         sizeOnDisk: number
       }[]
-    }>('admin', { listDatabases: 1 }),
+    }>(connection, 'admin', { listDatabases: 1 }),
   )
   const dispatch = useDispatch()
   const listCollections = useCallback(async (_database: string) => {
     const {
       cursor: { firstBatch },
     } = await runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
+      connection,
       _database,
       {
         listCollections: 1,
