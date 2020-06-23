@@ -8,7 +8,7 @@ import { IndexSpecification } from 'mongodb'
 import { stringify } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
-import { useDarkMode } from '@/utils/theme'
+import { useDarkMode } from '@/hooks/use-dark-mode'
 import { ActionButton } from './ActionButton'
 
 export function IndexViewModal(props: {

@@ -1,4 +1,6 @@
-import React, { useState, useMemo, useCallback } from 'react'
+/* eslint-disable react/no-danger */
+
+import React, { useMemo, useCallback } from 'react'
 import {
   getTheme,
   Icon,
@@ -8,31 +10,19 @@ import {
 } from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
-import useAsyncEffect from 'use-async-effect'
 
 import { ExecStats } from '@/types'
 import { stringify } from '@/utils/mongo-shell-data'
-import { colorize } from '@/utils/editor'
-import { useDarkMode } from '@/utils/theme'
 import { Number } from '@/utils/formatter'
+import { useColorize } from '@/hooks/use-colorize'
 
 export function ExecStage(props: { value: ExecStats }) {
   const theme = getTheme()
-  const isDarkMode = useDarkMode()
   const str = useMemo(
     () => stringify(_.omit(props.value, ['inputStage', 'inputStages']), 2),
     [props.value],
   )
-  const [html, setHtml] = useState(str)
-  useAsyncEffect(
-    async (isMounted) => {
-      const _html = await colorize(str, isDarkMode)
-      if (isMounted()) {
-        setHtml(_html)
-      }
-    },
-    [str, isDarkMode],
-  )
+  const html = useColorize(str)
   const onRenderPlainCard = useCallback(() => {
     return (
       <div

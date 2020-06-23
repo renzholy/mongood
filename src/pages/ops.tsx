@@ -108,9 +108,9 @@ export default () => {
         <FilterInput
           autoFocus={true}
           value={value}
-          onChange={(value) => {
+          onChange={(_value) => {
             setExample(undefined)
-            setFilter(value as {})
+            setFilter(_value as {})
           }}
         />
       </Stack>

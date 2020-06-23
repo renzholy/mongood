@@ -1,26 +1,15 @@
 /* eslint-disable react/no-danger */
 
-import React, { useState, useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { HoverCard, HoverCardType, IColumn, getTheme } from '@fluentui/react'
-import useAsyncEffect from 'use-async-effect'
 
-import { colorize } from '@/utils/editor'
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
-import { useDarkMode } from '@/utils/theme'
+import { useColorize } from '@/hooks/use-colorize'
 
 function PlainCard(props: { value: MongoData }) {
-  const [html, setHtml] = useState('')
-  const isDarkMode = useDarkMode()
+  const str = useMemo(() => stringify(props.value, 2), [props.value])
+  const html = useColorize(str)
   const theme = getTheme()
-  useAsyncEffect(
-    async (isMounted) => {
-      const _html = await colorize(stringify(props.value, 2), isDarkMode)
-      if (isMounted()) {
-        setHtml(_html)
-      }
-    },
-    [props.value, isDarkMode],
-  )
 
   return (
     <div
@@ -45,19 +34,9 @@ export function TableRow<T extends { [key: string]: MongoData }>(props: {
   column?: IColumn
 }) {
   const theme = getTheme()
-  const isDarkMode = useDarkMode()
   const value = props.value[props.column?.key as keyof typeof props.value]
-  const str = stringify(value)
-  const [html, setHtml] = useState(str)
-  useAsyncEffect(
-    async (isMounted) => {
-      const _html = await colorize(str.substr(0, 100), isDarkMode)
-      if (isMounted()) {
-        setHtml(_html)
-      }
-    },
-    [str, isDarkMode],
-  )
+  const str = useMemo(() => stringify(value), [value])
+  const html = useColorize(str.substr(0, 100))
   const onRenderPlainCard = useCallback(() => {
     return <PlainCard value={value} />
   }, [value])

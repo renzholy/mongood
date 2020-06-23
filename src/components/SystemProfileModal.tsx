@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 
 import { stringify } from '@/utils/mongo-shell-data'
 import { ControlledEditor } from '@/utils/editor'
-import { useDarkMode } from '@/utils/theme'
+import { useDarkMode } from '@/hooks/use-dark-mode'
 
 export function SystemProfileModal(props: {
   value: object
