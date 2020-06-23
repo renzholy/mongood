@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/gobuffalo/packr"
@@ -21,9 +22,9 @@ var (
 
 func runCommand(w http.ResponseWriter, r *http.Request) {
 	type Request struct {
-		URI      string
-		Database string
-		Command  string
+		Connection string
+		Database   string
+		Command    string
 	}
 	request := Request{}
 	err := json.NewDecoder(r.Body).Decode(&request)
@@ -38,7 +39,7 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	client, err := create(request.URI)
+	client, err := create(request.Connection)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -58,11 +59,7 @@ func create(uri string) (*mongo.Client, error) {
 		return cached.(*mongo.Client), nil
 	}
 	if uri == "" {
-		if os.Getenv("MONGO_URL") != "" {
-			uri = os.Getenv("MONGO_URL")
-		} else {
-			uri = "mongodb://localhost:27017"
-		}
+		uri = "mongodb://localhost:27017"
 	}
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
@@ -83,6 +80,17 @@ func destory() {
 	})
 }
 
+func listConnections(w http.ResponseWriter, r *http.Request) {
+	urls := os.Getenv("MONGO_URLS")
+	data, err := json.Marshal(strings.Split(urls, "|"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
+}
+
 func main() {
 	ctx = context.Background()
 
@@ -95,6 +103,9 @@ func main() {
 
 	// handle runCommand
 	http.HandleFunc("/api/runCommand", runCommand)
+
+	// handle listConnections
+	http.HandleFunc("/api/listConnections", listConnections)
 
 	// start service
 	startService()

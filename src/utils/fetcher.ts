@@ -19,3 +19,13 @@ export async function runCommand<T>(
   }
   throw new Error(await response.text())
 }
+
+export async function listConnections(): Promise<string[]> {
+  const response = await fetch('/api/listConnections', {
+    method: 'POST',
+  })
+  if (response.ok) {
+    return response.json()
+  }
+  throw new Error(await response.text())
+}
