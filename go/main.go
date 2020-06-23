@@ -81,8 +81,8 @@ func destory() {
 }
 
 func listConnections(w http.ResponseWriter, r *http.Request) {
-	urls := os.Getenv("MONGO_URLS")
-	data, err := json.Marshal(strings.Split(urls, "|"))
+	uris := os.Getenv("MONGO_URIS")
+	data, err := json.Marshal(strings.Split(uris, "|"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
