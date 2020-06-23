@@ -60,7 +60,9 @@ export function TopPivot() {
           menuProps={{
             items: connections.map(({ c, parsed }) => ({
               key: c,
-              text: parsed.hosts.map(({ host }) => host).join(','),
+              text: `${parsed.hosts[0].host}:${
+                parsed.hosts[0].port || '27017'
+              }`,
               canCheck: true,
               checked: connection === c,
               onClick() {
