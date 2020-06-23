@@ -9,12 +9,11 @@ import { store } from '@/stores/index'
 import { TopPivot } from '@/components/TopPivot'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 
+initializeIcons()
+
 export default (props: RouteComponentProps & { children: React.ReactNode }) => {
   const isDarkMode = useDarkMode()
   const [theme, setTheme] = useState<ITheme>()
-  useEffect(() => {
-    initializeIcons()
-  }, [])
   useEffect(() => {
     setTheme(
       loadTheme({
