@@ -3,15 +3,21 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export default createSlice({
   name: 'root',
   initialState: {
+    connection: 'mongodb://localhost:27017',
     expandedDatabases: [],
     collectionsMap: {},
   } as {
+    connection: string
     database?: string
     collection?: string
     expandedDatabases: string[]
     collectionsMap: { [database: string]: string[] }
   },
   reducers: {
+    setConnection: (state, { payload }: PayloadAction<string>) => ({
+      ...state,
+      connection: payload,
+    }),
     setDatabase: (state, { payload }: PayloadAction<string | undefined>) => ({
       ...state,
       database: payload,

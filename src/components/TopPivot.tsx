@@ -1,13 +1,35 @@
-import React from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { Pivot, PivotItem, getTheme, IconButton } from '@fluentui/react'
 import { useHistory } from 'umi'
+import useSWR from 'swr'
+import mongodbUri from 'mongodb-uri'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { listConnections } from '@/utils/fetcher'
+import { actions } from '@/stores'
 
 export function TopPivot() {
+  const { connection } = useSelector((state) => state.root)
+  const dispatch = useDispatch()
   const history = useHistory()
   const theme = getTheme()
-  listConnections()
+  const { data } = useSWR('connections', () => {
+    return listConnections()
+  })
+  const connections = useMemo(
+    () =>
+      data?.map((c) => ({
+        c,
+        parsed: mongodbUri.parse(c),
+      })) || [],
+    [data],
+  )
+  useEffect(() => {
+    if (!data?.length) {
+      return
+    }
+    dispatch(actions.root.setConnection(data[0]))
+  }, [data])
 
   return (
     <div
@@ -32,7 +54,22 @@ export function TopPivot() {
         <PivotItem headerText="Profiling" itemKey="/profiling" />
         <PivotItem headerText="Users" itemKey="/users" />
       </Pivot>
-      <IconButton iconProps={{ iconName: 'Database' }} />
+      {connections.length ? (
+        <IconButton
+          iconProps={{ iconName: 'Database' }}
+          menuProps={{
+            items: connections.map(({ c, parsed }) => ({
+              key: c,
+              text: parsed.hosts.map(({ host }) => host).join(','),
+              canCheck: true,
+              checked: connection === c,
+              onClick() {
+                dispatch(actions.root.setConnection(c))
+              },
+            })),
+          }}
+        />
+      ) : null}
     </div>
   )
 }
