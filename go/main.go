@@ -17,7 +17,7 @@ import (
 
 var (
 	ctx     context.Context
-	clients = sync.Map{}
+	clients sync.Map
 )
 
 func runCommand(w http.ResponseWriter, r *http.Request) {
@@ -54,12 +54,12 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 }
 
 func create(uri string) (*mongo.Client, error) {
+	if uri == "" {
+		uri = "mongodb://localhost:27017"
+	}
 	cached, ok := clients.Load(uri)
 	if ok && cached != nil {
 		return cached.(*mongo.Client), nil
-	}
-	if uri == "" {
-		uri = "mongodb://localhost:27017"
 	}
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
