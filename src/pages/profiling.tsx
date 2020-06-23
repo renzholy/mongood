@@ -1,5 +1,7 @@
+/* eslint-disable no-nested-ternary */
+
 import React, { useState, useEffect, useCallback } from 'react'
-import { Stack, SpinButton, Slider, Label, Dropdown } from '@fluentui/react'
+import { Stack, SpinButton, Slider, Label } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -155,7 +157,10 @@ export default () => {
         ) : data ? (
           data.cursor.firstBatch.length ? (
             data.cursor.firstBatch.map((item, index) => (
-              <SystemProfileCard key={`${item.ts}${index}`} value={item} />
+              <SystemProfileCard
+                key={`${item.ts}${index.toString()}`}
+                value={item}
+              />
             ))
           ) : (
             <LargeMessage iconName="Database" title="No Data" />

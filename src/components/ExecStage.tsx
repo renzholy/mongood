@@ -1,3 +1,5 @@
+/* eslint-disable react/no-danger */
+
 import React, { useState, useMemo, useCallback } from 'react'
 import {
   getTheme,
