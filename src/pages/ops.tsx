@@ -58,7 +58,7 @@ export default () => {
       }),
     { refreshInterval },
   )
-  const value = useMemo(() => (ns ? { ns, ...filter } : filter), [ns, filter])
+  const value = useMemo(() => (ns ? { ...filter, ns } : filter), [ns, filter])
 
   return (
     <>
