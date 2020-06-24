@@ -46,6 +46,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
           }}>
           <EditorModal
             title="View Profile"
+            readOnly={true}
             value={props.value}
             isOpen={isOpen}
             onDismiss={() => {
