@@ -137,7 +137,9 @@ export default () => {
             <StatsArea
               title="Replica: "
               subtitle={serverStatus.repl.setName}
-              data={serverStatus.repl.hosts.reduce((prev, curr, index) => {
+              data={_.sortBy(serverStatus.repl.hosts, (host) =>
+                host === serverStatus.repl!.primary ? 0 : 1,
+              ).reduce((prev, curr, index) => {
                 // eslint-disable-next-line no-param-reassign
                 prev[
                   `${Array.from({ length: index })

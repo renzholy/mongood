@@ -55,23 +55,32 @@ export function DatabaseNav() {
       ..._.pullAll(_databases.sort(), systemDatabases),
     ])
   }, [data])
+  const handleListCollectionOfDatabases = useCallback(
+    async (_databases: string[]) => {
+      _databases.forEach(async (_database) => {
+        const collections = await listCollections(_database)
+        const systemCollections = collections.filter((c) =>
+          c.startsWith('system.'),
+        )
+        dispatch(
+          actions.root.setCollectionsMap({
+            database: _database,
+            collections: [
+              ...systemCollections.sort(),
+              ..._.pullAll(collections.sort(), systemCollections),
+            ],
+          }),
+        )
+      })
+    },
+    [listCollections],
+  )
   useEffect(() => {
-    databases.forEach(async (_database) => {
-      const collections = await listCollections(_database)
-      const systemCollections = collections.filter((c) =>
-        c.startsWith('system.'),
-      )
-      dispatch(
-        actions.root.setCollectionsMap({
-          database: _database,
-          collections: [
-            ...systemCollections.sort(),
-            ..._.pullAll(collections.sort(), systemCollections),
-          ],
-        }),
-      )
-    })
-  }, [databases, listCollections])
+    handleListCollectionOfDatabases(expandedDatabases)
+  }, [expandedDatabases, handleListCollectionOfDatabases])
+  useEffect(() => {
+    handleListCollectionOfDatabases(databases)
+  }, [databases, handleListCollectionOfDatabases])
   const links = useMemo(
     () =>
       databases.length

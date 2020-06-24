@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 import { CollStats, IndexSpecification } from 'mongodb'
@@ -7,7 +7,8 @@ import { runCommand } from '@/utils/fetcher'
 import { LargeMessage } from '@/components/LargeMessage'
 import { Stack, DefaultButton } from '@fluentui/react'
 import { IndexCard } from '@/components/IndexCard'
-import { IndexCreateModal } from '@/components/IndexCreateModal'
+import { EditorModal } from '@/components/EditorModal'
+import { ActionButton } from '@/components/ActionButton'
 
 export default () => {
   const { connection, database, collection } = useSelector(
@@ -38,6 +39,15 @@ export default () => {
     },
   )
   const [isOpen, setIsOpen] = useState(false)
+  const [value, setValue] = useState<object>({
+    background: true,
+  })
+  const handleCreate = useCallback(async () => {
+    await runCommand(connection, database!, {
+      createIndexes: collection,
+      indexes: [value],
+    })
+  }, [database, collection, value])
 
   if (error) {
     return (
@@ -81,12 +91,18 @@ export default () => {
           Create
         </DefaultButton>
       </Stack>
-      <IndexCreateModal
+      <EditorModal
+        title="Create Index"
+        value={value}
+        onChange={setValue}
         isOpen={isOpen}
         onDismiss={() => {
           setIsOpen(false)
           revalidate()
         }}
+        footer={
+          <ActionButton text="Create" primary={true} onClick={handleCreate} />
+        }
       />
     </>
   )

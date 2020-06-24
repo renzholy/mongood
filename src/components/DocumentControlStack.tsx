@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import useSWR from 'swr'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -9,7 +9,8 @@ import { actions } from '@/stores'
 import { DisplayMode } from '@/types.d'
 import { IndexButton } from './IndexButton'
 import { Pagination } from './Pagination'
-import { DocumentInsertModal } from './DocumentInsertModal'
+import { EditorModal } from './EditorModal'
+import { ActionButton } from './ActionButton'
 
 export function DocumentControlStack() {
   const { connection, database, collection } = useSelector(
@@ -32,6 +33,14 @@ export function DocumentControlStack() {
   const { displayMode, index } = useSelector((state) => state.docs)
   const dispatch = useDispatch()
   const [isInsertOpen, setIsInsertOpen] = useState(false)
+  const [doc, setDoc] = useState({})
+  const handleInsert = useCallback(async () => {
+    await runCommand(connection, database!, {
+      insert: collection,
+      documents: [doc],
+    })
+    dispatch(actions.docs.setShouldRevalidate())
+  }, [database, collection, doc])
 
   return (
     <Stack
@@ -60,11 +69,17 @@ export function DocumentControlStack() {
         <DefaultButton disabled={true} text="No Index" />
       )}
       <Stack.Item grow={1}>
-        <DocumentInsertModal
+        <EditorModal
+          title="Insert Document"
+          value={doc}
+          onChange={setDoc}
           isOpen={isInsertOpen}
           onDismiss={() => {
             setIsInsertOpen(false)
           }}
+          footer={
+            <ActionButton text="Insert" primary={true} onClick={handleInsert} />
+          }
         />
       </Stack.Item>
       <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
