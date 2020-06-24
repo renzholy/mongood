@@ -140,7 +140,9 @@ export default () => {
               data={serverStatus.repl.hosts.reduce((prev, curr, index) => {
                 // eslint-disable-next-line no-param-reassign
                 prev[
-                  `${index} ${
+                  `${Array.from({ length: index })
+                    .map(() => ' ')
+                    .join('')}${
                     curr === serverStatus.repl!.primary
                       ? 'Primary'
                       : 'Secondary'
