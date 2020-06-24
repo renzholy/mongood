@@ -4,6 +4,7 @@ import { useHistory } from 'umi'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import useAsyncEffect from 'use-async-effect'
+import _ from 'lodash'
 
 import { listConnections, runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
@@ -14,34 +15,38 @@ export function TopPivot() {
   const dispatch = useDispatch()
   const history = useHistory()
   const theme = getTheme()
-  const { data } = useSWR('connections', () => {
-    return listConnections()
-  })
-  const serverStatus = useCallback(async (_connection: string) => {
-    return runCommand<ServerStats>(_connection, 'admin', {
-      serverStatus: 1,
-    })
-  }, [])
+  const { data } = useSWR('connections', listConnections)
+  const serverStatus = useCallback(
+    async (_connection: string) =>
+      runCommand<ServerStats>(_connection, 'admin', {
+        serverStatus: 1,
+      }),
+    [],
+  )
   const [connections, setConnections] = useState<
-    { c: string; host: string; version: string }[]
+    { c: string; host: string; version?: string }[]
   >([])
   useAsyncEffect(async () => {
     setConnections(
-      await Promise.all(
-        data?.map(async (c) => {
-          const { host, version } = await serverStatus(c)
-          return { c, host, version }
-        }) || [],
+      _.compact(
+        await Promise.all(
+          data?.map(async (c) => {
+            try {
+              const { host, version } = await serverStatus(c)
+              return { c, host, version }
+            } catch {
+              return { c, host: c }
+            }
+          }) || [],
+        ),
       ),
     )
   }, [data, serverStatus])
-
   useEffect(() => {
-    if (!data?.length) {
-      return
+    if (data?.length && !connection) {
+      dispatch(actions.root.setConnection(data[0]))
     }
-    dispatch(actions.root.setConnection(data[0]))
-  }, [data])
+  }, [data, connection])
 
   return (
     <div
@@ -60,11 +65,11 @@ export function TopPivot() {
           history.push(link?.props.itemKey || '/')
         }}>
         <PivotItem headerText="Stats" itemKey="/stats" />
-        <PivotItem headerText="Documents" itemKey="/docs" />
+        <PivotItem headerText="Documents" itemKey="/documents" />
         <PivotItem headerText="Indexes" itemKey="/indexes" />
-        <PivotItem headerText="Schema" itemKey="/schema" />
-        <PivotItem headerText="Operations" itemKey="/ops" />
+        <PivotItem headerText="Operations" itemKey="/operations" />
         <PivotItem headerText="Profiling" itemKey="/profiling" />
+        <PivotItem headerText="Schema" itemKey="/schema" />
         <PivotItem headerText="Users" itemKey="/users" />
       </Pivot>
       <CommandButton

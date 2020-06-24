@@ -31,8 +31,8 @@ export function DocumentTable(props: { order?: string[] }) {
           filter,
         )}/${JSON.stringify(sort)}`
       : null,
-    () => {
-      return runCommand<{
+    () =>
+      runCommand<{
         cursor: { firstBatch: { [key: string]: MongoData }[] }
       }>(
         connection,
@@ -46,8 +46,7 @@ export function DocumentTable(props: { order?: string[] }) {
           limit,
         },
         { canonical: true },
-      )
-    },
+      ),
   )
   useEffect(() => {
     revalidate()

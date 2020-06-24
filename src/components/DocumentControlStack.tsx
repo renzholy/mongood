@@ -20,15 +20,14 @@ export function DocumentControlStack() {
     database && collection
       ? `listIndexes/${connection}/${database}/${collection}`
       : null,
-    () => {
-      return runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
+    () =>
+      runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
         connection,
         database!,
         {
           listIndexes: collection,
         },
-      )
-    },
+      ),
   )
   const { displayMode, index } = useSelector((state) => state.docs)
   const dispatch = useDispatch()

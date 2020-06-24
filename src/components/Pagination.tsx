@@ -23,13 +23,12 @@ export function Pagination() {
           filter,
         )}`
       : null,
-    () => {
-      return runCommand<{ n: number }>(connection, database!, {
+    () =>
+      runCommand<{ n: number }>(connection, database!, {
         count: collection,
         query: filter,
         hint: _.isEmpty(filter) ? undefined : index?.name,
-      })
-    },
+      }),
   )
   useEffect(() => {
     dispatch(actions.docs.setCount(data?.n || 0))

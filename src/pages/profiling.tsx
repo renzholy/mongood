@@ -42,8 +42,8 @@ export default () => {
           filter,
         )}/${skip}/${limit}`
       : null,
-    () => {
-      return runCommand<{
+    () =>
+      runCommand<{
         cursor: { firstBatch: SystemProfileDoc[] }
       }>(connection, database!, {
         find: 'system.profile',
@@ -53,8 +53,7 @@ export default () => {
         filter,
         skip,
         limit,
-      })
-    },
+      }),
   )
   useEffect(() => {
     dispatch(
