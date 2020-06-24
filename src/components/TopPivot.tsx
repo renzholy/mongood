@@ -4,6 +4,7 @@ import { useHistory } from 'umi'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import useAsyncEffect from 'use-async-effect'
+import _ from 'lodash'
 
 import { listConnections, runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
@@ -23,15 +24,21 @@ export function TopPivot() {
     })
   }, [])
   const [connections, setConnections] = useState<
-    { c: string; host: string; version: string }[]
+    { c: string; host: string; version?: string }[]
   >([])
   useAsyncEffect(async () => {
     setConnections(
-      await Promise.all(
-        data?.map(async (c) => {
-          const { host, version } = await serverStatus(c)
-          return { c, host, version }
-        }) || [],
+      _.compact(
+        await Promise.all(
+          data?.map(async (c) => {
+            try {
+              const { host, version } = await serverStatus(c)
+              return { c, host, version }
+            } catch {
+              return { c, host: c }
+            }
+          }) || [],
+        ),
       ),
     )
   }, [data, serverStatus])
