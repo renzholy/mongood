@@ -1,12 +1,13 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { Pivot, PivotItem, getTheme, IconButton } from '@fluentui/react'
 import { useHistory } from 'umi'
 import useSWR from 'swr'
-import mongodbUri from 'mongodb-uri'
 import { useSelector, useDispatch } from 'react-redux'
+import useAsyncEffect from 'use-async-effect'
 
-import { listConnections } from '@/utils/fetcher'
+import { listConnections, runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
+import { ServerStats } from '@/types'
 
 export function TopPivot() {
   const { connection } = useSelector((state) => state.root)
@@ -16,14 +17,25 @@ export function TopPivot() {
   const { data } = useSWR('connections', () => {
     return listConnections()
   })
-  const connections = useMemo(
-    () =>
-      data?.map((c) => ({
-        c,
-        parsed: mongodbUri.parse(c),
-      })) || [],
-    [data],
-  )
+  const serverStatus = useCallback(async (_connection: string) => {
+    return runCommand<ServerStats>(_connection, 'admin', {
+      serverStatus: 1,
+    })
+  }, [])
+  const [connections, setConnections] = useState<
+    { c: string; host: string; version: string }[]
+  >([])
+  useAsyncEffect(async () => {
+    setConnections(
+      await Promise.all(
+        data?.map(async (c) => {
+          const { host, version } = await serverStatus(c)
+          return { c, host, version }
+        }) || [],
+      ),
+    )
+  }, [data, serverStatus])
+
   useEffect(() => {
     if (!data?.length) {
       return
@@ -58,11 +70,10 @@ export function TopPivot() {
         <IconButton
           iconProps={{ iconName: 'Database' }}
           menuProps={{
-            items: connections.map(({ c, parsed }) => ({
+            items: connections.map(({ c, host, version }) => ({
               key: c,
-              text: `${parsed.hosts[0].host}:${
-                parsed.hosts[0].port || '27017'
-              }`,
+              text: host,
+              secondaryText: version,
               canCheck: true,
               checked: connection === c,
               onClick() {
