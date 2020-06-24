@@ -1,14 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import useSWR from 'swr'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import _ from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
-import { MongoData } from '@/utils/mongo-shell-data'
+import { MongoData, stringify } from '@/utils/mongo-shell-data'
+import { actions } from '@/stores'
 import { Table } from './Table'
-import { DocumentUpdateModal } from './DocumentUpdateModal'
+import { EditorModal } from './EditorModal'
+import { ActionButton } from './ActionButton'
 
 export function DocumentTable(props: { order?: string[] }) {
   const { connection, database, collection } = useSelector(
@@ -50,17 +52,51 @@ export function DocumentTable(props: { order?: string[] }) {
   useEffect(() => {
     revalidate()
   }, [shouldRevalidate])
+  const dispatch = useDispatch()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [invokedItem, setInvokedItem] = useState<{ [key: string]: MongoData }>()
+  const handleUpdate = useCallback(async () => {
+    await runCommand(connection, database!, {
+      findAndModify: collection,
+      query: {
+        _id: (invokedItem as { _id: unknown })._id,
+      },
+      update: invokedItem,
+    })
+    dispatch(actions.docs.setShouldRevalidate())
+    setIsUpdateOpen(false)
+  }, [database, collection, invokedItem])
+  const handleDelete = useCallback(async () => {
+    await runCommand(connection, database!, {
+      delete: collection,
+      deletes: [
+        { q: { _id: (invokedItem as { _id: unknown })._id }, limit: 1 },
+      ],
+    })
+    dispatch(actions.docs.setShouldRevalidate())
+    setIsUpdateOpen(false)
+  }, [database, collection, invokedItem])
 
   return (
     <>
-      <DocumentUpdateModal
+      <EditorModal
+        title={stringify(invokedItem?._id)}
         value={invokedItem}
         isOpen={isUpdateOpen}
         onDismiss={() => {
           setIsUpdateOpen(false)
         }}
+        footer={
+          <>
+            <ActionButton
+              text="Update"
+              primary={true}
+              onClick={handleUpdate}
+              style={{ flexShrink: 0, marginLeft: 10 }}
+            />
+            <ActionButton text="Delete" danger={true} onClick={handleDelete} />
+          </>
+        }
       />
       <Table
         displayMode={displayMode}
