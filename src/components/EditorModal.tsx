@@ -1,51 +1,45 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
-import { useSelector } from 'react-redux'
-import { IndexSpecification } from 'mongodb'
+import React, { useState, useEffect } from 'react'
 
-import { stringify } from '@/utils/mongo-shell-data'
-import { runCommand } from '@/utils/fetcher'
+import { stringify, parse } from '@/utils/mongo-shell-data'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
-import { ActionButton } from './ActionButton'
 
-export function IndexViewModal(props: {
-  value: IndexSpecification
+export function EditorModal<T extends object>(props: {
+  title: string
+  value: T
+  readOnly?: boolean
+  onChange?(value: T): void
   isOpen: boolean
   onDismiss(): void
-  onDrop(): void
+  footer?: React.ReactNode
 }) {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
   const theme = getTheme()
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
   useEffect(() => {
     setValue(`return ${stringify(props.value, 2)}\n`)
   }, [props.value])
-  const handleDrop = useCallback(async () => {
-    if (!database || !collection) {
+  useEffect(() => {
+    if (!props.onChange) {
       return
     }
-    await runCommand(connection, database, {
-      dropIndexes: collection,
-      index: props.value.name,
-    })
-    props.onDrop()
-  }, [database, collection, props.value])
+    try {
+      props.onChange(parse(value) as T)
+    } catch (err) {
+      console.error(err)
+    }
+  }, [value, props.onChange])
 
   return (
     <>
       <Modal
         styles={{
           scrollableContent: {
-            minWidth: 600,
+            minWidth: 800,
             minHeight: 600,
-            width: '50vw',
-            height: '50vh',
+            width: '60vw',
+            height: '60vh',
             borderTop: `4px solid ${theme.palette.themePrimary}`,
             overflow: 'hidden',
             display: 'flex',
@@ -74,7 +68,7 @@ export function IndexViewModal(props: {
                 overflow: 'hidden',
               },
             }}>
-            View Index
+            {props.title}
           </Text>
           <IconButton
             styles={{ root: { marginLeft: 10 } }}
@@ -97,22 +91,24 @@ export function IndexViewModal(props: {
             })
           }}
           options={{
-            readOnly: true,
+            readOnly: props.readOnly,
             wordWrap: 'on',
             contextmenu: false,
             scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
           }}
         />
-        <div
-          style={{
-            height: 32,
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'row-reverse',
-            padding: 10,
-          }}>
-          <ActionButton text="Drop" danger={true} onClick={handleDrop} />
-        </div>
+        {props.footer ? (
+          <div
+            style={{
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'row-reverse',
+              padding: 10,
+            }}>
+            {props.footer}
+          </div>
+        ) : null}
       </Modal>
     </>
   )

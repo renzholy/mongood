@@ -15,9 +15,12 @@ import {
 import _ from 'lodash'
 import bytes from 'bytes'
 import { IndexSpecification, WiredTigerData } from 'mongodb'
+import { useSelector } from 'react-redux'
 
 import { useColorize } from '@/hooks/use-colorize'
-import { IndexViewModal } from './IndexViewModal'
+import { runCommand } from '@/utils/fetcher'
+import { EditorModal } from './EditorModal'
+import { ActionButton } from './ActionButton'
 
 function IndexInfo(props: { value: IndexSpecification }) {
   const theme = getTheme()
@@ -181,6 +184,19 @@ export function IndexCard(props: {
     [props.value],
   )
   const [isOpen, setIsOpen] = useState(false)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
+  const handleDrop = useCallback(async () => {
+    if (!database || !collection) {
+      return
+    }
+    await runCommand(connection, database, {
+      dropIndexes: collection,
+      index: props.value.name,
+    })
+    props.onDrop()
+  }, [database, collection, props.value])
 
   return (
     <Card
@@ -201,13 +217,17 @@ export function IndexCard(props: {
       }}>
       <Card.Section styles={{ root: { flex: 1 } }}>
         <Card.Item>
-          <IndexViewModal
+          <EditorModal
+            title="View Index"
+            readOnly={true}
             value={props.value}
             isOpen={isOpen}
             onDismiss={() => {
               setIsOpen(false)
             }}
-            onDrop={props.onDrop}
+            footer={
+              <ActionButton text="Drop" danger={true} onClick={handleDrop} />
+            }
           />
           <Text
             variant="xLarge"
