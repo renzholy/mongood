@@ -94,7 +94,7 @@ export default () => {
     const str = stringify(options.validator?.$jsonSchema, 2)
     setValidationAction(options.validationAction || null)
     setValidationLevel(options.validationLevel || null)
-    setValue(str ? `return ${str}` : 'return {\n  \n}')
+    setValue(str ? `return ${str}` : 'return {}')
   }, [data])
 
   if (!database || !collection) {
