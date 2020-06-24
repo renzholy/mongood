@@ -69,6 +69,11 @@ export function TopPivot() {
       <CommandButton
         text={connections.find(({ c }) => c === connection)?.host}
         menuIconProps={{ iconName: 'Database' }}
+        styles={{
+          menuIcon: {
+            color: theme.palette.themePrimary,
+          },
+        }}
         menuProps={{
           items: connections.map(({ c, host, version }) => ({
             key: c,
