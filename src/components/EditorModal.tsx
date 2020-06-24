@@ -7,8 +7,8 @@ import { useDarkMode } from '@/hooks/use-dark-mode'
 
 export function EditorModal<T extends object>(props: {
   title: string
-  value: T
   readOnly?: boolean
+  value?: T
   onChange?(value: T): void
   isOpen: boolean
   onDismiss(): void
@@ -20,16 +20,6 @@ export function EditorModal<T extends object>(props: {
   useEffect(() => {
     setValue(`return ${stringify(props.value, 2)}\n`)
   }, [props.value])
-  useEffect(() => {
-    if (!props.onChange) {
-      return
-    }
-    try {
-      props.onChange(parse(value) as T)
-    } catch (err) {
-      console.error(err)
-    }
-  }, [value, props.onChange])
 
   return (
     <>
@@ -76,27 +66,39 @@ export function EditorModal<T extends object>(props: {
             onClick={props.onDismiss}
           />
         </div>
-        <ControlledEditor
-          language="typescript"
-          value={value}
-          onChange={(_ev, _value) => {
-            setValue(_value || '')
-          }}
-          theme={isDarkMode ? 'vs-dark' : 'vs'}
-          editorDidMount={(_getEditorValue, editor) => {
-            editor.onKeyDown((e) => {
-              if (e.keyCode === 9) {
-                e.stopPropagation()
-              }
-            })
-          }}
-          options={{
-            readOnly: props.readOnly,
-            wordWrap: 'on',
-            contextmenu: false,
-            scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
-          }}
-        />
+        <div
+          style={{ flex: 1 }}
+          onBlur={() => {
+            if (!props.onChange) {
+              return
+            }
+            try {
+              props.onChange(parse(value.replace(/^return/, '')) as T)
+              // eslint-disable-next-line no-empty
+            } catch {}
+          }}>
+          <ControlledEditor
+            language="typescript"
+            value={value}
+            onChange={(_ev, _value) => {
+              setValue(_value || '')
+            }}
+            theme={isDarkMode ? 'vs-dark' : 'vs'}
+            editorDidMount={(_getEditorValue, editor) => {
+              editor.onKeyDown((e) => {
+                if (e.keyCode === 9) {
+                  e.stopPropagation()
+                }
+              })
+            }}
+            options={{
+              readOnly: props.readOnly,
+              wordWrap: 'on',
+              contextmenu: false,
+              scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
+            }}
+          />
+        </div>
         {props.footer ? (
           <div
             style={{
