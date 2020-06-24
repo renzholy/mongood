@@ -9,6 +9,8 @@ import (
 
 	"github.com/phayes/freeport"
 	"github.com/wailsapp/wails/lib/renderer/webview"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
 func startService() {
@@ -18,8 +20,11 @@ func startService() {
 		return
 	}
 	port := strconv.Itoa(intPort)
-
-	go http.ListenAndServe(":"+port, nil)
+	s := &http.Server{
+		Addr:    ":" + port,
+		Handler: h2c.NewHandler(mux, &http2.Server{}),
+	}
+	go s.ListenAndServe()
 	w := webview.NewWebview(webview.Settings{
 		Title:     "Mongood",
 		URL:       "http://localhost:" + port,

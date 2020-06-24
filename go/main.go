@@ -18,6 +18,7 @@ import (
 var (
 	ctx     context.Context
 	clients sync.Map
+	mux     = http.NewServeMux()
 )
 
 func runCommand(w http.ResponseWriter, r *http.Request) {
@@ -99,13 +100,13 @@ func main() {
 	if root == "" {
 		root = "../dist"
 	}
-	http.Handle("/", http.FileServer(packr.NewBox(root)))
+	mux.Handle("/", http.FileServer(packr.NewBox(root)))
 
 	// handle runCommand
-	http.HandleFunc("/api/runCommand", runCommand)
+	mux.HandleFunc("/api/runCommand", runCommand)
 
 	// handle listConnections
-	http.HandleFunc("/api/listConnections", listConnections)
+	mux.HandleFunc("/api/listConnections", listConnections)
 
 	// start service
 	startService()
