@@ -127,11 +127,12 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
               columns={[
                 {
                   key: '',
-                  name: 'Document',
-                  minWidth: 100,
+                  name: '',
+                  minWidth: 0,
                   isMultiline: true,
                 },
               ]}
+              isHeaderVisible={false}
               selectionMode={SelectionMode.none}
               constrainMode={ConstrainMode.unconstrained}
               layoutMode={DetailsListLayoutMode.justified}
