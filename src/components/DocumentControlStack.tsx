@@ -70,7 +70,7 @@ export function DocumentControlStack() {
       )}
       <Stack.Item grow={1}>
         <EditorModal
-          title="Create Document"
+          title="Insert Document"
           value={doc}
           onChange={setDoc}
           isOpen={isInsertOpen}
