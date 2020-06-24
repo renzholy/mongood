@@ -21,13 +21,12 @@ export function SystemProfilePagination() {
     database
       ? `systemProfileCount/${connection}/${database}/${JSON.stringify(filter)}`
       : null,
-    () => {
-      return runCommand<{ n: number }>(connection, database!, {
+    () =>
+      runCommand<{ n: number }>(connection, database!, {
         count: 'system.profile',
         query: filter,
         hint: _.isEmpty(filter) ? undefined : index?.name,
-      })
-    },
+      }),
   )
   useEffect(() => {
     dispatch(actions.docs.setCount(data?.n || 0))

@@ -15,14 +15,14 @@ export function TopPivot() {
   const dispatch = useDispatch()
   const history = useHistory()
   const theme = getTheme()
-  const { data } = useSWR('connections', () => {
-    return listConnections()
-  })
-  const serverStatus = useCallback(async (_connection: string) => {
-    return runCommand<ServerStats>(_connection, 'admin', {
-      serverStatus: 1,
-    })
-  }, [])
+  const { data } = useSWR('connections', listConnections)
+  const serverStatus = useCallback(
+    async (_connection: string) =>
+      runCommand<ServerStats>(_connection, 'admin', {
+        serverStatus: 1,
+      }),
+    [],
+  )
   const [connections, setConnections] = useState<
     { c: string; host: string; version?: string }[]
   >([])

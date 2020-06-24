@@ -18,25 +18,23 @@ export default () => {
     database && collection
       ? `collStats/${connection}/${database}/${collection}`
       : null,
-    () => {
-      return runCommand<CollStats>(connection, database!, {
+    () =>
+      runCommand<CollStats>(connection, database!, {
         collStats: collection,
-      })
-    },
+      }),
   )
   const { data: indexes, revalidate } = useSWR(
     database && collection
       ? `listIndexes/${connection}/${database}/${collection}`
       : null,
-    () => {
-      return runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
+    () =>
+      runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
         connection,
         database!,
         {
           listIndexes: collection,
         },
-      )
-    },
+      ),
   )
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState<object>({
