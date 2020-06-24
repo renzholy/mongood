@@ -1,7 +1,7 @@
 import { EJSON } from 'bson'
 
 export async function runCommand<T>(
-  connection: string,
+  connection: string | undefined,
   database: string,
   command: object,
   opts: { canonical?: boolean } = {},
