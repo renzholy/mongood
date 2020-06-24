@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 import _ from 'lodash'
@@ -8,6 +8,7 @@ import _ from 'lodash'
 import { runCommand } from '@/utils/fetcher'
 import { MongoData } from '@/utils/mongo-shell-data'
 import { Table } from './Table'
+import { DocumentUpdateModal } from './DocumentUpdateModal'
 
 export function DocumentTable(props: { order?: string[] }) {
   const { connection, database, collection } = useSelector(
@@ -49,20 +50,37 @@ export function DocumentTable(props: { order?: string[] }) {
   useEffect(() => {
     revalidate()
   }, [shouldRevalidate])
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
+  const [invokedItem, setInvokedItem] = useState<{ [key: string]: MongoData }>()
 
   return (
-    <Table
-      displayMode={displayMode}
-      items={data?.cursor.firstBatch}
-      order={
-        props.order || [
-          '_id',
-          ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),
-          ...Object.keys(index?.weights || {}).map((key) => key.split('.')[0]),
-        ]
-      }
-      error={error}
-      isValidating={isValidating}
-    />
+    <>
+      <DocumentUpdateModal
+        value={invokedItem}
+        isOpen={isUpdateOpen}
+        onDismiss={() => {
+          setIsUpdateOpen(false)
+        }}
+      />
+      <Table
+        displayMode={displayMode}
+        items={data?.cursor.firstBatch}
+        order={
+          props.order || [
+            '_id',
+            ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),
+            ...Object.keys(index?.weights || {}).map(
+              (key) => key.split('.')[0],
+            ),
+          ]
+        }
+        error={error}
+        isValidating={isValidating}
+        onItemInvoked={(item) => {
+          setInvokedItem(item)
+          setIsUpdateOpen(true)
+        }}
+      />
+    </>
   )
 }

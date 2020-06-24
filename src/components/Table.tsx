@@ -18,7 +18,6 @@ import _ from 'lodash'
 
 import { MongoData } from '@/utils/mongo-shell-data'
 import { DisplayMode } from '@/types.d'
-import { DocumentUpdateModal } from './DocumentUpdateModal'
 import { TableRow } from './TableRow'
 import { LargeMessage } from './LargeMessage'
 import { DocumentRow } from './DocumentRow'
@@ -27,13 +26,12 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   displayMode?: DisplayMode
   items?: T[]
   order?: string[]
+  onItemInvoked?(item: T): void
   error: Error
   isValidating: boolean
 }) {
   const theme = getTheme()
-  const [invokedItem, setInvokedItem] = useState<T>()
   const [columns, setColumns] = useState<IColumn[]>([])
-  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const { items, error, isValidating } = props
   useEffect(() => {
     // calc columns order
@@ -81,10 +79,6 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     ),
     [isValidating, theme],
   )
-  const onItemInvoked = useCallback((item: T) => {
-    setInvokedItem(item)
-    setIsUpdateOpen(true)
-  }, [])
 
   if (error) {
     return (
@@ -100,13 +94,6 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
-      <DocumentUpdateModal
-        value={invokedItem}
-        isOpen={isUpdateOpen}
-        onDismiss={() => {
-          setIsUpdateOpen(false)
-        }}
-      />
       {items?.length === 0 ? (
         <LargeMessage
           style={{
@@ -132,7 +119,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
                 <TableRow value={item} column={column} />
               )}
               onRenderDetailsHeader={onRenderDetailsHeader}
-              onItemInvoked={onItemInvoked}
+              onItemInvoked={props.onItemInvoked}
             />
           ) : null}
           {props.displayMode === DisplayMode.DOCUMENT ? (
@@ -151,7 +138,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
               items={items || []}
               onRenderItemColumn={(item) => <DocumentRow value={item} />}
               onRenderDetailsHeader={onRenderDetailsHeader}
-              onItemInvoked={onItemInvoked}
+              onItemInvoked={props.onItemInvoked}
             />
           ) : null}
         </ScrollablePane>
