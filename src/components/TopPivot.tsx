@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { Pivot, PivotItem, getTheme, IconButton } from '@fluentui/react'
+import { Pivot, PivotItem, getTheme, CommandButton } from '@fluentui/react'
 import { useHistory } from 'umi'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
@@ -66,23 +66,22 @@ export function TopPivot() {
         <PivotItem headerText="Profiling" itemKey="/profiling" />
         <PivotItem headerText="Users" itemKey="/users" />
       </Pivot>
-      {connections.length ? (
-        <IconButton
-          iconProps={{ iconName: 'Database' }}
-          menuProps={{
-            items: connections.map(({ c, host, version }) => ({
-              key: c,
-              text: host,
-              secondaryText: version,
-              canCheck: true,
-              checked: connection === c,
-              onClick() {
-                dispatch(actions.root.setConnection(c))
-              },
-            })),
-          }}
-        />
-      ) : null}
+      <CommandButton
+        text={connections.find(({ c }) => c === connection)?.host}
+        menuIconProps={{ iconName: 'Database' }}
+        menuProps={{
+          items: connections.map(({ c, host, version }) => ({
+            key: c,
+            text: host,
+            secondaryText: version,
+            canCheck: true,
+            checked: connection === c,
+            onClick() {
+              dispatch(actions.root.setConnection(c))
+            },
+          })),
+        }}
+      />
     </div>
   )
 }
