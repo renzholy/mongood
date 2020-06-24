@@ -52,6 +52,7 @@ export function TopPivot() {
         alignItems: 'center',
         paddingLeft: 8,
         paddingRight: 8,
+        flexShrink: 0,
       }}>
       <Pivot
         selectedKey={history.location.pathname}

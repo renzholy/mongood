@@ -72,7 +72,6 @@ export function DocumentFilterStack() {
                 color: disableSort
                   ? theme.palette.neutralTertiary
                   : theme.palette.neutralSecondary,
-                userSelect: 'none',
                 pointerEvents: 'unset',
                 cursor: disableSort ? 'not-allowed' : 'pointer',
               },

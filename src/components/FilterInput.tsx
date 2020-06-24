@@ -34,7 +34,7 @@ export function FilterInput<T extends string | object | undefined>(props: {
       spellCheck={false}
       styles={{
         root: { flex: 1 },
-        prefix: { userSelect: 'none', cursor: 'default' },
+        prefix: { cursor: 'default' },
       }}
       disabled={props.disabled}
       prefix={props.prefix}

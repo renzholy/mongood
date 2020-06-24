@@ -50,7 +50,6 @@ export function TableRow<T extends { [key: string]: MongoData }>(props: {
       styles={{
         host: {
           cursor: 'pointer',
-          userSelect: 'none',
           color: theme.palette.neutralSecondary,
           textOverflow: 'ellipsis',
           overflow: 'hidden',
@@ -67,7 +66,6 @@ export function TableRow<T extends { [key: string]: MongoData }>(props: {
       style={{
         verticalAlign: 'middle',
         cursor: 'default',
-        userSelect: 'none',
       }}
       dangerouslySetInnerHTML={{ __html: html }}
     />

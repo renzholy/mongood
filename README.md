@@ -12,6 +12,7 @@ MongoDB Operation Dashboard
 - [x] Edit documents with [monaco editor](https://microsoft.github.io/monaco-editor/index.html)
 - [x] [Mongo-shell data types](https://docs.mongodb.com/manual/core/shell-types/) query grammar
 - [x] Smart query & sort using [indexes](https://docs.mongodb.com/manual/tutorial/sort-results-with-indexes/)
+- [x] HTTP/2
 - [x] Json schema
 - [x] Designed with [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui)
 - [x] Auto **dark** mode
