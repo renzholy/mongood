@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export default createSlice({
   name: 'root',
   initialState: {
+    connection: localStorage.getItem('connection'),
     expandedDatabases: [],
     collectionsMap: {},
   } as {
@@ -13,10 +14,13 @@ export default createSlice({
     collectionsMap: { [database: string]: string[] }
   },
   reducers: {
-    setConnection: (state, { payload }: PayloadAction<string>) => ({
-      ...state,
-      connection: payload,
-    }),
+    setConnection: (state, { payload }: PayloadAction<string>) => {
+      localStorage.setItem('connection', payload)
+      return {
+        ...state,
+        connection: payload,
+      }
+    },
     setDatabase: (state, { payload }: PayloadAction<string | undefined>) => ({
       ...state,
       database: payload,

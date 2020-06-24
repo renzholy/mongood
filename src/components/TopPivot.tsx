@@ -42,13 +42,11 @@ export function TopPivot() {
       ),
     )
   }, [data, serverStatus])
-
   useEffect(() => {
-    if (!data?.length) {
-      return
+    if (data?.length && !connection) {
+      dispatch(actions.root.setConnection(data[0]))
     }
-    dispatch(actions.root.setConnection(data[0]))
-  }, [data])
+  }, [data, connection])
 
   return (
     <div
