@@ -40,5 +40,9 @@ export default createSlice({
         [payload.database]: payload.collections,
       },
     }),
+    resetCollectionsMap: (state) => ({
+      ...state,
+      collectionsMap: {},
+    }),
   },
 })
