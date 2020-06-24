@@ -8,21 +8,23 @@ import { Stack } from '@fluentui/react'
 import { UserCard } from '@/components/UserCard'
 
 export default () => {
-  const { database } = useSelector((state) => state.root)
-  const { data: usersInfo, error } = useSWR(`usersInfo/${database}`, () =>
-    runCommand<{
-      users: {
-        _id: string
-        db: string
-        user: string
-        roles: {
+  const { connection, database } = useSelector((state) => state.root)
+  const { data: usersInfo, error } = useSWR(
+    `usersInfo/${connection}/${database}`,
+    () =>
+      runCommand<{
+        users: {
+          _id: string
           db: string
-          role: string
+          user: string
+          roles: {
+            db: string
+            role: string
+          }[]
         }[]
-      }[]
-    }>(database || 'admin', {
-      usersInfo: database ? 1 : { forAllDBs: true },
-    }),
+      }>(connection, database || 'admin', {
+        usersInfo: database ? 1 : { forAllDBs: true },
+      }),
   )
 
   if (error) {

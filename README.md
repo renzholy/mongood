@@ -35,13 +35,13 @@ npm ci
 npm run build
 cd go
 go build .
-MONGO_URL="mongodb://localhost:27017" ./mongood
+MONGO_URIS="mongodb://localhost:27017|mongodb://user:password@example.com:27017" ./mongood
 ```
 
 ### Run as server:
 
 ```shell
-docker run -p 3000:3000 -e MONGO_URL="mongodb://host:port" renzholy/mongood
+docker run -p 3000:3000 -e MONGO_URIS="mongodb://localhost:27017|mongodb://user:password@example.com:27017" renzholy/mongood
 ```
 
 ### Dev mode:

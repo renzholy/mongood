@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
+	"sync"
 
 	"github.com/gobuffalo/packr"
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,14 +16,15 @@ import (
 )
 
 var (
-	ctx    context.Context
-	client *mongo.Client
+	ctx     context.Context
+	clients sync.Map
 )
 
 func runCommand(w http.ResponseWriter, r *http.Request) {
 	type Request struct {
-		Database string
-		Command  string
+		Connection string
+		Database   string
+		Command    string
 	}
 	request := Request{}
 	err := json.NewDecoder(r.Body).Decode(&request)
@@ -29,10 +32,16 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	log.Println(request.Database, request.Command)
 	var command interface{}
 	err = bson.UnmarshalExtJSON([]byte(request.Command), true, &command)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	client, err := create(request.Connection)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	raw, err := client.Database(request.Database).RunCommand(ctx, command).DecodeBytes()
@@ -44,22 +53,46 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(raw.String()))
 }
 
-func main() {
-	var err error
-
-	// connect mongodb
-	url := os.Getenv("MONGO_URL")
-	if url == "" {
-		url = "mongodb://localhost:27017"
+func create(uri string) (*mongo.Client, error) {
+	if uri == "" {
+		uri = "mongodb://localhost:27017"
 	}
-	client, err = mongo.NewClient(options.Client().ApplyURI(url))
+	cached, ok := clients.Load(uri)
+	if ok && cached != nil {
+		return cached.(*mongo.Client), nil
+	}
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
+	}
+	err = client.Connect(ctx)
+	if err != nil {
+		return nil, err
+	}
+	clients.Store(uri, client)
+	return client, nil
+}
+
+func destory() {
+	clients.Range(func(k, v interface{}) bool {
+		v.(*mongo.Client).Disconnect(ctx)
+		return true
+	})
+}
+
+func listConnections(w http.ResponseWriter, r *http.Request) {
+	uris := os.Getenv("MONGO_URIS")
+	data, err := json.Marshal(strings.Split(uris, "|"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
+}
+
+func main() {
 	ctx = context.Background()
-	client.Connect(ctx)
-	defer client.Disconnect(ctx)
 
 	// serve root dir
 	root := os.Getenv("ROOT")
@@ -71,6 +104,11 @@ func main() {
 	// handle runCommand
 	http.HandleFunc("/api/runCommand", runCommand)
 
+	// handle listConnections
+	http.HandleFunc("/api/listConnections", listConnections)
+
 	// start service
 	startService()
+
+	defer destory()
 }

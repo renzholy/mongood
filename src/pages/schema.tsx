@@ -23,9 +23,13 @@ enum ValidationLevel {
 }
 
 export default () => {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const { data, revalidate } = useSWR(
-    database && collection ? `listCollections/${database}/${collection}` : null,
+    database && collection
+      ? `listCollections/${connection}/${database}/${collection}`
+      : null,
     () =>
       runCommand<{
         cursor: {
@@ -42,7 +46,7 @@ export default () => {
             },
           ]
         }
-      }>(database!, {
+      }>(connection, database!, {
         listCollections: 1,
         filter: {
           name: collection,
@@ -65,7 +69,7 @@ export default () => {
   ] = useState<ValidationLevel | null>(null)
   const [value, setValue] = useState('')
   const handleUpdate = useCallback(async () => {
-    await runCommand(database!, {
+    await runCommand(connection, database!, {
       collMod: collection,
       validationAction,
       validationLevel,

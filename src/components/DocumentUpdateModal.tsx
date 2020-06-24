@@ -14,7 +14,9 @@ import { ActionButton } from './ActionButton'
 export function DocumentUpdateModal<
   T extends { [key: string]: MongoData }
 >(props: { value?: T; isOpen: boolean; onDismiss(): void }) {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const theme = getTheme()
   const isDarkMode = useDarkMode()
   const dispatch = useDispatch()
@@ -24,7 +26,7 @@ export function DocumentUpdateModal<
   }, [props.value])
   const handleUpdate = useCallback(async () => {
     const doc = parse(value.replace(/^return/, ''))
-    await runCommand(database!, {
+    await runCommand(connection, database!, {
       findAndModify: collection,
       query: {
         _id: (doc as { _id: unknown })._id,
@@ -36,7 +38,7 @@ export function DocumentUpdateModal<
   }, [database, collection, value])
   const handleDelete = useCallback(async () => {
     const doc = parse(value.replace(/^return/, ''))
-    await runCommand(database!, {
+    await runCommand(connection, database!, {
       delete: collection,
       deletes: [{ q: { _id: (doc as { _id: unknown })._id }, limit: 1 }],
     })

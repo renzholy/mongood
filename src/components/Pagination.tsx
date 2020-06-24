@@ -9,7 +9,9 @@ import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 
 export function Pagination() {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const { index, filter, skip, limit, count } = useSelector(
     (state) => state.docs,
   )
@@ -17,10 +19,12 @@ export function Pagination() {
   const theme = getTheme()
   const { data } = useSWR(
     database && collection
-      ? `count/${database}/${collection}/${JSON.stringify(filter)}`
+      ? `count/${connection}/${database}/${collection}/${JSON.stringify(
+          filter,
+        )}`
       : null,
     () => {
-      return runCommand<{ n: number }>(database!, {
+      return runCommand<{ n: number }>(connection, database!, {
         count: collection,
         query: filter,
         hint: _.isEmpty(filter) ? undefined : index?.name,

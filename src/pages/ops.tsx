@@ -43,22 +43,28 @@ const examples: { [key: string]: object } = {
 }
 
 export default () => {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const [filter, setFilter] = useState<object>({})
   const [example, setExample] = useState<string>()
   const ns = database && collection ? `${database}.${collection}` : undefined
   const [refreshInterval, setRefreshInterval] = useState(1000)
   const { data, error, revalidate, isValidating } = useSWR(
-    `currentOp/${ns}/${JSON.stringify(filter)}`,
+    `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
     () =>
-      runCommand<{ inprog: { [key: string]: MongoData }[] }>('admin', {
-        currentOp: 1,
-        ...filter,
-        ns,
-      }),
+      runCommand<{ inprog: { [key: string]: MongoData }[] }>(
+        connection,
+        'admin',
+        {
+          currentOp: 1,
+          ...filter,
+          ns,
+        },
+      ),
     { refreshInterval },
   )
-  const value = useMemo(() => (ns ? { ns, ...filter } : filter), [ns, filter])
+  const value = useMemo(() => (ns ? { ...filter, ns } : filter), [ns, filter])
 
   return (
     <>

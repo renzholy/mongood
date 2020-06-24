@@ -13,12 +13,18 @@ import { SystemProfilePagination } from '@/components/SystemProfilePagination'
 import { SystemProfileCard } from '@/components/SystemProfileCard'
 
 export default () => {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const { filter, skip, limit } = useSelector((state) => state.docs)
-  const { data: profile, revalidate } = useSWR(`profile`, () =>
-    runCommand<{ was: number; slowms: number; sampleRate: number }>('admin', {
-      profile: -1,
-    }),
+  const { data: profile, revalidate } = useSWR(`profile/${connection}`, () =>
+    runCommand<{ was: number; slowms: number; sampleRate: number }>(
+      connection,
+      'admin',
+      {
+        profile: -1,
+      },
+    ),
   )
   const [slowms, setSlowms] = useState(0)
   const dispatch = useDispatch()
@@ -32,12 +38,14 @@ export default () => {
   }, [profile])
   const { data, error } = useSWR(
     database
-      ? `systemProfile/${database}/${JSON.stringify(filter)}/${skip}/${limit}`
+      ? `systemProfile/${connection}/${database}/${JSON.stringify(
+          filter,
+        )}/${skip}/${limit}`
       : null,
     () => {
       return runCommand<{
         cursor: { firstBatch: SystemProfileDoc[] }
-      }>(database!, {
+      }>(connection, database!, {
         find: 'system.profile',
         sort: {
           ts: -1,
@@ -67,7 +75,7 @@ export default () => {
       }
       setLoading(true)
       try {
-        await runCommand(database, {
+        await runCommand(connection, database, {
           profile: 1,
           slowms: _slowms,
           sampleRate: { $numberDouble: _sampleRate.toString() },
@@ -163,7 +171,7 @@ export default () => {
               />
             ))
           ) : (
-            <LargeMessage iconName="Database" title="No Data" />
+            <LargeMessage iconName="Database" title="No Profile" />
           )
         ) : (
           <LargeMessage iconName="SearchData" title="Loading" />

@@ -17,7 +17,9 @@ export function IndexViewModal(props: {
   onDismiss(): void
   onDrop(): void
 }) {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const theme = getTheme()
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
@@ -28,7 +30,7 @@ export function IndexViewModal(props: {
     if (!database || !collection) {
       return
     }
-    await runCommand(database, {
+    await runCommand(connection, database, {
       dropIndexes: collection,
       index: props.value.name,
     })

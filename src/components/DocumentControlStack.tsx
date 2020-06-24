@@ -12,11 +12,16 @@ import { Pagination } from './Pagination'
 import { DocumentInsertModal } from './DocumentInsertModal'
 
 export function DocumentControlStack() {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const { data: indexes } = useSWR(
-    database && collection ? `listIndexes/${database}/${collection}` : null,
+    database && collection
+      ? `listIndexes/${connection}/${database}/${collection}`
+      : null,
     () => {
       return runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
+        connection,
         database!,
         {
           listIndexes: collection,

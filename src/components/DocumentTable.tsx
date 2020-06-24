@@ -10,7 +10,9 @@ import { MongoData } from '@/utils/mongo-shell-data'
 import { Table } from './Table'
 
 export function DocumentTable(props: { order?: string[] }) {
-  const { database, collection } = useSelector((state) => state.root)
+  const { connection, database, collection } = useSelector(
+    (state) => state.root,
+  )
   const {
     index,
     filter,
@@ -22,7 +24,7 @@ export function DocumentTable(props: { order?: string[] }) {
   } = useSelector((state) => state.docs)
   const { data, error, isValidating, revalidate } = useSWR(
     database && collection
-      ? `find/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
+      ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
         )}/${JSON.stringify(sort)}`
       : null,
@@ -30,6 +32,7 @@ export function DocumentTable(props: { order?: string[] }) {
       return runCommand<{
         cursor: { firstBatch: { [key: string]: MongoData }[] }
       }>(
+        connection,
         database!,
         {
           find: collection,

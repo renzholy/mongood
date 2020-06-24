@@ -12,33 +12,38 @@ const splitter = '/'
 export function DatabaseNav() {
   const theme = getTheme()
   const {
+    connection,
     database,
     collection,
     expandedDatabases,
     collectionsMap,
   } = useSelector((state) => state.root)
   const [keyword, setKeyword] = useState('')
-  const { data } = useSWR(`listDatabases`, () =>
+  const { data } = useSWR(`listDatabases/${connection}`, () =>
     runCommand<{
       databases: {
         empty: boolean
         name: string
         sizeOnDisk: number
       }[]
-    }>('admin', { listDatabases: 1 }),
+    }>(connection, 'admin', { listDatabases: 1 }),
   )
   const dispatch = useDispatch()
-  const listCollections = useCallback(async (_database: string) => {
-    const {
-      cursor: { firstBatch },
-    } = await runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
-      _database,
-      {
-        listCollections: 1,
-      },
-    )
-    return firstBatch.map(({ name }) => name)
-  }, [])
+  const listCollections = useCallback(
+    async (_database: string) => {
+      const {
+        cursor: { firstBatch },
+      } = await runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
+        connection,
+        _database,
+        {
+          listCollections: 1,
+        },
+      )
+      return firstBatch.map(({ name }) => name)
+    },
+    [connection],
+  )
   const [databases, setDatabases] = useState<string[]>([])
   useEffect(() => {
     const _databases = data?.databases.map(({ name }) => name) || []
@@ -119,6 +124,12 @@ export function DatabaseNav() {
           ],
     [databases, expandedDatabases, collectionsMap, keyword],
   )
+  useEffect(() => {
+    dispatch(actions.root.setDatabase())
+    dispatch(actions.root.setCollection())
+    dispatch(actions.root.setExpandedDatabases([]))
+    dispatch(actions.root.resetCollectionsMap())
+  }, [connection])
 
   return (
     <div
