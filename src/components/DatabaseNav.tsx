@@ -29,18 +29,21 @@ export function DatabaseNav() {
     }>(connection, 'admin', { listDatabases: 1 }),
   )
   const dispatch = useDispatch()
-  const listCollections = useCallback(async (_database: string) => {
-    const {
-      cursor: { firstBatch },
-    } = await runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
-      connection,
-      _database,
-      {
-        listCollections: 1,
-      },
-    )
-    return firstBatch.map(({ name }) => name)
-  }, [])
+  const listCollections = useCallback(
+    async (_database: string) => {
+      const {
+        cursor: { firstBatch },
+      } = await runCommand<{ cursor: { firstBatch: { name: string }[] } }>(
+        connection,
+        _database,
+        {
+          listCollections: 1,
+        },
+      )
+      return firstBatch.map(({ name }) => name)
+    },
+    [connection],
+  )
   const [databases, setDatabases] = useState<string[]>([])
   useEffect(() => {
     const _databases = data?.databases.map(({ name }) => name) || []
