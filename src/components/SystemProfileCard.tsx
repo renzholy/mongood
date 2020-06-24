@@ -7,8 +7,8 @@ import _ from 'lodash'
 
 import { SystemProfileDoc } from '@/types'
 import { Number } from '@/utils/formatter'
-import { SystemProfileModal } from './SystemProfileModal'
 import { ExecStage } from './ExecStage'
+import { EditorModal } from './EditorModal'
 
 export function SystemProfileCard(props: { value: SystemProfileDoc }) {
   const theme = getTheme()
@@ -44,7 +44,8 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
             display: 'flex',
             alignItems: 'center',
           }}>
-          <SystemProfileModal
+          <EditorModal
+            title="View Profile"
             value={props.value}
             isOpen={isOpen}
             onDismiss={() => {
