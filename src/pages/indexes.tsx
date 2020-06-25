@@ -53,7 +53,7 @@ export default () => {
     )
   }
   if (!database || !collection) {
-    return <LargeMessage iconName="Back" title="Select collection" />
+    return <LargeMessage iconName="Back" title="Select Collection" />
   }
   if (!indexes || !stats) {
     return <LargeMessage iconName="SearchData" title="Loading" />

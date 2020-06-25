@@ -98,7 +98,7 @@ export default () => {
   }, [data])
 
   if (!database || !collection) {
-    return <LargeMessage iconName="Back" title="Select collection" />
+    return <LargeMessage iconName="Back" title="Select Collection" />
   }
   return (
     <>
