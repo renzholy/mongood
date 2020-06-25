@@ -3,6 +3,7 @@ import { SearchBox, Nav, getTheme } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
 import _ from 'lodash'
+import useAsyncEffect from 'use-async-effect'
 
 import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
@@ -57,29 +58,34 @@ export function DatabaseNav() {
   }, [data])
   const handleListCollectionOfDatabases = useCallback(
     async (_databases: string[]) => {
-      _databases.forEach(async (_database) => {
-        const collections = await listCollections(_database)
-        const systemCollections = collections.filter((c) =>
-          c.startsWith('system.'),
-        )
-        dispatch(
-          actions.root.setCollectionsMap({
-            database: _database,
-            collections: [
-              ...systemCollections.sort(),
-              ..._.pullAll(collections.sort(), systemCollections),
-            ],
-          }),
-        )
-      })
+      // eslint-disable-next-line no-restricted-syntax
+      for (const _database of _databases) {
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const collections = await listCollections(_database)
+          const systemCollections = collections.filter((c) =>
+            c.startsWith('system.'),
+          )
+          dispatch(
+            actions.root.setCollectionsMap({
+              database: _database,
+              collections: [
+                ...systemCollections.sort(),
+                ..._.pullAll(collections.sort(), systemCollections),
+              ],
+            }),
+          )
+          // eslint-disable-next-line no-empty
+        } catch {}
+      }
     },
     [listCollections],
   )
-  useEffect(() => {
-    handleListCollectionOfDatabases(expandedDatabases)
+  useAsyncEffect(async () => {
+    await handleListCollectionOfDatabases(expandedDatabases)
   }, [expandedDatabases, handleListCollectionOfDatabases])
-  useEffect(() => {
-    handleListCollectionOfDatabases(databases)
+  useAsyncEffect(async () => {
+    await handleListCollectionOfDatabases(databases)
   }, [databases, handleListCollectionOfDatabases])
   const links = useMemo(
     () =>
