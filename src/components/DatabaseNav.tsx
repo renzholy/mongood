@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+
 import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import { SearchBox, Nav, getTheme } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -107,24 +109,34 @@ export function DatabaseNav() {
                     expandedDatabases.includes(_database) ||
                     (!!keyword && (databaseMatched || collectionMatched)),
                   links: collectionsMap[_database]
-                    ?.filter(
-                      (_collection) =>
-                        databaseMatched ||
-                        !keyword ||
-                        _collection.includes(keyword),
-                    )
-                    .map((_collection) => ({
-                      key: `${_database}${splitter}${_collection}`,
-                      name: _collection,
-                      title: _collection,
-                      url: '',
-                    })) || [
-                    {
-                      name: 'No Collection',
-                      url: '',
-                      disabled: true,
-                    },
-                  ],
+                    ? collectionsMap[_database].length
+                      ? collectionsMap[_database]
+                          .filter(
+                            (_collection) =>
+                              databaseMatched ||
+                              !keyword ||
+                              _collection.includes(keyword),
+                          )
+                          .map((_collection) => ({
+                            key: `${_database}${splitter}${_collection}`,
+                            name: _collection,
+                            title: _collection,
+                            url: '',
+                          }))
+                      : [
+                          {
+                            name: 'No Collection',
+                            url: '',
+                            disabled: true,
+                          },
+                        ]
+                    : [
+                        {
+                          name: '...',
+                          url: '',
+                          disabled: true,
+                        },
+                      ],
                 }
               }
               return undefined
