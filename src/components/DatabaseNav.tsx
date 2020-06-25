@@ -132,7 +132,7 @@ export function DatabaseNav() {
                         ]
                     : [
                         {
-                          name: '...',
+                          name: 'Loading',
                           url: '',
                           disabled: true,
                         },
