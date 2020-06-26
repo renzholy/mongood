@@ -22,10 +22,10 @@
   },
   "homepage": "https://github.com/RenzHoly/Mongood#readme",
   "dependencies": {
-    "@fluentui/react": "^7.121.2",
+    "@fluentui/react": "^7.121.3",
     "@monaco-editor/react": "^3.3.2",
     "@reduxjs/toolkit": "^1.4.0",
-    "@uifabric/react-cards": "^0.109.102",
+    "@uifabric/react-cards": "^0.109.103",
     "bson": "^4.0.4",
     "bytes": "^3.1.0",
     "normalize.css": "^8.0.1",
