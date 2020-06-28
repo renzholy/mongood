@@ -252,31 +252,6 @@ export function IndexCard(props: {
                   setIsOpen(true)
                 },
               },
-              {
-                key: '1',
-                text: 'Drop',
-                subMenuProps: {
-                  items: [
-                    {
-                      key: '2',
-                      text: 'Operation cannot rollback',
-                      style: { color: theme.palette.red },
-                      subMenuProps: {
-                        items: [
-                          {
-                            key: '3',
-                            text: `Drop ${props.value.name}`,
-                            style: { color: theme.palette.red },
-                            onClick() {
-                              handleDrop()
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
             ]}
           />
           <Text
