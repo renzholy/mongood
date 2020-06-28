@@ -11,7 +11,6 @@ import {
   Stack,
   HoverCard,
   HoverCardType,
-  ContextualMenu,
 } from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
@@ -198,16 +197,9 @@ export function IndexCard(props: {
     })
     props.onDrop()
   }, [database, collection, props.value])
-  const [target, setTarget] = useState<MouseEvent>()
-  const [isMenuHidden, setIsMenuHidden] = useState(true)
 
   return (
     <Card
-      onContextMenu={(ev) => {
-        setTarget(ev.nativeEvent)
-        setIsMenuHidden(false)
-        ev.preventDefault()
-      }}
       onDoubleClick={() => {
         setIsOpen(true)
       }}
@@ -236,23 +228,6 @@ export function IndexCard(props: {
             footer={
               <ActionButton text="Drop" danger={true} onClick={handleDrop} />
             }
-          />
-          <ContextualMenu
-            target={target}
-            hidden={isMenuHidden}
-            onDismiss={() => {
-              setIsMenuHidden(true)
-            }}
-            items={[
-              {
-                key: '0',
-                text: 'View',
-                onClick() {
-                  setIsMenuHidden(true)
-                  setIsOpen(true)
-                },
-              },
-            ]}
           />
           <Text
             variant="xLarge"
