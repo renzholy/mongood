@@ -4,7 +4,6 @@ import React, { useEffect, useState, useCallback } from 'react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import _ from 'lodash'
-import { ContextualMenu, getTheme } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
@@ -54,7 +53,6 @@ export function DocumentTable(props: { order?: string[] }) {
   }, [shouldRevalidate])
   const dispatch = useDispatch()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
-  const [isMenuHidden, setIsMenuHidden] = useState(true)
   const [invokedItem, setInvokedItem] = useState<{ [key: string]: MongoData }>()
   const [editedItem, setEditedItem] = useState<{ [key: string]: MongoData }>()
   const handleUpdate = useCallback(async () => {
@@ -76,8 +74,6 @@ export function DocumentTable(props: { order?: string[] }) {
     dispatch(actions.docs.setShouldRevalidate())
     setIsUpdateOpen(false)
   }, [database, collection, invokedItem])
-  const [target, setTarget] = useState<Event>()
-  const theme = getTheme()
 
   return (
     <>
@@ -101,52 +97,6 @@ export function DocumentTable(props: { order?: string[] }) {
           </>
         }
       />
-      <ContextualMenu
-        target={target as MouseEvent}
-        hidden={isMenuHidden}
-        onDismiss={() => {
-          setIsMenuHidden(true)
-        }}
-        items={[
-          {
-            key: '0',
-            text: 'View',
-            onClick() {
-              setIsMenuHidden(true)
-              setIsUpdateOpen(true)
-            },
-          },
-          {
-            key: '1',
-            text: 'Delete',
-            subMenuProps: {
-              items: [
-                {
-                  key: '2',
-                  text: 'Operation cannot rollback',
-                  style: { color: theme.palette.red },
-                  subMenuProps: {
-                    items: [
-                      {
-                        key: '3',
-                        text: `Delete ObjectId("${
-                          (invokedItem as {
-                            _id: { $oid: string }
-                          })?._id.$oid
-                        }")`,
-                        style: { color: theme.palette.red },
-                        onClick() {
-                          handleDelete()
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ]}
-      />
       <Table
         displayMode={displayMode}
         items={data?.cursor.firstBatch}
@@ -164,11 +114,6 @@ export function DocumentTable(props: { order?: string[] }) {
         onItemInvoked={(item) => {
           setInvokedItem(item)
           setIsUpdateOpen(true)
-        }}
-        onItemContextMenu={(item, _index, ev) => {
-          setInvokedItem(item)
-          setTarget(ev)
-          setIsMenuHidden(false)
         }}
       />
     </>
