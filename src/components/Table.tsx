@@ -27,6 +27,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
   order?: string[]
   onItemInvoked?(item: T): void
+  onItemContextMenu?(item?: T, index?: number, ev?: Event): void | boolean
   error: Error
   isValidating: boolean
 }) {
@@ -120,6 +121,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
               )}
               onRenderDetailsHeader={onRenderDetailsHeader}
               onItemInvoked={props.onItemInvoked}
+              onItemContextMenu={props.onItemContextMenu}
             />
           ) : null}
           {props.displayMode === DisplayMode.DOCUMENT ? (
@@ -140,6 +142,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
               onRenderItemColumn={(item) => <DocumentRow value={item} />}
               onRenderDetailsHeader={onRenderDetailsHeader}
               onItemInvoked={props.onItemInvoked}
+              onItemContextMenu={props.onItemContextMenu}
             />
           ) : null}
         </ScrollablePane>
