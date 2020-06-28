@@ -69,11 +69,8 @@ export function EditorModal<T extends object>(props: {
         <div
           style={{ flex: 1 }}
           onBlur={() => {
-            if (!props.onChange) {
-              return
-            }
             try {
-              props.onChange(parse(value.replace(/^return/, '')) as T)
+              props.onChange?.(parse(value.replace(/^return/, '')) as T)
               // eslint-disable-next-line no-empty
             } catch {}
           }}>

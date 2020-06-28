@@ -54,17 +54,16 @@ export function DocumentTable(props: { order?: string[] }) {
   const dispatch = useDispatch()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [invokedItem, setInvokedItem] = useState<{ [key: string]: MongoData }>()
+  const [editedItem, setEditedItem] = useState<{ [key: string]: MongoData }>()
   const handleUpdate = useCallback(async () => {
     await runCommand(connection, database!, {
       findAndModify: collection,
-      query: {
-        _id: (invokedItem as { _id: unknown })._id,
-      },
-      update: invokedItem,
+      query: { _id: (invokedItem as { _id: unknown })._id },
+      update: editedItem,
     })
     dispatch(actions.docs.setShouldRevalidate())
     setIsUpdateOpen(false)
-  }, [database, collection, invokedItem])
+  }, [database, collection, invokedItem, editedItem])
   const handleDelete = useCallback(async () => {
     await runCommand(connection, database!, {
       delete: collection,
@@ -78,9 +77,10 @@ export function DocumentTable(props: { order?: string[] }) {
 
   return (
     <>
-      <EditorModal
+      <EditorModal<{ [key: string]: MongoData }>
         title={stringify(invokedItem?._id)}
         value={invokedItem}
+        onChange={setEditedItem}
         isOpen={isUpdateOpen}
         onDismiss={() => {
           setIsUpdateOpen(false)
