@@ -24,6 +24,11 @@ monaco.init().then((_m) => {
   function ISODate(date: string): { $date: { $numberLong: string } }
 
   /**
+   * @param {number|string} date
+   */
+  function Date(date: number | string): { $date: { $numberLong: string } }
+
+  /**
     * @param {string} A high-precision decimal as string.
     */
   function NumberDecimal(num: string | number): { $numberDecimal: string }
