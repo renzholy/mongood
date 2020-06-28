@@ -9,7 +9,7 @@
     "analyze": "ANALYZE=1 npm run build",
     "test": "exit 0",
     "format": "prettier --config .prettierrc --write '**/*'",
-    "lint": "eslint --ext .ts,.tsx ./"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -22,10 +22,10 @@
   },
   "homepage": "https://github.com/RenzHoly/Mongood#readme",
   "dependencies": {
-    "@fluentui/react": "^7.121.2",
+    "@fluentui/react": "^7.121.4",
     "@monaco-editor/react": "^3.3.2",
     "@reduxjs/toolkit": "^1.4.0",
-    "@uifabric/react-cards": "^0.109.102",
+    "@uifabric/react-cards": "^0.109.104",
     "bson": "^4.0.4",
     "bytes": "^3.1.0",
     "normalize.css": "^8.0.1",
@@ -52,7 +52,7 @@
     "eslint": "^7.3.1",
     "eslint-config-airbnb-typescript": "^8.0.2",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.0",
@@ -63,7 +63,7 @@
     "monaco-editor": "^0.20.0",
     "prettier": "^2.0.5",
     "typescript": "^3.9.5",
-    "umi": "^3.2.5"
+    "umi": "^3.2.6"
   },
   "husky": {
     "hooks": {
