@@ -7,6 +7,11 @@ monaco.init().then((_m) => {
   _monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
     diagnosticCodesToIgnore: [1108],
   })
+  _monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+    noLib: true,
+    noResolve: true,
+    allowNonTsExtensions: true,
+  })
   _monaco.languages.typescript.typescriptDefaults.addExtraLib(`
   /**
     * @param {string} id Must be a 24 byte hex string.
@@ -45,64 +50,6 @@ monaco.init().then((_m) => {
    */
   function BinData(subType: number, base64: string): { $binary: { base64: string, subType: string } }
   `)
-  _monaco.languages.registerCompletionItemProvider('typescript', {
-    provideCompletionItems(model, position) {
-      const textUntilPosition = model.getValueInRange({
-        startLineNumber: 1,
-        startColumn: 1,
-        endLineNumber: position.lineNumber,
-        endColumn: position.column,
-      })
-      const match = textUntilPosition.match(
-        /"dependencies"\s*:\s*\{\s*("[^"]*"\s*:\s*"[^"]*"\s*,\s*)*([^"]*)?$/,
-      )
-      if (!match) {
-        return { suggestions: [] }
-      }
-      const word = model.getWordUntilPosition(position)
-      const range = {
-        startLineNumber: position.lineNumber,
-        endLineNumber: position.lineNumber,
-        startColumn: word.startColumn,
-        endColumn: word.endColumn,
-      }
-      return {
-        suggestions: [
-          {
-            label: '"lodash"',
-            kind: _monaco.languages.CompletionItemKind.Function,
-            documentation: 'The Lodash library exported as Node.js modules.',
-            insertText: '"lodash": "*"',
-            range,
-          },
-          {
-            label: '"express"',
-            kind: _monaco.languages.CompletionItemKind.Function,
-            documentation: 'Fast, unopinionated, minimalist web framework',
-            insertText: '"express": "*"',
-            range,
-          },
-          {
-            label: '"mkdirp"',
-            kind: _monaco.languages.CompletionItemKind.Function,
-            documentation: 'Recursively mkdir, like <code>mkdir -p</code>',
-            insertText: '"mkdirp": "*"',
-            range,
-          },
-          {
-            label: '"my-third-party-library"',
-            kind: _monaco.languages.CompletionItemKind.Function,
-            documentation: 'Describe your library here',
-            // eslint-disable-next-line no-template-curly-in-string
-            insertText: '"${1:my-third-party-library}": "${2:1.2.3}"',
-            insertTextRules:
-              _monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-            range,
-          },
-        ],
-      }
-    },
-  })
 })
 
 export async function colorize(
