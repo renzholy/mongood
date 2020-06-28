@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { Card } from '@uifabric/react-cards'
-import { Text, getTheme } from '@fluentui/react'
+import { Text, getTheme, ContextualMenu } from '@fluentui/react'
 import _ from 'lodash'
 
 import { SystemProfileDoc } from '@/types'
@@ -13,9 +13,16 @@ import { EditorModal } from './EditorModal'
 export function SystemProfileCard(props: { value: SystemProfileDoc }) {
   const theme = getTheme()
   const [isOpen, setIsOpen] = useState(false)
+  const [target, setTarget] = useState<MouseEvent>()
+  const [isMenuHidden, setIsMenuHidden] = useState(true)
 
   return (
     <Card
+      onContextMenu={(ev) => {
+        setTarget(ev.nativeEvent)
+        setIsMenuHidden(false)
+        ev.preventDefault()
+      }}
       onDoubleClick={() => {
         setIsOpen(true)
       }}
@@ -52,6 +59,23 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
             onDismiss={() => {
               setIsOpen(false)
             }}
+          />
+          <ContextualMenu
+            target={target}
+            hidden={isMenuHidden}
+            onDismiss={() => {
+              setIsMenuHidden(true)
+            }}
+            items={[
+              {
+                key: '0',
+                text: 'View',
+                onClick() {
+                  setIsMenuHidden(true)
+                  setIsOpen(true)
+                },
+              },
+            ]}
           />
           <Text
             variant="xLarge"
