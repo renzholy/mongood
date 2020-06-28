@@ -1,11 +1,16 @@
 import { monaco, ControlledEditor, Monaco } from '@monaco-editor/react'
 
-let _monaco: Monaco | undefined
+let _monaco: Monaco
 
 monaco.init().then((_m) => {
   _monaco = _m
   _monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
     diagnosticCodesToIgnore: [1108],
+  })
+  _monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+    noLib: true,
+    noResolve: true,
+    allowNonTsExtensions: true,
   })
   _monaco.languages.typescript.typescriptDefaults.addExtraLib(`
   /**
@@ -17,6 +22,11 @@ monaco.init().then((_m) => {
     * @param {string} date An ISO-8601 date string
     */
   function ISODate(date: string): { $date: { $numberLong: string } }
+
+  /**
+   * @param {number|string} date
+   */
+  function Date(date: number | string): { $date: { $numberLong: string } }
 
   /**
     * @param {string} A high-precision decimal as string.
