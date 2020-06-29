@@ -73,7 +73,10 @@ export default () => {
       ),
     { refreshInterval },
   )
-  const value = useMemo(() => (ns ? { ...filter, ns } : filter), [ns, filter])
+  const value = useMemo(() => (ns ? { ...filter, ns } : _.omit(filter, 'ns')), [
+    ns,
+    filter,
+  ])
   const [isOpen, setIsOpen] = useState(false)
   const [invokedItem, setInvokedItem] = useState<Data>()
   const [target, setTarget] = useState<MouseEvent>()
