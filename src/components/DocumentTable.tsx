@@ -14,7 +14,7 @@ import { DocumentContextualMenu } from './DocumentContextualMenu'
 
 type Data = { _id: MongoData; [key: string]: MongoData }
 
-export const DocumentTable = React.memo((props: { order?: string[] }) => {
+export const DocumentTable = React.memo(() => {
   const { connection, database, collection } = useSelector(
     (state) => state.root,
   )
@@ -137,15 +137,11 @@ export const DocumentTable = React.memo((props: { order?: string[] }) => {
       <Table
         displayMode={displayMode}
         items={data?.cursor.firstBatch}
-        order={
-          props.order || [
-            '_id',
-            ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),
-            ...Object.keys(index?.weights || {}).map(
-              (key) => key.split('.')[0],
-            ),
-          ]
-        }
+        order={[
+          '_id',
+          ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),
+          ...Object.keys(index?.weights || {}).map((key) => key.split('.')[0]),
+        ]}
         error={error}
         isValidating={isValidating}
         onItemInvoked={onItemInvoked}
