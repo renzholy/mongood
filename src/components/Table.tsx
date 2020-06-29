@@ -73,57 +73,6 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     ),
     [isValidating, theme],
   )
-  const renderTable = () => (
-    <>
-      {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
-        <DetailsList
-          columns={columns}
-          constrainMode={ConstrainMode.unconstrained}
-          layoutMode={DetailsListLayoutMode.justified}
-          items={items || []}
-          onRenderItemColumn={(item, _index, column) => (
-            <TableRow value={item} column={column} />
-          )}
-          onRenderDetailsHeader={onRenderDetailsHeader}
-          onItemInvoked={props.onItemInvoked}
-          onItemContextMenu={(item, _index, ev) => {
-            props.onItemContextMenu?.(ev as MouseEvent, item)
-          }}
-          selectionMode={
-            props.selection ? SelectionMode.multiple : SelectionMode.none
-          }
-          selection={props.selection}
-          enterModalSelectionOnTouch={true}
-        />
-      ) : null}
-      {props.displayMode === DisplayMode.DOCUMENT ? (
-        <DetailsList
-          columns={[
-            {
-              key: '',
-              name: 'Documents',
-              minWidth: 0,
-              isMultiline: true,
-            },
-          ]}
-          constrainMode={ConstrainMode.unconstrained}
-          layoutMode={DetailsListLayoutMode.justified}
-          items={items || []}
-          onRenderItemColumn={(item) => <DocumentRow value={item} />}
-          onRenderDetailsHeader={onRenderDetailsHeader}
-          onItemInvoked={props.onItemInvoked}
-          onItemContextMenu={(item, _index, ev) => {
-            props.onItemContextMenu?.(ev as MouseEvent, item)
-          }}
-          selectionMode={
-            props.selection ? SelectionMode.multiple : SelectionMode.none
-          }
-          selection={props.selection}
-          enterModalSelectionOnTouch={true}
-        />
-      ) : null}
-    </>
-  )
 
   if (error) {
     return (
@@ -153,13 +102,57 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             root: { maxWidth: '100%' },
             stickyBelow: { display: 'none' },
           }}>
-          {props.selection ? (
-            <MarqueeSelection selection={props.selection}>
-              {renderTable()}
-            </MarqueeSelection>
-          ) : (
-            renderTable()
-          )}
+          <MarqueeSelection
+            selection={props.selection!}
+            isEnabled={!!props.selection}>
+            {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
+              <DetailsList
+                columns={columns}
+                constrainMode={ConstrainMode.unconstrained}
+                layoutMode={DetailsListLayoutMode.justified}
+                items={items || []}
+                onRenderItemColumn={(item, _index, column) => (
+                  <TableRow value={item} column={column} />
+                )}
+                onRenderDetailsHeader={onRenderDetailsHeader}
+                onItemInvoked={props.onItemInvoked}
+                onItemContextMenu={(item, _index, ev) => {
+                  props.onItemContextMenu?.(ev as MouseEvent, item)
+                }}
+                selectionMode={
+                  props.selection ? SelectionMode.multiple : SelectionMode.none
+                }
+                selection={props.selection}
+                enterModalSelectionOnTouch={true}
+              />
+            ) : null}
+            {props.displayMode === DisplayMode.DOCUMENT ? (
+              <DetailsList
+                columns={[
+                  {
+                    key: '',
+                    name: 'Documents',
+                    minWidth: 0,
+                    isMultiline: true,
+                  },
+                ]}
+                constrainMode={ConstrainMode.unconstrained}
+                layoutMode={DetailsListLayoutMode.justified}
+                items={items || []}
+                onRenderItemColumn={(item) => <DocumentRow value={item} />}
+                onRenderDetailsHeader={onRenderDetailsHeader}
+                onItemInvoked={props.onItemInvoked}
+                onItemContextMenu={(item, _index, ev) => {
+                  props.onItemContextMenu?.(ev as MouseEvent, item)
+                }}
+                selectionMode={
+                  props.selection ? SelectionMode.multiple : SelectionMode.none
+                }
+                selection={props.selection}
+                enterModalSelectionOnTouch={true}
+              />
+            ) : null}
+          </MarqueeSelection>
         </ScrollablePane>
       )}
     </div>
