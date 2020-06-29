@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react'
-import { IconButton, Text, getTheme, Stack } from '@fluentui/react'
+import {
+  IconButton,
+  getTheme,
+  Stack,
+  CommandBarButton,
+  ContextualMenuItemType,
+} from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@/stores'
 import useSWR from 'swr'
@@ -37,18 +43,39 @@ export function SystemProfilePagination() {
 
   return (
     <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
-      <Text
+      <CommandBarButton
+        text={
+          count
+            ? `${skip + 1} ~ ${Math.min(
+                skip + limit,
+                count,
+              )} of ${Number.format(count)}`
+            : 'No Profile'
+        }
         style={{
-          marginLeft: 20,
-          marginRight: 20,
+          height: 32,
           color: theme.palette.neutralPrimary,
-        }}>
-        {count
-          ? `${skip + 1} ~ ${Math.min(skip + limit, count)} of ${Number.format(
-              count,
-            )}`
-          : 'No Profile'}
-      </Text>
+        }}
+        menuProps={{
+          items: [
+            {
+              key: '0',
+              itemType: ContextualMenuItemType.Section,
+              sectionProps: {
+                title: 'Page Size',
+                items: [25, 50, 100].map((l, i) => ({
+                  key: i.toString(),
+                  text: l.toString(),
+                  onClick() {
+                    dispatch(actions.docs.setLimit(l))
+                  },
+                })),
+              },
+            },
+          ],
+        }}
+        menuIconProps={{ hidden: true }}
+      />
       <IconButton
         iconProps={{ iconName: 'Back' }}
         disabled={skip <= 0}
