@@ -133,7 +133,7 @@ export function DocumentContextualMenu<
               items: [
                 {
                   key: '1-1',
-                  text: 'as JavaScript Code',
+                  text: 'as Mongo-Shell Data',
                   secondaryText: 'array',
                   onClick() {
                     window.navigator.clipboard.writeText(
@@ -145,7 +145,7 @@ export function DocumentContextualMenu<
                 },
                 {
                   key: '1-2',
-                  text: 'as JavaScript Code',
+                  text: 'as Mongo-Shell Data',
                   secondaryText: 'line',
                   onClick() {
                     window.navigator.clipboard.writeText(
