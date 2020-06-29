@@ -83,6 +83,9 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     (item) => <DocumentRow value={item} />,
     [],
   )
+  const getKey = useCallback((item) => {
+    return item?._id?.$oid || item._id
+  }, [])
 
   if (error) {
     return (
@@ -117,6 +120,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             isEnabled={!!props.selection}>
             {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
               <DetailsList
+                getKey={getKey}
                 columns={columns}
                 constrainMode={ConstrainMode.unconstrained}
                 layoutMode={DetailsListLayoutMode.justified}
@@ -132,10 +136,12 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
                 }
                 selection={props.selection}
                 enterModalSelectionOnTouch={true}
+                selectionPreservedOnEmptyClick={true}
               />
             ) : null}
             {props.displayMode === DisplayMode.DOCUMENT ? (
               <DetailsList
+                getKey={getKey}
                 columns={[
                   {
                     key: '',
@@ -158,6 +164,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
                 }
                 selection={props.selection}
                 enterModalSelectionOnTouch={true}
+                selectionPreservedOnEmptyClick={true}
               />
             ) : null}
           </MarqueeSelection>
