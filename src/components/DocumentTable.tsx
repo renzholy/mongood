@@ -133,10 +133,13 @@ export function DocumentTable(props: { order?: string[] }) {
           setInvokedItem(item)
           setIsUpdateOpen(true)
         }}
-        onItemContextMenu={(item, _index, ev) => {
-          setInvokedItem(item)
-          setTarget(ev)
-          setIsMenuHidden(false)
+        onItemContextMenu={(items, ev) => {
+          if (items.length === 1) {
+            const [item] = items
+            setInvokedItem(item)
+            setTarget(ev)
+            setIsMenuHidden(false)
+          }
         }}
       />
     </>

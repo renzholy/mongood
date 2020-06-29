@@ -29,7 +29,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
   order?: string[]
   onItemInvoked?(item: T): void
-  onItemContextMenu?(item?: T, index?: number, ev?: Event): void | boolean
+  onItemContextMenu?(items: T[], ev?: Event): void
   error: Error
   isValidating: boolean
 }) {
@@ -82,10 +82,13 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     ),
     [isValidating, theme],
   )
+  const [selectedItems, setSelectedItems] = useState<T[]>([])
   const selection = useMemo(
     () =>
       new Selection({
-        onSelectionChanged: console.log,
+        onSelectionChanged() {
+          setSelectedItems(selection.getSelection() as T[])
+        },
       }),
     [],
   )
@@ -130,7 +133,9 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
                 )}
                 onRenderDetailsHeader={onRenderDetailsHeader}
                 onItemInvoked={props.onItemInvoked}
-                onItemContextMenu={props.onItemContextMenu}
+                onItemContextMenu={(_item, _index, ev) => {
+                  props.onItemContextMenu?.(selectedItems, ev)
+                }}
                 selectionMode={SelectionMode.multiple}
                 selection={selection}
                 enterModalSelectionOnTouch={true}
@@ -153,7 +158,9 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
                 onRenderItemColumn={(item) => <DocumentRow value={item} />}
                 onRenderDetailsHeader={onRenderDetailsHeader}
                 onItemInvoked={props.onItemInvoked}
-                onItemContextMenu={props.onItemContextMenu}
+                onItemContextMenu={(_item, _index, ev) => {
+                  props.onItemContextMenu?.(selectedItems, ev)
+                }}
                 selectionMode={SelectionMode.multiple}
                 selection={selection}
                 enterModalSelectionOnTouch={true}
