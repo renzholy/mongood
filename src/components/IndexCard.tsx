@@ -134,6 +134,7 @@ export function IndexCard(props: {
   value: IndexSpecification
   onDrop(): void
   size: number
+  // eslint-disable-next-line react/no-unused-prop-types
   statDetail: WiredTigerData
 }) {
   const theme = getTheme()
