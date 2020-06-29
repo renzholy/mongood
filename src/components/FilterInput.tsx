@@ -1,4 +1,4 @@
-import { TextField, IIconProps } from '@fluentui/react'
+import { TextField, IIconProps, IconButton } from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
 
 import { parse, stringify } from '@/utils/mongo-shell-data'
@@ -25,32 +25,34 @@ export function FilterInput<T extends string | object | undefined>(props: {
   }, [value])
 
   return (
-    <TextField
-      autoFocus={props.autoFocus}
-      autoComplete="off"
-      autoCorrect="off"
-      autoCapitalize="off"
-      autoSave="off"
-      spellCheck={false}
-      styles={{
-        root: { flex: 1 },
-        prefix: { cursor: 'default' },
-      }}
-      disabled={props.disabled}
-      prefix={props.prefix}
-      iconProps={props.iconProps}
-      errorMessage={errorMessage}
-      value={value}
-      onBlur={handleChange}
-      onKeyDown={(ev) => {
-        if (ev.key === 'Enter') {
-          handleChange()
-        }
-      }}
-      onChange={(_ev, newValue) => {
-        setValue(newValue || '')
-        setErrorMessage(undefined)
-      }}
-    />
+    <div style={{ flex: 1, display: 'flex' }}>
+      <TextField
+        autoFocus={props.autoFocus}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        autoSave="off"
+        spellCheck={false}
+        styles={{
+          root: { flex: 1 },
+          prefix: { cursor: 'default' },
+        }}
+        disabled={props.disabled}
+        prefix={props.prefix}
+        errorMessage={errorMessage}
+        value={value}
+        onBlur={handleChange}
+        onKeyDown={(ev) => {
+          if (ev.key === 'Enter') {
+            handleChange()
+          }
+        }}
+        onChange={(_ev, newValue) => {
+          setValue(newValue || '')
+          setErrorMessage(undefined)
+        }}
+      />
+      <IconButton iconProps={props.iconProps} />
+    </div>
   )
 }
