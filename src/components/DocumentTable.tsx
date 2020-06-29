@@ -81,6 +81,23 @@ export function DocumentTable(props: { order?: string[] }) {
     [],
   )
   const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
+  const onItemInvoked = useCallback((item: Data) => {
+    setInvokedItem(item)
+    setIsUpdateOpen(true)
+  }, [])
+  const onItemContextMenu = useCallback(
+    (ev: MouseEvent) => {
+      if (selectedItems.length === 1) {
+        const [item] = selectedItems
+        setInvokedItem(item)
+      } else {
+        setInvokedItem(undefined)
+      }
+      setTarget(ev)
+      setIsMenuHidden(false)
+    },
+    [selectedItems],
+  )
 
   return (
     <>
@@ -131,20 +148,8 @@ export function DocumentTable(props: { order?: string[] }) {
         }
         error={error}
         isValidating={isValidating}
-        onItemInvoked={(item) => {
-          setInvokedItem(item)
-          setIsUpdateOpen(true)
-        }}
-        onItemContextMenu={(ev) => {
-          if (selectedItems.length === 1) {
-            const [item] = selectedItems
-            setInvokedItem(item)
-          } else {
-            setInvokedItem(undefined)
-          }
-          setTarget(ev)
-          setIsMenuHidden(false)
-        }}
+        onItemInvoked={onItemInvoked}
+        onItemContextMenu={onItemContextMenu}
         selection={selection}
       />
     </>
