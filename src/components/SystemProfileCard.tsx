@@ -70,6 +70,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
               {
                 key: '0',
                 text: 'View',
+                iconProps: { iconName: 'View' },
                 onClick() {
                   setIsMenuHidden(true)
                   setIsOpen(true)
