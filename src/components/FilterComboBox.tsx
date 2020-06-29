@@ -1,4 +1,4 @@
-import { IIconProps, ComboBox } from '@fluentui/react'
+import { IIconProps, ComboBox, IconButton } from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
 
 import { parse, stringify } from '@/utils/mongo-shell-data'
@@ -24,30 +24,36 @@ export function FilterComboBox<T extends string | object | undefined>(props: {
   }, [value])
 
   return (
-    <ComboBox
-      allowFreeform={true}
-      autoComplete="on"
-      autoCorrect="off"
-      autoCapitalize="off"
-      autoSave="off"
-      spellCheck={false}
-      styles={{
-        container: { flex: 1 },
-      }}
-      disabled={props.disabled}
-      label={props.label}
-      errorMessage={errorMessage}
-      text={value}
-      onBlur={handleChange}
-      onKeyDown={(ev) => {
-        if (ev.key === 'Enter') {
-          handleChange()
-        }
-      }}
-      onChange={(_ev, _option, _index, newValue) => {
-        setValue(newValue || '')
-        setErrorMessage(undefined)
-      }}
-    />
+    <div style={{ flex: 1, display: 'flex' }}>
+      <ComboBox
+        allowFreeform={true}
+        autoComplete="on"
+        autoCorrect="off"
+        autoCapitalize="off"
+        autoSave="off"
+        spellCheck={false}
+        styles={{ container: { flex: 1 } }}
+        disabled={props.disabled}
+        label={props.label}
+        errorMessage={errorMessage}
+        text={value}
+        onBlur={handleChange}
+        onKeyDown={(ev) => {
+          if (ev.key === 'Enter') {
+            handleChange()
+          }
+        }}
+        onChange={(_ev, _option, _index, newValue) => {
+          setValue(newValue || '')
+          setErrorMessage(undefined)
+        }}
+      />
+      <IconButton
+        iconProps={props.iconProps}
+        styles={{
+          root: { alignSelf: 'flex-end', marginLeft: 0, marginBottom: 4 },
+        }}
+      />
+    </div>
   )
 }
