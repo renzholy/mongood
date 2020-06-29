@@ -16,6 +16,7 @@ import {
   MarqueeSelection,
   Selection,
 } from '@fluentui/react'
+import _ from 'lodash'
 
 import { MongoData } from '@/utils/mongo-shell-data'
 import { DisplayMode } from '@/types.d'
@@ -178,4 +179,5 @@ export const Table = React.memo(
       </div>
     )
   },
+  _.isEqual,
 )

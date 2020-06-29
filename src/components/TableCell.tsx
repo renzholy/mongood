@@ -2,6 +2,7 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
+import _ from 'lodash'
 
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
 import { useColorize } from '@/hooks/use-colorize'
@@ -65,4 +66,4 @@ export const TableCell = React.memo((props: { value: MongoData }) => {
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
-})
+}, _.isEqual)

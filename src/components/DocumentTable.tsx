@@ -31,7 +31,7 @@ export const DocumentTable = React.memo(() => {
     database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
-        )}/${JSON.stringify(sort)}`
+        )}/${JSON.stringify(sort)}/${JSON.stringify(index)}`
       : null,
     () =>
       runCommand<{
