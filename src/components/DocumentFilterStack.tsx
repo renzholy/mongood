@@ -71,7 +71,7 @@ export function DocumentFilterStack() {
               root: {
                 color: disableSort
                   ? theme.palette.neutralTertiary
-                  : theme.palette.neutralSecondary,
+                  : theme.palette.themePrimary,
                 pointerEvents: 'unset',
                 cursor: disableSort ? 'not-allowed' : 'pointer',
               },
@@ -141,7 +141,14 @@ export function DocumentFilterStack() {
                 key as keyof typeof index.partialFilterExpression
               ]
             }
-            onChange={() => {}}
+            onChange={(value) => {
+              dispatch(
+                actions.docs.setFilter({
+                  ...filter,
+                  [key]: value,
+                }),
+              )
+            }}
           />
         )
       })}
