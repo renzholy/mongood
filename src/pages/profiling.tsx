@@ -9,14 +9,16 @@ import { runCommand } from '@/utils/fetcher'
 import { SystemProfileDoc } from '@/types'
 import { actions } from '@/stores'
 import { LargeMessage } from '@/components/LargeMessage'
-import { SystemProfilePagination } from '@/components/SystemProfilePagination'
 import { SystemProfileCard } from '@/components/SystemProfileCard'
+import { Pagination } from '@/components/Pagination'
 
 export default () => {
   const { connection, database, collection } = useSelector(
     (state) => state.root,
   )
-  const { filter, skip, limit } = useSelector((state) => state.docs)
+  const { filter, skip, limit, shouldRevalidate } = useSelector(
+    (state) => state.docs,
+  )
   const { data: profile, revalidate } = useSWR(`profile/${connection}`, () =>
     runCommand<{ was: number; slowms: number; sampleRate: number }>(
       connection,
@@ -86,6 +88,25 @@ export default () => {
     },
     [database],
   )
+  const { data: count } = useSWR(
+    database
+      ? `systemProfileCount/${connection}/${database}/${JSON.stringify(filter)}`
+      : null,
+    () =>
+      runCommand<{ n: number }>(connection, database!, {
+        count: 'system.profile',
+        query: filter,
+      }),
+  )
+  useEffect(() => {
+    dispatch(actions.docs.setCount(count?.n || 0))
+  }, [count])
+  useEffect(() => {
+    dispatch(actions.docs.resetPage())
+  }, [database, collection])
+  useEffect(() => {
+    revalidate()
+  }, [shouldRevalidate])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
@@ -142,7 +163,7 @@ export default () => {
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
-        <SystemProfilePagination />
+        <Pagination />
       </Stack>
       <Stack
         tokens={{ childrenGap: 20 }}

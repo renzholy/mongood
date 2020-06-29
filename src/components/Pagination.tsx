@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   IconButton,
   getTheme,
@@ -8,43 +8,13 @@ import {
 } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@/stores'
-import useSWR from 'swr'
-import _ from 'lodash'
 
-import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 
 export function Pagination() {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
-  const { index, filter, skip, limit, count, shouldRevalidate } = useSelector(
-    (state) => state.docs,
-  )
+  const { skip, limit, count } = useSelector((state) => state.docs)
   const dispatch = useDispatch()
   const theme = getTheme()
-  const { data, revalidate } = useSWR(
-    database && collection
-      ? `count/${connection}/${database}/${collection}/${JSON.stringify(
-          filter,
-        )}`
-      : null,
-    () =>
-      runCommand<{ n: number }>(connection, database!, {
-        count: collection,
-        query: filter,
-        hint: _.isEmpty(filter) ? undefined : index?.name,
-      }),
-  )
-  useEffect(() => {
-    dispatch(actions.docs.setCount(data?.n || 0))
-  }, [data])
-  useEffect(() => {
-    dispatch(actions.docs.resetPage())
-  }, [database, collection])
-  useEffect(() => {
-    revalidate()
-  }, [shouldRevalidate])
 
   return (
     <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>

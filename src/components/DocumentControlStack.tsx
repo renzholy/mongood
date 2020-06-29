@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import useSWR from 'swr'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { IndexSpecification } from 'mongodb'
+import _ from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
@@ -15,6 +16,9 @@ import { ActionButton } from './ActionButton'
 export function DocumentControlStack() {
   const { connection, database, collection } = useSelector(
     (state) => state.root,
+  )
+  const { displayMode, index, shouldRevalidate, filter } = useSelector(
+    (state) => state.docs,
   )
   const { data: indexes } = useSWR(
     database && collection
@@ -29,7 +33,6 @@ export function DocumentControlStack() {
         },
       ),
   )
-  const { displayMode, index } = useSelector((state) => state.docs)
   const dispatch = useDispatch()
   const [isInsertOpen, setIsInsertOpen] = useState(false)
   const [doc, setDoc] = useState({})
@@ -40,6 +43,28 @@ export function DocumentControlStack() {
     })
     dispatch(actions.docs.setShouldRevalidate())
   }, [database, collection, doc])
+  const { data: count, revalidate } = useSWR(
+    database && collection
+      ? `count/${connection}/${database}/${collection}/${JSON.stringify(
+          filter,
+        )}`
+      : null,
+    () =>
+      runCommand<{ n: number }>(connection, database!, {
+        count: collection,
+        query: filter,
+        hint: _.isEmpty(filter) ? undefined : index?.name,
+      }),
+  )
+  useEffect(() => {
+    dispatch(actions.docs.setCount(count?.n || 0))
+  }, [count])
+  useEffect(() => {
+    dispatch(actions.docs.resetPage())
+  }, [database, collection])
+  useEffect(() => {
+    revalidate()
+  }, [shouldRevalidate])
 
   return (
     <Stack
