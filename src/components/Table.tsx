@@ -73,6 +73,16 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     ),
     [isValidating, theme],
   )
+  const onRenderTableItemColumn = useCallback(
+    (item, _index, column) => (
+      <TableCell value={item[column?.key as keyof typeof item]} />
+    ),
+    [],
+  )
+  const onRenderDocumentItemColumn = useCallback(
+    (item) => <DocumentRow value={item} />,
+    [],
+  )
 
   if (error) {
     return (
@@ -111,9 +121,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
                 constrainMode={ConstrainMode.unconstrained}
                 layoutMode={DetailsListLayoutMode.justified}
                 items={items || []}
-                onRenderItemColumn={(item, _index, column) => (
-                  <TableCell value={item[column?.key as keyof typeof item]} />
-                )}
+                onRenderItemColumn={onRenderTableItemColumn}
                 onRenderDetailsHeader={onRenderDetailsHeader}
                 onItemInvoked={props.onItemInvoked}
                 onItemContextMenu={(item, _index, ev) => {
@@ -139,7 +147,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
                 constrainMode={ConstrainMode.unconstrained}
                 layoutMode={DetailsListLayoutMode.justified}
                 items={items || []}
-                onRenderItemColumn={(item) => <DocumentRow value={item} />}
+                onRenderItemColumn={onRenderDocumentItemColumn}
                 onRenderDetailsHeader={onRenderDetailsHeader}
                 onItemInvoked={props.onItemInvoked}
                 onItemContextMenu={(item, _index, ev) => {
