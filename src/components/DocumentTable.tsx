@@ -3,6 +3,7 @@ import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import _ from 'lodash'
 import { ContextualMenu } from '@fluentui/react'
+import csv, { Options } from 'csv-stringify'
 
 import { runCommand } from '@/utils/fetcher'
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
@@ -10,6 +11,16 @@ import { actions } from '@/stores'
 import { Table } from './Table'
 import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
+
+type Data = { [key: string]: MongoData }
+
+const cast: Options['cast'] = {
+  boolean: (value) => stringify(value),
+  date: (value) => stringify(value),
+  number: (value) => stringify(value),
+  object: (value) => stringify(value),
+  string: (value) => stringify(value),
+}
 
 export function DocumentTable(props: { order?: string[] }) {
   const { connection, database, collection } = useSelector(
@@ -32,7 +43,7 @@ export function DocumentTable(props: { order?: string[] }) {
       : null,
     () =>
       runCommand<{
-        cursor: { firstBatch: { [key: string]: MongoData }[] }
+        cursor: { firstBatch: Data[] }
       }>(
         connection,
         database!,
@@ -53,8 +64,8 @@ export function DocumentTable(props: { order?: string[] }) {
   const dispatch = useDispatch()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isMenuHidden, setIsMenuHidden] = useState(true)
-  const [invokedItem, setInvokedItem] = useState<{ [key: string]: MongoData }>()
-  const [editedItem, setEditedItem] = useState<{ [key: string]: MongoData }>()
+  const [invokedItem, setInvokedItem] = useState<Data>()
+  const [editedItem, setEditedItem] = useState<Data>()
   const handleUpdate = useCallback(async () => {
     await runCommand(connection, database!, {
       findAndModify: collection,
@@ -64,21 +75,26 @@ export function DocumentTable(props: { order?: string[] }) {
     dispatch(actions.docs.setShouldRevalidate())
     setIsUpdateOpen(false)
   }, [database, collection, invokedItem, editedItem])
-  const handleDelete = useCallback(async () => {
-    await runCommand(connection, database!, {
-      delete: collection,
-      deletes: [
-        { q: { _id: (invokedItem as { _id: unknown })._id }, limit: 1 },
-      ],
-    })
-    dispatch(actions.docs.setShouldRevalidate())
-    setIsUpdateOpen(false)
-  }, [database, collection, invokedItem])
+  const handleDelete = useCallback(
+    async (ids: MongoData[]) => {
+      await runCommand(connection, database!, {
+        delete: collection,
+        deletes: ids.map((id) => ({
+          q: { _id: id },
+          limit: 1,
+        })),
+      })
+      dispatch(actions.docs.setShouldRevalidate())
+      setIsUpdateOpen(false)
+    },
+    [database, collection, invokedItem],
+  )
   const [target, setTarget] = useState<Event>()
+  const [selectedItems, setSelectedItems] = useState<Data[]>([])
 
   return (
     <>
-      <EditorModal<{ [key: string]: MongoData }>
+      <EditorModal<Data>
         title={stringify(invokedItem?._id)}
         value={invokedItem}
         onChange={setEditedItem}
@@ -87,15 +103,12 @@ export function DocumentTable(props: { order?: string[] }) {
           setIsUpdateOpen(false)
         }}
         footer={
-          <>
-            <ActionButton
-              text="Update"
-              primary={true}
-              onClick={handleUpdate}
-              style={{ flexShrink: 0, marginLeft: 10 }}
-            />
-            <ActionButton text="Delete" danger={true} onClick={handleDelete} />
-          </>
+          <ActionButton
+            text="Update"
+            primary={true}
+            onClick={handleUpdate}
+            style={{ flexShrink: 0 }}
+          />
         }
       />
       <ContextualMenu
@@ -107,10 +120,99 @@ export function DocumentTable(props: { order?: string[] }) {
         items={[
           {
             key: '0',
-            text: 'View',
+            text: 'Edit',
+            disabled: !invokedItem,
+            iconProps: { iconName: 'PageEdit' },
             onClick() {
               setIsMenuHidden(true)
               setIsUpdateOpen(true)
+            },
+          },
+          {
+            key: '1',
+            text: 'Copy',
+            iconProps: { iconName: 'Copy' },
+            subMenuProps: {
+              items: [
+                {
+                  key: '1-1',
+                  text: 'as JavaScript Code',
+                  secondaryText: 'array',
+                  onClick() {
+                    window.navigator.clipboard.writeText(
+                      selectedItems.length === 1
+                        ? stringify(selectedItems[0], 2)
+                        : stringify(selectedItems, 2),
+                    )
+                  },
+                },
+                {
+                  key: '1-2',
+                  text: 'as JavaScript Code',
+                  secondaryText: 'line',
+                  onClick() {
+                    window.navigator.clipboard.writeText(
+                      selectedItems.map((item) => stringify(item)).join('\n'),
+                    )
+                  },
+                },
+                {
+                  key: '1-3',
+                  text: 'as Extended JSON (v2)',
+                  secondaryText: 'array',
+                  onClick() {
+                    window.navigator.clipboard.writeText(
+                      selectedItems.length === 1
+                        ? JSON.stringify(selectedItems[0], null, 2)
+                        : JSON.stringify(selectedItems, null, 2),
+                    )
+                  },
+                },
+                {
+                  key: '1-4',
+                  text: 'as Extended JSON (v2)',
+                  secondaryText: 'line',
+                  onClick() {
+                    window.navigator.clipboard.writeText(
+                      selectedItems
+                        .map((item) => JSON.stringify(item))
+                        .join('\n'),
+                    )
+                  },
+                },
+                {
+                  key: '1-5',
+                  text: 'as CSV',
+                  secondaryText: 'without header',
+                  onClick() {
+                    csv(selectedItems, { cast }, (_err, text) => {
+                      if (text) {
+                        window.navigator.clipboard.writeText(text)
+                      }
+                    })
+                  },
+                },
+                {
+                  key: '1-6',
+                  text: 'as CSV',
+                  secondaryText: 'with header',
+                  onClick() {
+                    csv(selectedItems, { header: true, cast }, (_err, text) => {
+                      if (text) {
+                        window.navigator.clipboard.writeText(text)
+                      }
+                    })
+                  },
+                },
+              ],
+            },
+          },
+          {
+            key: '2',
+            text: 'Delete',
+            iconProps: { iconName: 'Delete' },
+            onClick() {
+              handleDelete(selectedItems.map((item) => item._id))
             },
           },
         ]}
@@ -137,9 +239,12 @@ export function DocumentTable(props: { order?: string[] }) {
           if (items.length === 1) {
             const [item] = items
             setInvokedItem(item)
-            setTarget(ev)
-            setIsMenuHidden(false)
+          } else {
+            setInvokedItem(undefined)
           }
+          setSelectedItems(items)
+          setTarget(ev)
+          setIsMenuHidden(false)
         }}
       />
     </>

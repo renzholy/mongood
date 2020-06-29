@@ -28,6 +28,7 @@
     "@uifabric/react-cards": "^0.109.104",
     "bson": "^4.0.4",
     "bytes": "^3.1.0",
+    "csv-stringify": "^5.5.0",
     "normalize.css": "^8.0.1",
     "pretty-ms": "^7.0.0",
     "react": "^16.13.1",
