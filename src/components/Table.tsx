@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import {
   DetailsList,
   SelectionMode,
@@ -13,6 +13,8 @@ import {
   ProgressIndicator,
   getTheme,
   IColumn,
+  MarqueeSelection,
+  Selection,
 } from '@fluentui/react'
 import _ from 'lodash'
 
@@ -80,6 +82,13 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     ),
     [isValidating, theme],
   )
+  const selection = useMemo(
+    () =>
+      new Selection({
+        onSelectionChanged: console.log,
+      }),
+    [],
+  )
 
   if (error) {
     return (
@@ -109,42 +118,48 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             root: { maxWidth: '100%' },
             stickyBelow: { display: 'none' },
           }}>
-          {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
-            <DetailsList
-              columns={columns}
-              selectionMode={SelectionMode.none}
-              constrainMode={ConstrainMode.unconstrained}
-              layoutMode={DetailsListLayoutMode.justified}
-              items={items || []}
-              onRenderItemColumn={(item, _index, column) => (
-                <TableRow value={item} column={column} />
-              )}
-              onRenderDetailsHeader={onRenderDetailsHeader}
-              onItemInvoked={props.onItemInvoked}
-              onItemContextMenu={props.onItemContextMenu}
-            />
-          ) : null}
-          {props.displayMode === DisplayMode.DOCUMENT ? (
-            <DetailsList
-              columns={[
-                {
-                  key: '',
-                  name: '',
-                  minWidth: 0,
-                  isMultiline: true,
-                },
-              ]}
-              isHeaderVisible={false}
-              selectionMode={SelectionMode.none}
-              constrainMode={ConstrainMode.unconstrained}
-              layoutMode={DetailsListLayoutMode.justified}
-              items={items || []}
-              onRenderItemColumn={(item) => <DocumentRow value={item} />}
-              onRenderDetailsHeader={onRenderDetailsHeader}
-              onItemInvoked={props.onItemInvoked}
-              onItemContextMenu={props.onItemContextMenu}
-            />
-          ) : null}
+          <MarqueeSelection selection={selection}>
+            {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
+              <DetailsList
+                columns={columns}
+                constrainMode={ConstrainMode.unconstrained}
+                layoutMode={DetailsListLayoutMode.justified}
+                items={items || []}
+                onRenderItemColumn={(item, _index, column) => (
+                  <TableRow value={item} column={column} />
+                )}
+                onRenderDetailsHeader={onRenderDetailsHeader}
+                onItemInvoked={props.onItemInvoked}
+                onItemContextMenu={props.onItemContextMenu}
+                selectionMode={SelectionMode.multiple}
+                selection={selection}
+                enterModalSelectionOnTouch={true}
+              />
+            ) : null}
+            {props.displayMode === DisplayMode.DOCUMENT ? (
+              <DetailsList
+                columns={[
+                  {
+                    key: '',
+                    name: '',
+                    minWidth: 0,
+                    isMultiline: true,
+                  },
+                ]}
+                isHeaderVisible={false}
+                constrainMode={ConstrainMode.unconstrained}
+                layoutMode={DetailsListLayoutMode.justified}
+                items={items || []}
+                onRenderItemColumn={(item) => <DocumentRow value={item} />}
+                onRenderDetailsHeader={onRenderDetailsHeader}
+                onItemInvoked={props.onItemInvoked}
+                onItemContextMenu={props.onItemContextMenu}
+                selectionMode={SelectionMode.multiple}
+                selection={selection}
+                enterModalSelectionOnTouch={true}
+              />
+            ) : null}
+          </MarqueeSelection>
         </ScrollablePane>
       )}
     </div>
