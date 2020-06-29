@@ -1,5 +1,11 @@
 import React, { useState, useMemo } from 'react'
-import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
+import {
+  Stack,
+  DefaultButton,
+  IconButton,
+  Toggle,
+  ContextualMenu,
+} from '@fluentui/react'
 import _ from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
@@ -68,8 +74,10 @@ export default () => {
     { refreshInterval },
   )
   const value = useMemo(() => (ns ? { ...filter, ns } : filter), [ns, filter])
-  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const [invokedItem, setInvokedItem] = useState<Data>()
+  const [target, setTarget] = useState<MouseEvent>()
+  const [isMenuHidden, setIsMenuHidden] = useState(true)
 
   return (
     <>
@@ -93,10 +101,28 @@ export default () => {
           <EditorModal<Data>
             title="View Operation"
             value={invokedItem}
-            isOpen={isUpdateOpen}
+            isOpen={isOpen}
             onDismiss={() => {
-              setIsUpdateOpen(false)
+              setIsOpen(false)
             }}
+          />
+          <ContextualMenu
+            target={target}
+            hidden={isMenuHidden}
+            onDismiss={() => {
+              setIsMenuHidden(true)
+            }}
+            items={[
+              {
+                key: '0',
+                text: 'View',
+                iconProps: { iconName: 'View' },
+                onClick() {
+                  setIsMenuHidden(true)
+                  setIsOpen(true)
+                },
+              },
+            ]}
           />
         </Stack.Item>
         <Toggle
@@ -147,7 +173,12 @@ export default () => {
         ]}
         onItemInvoked={(item) => {
           setInvokedItem(item)
-          setIsUpdateOpen(true)
+          setIsOpen(true)
+        }}
+        onItemContextMenu={(ev, item) => {
+          setInvokedItem(item)
+          setTarget(ev)
+          setIsMenuHidden(false)
         }}
       />
     </>

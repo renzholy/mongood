@@ -68,7 +68,7 @@ export function DocumentTable(props: { order?: string[] }) {
     setIsUpdateOpen(false)
   }, [database, collection, invokedItem, editedItem])
 
-  const [target, setTarget] = useState<Event>()
+  const [target, setTarget] = useState<MouseEvent>()
   const [selectedItems, setSelectedItems] = useState<Data[]>([])
   const selection = useMemo(
     () =>
