@@ -20,7 +20,7 @@ import {
 import { MongoData } from '@/utils/mongo-shell-data'
 import { DisplayMode } from '@/types.d'
 import { calcHeaders } from '@/utils/table'
-import { TableRow } from './TableRow'
+import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'
 import { DocumentRow } from './DocumentRow'
 
@@ -112,7 +112,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
                 layoutMode={DetailsListLayoutMode.justified}
                 items={items || []}
                 onRenderItemColumn={(item, _index, column) => (
-                  <TableRow value={item} column={column} />
+                  <TableCell value={item[column?.key as keyof typeof item]} />
                 )}
                 onRenderDetailsHeader={onRenderDetailsHeader}
                 onItemInvoked={props.onItemInvoked}

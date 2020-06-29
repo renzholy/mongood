@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 
 import React, { useCallback, useMemo } from 'react'
-import { HoverCard, HoverCardType, IColumn, getTheme } from '@fluentui/react'
+import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
 import { useColorize } from '@/hooks/use-colorize'
@@ -29,17 +29,13 @@ function PlainCard(props: { value: MongoData }) {
   )
 }
 
-export function TableRow<T extends { [key: string]: MongoData }>(props: {
-  value: T
-  column?: IColumn
-}) {
+export function TableCell(props: { value: MongoData }) {
   const theme = getTheme()
-  const value = props.value[props.column?.key as keyof typeof props.value]
-  const str = useMemo(() => stringify(value), [value])
-  const html = useColorize(str.substr(0, 100))
+  const str = useMemo(() => stringify(props.value).substr(0, 50), [props.value])
+  const html = useColorize(str)
   const onRenderPlainCard = useCallback(() => {
-    return <PlainCard value={value} />
-  }, [value])
+    return <PlainCard value={props.value} />
+  }, [props.value])
 
   return str.length > 36 ? (
     <HoverCard
@@ -65,7 +61,6 @@ export function TableRow<T extends { [key: string]: MongoData }>(props: {
     <span
       style={{
         verticalAlign: 'middle',
-        cursor: 'default',
       }}
       dangerouslySetInnerHTML={{ __html: html }}
     />
