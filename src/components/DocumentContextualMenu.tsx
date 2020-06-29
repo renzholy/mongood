@@ -73,7 +73,10 @@ export function DocumentContextualMenu<
         hidden={hidden}
         dialogContentProps={{
           type: DialogType.normal,
-          title: 'Delete Document(s)',
+          title:
+            props.selectedItems.length === 1
+              ? 'Delete Document'
+              : `Delete ${props.selectedItems.length} Documents`,
           subText: props.selectedItems
             .map((item) => stringify(item._id))
             .join('\n'),
