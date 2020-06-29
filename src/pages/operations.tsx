@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 
 import { parse, MongoData } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
-import { FilterInput } from '@/components/FilterInput'
+import { FilterTextField } from '@/components/FilterTextField'
 import { Table } from '@/components/Table'
 
 const examples: { [key: string]: object } = {
@@ -111,7 +111,7 @@ export default () => {
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height: 52 } }}>
-        <FilterInput
+        <FilterTextField
           autoFocus={true}
           value={value}
           onChange={(_value) => {
