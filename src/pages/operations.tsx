@@ -8,6 +8,9 @@ import { parse, MongoData } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { FilterInput } from '@/components/FilterInput'
 import { Table } from '@/components/Table'
+import { EditorModal } from '@/components/EditorModal'
+
+type Data = { [key: string]: MongoData }
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -65,6 +68,8 @@ export default () => {
     { refreshInterval },
   )
   const value = useMemo(() => (ns ? { ...filter, ns } : filter), [ns, filter])
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
+  const [invokedItem, setInvokedItem] = useState<Data>()
 
   return (
     <>
@@ -85,7 +90,14 @@ export default () => {
           />
         ))}
         <Stack.Item grow={true}>
-          <div />
+          <EditorModal<Data>
+            title="View Operation"
+            value={invokedItem}
+            isOpen={isUpdateOpen}
+            onDismiss={() => {
+              setIsUpdateOpen(false)
+            }}
+          />
         </Stack.Item>
         <Toggle
           inlineLabel={true}
@@ -133,6 +145,10 @@ export default () => {
           'desc',
           'microsecs_running',
         ]}
+        onItemInvoked={(item) => {
+          setInvokedItem(item)
+          setIsUpdateOpen(true)
+        }}
       />
     </>
   )
