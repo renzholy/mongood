@@ -14,7 +14,7 @@ import { DocumentContextualMenu } from './DocumentContextualMenu'
 
 type Data = { _id: MongoData; [key: string]: MongoData }
 
-export function DocumentTable(props: { order?: string[] }) {
+export const DocumentTable = React.memo((props: { order?: string[] }) => {
   const { connection, database, collection } = useSelector(
     (state) => state.root,
   )
@@ -154,4 +154,4 @@ export function DocumentTable(props: { order?: string[] }) {
       />
     </>
   )
-}
+})
