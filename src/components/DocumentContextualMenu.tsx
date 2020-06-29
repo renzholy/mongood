@@ -228,7 +228,10 @@ export function DocumentContextualMenu<
           {
             key: '2',
             text: 'Delete',
-            iconProps: { iconName: 'Delete' },
+            iconProps: {
+              iconName: 'Delete',
+              styles: { root: { color: theme.palette.red } },
+            },
             onClick() {
               setHidden(false)
             },
