@@ -146,12 +146,11 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
                 columns={[
                   {
                     key: '',
-                    name: '',
+                    name: 'Documents',
                     minWidth: 0,
                     isMultiline: true,
                   },
                 ]}
-                isHeaderVisible={false}
                 constrainMode={ConstrainMode.unconstrained}
                 layoutMode={DetailsListLayoutMode.justified}
                 items={items || []}
