@@ -11,7 +11,7 @@ import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 
-type Data = { [key: string]: MongoData }
+type Data = { _id: MongoData; [key: string]: MongoData }
 
 export function DocumentTable(props: { order?: string[] }) {
   const { connection, database, collection } = useSelector(
@@ -95,12 +95,15 @@ export function DocumentTable(props: { order?: string[] }) {
           setIsMenuHidden(true)
         }}
         target={target as MouseEvent}
-        invokedItem={invokedItem}
         selectedItems={selectedItems}
-        onEdit={() => {
-          setIsMenuHidden(true)
-          setIsUpdateOpen(true)
-        }}
+        onEdit={
+          invokedItem
+            ? () => {
+                setIsMenuHidden(true)
+                setIsUpdateOpen(true)
+              }
+            : undefined
+        }
       />
       <Table
         displayMode={displayMode}
