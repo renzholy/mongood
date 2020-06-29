@@ -36,33 +36,38 @@ export function TableCell(props: { value: MongoData }) {
   const onRenderPlainCard = useCallback(() => {
     return <PlainCard value={props.value} />
   }, [props.value])
-
-  return str.length > 36 ? (
-    <HoverCard
-      type={HoverCardType.plain}
-      plainCardProps={{
-        onRenderPlainCard,
-      }}
-      styles={{
-        host: {
-          cursor: 'pointer',
-          color: theme.palette.neutralSecondary,
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-        },
-      }}
-      instantOpenOnClick={true}>
-      <span
-        style={{ verticalAlign: 'middle' }}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    </HoverCard>
-  ) : (
-    <span
-      style={{
-        verticalAlign: 'middle',
-      }}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+  const cell = useMemo(
+    () =>
+      str.length > 36 ? (
+        <HoverCard
+          type={HoverCardType.plain}
+          plainCardProps={{
+            onRenderPlainCard,
+          }}
+          styles={{
+            host: {
+              cursor: 'pointer',
+              color: theme.palette.neutralSecondary,
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+            },
+          }}
+          instantOpenOnClick={true}>
+          <span
+            style={{ verticalAlign: 'middle' }}
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        </HoverCard>
+      ) : (
+        <span
+          style={{
+            verticalAlign: 'middle',
+          }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      ),
+    [str, html, onRenderPlainCard],
   )
+
+  return cell
 }
