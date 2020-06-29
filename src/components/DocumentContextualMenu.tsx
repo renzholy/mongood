@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import {
   ContextualMenu,
   DialogType,
@@ -33,21 +33,35 @@ export function DocumentContextualMenu<T extends { _id: MongoData }>(props: {
     (state) => state.root,
   )
   const dispatch = useDispatch()
+  const [isSucceed, setIsSucceed] = useState<boolean>()
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [hidden, setHidden] = useState(true)
   const handleDelete = useCallback(
     async (ids: MongoData[]) => {
-      await runCommand(connection, database!, {
-        delete: collection,
-        deletes: ids.map((id) => ({
-          q: { _id: id },
-          limit: 1,
-        })),
-      })
-      dispatch(actions.docs.setShouldRevalidate())
+      try {
+        setIsDeleting(true)
+        await runCommand(connection, database!, {
+          delete: collection,
+          deletes: ids.map((id) => ({
+            q: { _id: id },
+            limit: 1,
+          })),
+        })
+        setIsSucceed(true)
+        setHidden(true)
+        dispatch(actions.docs.setShouldRevalidate())
+      } catch {
+        setIsSucceed(false)
+      } finally {
+        setIsDeleting(false)
+      }
     },
     [database, collection],
   )
   const theme = getTheme()
-  const [hidden, setHidden] = useState(true)
+  useEffect(() => {
+    setIsSucceed(undefined)
+  }, [props.target])
 
   return (
     <>
@@ -59,6 +73,7 @@ export function DocumentContextualMenu<T extends { _id: MongoData }>(props: {
           subText: props.selectedItems
             .map((item) => stringify(item._id))
             .join('\n'),
+          showCloseButton: true,
           onDismiss() {
             setHidden(true)
           },
@@ -77,9 +92,15 @@ export function DocumentContextualMenu<T extends { _id: MongoData }>(props: {
         }}>
         <DialogFooter>
           <DefaultButton
-            onClick={async () => {
-              await handleDelete(props.selectedItems.map((item) => item._id))
-              setHidden(true)
+            disabled={isDeleting}
+            iconProps={
+              {
+                true: { iconName: 'CheckMark' },
+                false: { iconName: 'Error' },
+              }[String(isSucceed) as 'true' | 'false']
+            }
+            onClick={() => {
+              handleDelete(props.selectedItems.map((item) => item._id))
             }}
             text="Delete"
           />
