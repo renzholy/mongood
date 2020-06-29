@@ -1,5 +1,5 @@
-/* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-danger */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-indent */
 
 import React, { useCallback, useState, useMemo } from 'react'
@@ -11,17 +11,14 @@ import {
   Stack,
   HoverCard,
   HoverCardType,
-  ContextualMenu,
 } from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
 import { IndexSpecification, WiredTigerData } from 'mongodb'
-import { useSelector } from 'react-redux'
 
 import { useColorize } from '@/hooks/use-colorize'
-import { runCommand } from '@/utils/fetcher'
 import { EditorModal } from './EditorModal'
-import { ActionButton } from './ActionButton'
+import { IndexContextualMenu } from './IndexContextualMenu'
 
 function IndexInfo(props: { value: IndexSpecification }) {
   const theme = getTheme()
@@ -185,19 +182,6 @@ export function IndexCard(props: {
     [props.value],
   )
   const [isOpen, setIsOpen] = useState(false)
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
-  const handleDrop = useCallback(async () => {
-    if (!database || !collection) {
-      return
-    }
-    await runCommand(connection, database, {
-      dropIndexes: collection,
-      index: props.value.name,
-    })
-    props.onDrop()
-  }, [database, collection, props.value])
   const [target, setTarget] = useState<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
 
@@ -233,26 +217,22 @@ export function IndexCard(props: {
             onDismiss={() => {
               setIsOpen(false)
             }}
-            footer={
-              <ActionButton text="Drop" danger={true} onClick={handleDrop} />
-            }
           />
-          <ContextualMenu
+          <IndexContextualMenu
+            value={props.value}
             target={target}
             hidden={isMenuHidden}
             onDismiss={() => {
               setIsMenuHidden(true)
             }}
-            items={[
-              {
-                key: '0',
-                text: 'View',
-                onClick() {
-                  setIsMenuHidden(true)
-                  setIsOpen(true)
-                },
-              },
-            ]}
+            onView={() => {
+              setIsMenuHidden(true)
+              setIsOpen(true)
+            }}
+            onDrop={() => {
+              setIsMenuHidden(true)
+              props.onDrop()
+            }}
           />
           <Text
             variant="xLarge"
