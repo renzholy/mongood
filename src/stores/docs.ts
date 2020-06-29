@@ -6,7 +6,7 @@ import { DisplayMode } from '@/types.d'
 export default createSlice({
   name: 'docs',
   initialState: {
-    displayMode: 0,
+    displayMode: DisplayMode.TABLE,
     filter: {},
     sort: {},
     skip: 0,
@@ -24,12 +24,9 @@ export default createSlice({
     shouldRevalidate: number
   },
   reducers: {
-    nextDisplayMode: (state) => ({
+    setDisplayMode: (state, { payload }: PayloadAction<DisplayMode>) => ({
       ...state,
-      displayMode: {
-        [DisplayMode.TABLE]: DisplayMode.DOCUMENT,
-        [DisplayMode.DOCUMENT]: DisplayMode.TABLE,
-      }[state.displayMode],
+      displayMode: payload,
     }),
     setIndex: (
       state,

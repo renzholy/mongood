@@ -95,8 +95,30 @@ export function DocumentControlStack() {
               [DisplayMode.DOCUMENT]: 'Documentation',
             }[displayMode],
           }}
-          onClick={() => {
-            dispatch(actions.docs.nextDisplayMode())
+          menuIconProps={{ hidden: true }}
+          menuProps={{
+            items: [
+              {
+                key: DisplayMode.TABLE,
+                text: 'Tabel view',
+                iconProps: {
+                  iconName: 'Table',
+                },
+                onClick() {
+                  dispatch(actions.docs.setDisplayMode(DisplayMode.TABLE))
+                },
+              },
+              {
+                key: DisplayMode.DOCUMENT,
+                text: 'Document view',
+                iconProps: {
+                  iconName: 'Documentation',
+                },
+                onClick() {
+                  dispatch(actions.docs.setDisplayMode(DisplayMode.DOCUMENT))
+                },
+              },
+            ],
           }}
         />
         <Pagination />

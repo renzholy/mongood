@@ -50,8 +50,8 @@ export type DbStats = {
 }
 
 export enum DisplayMode {
-  TABLE,
-  DOCUMENT,
+  TABLE = 'TABLE',
+  DOCUMENT = 'DOCUMENT',
 }
 
 export type ExecStats = {
