@@ -80,11 +80,12 @@ export function DocumentTable(props: { order?: string[] }) {
       }),
     [],
   )
+  const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
 
   return (
     <>
       <EditorModal<Data>
-        title={stringify(invokedItem?._id)}
+        title={title}
         value={invokedItem}
         onChange={setEditedItem}
         isOpen={isUpdateOpen}
