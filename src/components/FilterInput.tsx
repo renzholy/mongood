@@ -1,11 +1,12 @@
-import { IIconProps, ComboBox } from '@fluentui/react'
+import { TextField, IIconProps } from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
 
 import { parse, stringify } from '@/utils/mongo-shell-data'
 
-export function FilterComboBox<T extends string | object | undefined>(props: {
+export function FilterInput<T extends string | object | undefined>(props: {
+  autoFocus?: boolean
   disabled?: boolean
-  label?: string
+  prefix?: string
   iconProps?: IIconProps
   value?: T
   onChange(value: T): void
@@ -24,27 +25,29 @@ export function FilterComboBox<T extends string | object | undefined>(props: {
   }, [value])
 
   return (
-    <ComboBox
-      allowFreeform={true}
-      autoComplete="on"
+    <TextField
+      autoFocus={props.autoFocus}
+      autoComplete="off"
       autoCorrect="off"
       autoCapitalize="off"
       autoSave="off"
       spellCheck={false}
       styles={{
-        container: { flex: 1 },
+        root: { flex: 1 },
+        prefix: { cursor: 'default' },
       }}
       disabled={props.disabled}
-      label={props.label}
+      prefix={props.prefix}
+      iconProps={props.iconProps}
       errorMessage={errorMessage}
-      text={value}
+      value={value}
       onBlur={handleChange}
       onKeyDown={(ev) => {
         if (ev.key === 'Enter') {
           handleChange()
         }
       }}
-      onChange={(_ev, _option, _index, newValue) => {
+      onChange={(_ev, newValue) => {
         setValue(newValue || '')
         setErrorMessage(undefined)
       }}

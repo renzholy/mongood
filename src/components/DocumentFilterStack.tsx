@@ -7,10 +7,7 @@ import _ from 'lodash'
 
 import { actions } from '@/stores'
 import { nextSorter } from '@/utils/sorter'
-import { FilterTextField } from './FilterTextField'
-import { FilterComboBox } from './FilterComboBox'
-
-const height = 82
+import { FilterInput } from './FilterInput'
 
 export function DocumentFilterStack() {
   const dispatch = useDispatch()
@@ -26,7 +23,7 @@ export function DocumentFilterStack() {
   }, [database, collection])
 
   if (!database || !collection) {
-    return <div style={{ height }} />
+    return <div style={{ height: 52 }} />
   }
 
   if (!index) {
@@ -34,8 +31,8 @@ export function DocumentFilterStack() {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height } }}>
-        <FilterTextField
+        styles={{ root: { height: 52 } }}>
+        <FilterInput
           autoFocus={true}
           value={filter}
           onChange={(value) => {
@@ -54,9 +51,9 @@ export function DocumentFilterStack() {
     <Stack
       horizontal={true}
       tokens={{ childrenGap: 10, padding: 10 }}
-      styles={{ root: { height } }}>
+      styles={{ root: { height: 52 } }}>
       {'textIndexVersion' in index ? (
-        <FilterTextField<string>
+        <FilterInput<string>
           autoFocus={true}
           prefix="Text Search"
           onChange={(value) => {
@@ -92,10 +89,11 @@ export function DocumentFilterStack() {
             ]
           ) {
             return (
-              <FilterComboBox
+              <FilterInput
                 key={key}
+                autoFocus={i === 0}
                 disabled={disableFilter}
-                label={`${key}:`}
+                prefix={`${key}:`}
                 iconProps={iconProps}
                 value={
                   index.partialFilterExpression[
@@ -114,10 +112,11 @@ export function DocumentFilterStack() {
             )
           }
           return (
-            <FilterComboBox
+            <FilterInput
               key={key}
+              autoFocus={i === 0}
               disabled={disableFilter}
-              label={`${key}:`}
+              prefix={`${key}:`}
               iconProps={iconProps}
               onChange={(value) => {
                 dispatch(
@@ -133,10 +132,10 @@ export function DocumentFilterStack() {
       )}
       {extraPartialKeys.map((key) => {
         return (
-          <FilterComboBox
+          <FilterInput
             key={key}
             disabled={true}
-            label={`${key}:`}
+            prefix={`${key}:`}
             value={
               index.partialFilterExpression?.[
                 key as keyof typeof index.partialFilterExpression
