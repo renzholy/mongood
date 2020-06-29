@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import _ from 'lodash'
-import { ContextualMenu, getTheme } from '@fluentui/react'
+import { ContextualMenu, getTheme, IContextualMenuItem } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
@@ -78,6 +78,48 @@ export function DocumentTable(props: { order?: string[] }) {
   }, [database, collection, invokedItem])
   const [target, setTarget] = useState<Event>()
   const theme = getTheme()
+  const items = useMemo<IContextualMenuItem[]>(
+    () => [
+      {
+        key: '0',
+        text: 'View',
+        onClick() {
+          setIsMenuHidden(true)
+          setIsUpdateOpen(true)
+        },
+      },
+      {
+        key: '1',
+        text: 'Delete',
+        subMenuProps: {
+          items: [
+            {
+              key: '2',
+              text: 'Operation cannot rollback',
+              style: { color: theme.palette.red },
+              subMenuProps: {
+                items: [
+                  {
+                    key: '3',
+                    text: `Delete ${stringify(
+                      (invokedItem as {
+                        _id: MongoData
+                      })?._id,
+                    )}`,
+                    style: { color: theme.palette.red },
+                    onClick() {
+                      handleDelete()
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+    [handleDelete, theme],
+  )
 
   return (
     <>
@@ -107,45 +149,7 @@ export function DocumentTable(props: { order?: string[] }) {
         onDismiss={() => {
           setIsMenuHidden(true)
         }}
-        items={[
-          {
-            key: '0',
-            text: 'View',
-            onClick() {
-              setIsMenuHidden(true)
-              setIsUpdateOpen(true)
-            },
-          },
-          {
-            key: '1',
-            text: 'Delete',
-            subMenuProps: {
-              items: [
-                {
-                  key: '2',
-                  text: 'Operation cannot rollback',
-                  style: { color: theme.palette.red },
-                  subMenuProps: {
-                    items: [
-                      {
-                        key: '3',
-                        text: `Delete ObjectId("${
-                          (invokedItem as {
-                            _id: { $oid: string }
-                          })?._id.$oid
-                        }")`,
-                        style: { color: theme.palette.red },
-                        onClick() {
-                          handleDelete()
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ]}
+        items={items}
       />
       <Table
         displayMode={displayMode}
