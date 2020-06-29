@@ -16,10 +16,10 @@ import {
   MarqueeSelection,
   Selection,
 } from '@fluentui/react'
-import _ from 'lodash'
 
 import { MongoData } from '@/utils/mongo-shell-data'
 import { DisplayMode } from '@/types.d'
+import { calcHeaders } from '@/utils/table'
 import { TableRow } from './TableRow'
 import { LargeMessage } from './LargeMessage'
 import { DocumentRow } from './DocumentRow'
@@ -37,25 +37,15 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   const [columns, setColumns] = useState<IColumn[]>([])
   const { items, error, isValidating } = props
   useEffect(() => {
-    // calc columns order
-    const keys: { [key: string]: number } = {}
-    props.items?.forEach((item) => {
-      Object.keys(item).forEach((key) => {
-        if (!keys[key] && props.order) {
-          const index = props.order.indexOf(key)
-          keys[key] = index >= 0 ? (props.order.length - index) * 10 : 0
-        }
-        keys[key] += 1
-      })
-    })
+    if (!props.items) {
+      return
+    }
     setColumns(
-      _.sortBy(Object.entries(keys), (k) => k[1])
-        .reverse()
-        .map(([key]) => ({
-          key,
-          name: key,
-          minWidth: 240,
-        })),
+      calcHeaders(props.items, props.order).map((key) => ({
+        key,
+        name: key,
+        minWidth: 240,
+      })),
     )
   }, [props.items, props.order])
   const onRenderDetailsHeader = useCallback(

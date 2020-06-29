@@ -8,11 +8,13 @@ import {
   DefaultButton,
 } from '@fluentui/react'
 import csv, { Options } from 'csv-stringify'
+import table from 'markdown-table'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { stringify, MongoData } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
+import { calcHeaders } from '@/utils/table'
 
 const cast: Options['cast'] = {
   boolean: (value) => stringify(value),
@@ -22,7 +24,9 @@ const cast: Options['cast'] = {
   string: (value) => stringify(value),
 }
 
-export function DocumentContextualMenu<T extends { _id: MongoData }>(props: {
+export function DocumentContextualMenu<
+  T extends { _id: MongoData; [key: string]: MongoData }
+>(props: {
   hidden: boolean
   onDismiss(): void
   target?: MouseEvent
@@ -197,6 +201,21 @@ export function DocumentContextualMenu<T extends { _id: MongoData }>(props: {
                           window.navigator.clipboard.writeText(text)
                         }
                       },
+                    )
+                  },
+                },
+                {
+                  key: '1-7',
+                  text: 'as Markdown Table',
+                  onClick() {
+                    const headers = calcHeaders(props.selectedItems)
+                    window.navigator.clipboard.writeText(
+                      table([
+                        headers,
+                        ...props.selectedItems.map((item) =>
+                          headers.map((header) => stringify(item[header])),
+                        ),
+                      ]),
                     )
                   },
                 },
