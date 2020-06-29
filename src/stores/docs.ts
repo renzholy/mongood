@@ -58,6 +58,10 @@ export default createSlice({
       ...state,
       skip: Math.min(state.skip + state.limit, state.count),
     }),
+    setLimit: (state, { payload }: PayloadAction<number>) => ({
+      ...state,
+      limit: payload,
+    }),
     setCount: (state, { payload }: PayloadAction<number>) => ({
       ...state,
       count: payload,
