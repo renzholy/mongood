@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   DetailsList,
   SelectionMode,
@@ -29,7 +29,8 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   items?: T[]
   order?: string[]
   onItemInvoked?(item: T): void
-  onItemContextMenu?(items: T[], ev?: Event): void
+  onItemContextMenu?(ev?: Event): void
+  selection?: Selection
   error: Error
   isValidating: boolean
 }) {
@@ -72,15 +73,56 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     ),
     [isValidating, theme],
   )
-  const [selectedItems, setSelectedItems] = useState<T[]>([])
-  const selection = useMemo(
-    () =>
-      new Selection({
-        onSelectionChanged() {
-          setSelectedItems(selection.getSelection() as T[])
-        },
-      }),
-    [],
+  const renderTable = () => (
+    <>
+      {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
+        <DetailsList
+          columns={columns}
+          constrainMode={ConstrainMode.unconstrained}
+          layoutMode={DetailsListLayoutMode.justified}
+          items={items || []}
+          onRenderItemColumn={(item, _index, column) => (
+            <TableRow value={item} column={column} />
+          )}
+          onRenderDetailsHeader={onRenderDetailsHeader}
+          onItemInvoked={props.onItemInvoked}
+          onItemContextMenu={(_item, _index, ev) => {
+            props.onItemContextMenu?.(ev)
+          }}
+          selectionMode={
+            props.selection ? SelectionMode.multiple : SelectionMode.none
+          }
+          selection={props.selection}
+          enterModalSelectionOnTouch={true}
+        />
+      ) : null}
+      {props.displayMode === DisplayMode.DOCUMENT ? (
+        <DetailsList
+          columns={[
+            {
+              key: '',
+              name: 'Documents',
+              minWidth: 0,
+              isMultiline: true,
+            },
+          ]}
+          constrainMode={ConstrainMode.unconstrained}
+          layoutMode={DetailsListLayoutMode.justified}
+          items={items || []}
+          onRenderItemColumn={(item) => <DocumentRow value={item} />}
+          onRenderDetailsHeader={onRenderDetailsHeader}
+          onItemInvoked={props.onItemInvoked}
+          onItemContextMenu={(_item, _index, ev) => {
+            props.onItemContextMenu?.(ev)
+          }}
+          selectionMode={
+            props.selection ? SelectionMode.multiple : SelectionMode.none
+          }
+          selection={props.selection}
+          enterModalSelectionOnTouch={true}
+        />
+      ) : null}
+    </>
   )
 
   if (error) {
@@ -111,51 +153,13 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             root: { maxWidth: '100%' },
             stickyBelow: { display: 'none' },
           }}>
-          <MarqueeSelection selection={selection}>
-            {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
-              <DetailsList
-                columns={columns}
-                constrainMode={ConstrainMode.unconstrained}
-                layoutMode={DetailsListLayoutMode.justified}
-                items={items || []}
-                onRenderItemColumn={(item, _index, column) => (
-                  <TableRow value={item} column={column} />
-                )}
-                onRenderDetailsHeader={onRenderDetailsHeader}
-                onItemInvoked={props.onItemInvoked}
-                onItemContextMenu={(_item, _index, ev) => {
-                  props.onItemContextMenu?.(selectedItems, ev)
-                }}
-                selectionMode={SelectionMode.multiple}
-                selection={selection}
-                enterModalSelectionOnTouch={true}
-              />
-            ) : null}
-            {props.displayMode === DisplayMode.DOCUMENT ? (
-              <DetailsList
-                columns={[
-                  {
-                    key: '',
-                    name: 'Documents',
-                    minWidth: 0,
-                    isMultiline: true,
-                  },
-                ]}
-                constrainMode={ConstrainMode.unconstrained}
-                layoutMode={DetailsListLayoutMode.justified}
-                items={items || []}
-                onRenderItemColumn={(item) => <DocumentRow value={item} />}
-                onRenderDetailsHeader={onRenderDetailsHeader}
-                onItemInvoked={props.onItemInvoked}
-                onItemContextMenu={(_item, _index, ev) => {
-                  props.onItemContextMenu?.(selectedItems, ev)
-                }}
-                selectionMode={SelectionMode.multiple}
-                selection={selection}
-                enterModalSelectionOnTouch={true}
-              />
-            ) : null}
-          </MarqueeSelection>
+          {props.selection ? (
+            <MarqueeSelection selection={props.selection}>
+              {renderTable()}
+            </MarqueeSelection>
+          ) : (
+            renderTable()
+          )}
         </ScrollablePane>
       )}
     </div>

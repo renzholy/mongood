@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import _ from 'lodash'
+import { Selection } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { MongoData, stringify } from '@/utils/mongo-shell-data'
@@ -69,6 +70,15 @@ export function DocumentTable(props: { order?: string[] }) {
 
   const [target, setTarget] = useState<Event>()
   const [selectedItems, setSelectedItems] = useState<Data[]>([])
+  const selection = useMemo(
+    () =>
+      new Selection({
+        onSelectionChanged() {
+          setSelectedItems(selection.getSelection() as Data[])
+        },
+      }),
+    [],
+  )
 
   return (
     <>
@@ -123,17 +133,17 @@ export function DocumentTable(props: { order?: string[] }) {
           setInvokedItem(item)
           setIsUpdateOpen(true)
         }}
-        onItemContextMenu={(items, ev) => {
-          if (items.length === 1) {
-            const [item] = items
+        onItemContextMenu={(ev) => {
+          if (selectedItems.length === 1) {
+            const [item] = selectedItems
             setInvokedItem(item)
           } else {
             setInvokedItem(undefined)
           }
-          setSelectedItems(items)
           setTarget(ev)
           setIsMenuHidden(false)
         }}
+        selection={selection}
       />
     </>
   )
