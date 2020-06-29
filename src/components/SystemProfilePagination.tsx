@@ -57,6 +57,7 @@ export function SystemProfilePagination() {
           color: theme.palette.neutralPrimary,
         }}
         menuProps={{
+          useTargetWidth: true,
           items: [
             {
               key: '0',
