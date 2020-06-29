@@ -7,8 +7,8 @@ import {
   ContextualMenuItemType,
 } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
-import { actions } from '@/stores'
 
+import { actions } from '@/stores'
 import { Number } from '@/utils/formatter'
 
 export function Pagination() {
@@ -32,7 +32,6 @@ export function Pagination() {
           color: theme.palette.neutralPrimary,
         }}
         menuProps={{
-          useTargetWidth: true,
           items: [
             {
               key: '0',

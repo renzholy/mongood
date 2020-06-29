@@ -78,7 +78,7 @@ export function DocumentContextualMenu<
               ? 'Delete Document'
               : `Delete ${props.selectedItems.length} Documents`,
           subText: props.selectedItems
-            .map((item) => stringify(item._id))
+            .map((item) => (hidden ? '' : stringify(item._id)))
             .join('\n'),
           showCloseButton: true,
           onDismiss() {

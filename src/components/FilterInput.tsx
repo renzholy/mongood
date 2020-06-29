@@ -52,7 +52,7 @@ export function FilterInput<T extends string | object | undefined>(props: {
           setErrorMessage(undefined)
         }}
       />
-      <IconButton iconProps={props.iconProps} />
+      {props.iconProps ? <IconButton iconProps={props.iconProps} /> : null}
     </div>
   )
 }

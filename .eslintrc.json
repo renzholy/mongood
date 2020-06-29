@@ -20,6 +20,7 @@
     "react/jsx-curly-newline": "off",
     "react/jsx-one-expression-per-line": "off",
     "react/jsx-wrap-multilines": "off",
+    "react/require-default-props": "off",
     "no-underscore-dangle": "off",
     "@typescript-eslint/naming-convention": "off"
   }

@@ -14,7 +14,7 @@ import { DocumentContextualMenu } from './DocumentContextualMenu'
 
 type Data = { _id: MongoData; [key: string]: MongoData }
 
-export function DocumentTable(props: { order?: string[] }) {
+export const DocumentTable = React.memo(() => {
   const { connection, database, collection } = useSelector(
     (state) => state.root,
   )
@@ -31,7 +31,7 @@ export function DocumentTable(props: { order?: string[] }) {
     database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
-        )}/${JSON.stringify(sort)}`
+        )}/${JSON.stringify(sort)}/${JSON.stringify(index)}`
       : null,
     () =>
       runCommand<{
@@ -49,6 +49,7 @@ export function DocumentTable(props: { order?: string[] }) {
         },
         { canonical: true },
       ),
+    { revalidateOnFocus: false },
   )
   useEffect(() => {
     revalidate()
@@ -79,11 +80,29 @@ export function DocumentTable(props: { order?: string[] }) {
       }),
     [],
   )
+  const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
+  const onItemInvoked = useCallback((item: Data) => {
+    setInvokedItem(item)
+    setIsUpdateOpen(true)
+  }, [])
+  const onItemContextMenu = useCallback(
+    (ev: MouseEvent) => {
+      if (selectedItems.length === 1) {
+        const [item] = selectedItems
+        setInvokedItem(item)
+      } else {
+        setInvokedItem(undefined)
+      }
+      setTarget(ev)
+      setIsMenuHidden(false)
+    },
+    [selectedItems],
+  )
 
   return (
     <>
       <EditorModal<Data>
-        title={stringify(invokedItem?._id)}
+        title={title}
         value={invokedItem}
         onChange={setEditedItem}
         isOpen={isUpdateOpen}
@@ -118,33 +137,17 @@ export function DocumentTable(props: { order?: string[] }) {
       <Table
         displayMode={displayMode}
         items={data?.cursor.firstBatch}
-        order={
-          props.order || [
-            '_id',
-            ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),
-            ...Object.keys(index?.weights || {}).map(
-              (key) => key.split('.')[0],
-            ),
-          ]
-        }
+        order={[
+          '_id',
+          ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),
+          ...Object.keys(index?.weights || {}).map((key) => key.split('.')[0]),
+        ]}
         error={error}
         isValidating={isValidating}
-        onItemInvoked={(item) => {
-          setInvokedItem(item)
-          setIsUpdateOpen(true)
-        }}
-        onItemContextMenu={(ev) => {
-          if (selectedItems.length === 1) {
-            const [item] = selectedItems
-            setInvokedItem(item)
-          } else {
-            setInvokedItem(undefined)
-          }
-          setTarget(ev)
-          setIsMenuHidden(false)
-        }}
+        onItemInvoked={onItemInvoked}
+        onItemContextMenu={onItemContextMenu}
         selection={selection}
       />
     </>
   )
-}
+})
