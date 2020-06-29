@@ -12,12 +12,12 @@ export function Pagination() {
   const { connection, database, collection } = useSelector(
     (state) => state.root,
   )
-  const { index, filter, skip, limit, count } = useSelector(
+  const { index, filter, skip, limit, count, shouldRevalidate } = useSelector(
     (state) => state.docs,
   )
   const dispatch = useDispatch()
   const theme = getTheme()
-  const { data } = useSWR(
+  const { data, revalidate } = useSWR(
     database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(
           filter,
@@ -36,6 +36,9 @@ export function Pagination() {
   useEffect(() => {
     dispatch(actions.docs.resetPage())
   }, [database, collection])
+  useEffect(() => {
+    revalidate()
+  }, [shouldRevalidate])
 
   return (
     <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
