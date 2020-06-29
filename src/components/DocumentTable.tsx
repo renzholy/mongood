@@ -49,7 +49,7 @@ export function DocumentTable(props: { order?: string[] }) {
         },
         { canonical: true },
       ),
-    { revalidateOnMount: false },
+    { revalidateOnFocus: false },
   )
   useEffect(() => {
     revalidate()

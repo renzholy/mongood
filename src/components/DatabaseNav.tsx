@@ -22,14 +22,17 @@ export function DatabaseNav() {
     collectionsMap,
   } = useSelector((state) => state.root)
   const [keyword, setKeyword] = useState('')
-  const { data } = useSWR(`listDatabases/${connection}`, () =>
-    runCommand<{
-      databases: {
-        empty: boolean
-        name: string
-        sizeOnDisk: number
-      }[]
-    }>(connection, 'admin', { listDatabases: 1 }),
+  const { data } = useSWR(
+    `listDatabases/${connection}`,
+    () =>
+      runCommand<{
+        databases: {
+          empty: boolean
+          name: string
+          sizeOnDisk: number
+        }[]
+      }>(connection, 'admin', { listDatabases: 1 }),
+    { revalidateOnFocus: false },
   )
   const dispatch = useDispatch()
   const listCollections = useCallback(
