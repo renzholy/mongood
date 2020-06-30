@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import { CollStats, IndexSpecification } from 'mongodb'
+import type { CollStats, IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
 import { LargeMessage } from '@/components/LargeMessage'

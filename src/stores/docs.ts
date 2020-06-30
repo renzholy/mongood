@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IndexSpecification, FilterQuery } from 'mongodb'
+import type { IndexSpecification, FilterQuery } from 'mongodb'
 
 import { DisplayMode } from '@/types.d'
 

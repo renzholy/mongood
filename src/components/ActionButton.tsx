@@ -12,7 +12,6 @@ export function ActionButton(props: {
   text?: string
   disabled?: boolean
   primary?: boolean
-  danger?: boolean
   onClick(): Promise<void>
   style?: IStyle
 }) {
@@ -21,7 +20,6 @@ export function ActionButton(props: {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [succeed, setSucceed] = useState(false)
-
   const handleClick = useCallback(async () => {
     setLoading(true)
     try {
@@ -41,29 +39,6 @@ export function ActionButton(props: {
       }, 1000)
     }
   }, [succeed])
-  const menuProps = props.danger
-    ? {
-        items: [
-          {
-            key: '1',
-            text: 'Operation cannot rollback',
-            style: { color: theme.palette.red },
-            subMenuProps: {
-              items: [
-                {
-                  key: '2',
-                  text: props.text,
-                  style: { color: theme.palette.red },
-                  onClick() {
-                    handleClick()
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      }
-    : undefined
 
   return (
     <div>
@@ -99,11 +74,10 @@ export function ActionButton(props: {
         </DialogFooter>
       </Dialog>
       <DefaultButton
-        menuProps={menuProps}
         text={props.text}
         disabled={succeed || props.disabled || loading}
         primary={props.primary}
-        onClick={props.danger ? undefined : handleClick}
+        onClick={handleClick}
         styles={{ root: props.style }}
         iconProps={succeed ? { iconName: 'CheckMark' } : {}}
       />

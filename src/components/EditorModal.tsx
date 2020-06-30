@@ -28,8 +28,8 @@ export function EditorModal<T extends object>(props: {
           scrollableContent: {
             minWidth: 800,
             minHeight: 600,
-            width: '60vw',
-            height: '60vh',
+            width: '80vw',
+            height: '80vh',
             borderTop: `4px solid ${theme.palette.themePrimary}`,
             overflow: 'hidden',
             display: 'flex',

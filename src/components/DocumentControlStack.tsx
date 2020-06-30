@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import useSWR from 'swr'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
-import { IndexSpecification } from 'mongodb'
+import type { IndexSpecification } from 'mongodb'
 import _ from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
@@ -61,6 +61,7 @@ export function DocumentControlStack() {
   }, [count])
   useEffect(() => {
     dispatch(actions.docs.resetPage())
+    dispatch(actions.docs.setIndex())
   }, [database, collection])
   useEffect(() => {
     revalidate()

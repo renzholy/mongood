@@ -54,7 +54,6 @@ export default () => {
       }),
     {
       revalidateOnFocus: false,
-      revalidateOnReconnect: false,
     },
   )
   const isDarkMode = useDarkMode()

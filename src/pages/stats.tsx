@@ -5,7 +5,7 @@ import { Stack, Text, getTheme } from '@fluentui/react'
 import { Card } from '@uifabric/react-cards'
 import bytes from 'bytes'
 import prettyMilliseconds from 'pretty-ms'
-import { CollStats } from 'mongodb'
+import type { CollStats } from 'mongodb'
 import _ from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'

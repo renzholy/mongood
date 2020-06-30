@@ -14,7 +14,7 @@ import {
 } from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
-import { IndexSpecification, WiredTigerData } from 'mongodb'
+import type { IndexSpecification, WiredTigerData } from 'mongodb'
 
 import { useColorize } from '@/hooks/use-colorize'
 import { EditorModal } from './EditorModal'
