@@ -61,6 +61,7 @@ export function DocumentControlStack() {
   }, [count])
   useEffect(() => {
     dispatch(actions.docs.resetPage())
+    dispatch(actions.docs.setIndex())
   }, [database, collection])
   useEffect(() => {
     revalidate()
