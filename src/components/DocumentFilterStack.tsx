@@ -1,11 +1,15 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useEffect } from 'react'
-import { Stack, IIconProps, getTheme } from '@fluentui/react'
+import {
+  Stack,
+  IIconProps,
+  getTheme,
+  IContextualMenuProps,
+} from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
-import { nextSorter } from '@/utils/sorter'
 import { FilterInput } from './FilterInput'
 
 export function DocumentFilterStack() {
@@ -58,26 +62,59 @@ export function DocumentFilterStack() {
         />
       ) : (
         keys.map((key, i) => {
-          const disableSort =
-            i > 0 && !filter[keys[i - 1]] && sort[keys[i - 1]] === undefined
-          const iconProps: IIconProps = {
-            iconName:
-              sort[key] === 1 ? 'Up' : sort[key] === -1 ? 'Down' : 'Sort',
-            styles: {
-              root: {
-                color: disableSort
-                  ? theme.palette.neutralTertiary
-                  : theme.palette.themePrimary,
-                pointerEvents: 'unset',
-                cursor: disableSort ? 'not-allowed' : 'pointer',
-              },
-            },
-            onClick: disableSort
-              ? undefined
-              : () => {
-                  dispatch(actions.docs.setSort(nextSorter(i, index.key, sort)))
+          const k = index.key[key as keyof typeof index.key]
+          const isSortKey = k === 1 || k === -1
+          const iconProps: IIconProps | undefined = isSortKey
+            ? {
+                iconName:
+                  sort[key] === 1
+                    ? 'SortUp'
+                    : sort[key] === -1
+                    ? 'SortDown'
+                    : 'Sort',
+                styles: {
+                  root: {
+                    color: theme.palette.themePrimary,
+                  },
                 },
-          }
+              }
+            : undefined
+          const menuProps: IContextualMenuProps | undefined = isSortKey
+            ? {
+                items: [
+                  {
+                    key: '1',
+                    text: 'Ascending',
+                    iconProps: {
+                      iconName: 'SortUp',
+                    },
+                    onClick() {
+                      dispatch(
+                        actions.docs.setSort({
+                          ...sort,
+                          [key]: 1,
+                        }),
+                      )
+                    },
+                  },
+                  {
+                    key: '2',
+                    text: 'Descending',
+                    iconProps: {
+                      iconName: 'SortDown',
+                    },
+                    onClick() {
+                      dispatch(
+                        actions.docs.setSort({
+                          ...sort,
+                          [key]: -1,
+                        }),
+                      )
+                    },
+                  },
+                ],
+              }
+            : undefined
           const disableFilter = i > 0 && !filter[keys[i - 1]]
           if (
             index.partialFilterExpression?.[
@@ -91,6 +128,7 @@ export function DocumentFilterStack() {
                 disabled={disableFilter}
                 prefix={`${key}:`}
                 iconProps={iconProps}
+                menuProps={menuProps}
                 value={
                   index.partialFilterExpression[
                     key as keyof typeof index.partialFilterExpression
@@ -114,6 +152,7 @@ export function DocumentFilterStack() {
               disabled={disableFilter}
               prefix={`${key}:`}
               iconProps={iconProps}
+              menuProps={menuProps}
               onChange={(value) => {
                 dispatch(
                   actions.docs.setFilter({

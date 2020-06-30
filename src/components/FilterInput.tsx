@@ -1,4 +1,9 @@
-import { TextField, IIconProps, IconButton } from '@fluentui/react'
+import {
+  TextField,
+  IIconProps,
+  IconButton,
+  IContextualMenuProps,
+} from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
 
 import { parse, stringify } from '@/utils/mongo-shell-data'
@@ -8,6 +13,7 @@ export function FilterInput<T extends string | object | undefined>(props: {
   disabled?: boolean
   prefix?: string
   iconProps?: IIconProps
+  menuProps?: IContextualMenuProps
   value?: T
   onChange(value: T): void
 }) {
@@ -52,7 +58,13 @@ export function FilterInput<T extends string | object | undefined>(props: {
           setErrorMessage(undefined)
         }}
       />
-      {props.iconProps ? <IconButton iconProps={props.iconProps} /> : null}
+      {props.iconProps && props.menuProps ? (
+        <IconButton
+          iconProps={props.iconProps}
+          menuProps={props.menuProps}
+          menuIconProps={{ hidden: true }}
+        />
+      ) : null}
     </div>
   )
 }
