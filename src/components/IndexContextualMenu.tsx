@@ -8,9 +8,9 @@ import {
   DefaultButton,
 } from '@fluentui/react'
 import { useSelector } from 'react-redux'
+import type { IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
-import { IndexSpecification } from 'mongodb'
 
 export function IndexContextualMenu(props: {
   hidden: boolean
