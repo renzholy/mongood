@@ -21,7 +21,6 @@ RUN /go/bin/pkger
 RUN go build -tags headless -o mongood .
 
 FROM alpine
-ENV TZ=Asia/Shanghai
 ENV PORT=3000
 EXPOSE 3000
 COPY --from=golang-builder /src/golang/mongood /usr/local/bin/mongood
