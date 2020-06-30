@@ -3,6 +3,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
 
@@ -20,5 +21,7 @@ func startService() {
 		Addr:    ":" + port,
 		Handler: h2c.NewHandler(mux, &http2.Server{}),
 	}
+
+	log.Println("listening: " + port)
 	s.ListenAndServe()
 }

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gobuffalo/packr"
+	"github.com/markbates/pkger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -96,11 +96,7 @@ func main() {
 	ctx = context.Background()
 
 	// serve root dir
-	root := os.Getenv("ROOT")
-	if root == "" {
-		root = "../dist"
-	}
-	mux.Handle("/", http.FileServer(packr.NewBox(root)))
+	mux.Handle("/", http.FileServer(pkger.Dir("/dist")))
 
 	// handle runCommand
 	mux.HandleFunc("/api/runCommand", runCommand)

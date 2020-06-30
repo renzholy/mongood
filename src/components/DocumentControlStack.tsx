@@ -47,7 +47,7 @@ export function DocumentControlStack() {
     database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(
           filter,
-        )}`
+        )}/${JSON.stringify(index)}`
       : null,
     () =>
       runCommand<{ n: number }>(connection, database!, {
