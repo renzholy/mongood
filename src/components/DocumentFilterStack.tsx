@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react'
 import { Stack, IIconProps, getTheme } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
-import _ from 'lodash'
 
 import { actions } from '@/stores'
 import { nextSorter } from '@/utils/sorter'
@@ -44,9 +43,6 @@ export function DocumentFilterStack() {
   }
 
   const keys = Object.keys(index.key)
-  const extraPartialKeys = index.partialFilterExpression
-    ? _.difference(Object.keys(index.partialFilterExpression), keys)
-    : []
   return (
     <Stack
       horizontal={true}
@@ -130,28 +126,6 @@ export function DocumentFilterStack() {
           )
         })
       )}
-      {extraPartialKeys.map((key) => {
-        return (
-          <FilterInput
-            key={key}
-            disabled={true}
-            prefix={`${key}:`}
-            value={
-              index.partialFilterExpression?.[
-                key as keyof typeof index.partialFilterExpression
-              ]
-            }
-            onChange={(value) => {
-              dispatch(
-                actions.docs.setFilter({
-                  ...filter,
-                  [key]: value,
-                }),
-              )
-            }}
-          />
-        )
-      })}
     </Stack>
   )
 }
