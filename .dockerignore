@@ -4,3 +4,4 @@ dist/
 screenshot/
 src/.umi/
 npm-debug.log
+go/pkged.go

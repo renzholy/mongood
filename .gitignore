@@ -3,3 +3,4 @@ dist/
 .umi/
 .umi-production/
 go/mongood
+go/pkged.go
