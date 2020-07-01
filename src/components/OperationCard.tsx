@@ -222,6 +222,7 @@ export function OperationCard(props: {
             style={{
               fontSize: 12,
               margin: 0,
+              marginRight: 10,
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-all',
             }}

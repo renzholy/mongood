@@ -182,6 +182,7 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
             style={{
               fontSize: 12,
               margin: 0,
+              marginRight: 10,
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-all',
             }}
