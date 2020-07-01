@@ -99,6 +99,6 @@ export type Operation = {
   desc: string
   planSummary: string
   originatingCommand: MongoData
-  currentOpTime: string
   client: string
+  numYields: number
 }

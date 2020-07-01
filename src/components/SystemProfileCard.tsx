@@ -98,7 +98,7 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
       </Card.Item>
       <Card.Item>
         <Text
-          variant="large"
+          variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {_.compact([
             `${Number.format(props.value.millis)} ms`,
