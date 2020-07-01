@@ -4,14 +4,12 @@ import _ from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
-import { parse, MongoData } from '@/utils/mongo-shell-data'
+import { parse } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { FilterInput } from '@/components/FilterInput'
 import { OperationCard } from '@/components/OperationCard'
 import { Operation } from '@/types'
 import { LargeMessage } from '@/components/LargeMessage'
-
-type Data = { [key: string]: MongoData }
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -143,7 +141,12 @@ export default () => {
           },
         }}>
         {data?.inprog.map((item) => (
-          <OperationCard key={item.opid} value={item} onView={setIsOpen} />
+          <OperationCard
+            key={item.opid}
+            value={item}
+            onView={setIsOpen}
+            onKill={revalidate}
+          />
         ))}
       </Stack>
     </>
