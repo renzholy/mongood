@@ -79,6 +79,7 @@ export type SystemProfileDoc = {
   nreturned?: number
   docsExamined?: number
   keysExamined?: number
+  originatingCommand?: MongoData
   command: MongoData
   locks: object
 }
@@ -95,12 +96,12 @@ export type Operation = {
     | 'remove'
     | 'killcursors'
   ns?: string
-  command: MongoData
   active: boolean
   microsecs_running?: number
   desc: string
   planSummary: string
-  originatingCommand: MongoData
+  originatingCommand?: MongoData
+  command: MongoData
   lockStats: object
   clientMetadata?: {
     driver?: {

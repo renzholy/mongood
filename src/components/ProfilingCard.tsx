@@ -20,21 +20,24 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
   const commandStr = useMemo(
     () =>
       stringify(
-        _.omit(props.value.command as object, [
-          'lsid',
-          '$clusterTime',
-          '$db',
-          '$readPreference',
-          'returnKey',
-          'showRecordId',
-          'tailable',
-          'oplogReplay',
-          'noCursorTimeout',
-          'awaitData',
-        ]),
+        _.omit(
+          (props.value.originatingCommand || props.value.command) as object,
+          [
+            'lsid',
+            '$clusterTime',
+            '$db',
+            '$readPreference',
+            'returnKey',
+            'showRecordId',
+            'tailable',
+            'oplogReplay',
+            'noCursorTimeout',
+            'awaitData',
+          ],
+        ),
         2,
       ),
-    [props.value.command],
+    [props.value.command, props.value.originatingCommand],
   )
   const commandHtml = useColorize(commandStr)
   const lockStr = useMemo(() => stringify(props.value.locks, 2), [
