@@ -22,10 +22,10 @@
   },
   "homepage": "https://github.com/RenzHoly/Mongood#readme",
   "dependencies": {
-    "@fluentui/react": "^7.121.6",
+    "@fluentui/react": "^7.121.7",
     "@monaco-editor/react": "^3.4.0",
     "@reduxjs/toolkit": "^1.4.0",
-    "@uifabric/react-cards": "^0.109.106",
+    "@uifabric/react-cards": "^0.109.107",
     "bson": "^4.0.4",
     "bytes": "^3.1.0",
     "csv-stringify": "^5.5.0",
@@ -58,7 +58,7 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.20.2",
+    "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.5",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
@@ -66,7 +66,7 @@
     "monaco-editor": "^0.20.0",
     "prettier": "^2.0.5",
     "typescript": "^3.9.5",
-    "umi": "^3.2.6"
+    "umi": "^3.2.7"
   },
   "husky": {
     "hooks": {

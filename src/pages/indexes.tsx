@@ -45,7 +45,7 @@ export default () => {
       createIndexes: collection,
       indexes: [value],
     })
-  }, [database, collection, value])
+  }, [connection, database, collection, value])
 
   if (error) {
     return (

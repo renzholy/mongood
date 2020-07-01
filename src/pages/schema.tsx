@@ -78,6 +78,7 @@ export default () => {
     })
     revalidate()
   }, [
+    connection,
     database,
     collection,
     value,

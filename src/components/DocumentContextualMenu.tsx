@@ -60,7 +60,7 @@ export function DocumentContextualMenu<
         setIsDeleting(false)
       }
     },
-    [database, collection],
+    [connection, database, collection],
   )
   const theme = getTheme()
   useEffect(() => {

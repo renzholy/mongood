@@ -86,7 +86,7 @@ export default () => {
         revalidate()
       }
     },
-    [database],
+    [connection, database],
   )
   const { data: count } = useSWR(
     database
