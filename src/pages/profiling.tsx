@@ -9,7 +9,7 @@ import { runCommand } from '@/utils/fetcher'
 import { SystemProfileDoc } from '@/types'
 import { actions } from '@/stores'
 import { LargeMessage } from '@/components/LargeMessage'
-import { SystemProfileCard } from '@/components/SystemProfileCard'
+import { ProfilingCard } from '@/components/ProfilingCard'
 import { Pagination } from '@/components/Pagination'
 
 export default () => {
@@ -185,7 +185,7 @@ export default () => {
         ) : data ? (
           data.cursor.firstBatch.length ? (
             data.cursor.firstBatch.map((item, index) => (
-              <SystemProfileCard
+              <ProfilingCard
                 key={`${item.ts}${index.toString()}`}
                 value={item}
               />

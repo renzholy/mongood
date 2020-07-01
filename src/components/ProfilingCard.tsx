@@ -1,20 +1,46 @@
 /* eslint-disable react/no-danger */
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
 import { Text, getTheme, ContextualMenu } from '@fluentui/react'
 import _ from 'lodash'
 
 import { SystemProfileDoc } from '@/types'
 import { Number } from '@/utils/formatter'
+import { stringify } from '@/utils/mongo-shell-data'
+import { useColorize } from '@/hooks/use-colorize'
 import { ExecStage } from './ExecStage'
 import { EditorModal } from './EditorModal'
 
-export function SystemProfileCard(props: { value: SystemProfileDoc }) {
+export function ProfilingCard(props: { value: SystemProfileDoc }) {
   const theme = getTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [target, setTarget] = useState<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
+  const commandStr = useMemo(
+    () =>
+      stringify(
+        _.omit(props.value.command as object, [
+          'lsid',
+          '$clusterTime',
+          '$db',
+          '$readPreference',
+          'returnKey',
+          'showRecordId',
+          'tailable',
+          'oplogReplay',
+          'noCursorTimeout',
+          'awaitData',
+        ]),
+        2,
+      ),
+    [props.value.command],
+  )
+  const commandHtml = useColorize(commandStr)
+  const lockStr = useMemo(() => stringify(props.value.locks, 2), [
+    props.value.locks,
+  ])
+  const lockHtml = useColorize(lockStr)
 
   return (
     <Card
@@ -147,6 +173,31 @@ export function SystemProfileCard(props: { value: SystemProfileDoc }) {
           </Text>
         </Card.Item>
       ) : null}
+      {commandStr === '{}' && lockStr === '{}' ? null : (
+        <Card.Item
+          styles={{
+            root: { display: 'flex', justifyContent: 'space-between' },
+          }}>
+          <pre
+            style={{
+              fontSize: 12,
+              margin: 0,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+            }}
+            dangerouslySetInnerHTML={{ __html: commandHtml }}
+          />
+          <pre
+            style={{
+              fontSize: 12,
+              margin: 0,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+            }}
+            dangerouslySetInnerHTML={{ __html: lockHtml }}
+          />
+        </Card.Item>
+      )}
     </Card>
   )
 }

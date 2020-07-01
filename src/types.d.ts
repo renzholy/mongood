@@ -79,6 +79,8 @@ export type SystemProfileDoc = {
   nreturned?: number
   docsExamined?: number
   keysExamined?: number
+  command: MongoData
+  locks: object
 }
 
 export type Operation = {
