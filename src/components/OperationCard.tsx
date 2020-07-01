@@ -205,11 +205,11 @@ export function OperationCard(props: {
                     : props.value.microsecs_running / 1000,
                 )} ms`
               : undefined,
+            props.value.numYields
+              ? `${Number.format(props.value.numYields)} yields`
+              : undefined,
             props.value.planSummary,
             props.value.desc?.startsWith('conn') ? undefined : props.value.desc,
-            props.value.numYields
-              ? `yields: ${Number.format(props.value.numYields)}`
-              : undefined,
           ]).join(', ')}
         </Text>
       </Card.Item>
