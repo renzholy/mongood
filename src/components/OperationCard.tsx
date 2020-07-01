@@ -57,7 +57,7 @@ export function OperationCard(props: {
   useEffect(() => {
     props.onView(isOpen)
   }, [isOpen])
-  const str = useMemo(
+  const commandStr = useMemo(
     () =>
       stringify(
         _.omit(props.value.originatingCommand as object, [
@@ -76,7 +76,11 @@ export function OperationCard(props: {
       ),
     [props.value.originatingCommand],
   )
-  const html = useColorize(str)
+  const commandHtml = useColorize(commandStr)
+  const lockStr = useMemo(() => stringify(props.value.lockStats, 2), [
+    props.value.lockStats,
+  ])
+  const lockHtml = useColorize(lockStr)
 
   return (
     <Card
@@ -209,8 +213,11 @@ export function OperationCard(props: {
           ]).join(', ')}
         </Text>
       </Card.Item>
-      {str === '{}' ? null : (
-        <Card.Item>
+      {commandStr === '{}' ? null : (
+        <Card.Item
+          styles={{
+            root: { display: 'flex', justifyContent: 'space-between' },
+          }}>
           <pre
             style={{
               fontSize: 12,
@@ -218,7 +225,16 @@ export function OperationCard(props: {
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-all',
             }}
-            dangerouslySetInnerHTML={{ __html: html }}
+            dangerouslySetInnerHTML={{ __html: commandHtml }}
+          />
+          <pre
+            style={{
+              fontSize: 12,
+              margin: 0,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+            }}
+            dangerouslySetInnerHTML={{ __html: lockHtml }}
           />
         </Card.Item>
       )}

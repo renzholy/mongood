@@ -99,6 +99,7 @@ export type Operation = {
   desc: string
   planSummary: string
   originatingCommand: MongoData
+  lockStats: object
   client: string
   numYields: number
 }
