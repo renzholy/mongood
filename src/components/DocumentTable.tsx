@@ -67,7 +67,7 @@ export const DocumentTable = React.memo(() => {
     })
     dispatch(actions.docs.setShouldRevalidate())
     setIsUpdateOpen(false)
-  }, [database, collection, invokedItem, editedItem])
+  }, [connection, database, collection, invokedItem, editedItem])
 
   const [target, setTarget] = useState<MouseEvent>()
   const [selectedItems, setSelectedItems] = useState<Data[]>([])

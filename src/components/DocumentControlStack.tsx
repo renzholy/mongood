@@ -42,7 +42,7 @@ export function DocumentControlStack() {
       documents: [doc],
     })
     dispatch(actions.docs.setShouldRevalidate())
-  }, [database, collection, doc])
+  }, [connection, database, collection, doc])
   const { data: count, revalidate } = useSWR(
     database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(
