@@ -19,6 +19,7 @@ mongood-windows.exe: pkged.go
 # packaging mongood.app
 mac-app: mongood-darwin
 	CC=$(Darwin_CC) CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 fyne package -os darwin -icon mongood.png -release --executable ./mongood-darwin
+	cp ../app-assets/Info.plist mongood.app/Contents/Info.plist 
 
 # packaging mongood.exe
 windows-app: mongood-windows.exe

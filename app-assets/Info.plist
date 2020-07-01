@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>CFBundleName</key>
+<string>mongood</string>
+<key>CFBundleExecutable</key>
+<string>mongood-darwin</string>
+<key>CFBundleIdentifier</key>
+<string>com.example.mongood</string>
+<key>CFBundleIconFile</key>
+<string>icon.icns</string>
+<key>CFBundleShortVersionString</key>
+<string>1.0</string>
+<key>NSHumanReadableCopyright</key>
+<string>Copyright © 2020 Mongood Authors. All rights reserved.</string>
+<key>NSHighResolutionCapable</key>
+<true/>
+<key>CFBundleInfoDictionaryVersion</key>
+<string>6.0</string>
+<key>CFBundlePackageType</key>
+<string>APPL</string>
+<key>NSAppTransportSecurity</key>
+<dict>
+<key>NSAllowsArbitraryLoads</key>
+<true/>
+</dict>
+<key>NSSupportsAutomaticTermination</key>
+<true/>
+<key>NSSupportsSuddenTermination</key>
+<false/>
+</dict>
+</plist>
