@@ -16,4 +16,5 @@ Dockerfile
 *.svg
 *.xml
 go/
+app-assets/
 LICENCE
