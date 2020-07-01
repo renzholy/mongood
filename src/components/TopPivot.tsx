@@ -24,7 +24,7 @@ export function TopPivot() {
     [],
   )
   const [connections, setConnections] = useState<
-    { c: string; host: string; version?: string }[]
+    { c: string; host: string; replSetName?: string }[]
   >([])
   useAsyncEffect(async () => {
     setConnections(
@@ -32,8 +32,8 @@ export function TopPivot() {
         await Promise.all(
           data?.map(async (c) => {
             try {
-              const { host, version } = await serverStatus(c)
-              return { c, host, version }
+              const { host, repl } = await serverStatus(c)
+              return { c, host, replSetName: repl?.setName }
             } catch {
               return { c, host: c }
             }
@@ -81,10 +81,10 @@ export function TopPivot() {
           },
         }}
         menuProps={{
-          items: connections.map(({ c, host, version }) => ({
+          items: connections.map(({ c, host, replSetName }) => ({
             key: c,
             text: host,
-            secondaryText: version,
+            secondaryText: replSetName,
             canCheck: true,
             checked: connection === c,
             onClick() {
