@@ -213,7 +213,7 @@ export function OperationCard(props: {
           ]).join(', ')}
         </Text>
       </Card.Item>
-      {commandStr === '{}' ? null : (
+      {commandStr === '{}' && lockStr === '{}' ? null : (
         <Card.Item
           styles={{
             root: { display: 'flex', justifyContent: 'space-between' },
@@ -238,6 +238,17 @@ export function OperationCard(props: {
           />
         </Card.Item>
       )}
+      {props.value.client && props.value.clientMetadata ? (
+        <Card.Item>
+          <Text
+            variant="medium"
+            styles={{ root: { color: theme.palette.neutralSecondary } }}>
+            {props.value.client}&nbsp;{props.value.clientMetadata?.driver?.name}
+            &nbsp;
+            {props.value.clientMetadata?.driver?.version}
+          </Text>
+        </Card.Item>
+      ) : null}
     </Card>
   )
 }

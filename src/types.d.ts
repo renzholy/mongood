@@ -100,6 +100,12 @@ export type Operation = {
   planSummary: string
   originatingCommand: MongoData
   lockStats: object
-  client: string
+  clientMetadata?: {
+    driver?: {
+      name?: string
+      version?: string
+    }
+  }
+  client?: string
   numYields: number
 }
