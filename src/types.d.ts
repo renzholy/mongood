@@ -1,3 +1,5 @@
+import type { MongoData } from './utils/mongo-shell-data'
+
 export type ServerStats = {
   host: string
   uptimeMillis: number
@@ -77,4 +79,26 @@ export type SystemProfileDoc = {
   nreturned?: number
   docsExamined?: number
   keysExamined?: number
+}
+
+export type Operation = {
+  opid: number
+  op:
+    | 'none'
+    | 'update'
+    | 'insert'
+    | 'query'
+    | 'command'
+    | 'getmore'
+    | 'remove'
+    | 'killcursors'
+  ns?: string
+  command: MongoData
+  active: boolean
+  microsecs_running?: number
+  desc: string
+  planSummary: string
+  originatingCommand: MongoData
+  currentOpTime: string
+  client: string
 }

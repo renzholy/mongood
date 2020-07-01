@@ -1,11 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import {
-  Stack,
-  DefaultButton,
-  IconButton,
-  Toggle,
-  ContextualMenu,
-} from '@fluentui/react'
+import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
 import _ from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
@@ -13,8 +7,9 @@ import { useSelector } from 'react-redux'
 import { parse, MongoData } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { FilterInput } from '@/components/FilterInput'
-import { Table } from '@/components/Table'
-import { EditorModal } from '@/components/EditorModal'
+import { OperationCard } from '@/components/OperationCard'
+import { Operation } from '@/types'
+import { LargeMessage } from '@/components/LargeMessage'
 
 type Data = { [key: string]: MongoData }
 
@@ -59,29 +54,30 @@ export default () => {
   const [example, setExample] = useState<string>()
   const ns = database && collection ? `${database}.${collection}` : undefined
   const [refreshInterval, setRefreshInterval] = useState(1000)
+  const [isOpen, setIsOpen] = useState(false)
   const { data, error, revalidate, isValidating } = useSWR(
     `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
     () =>
-      runCommand<{ inprog: { [key: string]: MongoData }[] }>(
-        connection,
-        'admin',
-        {
-          currentOp: 1,
-          ...filter,
-          ns,
-        },
-      ),
-    { refreshInterval },
+      runCommand<{ inprog: Operation[] }>(connection, 'admin', {
+        currentOp: 1,
+        ...filter,
+        ns,
+      }),
+    {
+      refreshInterval: isOpen ? 0 : refreshInterval,
+      revalidateOnFocus: false,
+    },
   )
   const value = useMemo(() => (ns ? { ...filter, ns } : _.omit(filter, 'ns')), [
     ns,
     filter,
   ])
-  const [isOpen, setIsOpen] = useState(false)
-  const [invokedItem, setInvokedItem] = useState<Data>()
-  const [target, setTarget] = useState<MouseEvent>()
-  const [isMenuHidden, setIsMenuHidden] = useState(true)
 
+  if (error) {
+    return (
+      <LargeMessage iconName="Error" title="Error" content={error.message} />
+    )
+  }
   return (
     <>
       <Stack
@@ -101,32 +97,7 @@ export default () => {
           />
         ))}
         <Stack.Item grow={true}>
-          <EditorModal<Data>
-            title="View Operation"
-            value={invokedItem}
-            isOpen={isOpen}
-            onDismiss={() => {
-              setIsOpen(false)
-            }}
-          />
-          <ContextualMenu
-            target={target}
-            hidden={isMenuHidden}
-            onDismiss={() => {
-              setIsMenuHidden(true)
-            }}
-            items={[
-              {
-                key: '0',
-                text: 'View',
-                iconProps: { iconName: 'View' },
-                onClick() {
-                  setIsMenuHidden(true)
-                  setIsOpen(true)
-                },
-              },
-            ]}
-          />
+          <div />
         </Stack.Item>
         <Toggle
           inlineLabel={true}
@@ -161,29 +132,20 @@ export default () => {
           }}
         />
       </Stack>
-      <Table
-        items={data?.inprog}
-        error={error}
-        isValidating={isValidating}
-        order={[
-          'host',
-          'ns',
-          'op',
-          'client',
-          'originatingCommand',
-          'desc',
-          'microsecs_running',
-        ]}
-        onItemInvoked={(item) => {
-          setInvokedItem(item)
-          setIsOpen(true)
-        }}
-        onItemContextMenu={(ev, item) => {
-          setInvokedItem(item)
-          setTarget(ev)
-          setIsMenuHidden(false)
-        }}
-      />
+      <Stack
+        tokens={{ childrenGap: 20 }}
+        styles={{
+          root: {
+            overflowY: 'scroll',
+            padding: 20,
+            flex: 1,
+            alignItems: 'center',
+          },
+        }}>
+        {data?.inprog.map((item) => (
+          <OperationCard key={item.opid} value={item} onView={setIsOpen} />
+        ))}
+      </Stack>
     </>
   )
 }
