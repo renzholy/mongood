@@ -19,6 +19,12 @@ monaco.init().then((_m) => {
   _monaco.languages.typescript.typescriptDefaults.addExtraLib(
     // eslint-disable-next-line global-require
     require('./libs/bson.d.ts').default,
+    'bson.d.ts',
+  )
+  _monaco.languages.typescript.typescriptDefaults.addExtraLib(
+    // eslint-disable-next-line global-require
+    require('./libs/mongodb.d.ts').default,
+    'mongodb.d.ts',
   )
 })
 
@@ -27,7 +33,7 @@ let disposable: IDisposable
 export function changeLib(collections: string[]) {
   disposable?.dispose()
   disposable = _monaco.languages.typescript.typescriptDefaults.addExtraLib(`
-  const db: { [key in "${collections.join('" | "')}"]: any } = {}
+  const db: { [key in "${collections.join('" | "')}"]: Collection } = {}
   `)
 }
 
