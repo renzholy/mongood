@@ -18,7 +18,7 @@ import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 import { Operation } from '@/types'
 import { useColorize } from '@/hooks/use-colorize'
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/ejson'
 import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
 

@@ -6,7 +6,7 @@ import {
 } from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
 
-import { parse, stringify } from '@/utils/mongo-shell-data'
+import { parse, stringify } from '@/utils/ejson'
 
 export function FilterInput<T extends string | object | undefined>(props: {
   autoFocus?: boolean

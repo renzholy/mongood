@@ -12,7 +12,7 @@ import _ from 'lodash'
 import bytes from 'bytes'
 
 import { ExecStats } from '@/types'
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/ejson'
 import { Number } from '@/utils/formatter'
 import { useColorize } from '@/hooks/use-colorize'
 

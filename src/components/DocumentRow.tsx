@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react'
 
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
 

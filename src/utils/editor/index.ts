@@ -18,8 +18,8 @@ monaco.init().then((_m) => {
   })
   _monaco.languages.typescript.typescriptDefaults.addExtraLib(
     // eslint-disable-next-line global-require
-    require('./libs/bson.d.ts').default,
-    'bson.d.ts',
+    require('./libs/ejson.d.ts').default,
+    'ejson.d.ts',
   )
   _monaco.languages.typescript.typescriptDefaults.addExtraLib(
     // eslint-disable-next-line global-require

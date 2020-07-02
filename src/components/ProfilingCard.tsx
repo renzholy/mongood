@@ -7,7 +7,7 @@ import _ from 'lodash'
 
 import { SystemProfileDoc } from '@/types'
 import { Number } from '@/utils/formatter'
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { ExecStage } from './ExecStage'
 import { EditorModal } from './EditorModal'

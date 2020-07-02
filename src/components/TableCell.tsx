@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 import _ from 'lodash'
 
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
 
