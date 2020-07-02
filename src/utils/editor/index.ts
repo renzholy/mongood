@@ -23,8 +23,8 @@ monaco.init().then((_m) => {
   )
   _monaco.languages.typescript.typescriptDefaults.addExtraLib(
     // eslint-disable-next-line global-require
-    require('./libs/mongodb.d.ts').default,
-    'mongodb.d.ts',
+    require('./libs/collection.d.ts').default,
+    'collection.d.ts',
   )
 })
 
