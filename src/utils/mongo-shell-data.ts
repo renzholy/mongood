@@ -5,6 +5,8 @@
 import saferEval from 'safer-eval'
 import _ from 'lodash'
 
+import { MongoData } from '@/types'
+
 function wrapKey(key: string) {
   const strKey = key.toString()
   if (strKey.includes('-') || strKey.includes('.') || /^\d/.test(strKey)) {
@@ -12,40 +14,6 @@ function wrapKey(key: string) {
   }
   return key
 }
-
-export type MongoData =
-  | string
-  | number
-  | boolean
-  | undefined
-  | null
-  | { $oid: string }
-  | {
-      id: {
-        '0': number
-        '1': number
-        '2': number
-        '3': number
-        '4': number
-        '5': number
-        '6': number
-        '7': number
-        '8': number
-        '9': number
-        '10': number
-        '11': number
-      }
-    }
-  | { $date: { $numberLong: string } }
-  | { $numberDecimal: string }
-  | { $numberDouble: string }
-  | { $numberInt: string }
-  | { $numberLong: string }
-  | { $regularExpression: { pattern: string; options: string } }
-  | { $timestamp: { t: number; i: number } }
-  | { $binary: { base64: string; subType: string } }
-  | object[]
-  | object
 
 export function stringify(val: MongoData, indent = 0, depth = 0): string {
   if (typeof val === 'string') {
@@ -146,7 +114,7 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
   ).join(',\n')}\n${spaces}}`
 }
 
-export function parse(str: string): object | string {
+export function parse(str: string): MongoData {
   return JSON.parse(
     JSON.stringify(
       saferEval(str, {

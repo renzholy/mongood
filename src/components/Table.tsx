@@ -18,8 +18,7 @@ import {
 } from '@fluentui/react'
 import _ from 'lodash'
 
-import { MongoData } from '@/utils/mongo-shell-data'
-import { DisplayMode } from '@/types.d'
+import { DisplayMode, MongoData } from '@/types.d'
 import { calcHeaders } from '@/utils/table'
 import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'

@@ -2,8 +2,9 @@
 
 import React, { useMemo } from 'react'
 
-import { MongoData, stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/mongo-shell-data'
 import { useColorize } from '@/hooks/use-colorize'
+import { MongoData } from '@/types'
 
 export function DocumentRow<T extends { [key: string]: MongoData }>(props: {
   value: T

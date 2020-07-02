@@ -4,8 +4,9 @@ import React, { useCallback, useMemo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 import _ from 'lodash'
 
-import { MongoData, stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/mongo-shell-data'
 import { useColorize } from '@/hooks/use-colorize'
+import { MongoData } from '@/types'
 
 function PlainCard(props: { value: MongoData }) {
   const str = useMemo(() => stringify(props.value, 2), [props.value])

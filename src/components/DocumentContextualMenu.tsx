@@ -11,10 +11,11 @@ import csv, { Options } from 'csv-stringify'
 import table from 'markdown-table'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { stringify, MongoData } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/mongo-shell-data'
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { calcHeaders } from '@/utils/table'
+import { MongoData } from '@/types'
 
 const cast: Options['cast'] = {
   boolean: (value) => stringify(value),

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { MongoData } from './mongo-shell-data'
+import { MongoData } from '@/types'
 
 export function calcHeaders<T extends { [key: string]: MongoData }>(
   items: T[],
