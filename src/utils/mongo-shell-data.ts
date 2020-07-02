@@ -68,6 +68,7 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
   }
   if (
     'id' in val &&
+    typeof val.id === 'object' &&
     '0' in val.id &&
     '1' in val.id &&
     '2' in val.id &&
