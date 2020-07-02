@@ -39,7 +39,7 @@ export function DocumentFilterStack() {
           autoFocus={true}
           value={filter}
           onChange={(value) => {
-            dispatch(actions.docs.setFilter(value as {}))
+            dispatch(actions.docs.setFilter((value as {}) || {}))
           }}
         />
       </Stack>
