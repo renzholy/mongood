@@ -1,11 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-import { ControlledEditor } from '@/utils/editor'
+import { ControlledEditor, changeLib } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
+import { useSelector } from 'react-redux'
 
 export default () => {
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
+  const { database, collectionsMap } = useSelector((state) => state.root)
+  useEffect(() => {
+    if (!database) {
+      return
+    }
+    changeLib(collectionsMap[database])
+  }, [database, collectionsMap])
+
   return (
     <ControlledEditor
       language="typescript"

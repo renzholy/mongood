@@ -1,4 +1,5 @@
 import { monaco, ControlledEditor, Monaco } from '@monaco-editor/react'
+import { IDisposable } from 'monaco-editor'
 
 let _monaco: Monaco
 
@@ -56,6 +57,15 @@ monaco.init().then((_m) => {
   function BinData(subType: number, base64: string): { $binary: { base64: string, subType: string } }
   `)
 })
+
+let disposable: IDisposable
+
+export function changeLib(collections: string[]) {
+  disposable?.dispose()
+  disposable = _monaco.languages.typescript.typescriptDefaults.addExtraLib(`
+  const db: {[key in "${collections.join('"|"')}"]: any} = {}
+  `)
+}
 
 export async function colorize(
   text: string,
