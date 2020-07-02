@@ -1,4 +1,5 @@
 import { defineConfig } from 'umi'
+import { resolve } from 'path'
 
 export default defineConfig({
   antd: false,
@@ -14,4 +15,13 @@ export default defineConfig({
     },
   },
   forkTSChecker: {},
+  chainWebpack(config) {
+    config.module
+      .rule('declaration')
+      .test(/\.d\.ts$/)
+      .include.add(resolve('./src/utils/editor/libs'))
+      .end()
+      .use('declaration')
+      .loader('raw-loader')
+  },
 })
