@@ -39,12 +39,19 @@ export default () => {
     return <LargeMessage iconName="UserOptional" title="No User" />
   }
   return (
-    <div style={{ overflowY: 'scroll', padding: 10, margin: '0 auto' }}>
-      <Stack tokens={{ childrenGap: 20, padding: 10 }}>
-        {usersInfo.users.map((user) => (
-          <UserCard key={user._id} value={user} />
-        ))}
-      </Stack>
-    </div>
+    <Stack
+      tokens={{ childrenGap: 20, padding: 10 }}
+      styles={{
+        root: {
+          overflowY: 'scroll',
+          padding: 20,
+          flex: 1,
+          alignItems: 'center',
+        },
+      }}>
+      {usersInfo.users.map((user) => (
+        <UserCard key={user._id} value={user} />
+      ))}
+    </Stack>
   )
 }
