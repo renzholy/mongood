@@ -118,19 +118,39 @@ export function parse(str: string): MongoData {
   return JSON.parse(
     JSON.stringify(
       saferEval(str, {
-        ObjectId: (s: string) => ({ $oid: s }),
+        ObjectId: (s: string) => ({
+          $oid: s,
+        }),
         Date: (s: string | number) => ({
-          $date: { $numberLong: new Date(s).getTime().toString() },
+          $date: {
+            $numberLong: new Date(s).getTime().toString(),
+          },
         }),
-        ISODate: (s: string) => ({
-          $date: { $numberLong: new Date(s).getTime().toString() },
+        ISODate: (s: string | number) => ({
+          $date: {
+            $numberLong: new Date(s).getTime().toString(),
+          },
         }),
-        NumberDecimal: (s: string) => ({ $numberDecimal: s }),
-        NumberInt: (s: string) => ({ $numberInt: s }),
-        NumberLong: (s: string) => ({ $numberLong: s }),
-        Timestamp: (t: number, i: number) => ({ $timestamp: { t, i } }),
+        NumberDecimal: (s: string | number) => ({
+          $numberDecimal: s.toString(),
+        }),
+        NumberInt: (s: string | number) => ({
+          $numberInt: s.toString(),
+        }),
+        NumberLong: (s: string | number) => ({
+          $numberLong: s.toString(),
+        }),
+        Timestamp: (t: number, i: number) => ({
+          $timestamp: {
+            t,
+            i,
+          },
+        }),
         BinData: (subType: number, base64: string) => ({
-          $binary: { base64, subType: subType.toString(16) },
+          $binary: {
+            base64,
+            subType: subType.toString(16),
+          },
         }),
       }),
       (_key, value) => {
