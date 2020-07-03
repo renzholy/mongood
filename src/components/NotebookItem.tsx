@@ -73,7 +73,7 @@ export function NotebookItem(props: {
         styles={{
           root: {
             backgroundColor: isDarkMode ? '#1e1e1e' : '#fffffe',
-            margin: 20,
+            margin: '14px 20px',
             height: 10 * 2 + 5 * 18,
             position: 'relative',
           },
@@ -146,7 +146,7 @@ export function NotebookItem(props: {
         <pre
           style={{
             margin: 0,
-            padding: 20,
+            padding: '14px 20px',
             paddingTop: 0,
             fontSize: 12,
             whiteSpace: 'pre-wrap',
