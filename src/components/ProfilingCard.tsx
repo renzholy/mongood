@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
 import { Text, getTheme, ContextualMenu } from '@fluentui/react'
 import _ from 'lodash'
+import { EJSON } from 'bson'
 
 import { SystemProfileDoc } from '@/types'
 import { Number } from '@/utils/formatter'
@@ -17,6 +18,10 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
   const [isOpen, setIsOpen] = useState(false)
   const [target, setTarget] = useState<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
+  const value = useMemo<SystemProfileDoc>(
+    () => EJSON.parse(JSON.stringify(props.value)) as SystemProfileDoc,
+    [props.value],
+  )
   const commandStr = useMemo(
     () =>
       stringify(
@@ -40,9 +45,7 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
     [props.value.command, props.value.originatingCommand],
   )
   const commandHtml = useColorize(commandStr)
-  const lockStr = useMemo(() => stringify(props.value.locks, 2), [
-    props.value.locks,
-  ])
+  const lockStr = useMemo(() => stringify(value.locks, 2), [value.locks])
   const lockHtml = useColorize(lockStr)
 
   return (
@@ -110,19 +113,19 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
           <Text
             variant="xLarge"
             styles={{ root: { color: theme.palette.neutralPrimary } }}>
-            {props.value.op}
+            {value.op}
           </Text>
           &nbsp;
           <Text
             variant="xLarge"
             styles={{ root: { color: theme.palette.neutralSecondary } }}>
-            {props.value.ns}
+            {value.ns}
           </Text>
         </div>
         <Text
           variant="medium"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {props.value.ts.toLocaleString([], { hour12: false })}
+          {value.ts.toLocaleString([], { hour12: false })}
         </Text>
       </Card.Item>
       <Card.Item>
@@ -130,20 +133,20 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {_.compact([
-            `${Number.format(props.value.millis)} ms`,
-            props.value.keysExamined === undefined
+            `${Number.format(value.millis)} ms`,
+            value.keysExamined === undefined
               ? undefined
-              : `${Number.format(props.value.keysExamined)} keys examined`,
-            props.value.docsExamined === undefined
+              : `${Number.format(value.keysExamined)} keys examined`,
+            value.docsExamined === undefined
               ? undefined
-              : `${Number.format(props.value.docsExamined)} docs examined`,
-            props.value.nreturned === undefined
+              : `${Number.format(value.docsExamined)} docs examined`,
+            value.nreturned === undefined
               ? undefined
-              : `${Number.format(props.value.nreturned)} returned`,
+              : `${Number.format(value.nreturned)} returned`,
           ]).join(', ')}
         </Text>
       </Card.Item>
-      {props.value.execStats ? (
+      {value.execStats ? (
         <Card.Item
           styles={{
             root: {
@@ -158,11 +161,11 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
               justifyContent: 'flex-end',
               alignItems: 'center',
             }}>
-            <ExecStage value={props.value.execStats} />
+            <ExecStage value={value.execStats} />
           </div>
         </Card.Item>
       ) : null}
-      {props.value.errMsg ? (
+      {value.errMsg ? (
         <Card.Item>
           <Text
             styles={{
@@ -172,7 +175,7 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
                 wordBreak: 'break-all',
               },
             }}>
-            {props.value.errMsg}
+            {value.errMsg}
           </Text>
         </Card.Item>
       ) : null}
