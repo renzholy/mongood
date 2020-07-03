@@ -73,9 +73,7 @@ export default () => {
         inprog: response.inprog.map(
           (item) =>
             ({
-              ...EJSON.parse(
-                JSON.stringify(_.omit(item, ['command', 'originatingCommand'])),
-              ),
+              ...EJSON.parse(JSON.stringify(item)),
               command: item.command,
               originatingCommand: item.originatingCommand,
             } as Operation),

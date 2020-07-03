@@ -113,7 +113,7 @@ export type SystemProfileDoc = {
   keysExamined?: number
   originatingCommand?: MongoData
   command: MongoData
-  locks: lockStats
+  locks: object
 }
 
 export type Operation = {
@@ -134,7 +134,7 @@ export type Operation = {
   planSummary: string
   originatingCommand?: MongoData
   command: MongoData
-  lockStats: MongoData
+  lockStats: object
   clientMetadata?: {
     driver?: {
       name?: string
