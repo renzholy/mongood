@@ -74,7 +74,7 @@ export function NotebookItem(props: {
           root: {
             backgroundColor: isDarkMode ? '#1e1e1e' : '#fffffe',
             margin: 20,
-            height: 200,
+            height: 10 * 2 + 5 * 18,
             position: 'relative',
           },
         }}
