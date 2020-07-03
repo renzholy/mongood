@@ -79,6 +79,8 @@ export default () => {
             })
           }}
           options={{
+            lineNumbers: 'off',
+            minimap: { enabled: false },
             wordWrap: 'on',
             contextmenu: false,
             scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
@@ -89,13 +91,23 @@ export default () => {
             position: 'absolute',
             right: 10,
             bottom: 10,
-            fontWeight: 100,
             userSelect: 'none',
           }}>
-          ⌘
+          <span
+            style={{
+              fontSize: 14,
+              color: theme.palette.neutralSecondary,
+            }}>
+            ⌘
+          </span>
           <Icon
             iconName="ReturnKey"
-            styles={{ root: { verticalAlign: 'text-bottom' } }}
+            styles={{
+              root: {
+                verticalAlign: 'text-bottom',
+                color: theme.palette.neutralSecondary,
+              },
+            }}
           />
         </div>
       </div>
