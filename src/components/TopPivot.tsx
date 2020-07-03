@@ -65,13 +65,13 @@ export function TopPivot() {
           history.push(link?.props.itemKey || '/')
         }}>
         <PivotItem headerText="Stats" itemKey="/stats" />
-        <PivotItem headerText="Notebook" itemKey="/notebook" />
         <PivotItem headerText="Documents" itemKey="/documents" />
         <PivotItem headerText="Indexes" itemKey="/indexes" />
         <PivotItem headerText="Operations" itemKey="/operations" />
         <PivotItem headerText="Profiling" itemKey="/profiling" />
         <PivotItem headerText="Schema" itemKey="/schema" />
         <PivotItem headerText="Users" itemKey="/users" />
+        <PivotItem headerText="Notebook (Alpha)" itemKey="/notebook" />
       </Pivot>
       <CommandButton
         text={connections.find(({ c }) => c === connection)?.host}
