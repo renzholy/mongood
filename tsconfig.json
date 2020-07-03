@@ -17,5 +17,5 @@
       "@@/*": ["src/.umi/*"]
     }
   },
-  "include": ["mock/**/*", "src/**/*", "config/**/*", ".umirc.ts"]
+  "include": ["mock/**/*", "src/**/*", "config/**/*"]
 }
