@@ -15,7 +15,11 @@ import { runCommand } from '@/utils/fetcher'
 import { useColorize } from '@/hooks/use-colorize'
 import { stringify } from '@/utils/ejson'
 
-export function NotebookItem() {
+export function NotebookItem(props: {
+  in: string
+  out?: object
+  error?: Error
+}) {
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
   const theme = getTheme()
@@ -29,7 +33,7 @@ export function NotebookItem() {
     changeLib(collectionsMap[database])
   }, [database, collectionsMap])
   const [command, setCommand] = useState<{}>()
-  const [result, setResult] = useState()
+  const [result, setResult] = useState<object>()
   const [error, setError] = useState<Error>()
   useAsyncEffect(async () => {
     if (!database || !command) {
@@ -48,6 +52,15 @@ export function NotebookItem() {
   const resultStr = useMemo(() => stringify(result, 2), [result])
   const resultHtml = useColorize(resultStr)
   const [focus, setFocus] = useState(false)
+  useEffect(() => {
+    setValue(props.in)
+  }, [props.in])
+  useEffect(() => {
+    setResult(props.out)
+  }, [props.out])
+  useEffect(() => {
+    setError(props.error)
+  }, [props.error])
 
   return (
     <div>
@@ -129,19 +142,21 @@ export function NotebookItem() {
           </div>
         ) : null}
       </Card>
-      <pre
-        style={{
-          margin: 0,
-          padding: 20,
-          paddingTop: 0,
-          fontSize: 12,
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-all',
-          overflow: 'scroll',
-          color: theme.palette.neutralPrimary,
-        }}
-        dangerouslySetInnerHTML={{ __html: error?.message || resultHtml }}
-      />
+      {error?.message || resultStr ? (
+        <pre
+          style={{
+            margin: 0,
+            padding: 20,
+            paddingTop: 0,
+            fontSize: 12,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-all',
+            overflow: 'scroll',
+            color: theme.palette.neutralPrimary,
+          }}
+          dangerouslySetInnerHTML={{ __html: error?.message || resultHtml }}
+        />
+      ) : null}
     </div>
   )
 }
