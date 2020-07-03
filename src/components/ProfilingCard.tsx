@@ -8,10 +8,9 @@ import { EJSON } from 'bson'
 
 import { SystemProfileDoc } from '@/types'
 import { Number } from '@/utils/formatter'
-import { stringify } from '@/utils/ejson'
-import { useColorize } from '@/hooks/use-colorize'
 import { ExecStage } from './ExecStage'
 import { EditorModal } from './EditorModal'
+import { CommandAndLocksCardItem } from './CommandAndLocksCardItem'
 
 export function ProfilingCard(props: { value: SystemProfileDoc }) {
   const theme = getTheme()
@@ -25,31 +24,6 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
       ) as SystemProfileDoc,
     [props.value],
   )
-  const commandStr = useMemo(
-    () =>
-      stringify(
-        _.omit(
-          (props.value.originatingCommand || props.value.command) as object,
-          [
-            'lsid',
-            '$clusterTime',
-            '$db',
-            '$readPreference',
-            'returnKey',
-            'showRecordId',
-            'tailable',
-            'oplogReplay',
-            'noCursorTimeout',
-            'awaitData',
-          ],
-        ),
-        2,
-      ),
-    [props.value.command, props.value.originatingCommand],
-  )
-  const commandHtml = useColorize(commandStr)
-  const lockStr = useMemo(() => stringify(value.locks, 2), [value.locks])
-  const lockHtml = useColorize(lockStr)
 
   return (
     <Card
@@ -182,32 +156,10 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
           </Text>
         </Card.Item>
       ) : null}
-      {commandStr === '{}' && lockStr === '{}' ? null : (
-        <Card.Item
-          styles={{
-            root: { display: 'flex', justifyContent: 'space-between' },
-          }}>
-          <pre
-            style={{
-              fontSize: 12,
-              margin: 0,
-              marginRight: 10,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-            }}
-            dangerouslySetInnerHTML={{ __html: commandHtml }}
-          />
-          <pre
-            style={{
-              fontSize: 12,
-              margin: 0,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-            }}
-            dangerouslySetInnerHTML={{ __html: lockHtml }}
-          />
-        </Card.Item>
-      )}
+      <CommandAndLocksCardItem
+        command={props.value.originatingCommand || props.value.command}
+        locks={value.locks}
+      />
     </Card>
   )
 }

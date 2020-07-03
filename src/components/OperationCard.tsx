@@ -18,10 +18,9 @@ import { EJSON } from 'bson'
 
 import { Number } from '@/utils/formatter'
 import { Operation } from '@/types'
-import { useColorize } from '@/hooks/use-colorize'
-import { stringify } from '@/utils/ejson'
 import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
+import { CommandAndLocksCardItem } from './CommandAndLocksCardItem'
 
 export function OperationCard(props: {
   value: Operation
@@ -65,33 +64,6 @@ export function OperationCard(props: {
   useEffect(() => {
     props.onView(isOpen || !isMenuHidden)
   }, [isOpen, isMenuHidden])
-  const commandStr = useMemo(
-    () =>
-      stringify(
-        _.omit(
-          (props.value.originatingCommand || props.value.command) as object,
-          [
-            'lsid',
-            '$clusterTime',
-            '$db',
-            '$readPreference',
-            'returnKey',
-            'showRecordId',
-            'tailable',
-            'oplogReplay',
-            'noCursorTimeout',
-            'awaitData',
-          ],
-        ),
-        2,
-      ),
-    [props.value.command, props.value.originatingCommand],
-  )
-  const commandHtml = useColorize(commandStr)
-  const lockStr = useMemo(() => stringify(value.lockStats, 2), [
-    value.lockStats,
-  ])
-  const lockHtml = useColorize(lockStr)
 
   return (
     <Card
@@ -224,32 +196,10 @@ export function OperationCard(props: {
           ]).join(', ')}
         </Text>
       </Card.Item>
-      {commandStr === '{}' && lockStr === '{}' ? null : (
-        <Card.Item
-          styles={{
-            root: { display: 'flex', justifyContent: 'space-between' },
-          }}>
-          <pre
-            style={{
-              fontSize: 12,
-              margin: 0,
-              marginRight: 10,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-            }}
-            dangerouslySetInnerHTML={{ __html: commandHtml }}
-          />
-          <pre
-            style={{
-              fontSize: 12,
-              margin: 0,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-            }}
-            dangerouslySetInnerHTML={{ __html: lockHtml }}
-          />
-        </Card.Item>
-      )}
+      <CommandAndLocksCardItem
+        command={props.value.originatingCommand || props.value.command}
+        locks={value.lockStats}
+      />
       {value.client && value.clientMetadata ? (
         <Card.Item>
           <Text
