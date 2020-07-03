@@ -191,10 +191,7 @@ export default () => {
         ) : data ? (
           data.cursor.firstBatch.length ? (
             data.cursor.firstBatch.map((item, index) => (
-              <ProfilingCard
-                key={`${item.ts}${index.toString()}`}
-                value={item}
-              />
+              <ProfilingCard key={index.toString()} value={item} />
             ))
           ) : (
             <LargeMessage iconName="Database" title="No Profile" />

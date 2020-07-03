@@ -147,9 +147,9 @@ export default () => {
             alignItems: 'center',
           },
         }}>
-        {data?.inprog.map((item) => (
+        {data?.inprog.map((item, index) => (
           <OperationCard
-            key={item.opid}
+            key={index.toString()}
             value={item}
             onView={setIsOpen}
             onKill={revalidate}
