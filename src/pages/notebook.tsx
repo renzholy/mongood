@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 import { ControlledEditor, changeLib } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
-import { useSelector } from 'react-redux'
+import { toCommand } from '@/utils/collection'
 
 export default () => {
   const isDarkMode = useDarkMode()
@@ -14,6 +15,13 @@ export default () => {
     }
     changeLib(collectionsMap[database])
   }, [database, collectionsMap])
+  useEffect(() => {
+    try {
+      console.log(toCommand(value))
+    } catch (err) {
+      console.error(err)
+    }
+  }, [value])
 
   return (
     <ControlledEditor

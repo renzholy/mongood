@@ -65,6 +65,7 @@ export function TopPivot() {
           history.push(link?.props.itemKey || '/')
         }}>
         <PivotItem headerText="Stats" itemKey="/stats" />
+        <PivotItem headerText="Notebook" itemKey="/notebook" />
         <PivotItem headerText="Documents" itemKey="/documents" />
         <PivotItem headerText="Indexes" itemKey="/indexes" />
         <PivotItem headerText="Operations" itemKey="/operations" />
