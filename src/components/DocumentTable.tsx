@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { Selection } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/ejson'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { Table } from './Table'

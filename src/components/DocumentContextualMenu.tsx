@@ -11,7 +11,7 @@ import csv, { Options } from 'csv-stringify'
 import table from 'markdown-table'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/ejson'
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { calcHeaders } from '@/utils/table'

@@ -1,7 +1,7 @@
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
 import React, { useState, useEffect } from 'react'
 
-import { stringify, parse } from '@/utils/mongo-shell-data'
+import { stringify, parse } from '@/utils/ejson'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 

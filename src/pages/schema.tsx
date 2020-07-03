@@ -7,7 +7,7 @@ import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
-import { stringify, parse } from '@/utils/mongo-shell-data'
+import { stringify, parse } from '@/utils/ejson'
 import { ActionButton } from '@/components/ActionButton'
 import { LargeMessage } from '@/components/LargeMessage'
 

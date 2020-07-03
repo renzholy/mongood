@@ -14,11 +14,12 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import _ from 'lodash'
 import { useSelector } from 'react-redux'
 import { runCommand } from '@/utils/fetcher'
+import { EJSON } from 'bson'
 
 import { Number } from '@/utils/formatter'
 import { Operation } from '@/types'
 import { useColorize } from '@/hooks/use-colorize'
-import { stringify } from '@/utils/mongo-shell-data'
+import { stringify } from '@/utils/ejson'
 import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
 
@@ -38,12 +39,16 @@ export function OperationCard(props: {
   useEffect(() => {
     setIsSucceed(undefined)
   }, [target])
+  const value = useMemo<Operation>(
+    () => EJSON.parse(JSON.stringify(props.value)) as Operation,
+    [props.value],
+  )
   const handleKill = useCallback(async () => {
     try {
       setIsKilling(true)
       await runCommand(connection, 'admin', {
         killOp: 1,
-        op: props.value.opid,
+        op: value.opid,
       })
       setIsSucceed(true)
       setHidden(true)
@@ -53,7 +58,7 @@ export function OperationCard(props: {
     } finally {
       setIsKilling(false)
     }
-  }, [connection, props.value.opid])
+  }, [connection, value.opid])
   useEffect(() => {
     props.onView(isOpen)
   }, [isOpen])
@@ -80,8 +85,8 @@ export function OperationCard(props: {
     [props.value.command, props.value.originatingCommand],
   )
   const commandHtml = useColorize(commandStr)
-  const lockStr = useMemo(() => stringify(props.value.lockStats, 2), [
-    props.value.lockStats,
+  const lockStr = useMemo(() => stringify(value.lockStats, 2), [
+    value.lockStats,
   ])
   const lockHtml = useColorize(lockStr)
 
@@ -150,7 +155,7 @@ export function OperationCard(props: {
           hidden={hidden}
           dialogContentProps={{
             type: DialogType.normal,
-            title: `Kill Operation ${props.value.opid}`,
+            title: `Kill Operation ${value.opid}`,
             showCloseButton: true,
             onDismiss() {
               setHidden(true)
@@ -187,13 +192,13 @@ export function OperationCard(props: {
         <Text
           variant="xLarge"
           styles={{ root: { color: theme.palette.neutralPrimary } }}>
-          {props.value.op}
+          {value.op}
         </Text>
         &nbsp;
         <Text
           variant="xLarge"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {props.value.ns}
+          {value.ns}
         </Text>
       </Card.Item>
       <Card.Item>
@@ -201,18 +206,18 @@ export function OperationCard(props: {
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {_.compact([
-            props.value.microsecs_running
+            value.microsecs_running
               ? `${Number.format(
-                  props.value.microsecs_running > 1000
-                    ? Math.round(props.value.microsecs_running / 1000)
-                    : props.value.microsecs_running / 1000,
+                  value.microsecs_running > 1000
+                    ? Math.round(value.microsecs_running / 1000)
+                    : value.microsecs_running / 1000,
                 )} ms`
               : undefined,
-            props.value.numYields
-              ? `${Number.format(props.value.numYields)} yields`
+            value.numYields
+              ? `${Number.format(value.numYields)} yields`
               : undefined,
-            props.value.planSummary,
-            props.value.desc?.startsWith('conn') ? undefined : props.value.desc,
+            value.planSummary,
+            value.desc?.startsWith('conn') ? undefined : value.desc,
           ]).join(', ')}
         </Text>
       </Card.Item>
@@ -242,14 +247,14 @@ export function OperationCard(props: {
           />
         </Card.Item>
       )}
-      {props.value.client && props.value.clientMetadata ? (
+      {value.client && value.clientMetadata ? (
         <Card.Item>
           <Text
             variant="medium"
             styles={{ root: { color: theme.palette.neutralSecondary } }}>
-            {props.value.client}&nbsp;{props.value.clientMetadata?.driver?.name}
+            {value.client}&nbsp;{value.clientMetadata?.driver?.name}
             &nbsp;
-            {props.value.clientMetadata?.driver?.version}
+            {value.clientMetadata?.driver?.version}
           </Text>
         </Card.Item>
       ) : null}

@@ -4,7 +4,7 @@ import _ from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
-import { parse } from '@/utils/mongo-shell-data'
+import { parse } from '@/utils/ejson'
 import { runCommand } from '@/utils/fetcher'
 import { FilterInput } from '@/components/FilterInput'
 import { OperationCard } from '@/components/OperationCard'
@@ -147,9 +147,9 @@ export default () => {
             alignItems: 'center',
           },
         }}>
-        {data?.inprog.map((item) => (
+        {data?.inprog.map((item, index) => (
           <OperationCard
-            key={item.opid}
+            key={index.toString()}
             value={item}
             onView={setIsOpen}
             onKill={revalidate}
