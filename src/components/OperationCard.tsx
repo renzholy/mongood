@@ -63,8 +63,8 @@ export function OperationCard(props: {
     }
   }, [connection, value.opid])
   useEffect(() => {
-    props.onView(isOpen)
-  }, [isOpen])
+    props.onView(isOpen || !isMenuHidden)
+  }, [isOpen, isMenuHidden])
   const commandStr = useMemo(
     () =>
       stringify(
