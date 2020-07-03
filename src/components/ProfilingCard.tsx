@@ -19,7 +19,10 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
   const [target, setTarget] = useState<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
   const value = useMemo<SystemProfileDoc>(
-    () => EJSON.parse(JSON.stringify(props.value)) as SystemProfileDoc,
+    () =>
+      EJSON.parse(
+        JSON.stringify(_.omit(props.value, ['command', 'originatingCommand'])),
+      ) as SystemProfileDoc,
     [props.value],
   )
   const commandStr = useMemo(

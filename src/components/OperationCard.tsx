@@ -40,7 +40,10 @@ export function OperationCard(props: {
     setIsSucceed(undefined)
   }, [target])
   const value = useMemo<Operation>(
-    () => EJSON.parse(JSON.stringify(props.value)) as Operation,
+    () =>
+      EJSON.parse(
+        JSON.stringify(_.omit(props.value, ['command', 'originatingCommand'])),
+      ) as Operation,
     [props.value],
   )
   const handleKill = useCallback(async () => {
