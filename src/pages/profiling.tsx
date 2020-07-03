@@ -47,15 +47,22 @@ export default () => {
     () =>
       runCommand<{
         cursor: { firstBatch: SystemProfileDoc[] }
-      }>(connection, database!, {
-        find: 'system.profile',
-        sort: {
-          ts: -1,
+      }>(
+        connection,
+        database!,
+        {
+          find: 'system.profile',
+          sort: {
+            ts: -1,
+          },
+          filter,
+          skip,
+          limit,
         },
-        filter,
-        skip,
-        limit,
-      }),
+        {
+          canonical: true,
+        },
+      ),
   )
   useEffect(() => {
     dispatch(

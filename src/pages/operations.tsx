@@ -56,11 +56,18 @@ export default () => {
   const { data, error, revalidate, isValidating } = useSWR(
     `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
     () =>
-      runCommand<{ inprog: Operation[] }>(connection, 'admin', {
-        currentOp: 1,
-        ...filter,
-        ns,
-      }),
+      runCommand<{ inprog: Operation[] }>(
+        connection,
+        'admin',
+        {
+          currentOp: 1,
+          ...filter,
+          ns,
+        },
+        {
+          canonical: true,
+        },
+      ),
     {
       refreshInterval: isOpen ? 0 : refreshInterval,
       revalidateOnFocus: false,

@@ -34,26 +34,6 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
   if ('$oid' in val) {
     return `ObjectId("${val.$oid}")`
   }
-  if (
-    'id' in val &&
-    typeof val.id === 'object' &&
-    '0' in val.id &&
-    '1' in val.id &&
-    '2' in val.id &&
-    '3' in val.id &&
-    '4' in val.id &&
-    '5' in val.id &&
-    '6' in val.id &&
-    '7' in val.id &&
-    '8' in val.id &&
-    '9' in val.id &&
-    '10' in val.id &&
-    '11' in val.id
-  ) {
-    return `ObjectId("${Object.values(val.id)
-      .map((n) => _.padStart(n.toString(16), 2, '0'))
-      .join('')}")`
-  }
   if ('$date' in val && '$numberLong' in val.$date) {
     return `ISODate("${new Date(
       parseInt(val.$date.$numberLong, 10),
