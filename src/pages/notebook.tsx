@@ -10,7 +10,7 @@ import { useDarkMode } from '@/hooks/use-dark-mode'
 import { toCommand } from '@/utils/collection'
 import { LargeMessage } from '@/components/LargeMessage'
 import { runCommand } from '@/utils/fetcher'
-import { getTheme } from '@fluentui/react'
+import { getTheme, Icon } from '@fluentui/react'
 import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 
@@ -56,6 +56,7 @@ export default () => {
         style={{
           height: 200,
           flexShrink: 0,
+          position: 'relative',
         }}>
         <ControlledEditor
           language="typescript"
@@ -83,27 +84,34 @@ export default () => {
             scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
           }}
         />
+        <div
+          style={{
+            position: 'absolute',
+            right: 10,
+            bottom: 10,
+            fontWeight: 100,
+            userSelect: 'none',
+          }}>
+          ⌘
+          <Icon
+            iconName="ReturnKey"
+            styles={{ root: { verticalAlign: 'text-bottom' } }}
+          />
+        </div>
       </div>
       <pre
         style={{
           flex: 1,
           margin: 0,
+          padding: 10,
           fontSize: 12,
           backgroundColor: theme.palette.neutralLighter,
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-all',
           overflow: 'scroll',
         }}
-        dangerouslySetInnerHTML={{ __html: resultHtml }}
+        dangerouslySetInnerHTML={{ __html: error?.message || resultHtml }}
       />
-      <pre
-        style={{
-          flexShrink: 0,
-          height: 48,
-          margin: 0,
-          fontSize: 12,
-          backgroundColor: theme.palette.neutralLight,
-        }}>
-        {error?.message}
-      </pre>
     </>
   )
 }
