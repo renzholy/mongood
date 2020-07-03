@@ -38,11 +38,11 @@ export function OperationCard(props: {
   useEffect(() => {
     setIsSucceed(undefined)
   }, [target])
-  const value = useMemo<Operation>(
+  const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
     () =>
       EJSON.parse(
         JSON.stringify(_.omit(props.value, ['command', 'originatingCommand'])),
-      ) as Operation,
+      ) as Omit<Operation, 'command' | 'originatingCommand'>,
     [props.value],
   )
   const handleKill = useCallback(async () => {
