@@ -5,6 +5,7 @@ import { Stack, SpinButton, Slider, Label } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import { EJSON } from 'bson'
+import _ from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
 import { SystemProfileDoc } from '@/types'
@@ -70,7 +71,11 @@ export default () => {
           firstBatch: response.cursor.firstBatch.map(
             (item) =>
               ({
-                ...EJSON.parse(JSON.stringify(item)),
+                ...EJSON.parse(
+                  JSON.stringify(
+                    _.omit(item, ['command', 'originatingCommand']),
+                  ),
+                ),
                 command: item.command,
                 originatingCommand: item.originatingCommand,
               } as SystemProfileDoc),
