@@ -3,6 +3,7 @@ import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
 import _ from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
+import { EJSON } from 'bson'
 
 import { parse } from '@/utils/ejson'
 import { runCommand } from '@/utils/fetcher'
@@ -67,7 +68,17 @@ export default () => {
         {
           canonical: true,
         },
-      ),
+      ).then((response) => ({
+        ...response,
+        inprog: response.inprog.map(
+          (item) =>
+            ({
+              ...EJSON.parse(JSON.stringify(item)),
+              command: item.command,
+              originatingCommand: item.originatingCommand,
+            } as Operation),
+        ),
+      })),
     {
       refreshInterval: isOpen ? 0 : refreshInterval,
       revalidateOnFocus: false,
@@ -147,9 +158,9 @@ export default () => {
             alignItems: 'center',
           },
         }}>
-        {data?.inprog.map((item, index) => (
+        {data?.inprog.map((item) => (
           <OperationCard
-            key={index.toString()}
+            key={item.opid}
             value={item}
             onView={setIsOpen}
             onKill={revalidate}

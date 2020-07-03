@@ -14,7 +14,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import _ from 'lodash'
 import { useSelector } from 'react-redux'
 import { runCommand } from '@/utils/fetcher'
-import { EJSON } from 'bson'
 
 import { Number } from '@/utils/formatter'
 import { Operation } from '@/types'
@@ -39,16 +38,12 @@ export function OperationCard(props: {
   useEffect(() => {
     setIsSucceed(undefined)
   }, [target])
-  const value = useMemo<Operation>(
-    () => EJSON.parse(JSON.stringify(props.value)) as Operation,
-    [props.value],
-  )
   const handleKill = useCallback(async () => {
     try {
       setIsKilling(true)
       await runCommand(connection, 'admin', {
         killOp: 1,
-        op: value.opid,
+        op: props.value.opid,
       })
       setIsSucceed(true)
       setHidden(true)
@@ -58,7 +53,7 @@ export function OperationCard(props: {
     } finally {
       setIsKilling(false)
     }
-  }, [connection, value.opid])
+  }, [connection, props.value.opid])
   useEffect(() => {
     props.onView(isOpen)
   }, [isOpen])
@@ -85,8 +80,8 @@ export function OperationCard(props: {
     [props.value.command, props.value.originatingCommand],
   )
   const commandHtml = useColorize(commandStr)
-  const lockStr = useMemo(() => stringify(value.lockStats, 2), [
-    value.lockStats,
+  const lockStr = useMemo(() => stringify(props.value.lockStats, 2), [
+    props.value.lockStats,
   ])
   const lockHtml = useColorize(lockStr)
 
@@ -155,7 +150,7 @@ export function OperationCard(props: {
           hidden={hidden}
           dialogContentProps={{
             type: DialogType.normal,
-            title: `Kill Operation ${value.opid}`,
+            title: `Kill Operation ${props.value.opid}`,
             showCloseButton: true,
             onDismiss() {
               setHidden(true)
@@ -192,13 +187,13 @@ export function OperationCard(props: {
         <Text
           variant="xLarge"
           styles={{ root: { color: theme.palette.neutralPrimary } }}>
-          {value.op}
+          {props.value.op}
         </Text>
         &nbsp;
         <Text
           variant="xLarge"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {value.ns}
+          {props.value.ns}
         </Text>
       </Card.Item>
       <Card.Item>
@@ -206,18 +201,18 @@ export function OperationCard(props: {
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {_.compact([
-            value.microsecs_running
+            props.value.microsecs_running
               ? `${Number.format(
-                  value.microsecs_running > 1000
-                    ? Math.round(value.microsecs_running / 1000)
-                    : value.microsecs_running / 1000,
+                  props.value.microsecs_running > 1000
+                    ? Math.round(props.value.microsecs_running / 1000)
+                    : props.value.microsecs_running / 1000,
                 )} ms`
               : undefined,
-            value.numYields
-              ? `${Number.format(value.numYields)} yields`
+            props.value.numYields
+              ? `${Number.format(props.value.numYields)} yields`
               : undefined,
-            value.planSummary,
-            value.desc?.startsWith('conn') ? undefined : value.desc,
+            props.value.planSummary,
+            props.value.desc?.startsWith('conn') ? undefined : props.value.desc,
           ]).join(', ')}
         </Text>
       </Card.Item>
@@ -247,14 +242,14 @@ export function OperationCard(props: {
           />
         </Card.Item>
       )}
-      {value.client && value.clientMetadata ? (
+      {props.value.client && props.value.clientMetadata ? (
         <Card.Item>
           <Text
             variant="medium"
             styles={{ root: { color: theme.palette.neutralSecondary } }}>
-            {value.client}&nbsp;{value.clientMetadata?.driver?.name}
+            {props.value.client}&nbsp;{props.value.clientMetadata?.driver?.name}
             &nbsp;
-            {value.clientMetadata?.driver?.version}
+            {props.value.clientMetadata?.driver?.version}
           </Text>
         </Card.Item>
       ) : null}

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Stack, SpinButton, Slider, Label } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
+import { EJSON } from 'bson'
 
 import { runCommand } from '@/utils/fetcher'
 import { SystemProfileDoc } from '@/types'
@@ -62,7 +63,20 @@ export default () => {
         {
           canonical: true,
         },
-      ),
+      ).then((response) => ({
+        ...response,
+        cursor: {
+          ...response.cursor,
+          firstBatch: response.cursor.firstBatch.map(
+            (item) =>
+              ({
+                ...EJSON.parse(JSON.stringify(item)),
+                command: item.command,
+                originatingCommand: item.originatingCommand,
+              } as SystemProfileDoc),
+          ),
+        },
+      })),
   )
   useEffect(() => {
     dispatch(
@@ -191,7 +205,10 @@ export default () => {
         ) : data ? (
           data.cursor.firstBatch.length ? (
             data.cursor.firstBatch.map((item, index) => (
-              <ProfilingCard key={index.toString()} value={item} />
+              <ProfilingCard
+                key={`${item.ts}${index.toString()}`}
+                value={item}
+              />
             ))
           ) : (
             <LargeMessage iconName="Database" title="No Profile" />
