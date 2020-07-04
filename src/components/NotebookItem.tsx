@@ -74,7 +74,6 @@ export function NotebookItem(props: {
           root: {
             backgroundColor: isDarkMode ? '#1e1e1e' : '#fffffe',
             margin: '14px 20px',
-            height: 10 * 2 + 5 * 18,
             position: 'relative',
           },
         }}
@@ -84,44 +83,48 @@ export function NotebookItem(props: {
         onBlur={() => {
           setFocus(false)
         }}>
-        <ControlledEditor
-          language="typescript"
-          value={value}
-          onChange={(_ev, _value) => {
-            setValue(_value || '')
-          }}
-          theme={isDarkMode ? 'vs-dark' : 'vs'}
-          editorDidMount={(getEditorValue, editor) => {
-            editor.onKeyDown((e) => {
-              if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
-                e.stopPropagation()
-                try {
-                  setCommand(toCommand(getEditorValue()))
-                  setError(undefined)
-                } catch (err) {
-                  setError(err)
+        <Card.Item styles={{ root: { height: 10 * 2 + 5 * 18 } }}>
+          <ControlledEditor
+            language="typescript"
+            value={value}
+            onChange={(_ev, _value) => {
+              setValue(_value || '')
+            }}
+            theme={isDarkMode ? 'vs-dark' : 'vs'}
+            editorDidMount={(getEditorValue, editor) => {
+              editor.onKeyDown((e) => {
+                if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
+                  e.stopPropagation()
+                  try {
+                    setCommand(toCommand(getEditorValue()))
+                    setError(undefined)
+                  } catch (err) {
+                    setError(err)
+                  }
                 }
-              }
-            })
-          }}
-          options={{
-            lineDecorationsWidth: 0,
-            glyphMargin: false,
-            folding: false,
-            lineNumbers: 'off',
-            minimap: { enabled: false },
-            wordWrap: 'on',
-            contextmenu: false,
-            scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
-          }}
-        />
+              })
+            }}
+            options={{
+              lineDecorationsWidth: 0,
+              glyphMargin: false,
+              folding: false,
+              lineNumbers: 'off',
+              minimap: { enabled: false },
+              wordWrap: 'on',
+              contextmenu: false,
+              scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
+            }}
+          />
+        </Card.Item>
         {focus ? (
-          <div
-            style={{
-              position: 'absolute',
-              right: 10,
-              bottom: 10,
-              userSelect: 'none',
+          <Card.Item
+            styles={{
+              root: {
+                position: 'absolute',
+                right: 10,
+                bottom: 10,
+                userSelect: 'none',
+              },
             }}>
             <span
               style={{
@@ -139,23 +142,25 @@ export function NotebookItem(props: {
                 },
               }}
             />
-          </div>
+          </Card.Item>
         ) : null}
       </Card>
       {error?.message || resultStr ? (
-        <pre
-          style={{
-            margin: 0,
-            padding: '14px 20px',
-            paddingTop: 0,
-            fontSize: 12,
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-all',
-            overflow: 'scroll',
-            color: theme.palette.neutralPrimary,
-          }}
-          dangerouslySetInnerHTML={{ __html: error?.message || resultHtml }}
-        />
+        <Card.Item>
+          <pre
+            style={{
+              margin: 0,
+              padding: '14px 20px',
+              paddingTop: 0,
+              fontSize: 12,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+              overflow: 'scroll',
+              color: theme.palette.neutralPrimary,
+            }}
+            dangerouslySetInnerHTML={{ __html: error?.message || resultHtml }}
+          />
+        </Card.Item>
       ) : null}
     </div>
   )
