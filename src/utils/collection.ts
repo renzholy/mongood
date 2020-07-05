@@ -4,7 +4,7 @@ import vm from 'vm'
 
 import { sandbox } from './ejson'
 
-function Cursor(obj: any = { limit: 10 }) {
+function Cursor(obj: any = {}) {
   return {
     skip(skip: number) {
       obj.skip = skip
@@ -43,6 +43,7 @@ function Collection(collection: string) {
       return Cursor({
         find: collection,
         filter,
+        limit: 10,
       })
     },
   }
