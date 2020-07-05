@@ -32,7 +32,7 @@ export function NotebookItem(props: {
     }
     changeLib(collectionsMap[database])
   }, [database, collectionsMap])
-  const [result, setResult] = useState<object>()
+  const [result, setResult] = useState<any>()
   const [error, setError] = useState<string>()
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
@@ -56,7 +56,10 @@ export function NotebookItem(props: {
     },
     [connection, database],
   )
-  const resultStr = useMemo(() => stringify(result, 2), [result])
+  const resultStr = useMemo(
+    () => stringify(result?.cursor?.firstBatch || result?.cursot || result, 2),
+    [result],
+  )
   const resultHtml = useColorize(resultStr)
   const [focus, setFocus] = useState(false)
   useEffect(() => {
