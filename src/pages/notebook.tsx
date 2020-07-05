@@ -1,129 +1,79 @@
-/* eslint-disable react/no-danger */
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { DetailsList, SelectionMode, ScrollablePane } from '@fluentui/react'
 
-import React, { useState, useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
-import { KeyCode } from 'monaco-editor'
-import useAsyncEffect from 'use-async-effect'
-
-import { ControlledEditor, changeLib } from '@/utils/editor'
-import { useDarkMode } from '@/hooks/use-dark-mode'
-import { toCommand } from '@/utils/collection'
+import { changeLib } from '@/utils/editor'
 import { LargeMessage } from '@/components/LargeMessage'
-import { runCommand } from '@/utils/fetcher'
-import { getTheme, Icon } from '@fluentui/react'
-import { stringify } from '@/utils/ejson'
-import { useColorize } from '@/hooks/use-colorize'
+import { NotebookItem } from '@/components/NotebookItem'
+import { actions } from '@/stores'
 
 export default () => {
-  const isDarkMode = useDarkMode()
-  const [value, setValue] = useState('')
-  const theme = getTheme()
-  const { connection, database, collectionsMap } = useSelector(
-    (state) => state.root,
-  )
+  const { notebooks } = useSelector((state) => state.notebook)
+  const { database, collectionsMap } = useSelector((state) => state.root)
   useEffect(() => {
     if (!database) {
       return
     }
     changeLib(collectionsMap[database])
   }, [database, collectionsMap])
-  const [command, setCommand] = useState<{}>()
-  const [result, setResult] = useState()
-  const [error, setError] = useState<Error>()
-  useAsyncEffect(async () => {
-    if (!database || !command) {
-      return
-    }
-    try {
-      setResult(
-        await runCommand(connection, database, command, { canonical: true }),
-      )
-      setError(undefined)
-    } catch (err) {
-      setResult(undefined)
-      setError(err)
-    }
-  }, [connection, database, command])
-  const resultStr = useMemo(() => stringify(result, 2), [result])
-  const resultHtml = useColorize(resultStr)
+  const dispatch = useDispatch()
 
   if (!database) {
     return <LargeMessage iconName="Back" title="Select Database" />
   }
   return (
-    <>
-      <div
-        style={{
-          height: 200,
-          flexShrink: 0,
-          position: 'relative',
+    <div style={{ position: 'relative', height: 0, flex: 1 }}>
+      <ScrollablePane
+        styles={{
+          root: { maxWidth: '100%' },
+          stickyBelow: { display: 'none' },
         }}>
-        <ControlledEditor
-          language="typescript"
-          value={value}
-          onChange={(_ev, _value) => {
-            setValue(_value || '')
+        <DetailsList
+          items={[...notebooks, { index: 0, in: '' }]}
+          selectionMode={SelectionMode.none}
+          compact={true}
+          isHeaderVisible={false}
+          columns={[
+            {
+              key: '',
+              name: 'Notebooks',
+              minWidth: 0,
+              isMultiline: true,
+            },
+          ]}
+          cellStyleProps={{
+            cellLeftPadding: 0,
+            cellRightPadding: 0,
+            cellExtraRightPadding: 0,
           }}
-          theme={isDarkMode ? 'vs-dark' : 'vs'}
-          editorDidMount={(getEditorValue, editor) => {
-            editor.onKeyDown((e) => {
-              if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
-                e.stopPropagation()
-                try {
-                  setCommand(toCommand(getEditorValue()))
-                  setError(undefined)
-                } catch (err) {
-                  setError(err)
+          onRenderItemColumn={(item: {
+            index: number
+            in: string
+            out?: object
+            error?: string
+          }) => (
+            <NotebookItem
+              in={item.in}
+              out={item.out}
+              error={item.error}
+              onNext={(notebook) => {
+                if (notebook.in && (notebook.out || notebook.error)) {
+                  if (item.out || item.error) {
+                    dispatch(
+                      actions.notebook.updateNotebook({
+                        ...notebook,
+                        index: item.index,
+                      }),
+                    )
+                  } else {
+                    dispatch(actions.notebook.appendNotebook(notebook))
+                  }
                 }
-              }
-            })
-          }}
-          options={{
-            lineNumbers: 'off',
-            minimap: { enabled: false },
-            wordWrap: 'on',
-            contextmenu: false,
-            scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
-          }}
+              }}
+            />
+          )}
         />
-        <div
-          style={{
-            position: 'absolute',
-            right: 10,
-            bottom: 10,
-            userSelect: 'none',
-          }}>
-          <span
-            style={{
-              fontSize: 14,
-              color: theme.palette.neutralSecondary,
-            }}>
-            ⌘
-          </span>
-          <Icon
-            iconName="ReturnKey"
-            styles={{
-              root: {
-                verticalAlign: 'text-bottom',
-                color: theme.palette.neutralSecondary,
-              },
-            }}
-          />
-        </div>
-      </div>
-      <pre
-        style={{
-          flex: 1,
-          margin: 0,
-          padding: 10,
-          fontSize: 12,
-          backgroundColor: theme.palette.neutralLighter,
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-all',
-          overflow: 'scroll',
-        }}
-        dangerouslySetInnerHTML={{ __html: error?.message || resultHtml }}
-      />
-    </>
+      </ScrollablePane>
+    </div>
   )
 }

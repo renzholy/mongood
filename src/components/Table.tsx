@@ -122,6 +122,7 @@ export const Table = React.memo(
               {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
                 <DetailsList
                   getKey={getKey}
+                  useReducedRowRenderer={true}
                   columns={columns}
                   constrainMode={ConstrainMode.unconstrained}
                   layoutMode={DetailsListLayoutMode.justified}
@@ -145,6 +146,7 @@ export const Table = React.memo(
               {props.displayMode === DisplayMode.DOCUMENT ? (
                 <DetailsList
                   getKey={getKey}
+                  useReducedRowRenderer={true}
                   columns={[
                     {
                       key: '',
