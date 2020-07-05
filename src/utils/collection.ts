@@ -6,13 +6,30 @@ import { sandbox } from './ejson'
 
 function Cursor(obj: any = {}) {
   return {
+    skip(skip: number = 0) {
+      obj.skip = skip
+      return this
+    },
     limit(limit: number = 10) {
       obj.limit = limit
       return this
     },
-    sort(sorter: any) {
+    sort(sorter: object) {
       obj.sort = sorter
       return this
+    },
+    hint(hint: object | string) {
+      obj.hint = hint
+      return this
+    },
+    project(projection: object) {
+      obj.projection = projection
+      return this
+    },
+    explain() {
+      return {
+        explain: obj,
+      }
     },
     toArray() {
       return obj
