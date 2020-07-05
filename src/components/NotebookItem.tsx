@@ -18,7 +18,8 @@ import { stringify } from '@/utils/ejson'
 export function NotebookItem(props: {
   in: string
   out?: object
-  error?: Error
+  error?: string
+  onNext(value: { in: string; out?: object; error?: string }): void
 }) {
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
@@ -34,7 +35,7 @@ export function NotebookItem(props: {
   }, [database, collectionsMap])
   const [command, setCommand] = useState<{}>()
   const [result, setResult] = useState<object>()
-  const [error, setError] = useState<Error>()
+  const [error, setError] = useState<string>()
   useAsyncEffect(async () => {
     if (!database || !command) {
       return
@@ -46,7 +47,7 @@ export function NotebookItem(props: {
       setError(undefined)
     } catch (err) {
       setResult(undefined)
-      setError(err)
+      setError(err.message)
     }
   }, [connection, database, command])
   const resultStr = useMemo(() => stringify(result, 2), [result])
@@ -61,6 +62,9 @@ export function NotebookItem(props: {
   useEffect(() => {
     setError(props.error)
   }, [props.error])
+  useEffect(() => {
+    props.onNext({ in: value, out: result, error })
+  }, [value, result, error])
 
   return (
     <div>
@@ -81,6 +85,7 @@ export function NotebookItem(props: {
           setFocus(true)
         }}
         onBlur={() => {
+          setCommand(toCommand(value))
           setFocus(false)
         }}>
         <Card.Item styles={{ root: { height: 10 * 2 + 5 * 18 } }}>
@@ -145,7 +150,7 @@ export function NotebookItem(props: {
           </Card.Item>
         ) : null}
       </Card>
-      {error?.message || resultStr ? (
+      {error || resultStr ? (
         <Card.Item>
           <pre
             style={{
@@ -158,7 +163,7 @@ export function NotebookItem(props: {
               overflow: 'scroll',
               color: theme.palette.neutralPrimary,
             }}
-            dangerouslySetInnerHTML={{ __html: error?.message || resultHtml }}
+            dangerouslySetInnerHTML={{ __html: error || resultHtml }}
           />
         </Card.Item>
       ) : null}
