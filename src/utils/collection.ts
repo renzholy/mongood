@@ -1,35 +1,27 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable max-classes-per-file */
 import vm from 'vm'
 
-class Cursor {
-  #obj: any
-
-  constructor(obj: object = {}) {
-    this.#obj = obj
-  }
-
-  limit(limit: number = 100) {
-    this.#obj.limit = limit
-    return this
-  }
-
-  toArray() {
-    return this.#obj
+function Cursor(obj: any = {}) {
+  return {
+    limit(limit: number = 100) {
+      obj.limit = limit
+      return this
+    },
+    toArray() {
+      return obj
+    },
   }
 }
 
-class Collection {
-  #collection: string
-
-  constructor(collection: string) {
-    this.#collection = collection
-  }
-
-  find(filter?: object) {
-    return new Cursor({
-      find: this.#collection,
-      filter,
-    })
+function Collection(collection: string) {
+  return {
+    find(filter?: object) {
+      return Cursor({
+        find: collection,
+        filter,
+      })
+    },
   }
 }
 
@@ -38,7 +30,7 @@ const sandbox = vm.createContext({
     {},
     {
       get(_target, name) {
-        return new Collection(name as string)
+        return Collection(name as string)
       },
     },
   ),
