@@ -97,7 +97,7 @@ export function NotebookItem(props: {
           setFocus(false)
           handleRunCommand(value)
         }}>
-        <Card.Item styles={{ root: { height: 10 * 2 + 5 * 18 } }}>
+        <Card.Item styles={{ root: { height: 5 * 18 } }}>
           <ControlledEditor
             language="typescript"
             value={value}
@@ -158,7 +158,7 @@ export function NotebookItem(props: {
         {error || resultStr ? (
           <pre
             style={{
-              minHeight: 200,
+              minHeight: 100,
               margin: 0,
               padding: '14px 20px',
               paddingTop: 0,
@@ -173,8 +173,7 @@ export function NotebookItem(props: {
         ) : (
           <div
             style={{
-              height: 200,
-              minHeight: 200,
+              height: 100,
               margin: 0,
               padding: '14px 20px',
               paddingTop: 0,
