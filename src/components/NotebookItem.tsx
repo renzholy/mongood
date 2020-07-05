@@ -1,11 +1,10 @@
 /* eslint-disable react/no-danger */
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Card } from '@uifabric/react-cards'
 import { ControlledEditor } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor'
 import { useSelector } from 'react-redux'
-import useAsyncEffect from 'use-async-effect'
 import { Icon, getTheme } from '@fluentui/react'
 
 import { toCommand } from '@/utils/collection'
@@ -33,23 +32,30 @@ export function NotebookItem(props: {
     }
     changeLib(collectionsMap[database])
   }, [database, collectionsMap])
-  const [command, setCommand] = useState<{}>()
   const [result, setResult] = useState<object>()
   const [error, setError] = useState<string>()
-  useAsyncEffect(async () => {
-    if (!database || !command) {
-      return
-    }
-    try {
-      setResult(
-        await runCommand(connection, database, command, { canonical: true }),
-      )
-      setError(undefined)
-    } catch (err) {
-      setResult(undefined)
-      setError(err.message)
-    }
-  }, [connection, database, command])
+  const handleRunCommand = useCallback(
+    async (commandStr?: string) => {
+      if (!database || !commandStr) {
+        return
+      }
+      try {
+        const command = toCommand(commandStr)
+        setResult(
+          await runCommand(connection, database, command, { canonical: true }),
+        )
+        setError(undefined)
+      } catch (err) {
+        setResult(undefined)
+        if (err?.message?.startsWith('(CommandNotFound)')) {
+          setError(`Command Error: ${commandStr}`)
+        } else {
+          setError(err.message)
+        }
+      }
+    },
+    [connection, database],
+  )
   const resultStr = useMemo(() => stringify(result, 2), [result])
   const resultHtml = useColorize(resultStr)
   const [focus, setFocus] = useState(false)
@@ -84,9 +90,9 @@ export function NotebookItem(props: {
         onFocus={() => {
           setFocus(true)
         }}
-        onBlur={() => {
-          setCommand(toCommand(value))
+        onBlur={async () => {
           setFocus(false)
+          handleRunCommand(value)
         }}>
         <Card.Item styles={{ root: { height: 10 * 2 + 5 * 18 } }}>
           <ControlledEditor
@@ -97,15 +103,10 @@ export function NotebookItem(props: {
             }}
             theme={isDarkMode ? 'vs-dark' : 'vs'}
             editorDidMount={(getEditorValue, editor) => {
-              editor.onKeyDown((e) => {
+              editor.onKeyDown(async (e) => {
                 if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
                   e.stopPropagation()
-                  try {
-                    setCommand(toCommand(getEditorValue()))
-                    setError(undefined)
-                  } catch (err) {
-                    setError(err)
-                  }
+                  handleRunCommand(getEditorValue())
                 }
               })
             }}
@@ -150,10 +151,11 @@ export function NotebookItem(props: {
           </Card.Item>
         ) : null}
       </Card>
-      {error || resultStr ? (
-        <Card.Item>
+      <Card.Item>
+        {error || resultStr ? (
           <pre
             style={{
+              minHeight: 200,
               margin: 0,
               padding: '14px 20px',
               paddingTop: 0,
@@ -165,8 +167,18 @@ export function NotebookItem(props: {
             }}
             dangerouslySetInnerHTML={{ __html: error || resultHtml }}
           />
-        </Card.Item>
-      ) : null}
+        ) : (
+          <div
+            style={{
+              height: 200,
+              minHeight: 200,
+              margin: 0,
+              padding: '14px 20px',
+              paddingTop: 0,
+            }}
+          />
+        )}
+      </Card.Item>
     </div>
   )
 }
