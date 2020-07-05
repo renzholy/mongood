@@ -9,7 +9,9 @@ import { actions } from '@/stores'
 
 export default () => {
   const { notebooks } = useSelector((state) => state.notebook)
-  const { database, collectionsMap } = useSelector((state) => state.root)
+  const { connection, database, collectionsMap } = useSelector(
+    (state) => state.root,
+  )
   useEffect(() => {
     if (!database) {
       return
@@ -17,6 +19,9 @@ export default () => {
     changeLib(collectionsMap[database])
   }, [database, collectionsMap])
   const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(actions.notebook.clearNotebooks())
+  }, [connection, database])
 
   if (!database) {
     return <LargeMessage iconName="Back" title="Select Database" />
@@ -29,7 +34,7 @@ export default () => {
           stickyBelow: { display: 'none' },
         }}>
         <DetailsList
-          items={[...notebooks, { index: 0, in: '' }]}
+          items={[...notebooks, { index: Infinity, in: '' }]}
           selectionMode={SelectionMode.none}
           compact={true}
           isHeaderVisible={false}
