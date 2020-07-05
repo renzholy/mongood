@@ -53,6 +53,41 @@ function Collection(collection: string) {
         limit: 1,
       }
     },
+    updateOne(
+      filter: object,
+      update: object,
+      options: { upsert?: boolean; bypassDocumentValidation?: boolean } = {},
+    ) {
+      return {
+        update: collection,
+        updates: [
+          {
+            q: filter,
+            u: update,
+            upsert: options.upsert,
+            bypassDocumentValidation: options.bypassDocumentValidation,
+            multi: false,
+          },
+        ],
+      }
+    },
+    updateMany(
+      filter: object,
+      update: object,
+      options: { upsert?: boolean } = {},
+    ) {
+      return {
+        update: collection,
+        updates: [
+          {
+            q: filter,
+            u: update,
+            upsert: options.upsert,
+            multi: true,
+          },
+        ],
+      }
+    },
     getIndexes() {
       return {
         listIndexes: collection,

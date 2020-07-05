@@ -14,5 +14,15 @@ class Cursor {
 class Collection {
   find(filter: object = {}): Cursor
   findOne(filter: object = {}): void
+  updateOne(
+    filter: object,
+    update: object,
+    options: { upsert?: boolean; bypassDocumentValidation?: boolean } = {},
+  ): void
+  updateMany(
+    filter: object,
+    update: object,
+    options: { upsert?: boolean } = {},
+  ): void
   getIndexes(): void
 }
