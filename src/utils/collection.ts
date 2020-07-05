@@ -2,10 +2,16 @@
 /* eslint-disable max-classes-per-file */
 import vm from 'vm'
 
+import { sandbox } from './ejson'
+
 function Cursor(obj: any = {}) {
   return {
-    limit(limit: number = 100) {
+    limit(limit: number = 10) {
       obj.limit = limit
+      return this
+    },
+    sort(sorter: any) {
+      obj.sort = sorter
       return this
     },
     toArray() {
@@ -25,7 +31,8 @@ function Collection(collection: string) {
   }
 }
 
-const sandbox = vm.createContext({
+const context = vm.createContext({
+  ...sandbox,
   db: new Proxy(
     {},
     {
@@ -37,5 +44,5 @@ const sandbox = vm.createContext({
 })
 
 export function toCommand(str: string): object {
-  return vm.runInContext(str, sandbox)
+  return vm.runInContext(str, context)
 }

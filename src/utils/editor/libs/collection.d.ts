@@ -2,7 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 class Cursor {
-  limit(limit: number = 100): Cursor
+  limit(limit: number = 10): Cursor
+
+  sort(sorter: object): Cursor
 
   toArray(): void
 }

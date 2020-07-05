@@ -94,7 +94,7 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
   ).join(',\n')}\n${spaces}}`
 }
 
-const sandbox = vm.createContext({
+export const sandbox = {
   ObjectId: (s: string) => ({
     $oid: s,
   }),
@@ -129,11 +129,13 @@ const sandbox = vm.createContext({
       subType: subType.toString(16),
     },
   }),
-})
+}
+
+const context = vm.createContext(sandbox)
 
 export function parse(str: string): MongoData {
   return JSON.parse(
-    JSON.stringify(vm.runInContext(str, sandbox) || null, (_key, value) => {
+    JSON.stringify(vm.runInContext(str, context) || null, (_key, value) => {
       if (value instanceof RegExp) {
         return {
           $regularExpression: {
