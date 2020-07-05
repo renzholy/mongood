@@ -88,6 +88,28 @@ function Collection(collection: string) {
         ],
       }
     },
+    deleteOne(filter: object) {
+      return {
+        delete: collection,
+        deletes: [
+          {
+            q: filter,
+            limit: 1,
+          },
+        ],
+      }
+    },
+    deleteMany(filter: object) {
+      return {
+        delete: collection,
+        deletes: [
+          {
+            q: filter,
+            limit: 0,
+          },
+        ],
+      }
+    },
     getIndexes() {
       return {
         listIndexes: collection,

@@ -24,5 +24,7 @@ class Collection {
     update: object,
     options: { upsert?: boolean } = {},
   ): void
+  deleteOne(filter: object): void
+  deleteMany(filter: object): void
   getIndexes(): void
 }
