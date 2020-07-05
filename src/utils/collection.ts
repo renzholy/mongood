@@ -53,6 +53,74 @@ function Collection(collection: string) {
         limit: 1,
       }
     },
+    insertOne(doc: object) {
+      return {
+        insert: collection,
+        documents: [doc],
+      }
+    },
+    insertMany(docs: object[]) {
+      return {
+        insert: collection,
+        documents: docs,
+      }
+    },
+    updateOne(
+      filter: object,
+      update: object,
+      options: { upsert?: boolean } = {},
+    ) {
+      return {
+        update: collection,
+        updates: [
+          {
+            q: filter,
+            u: update,
+            upsert: options.upsert,
+            multi: false,
+          },
+        ],
+      }
+    },
+    updateMany(
+      filter: object,
+      update: object,
+      options: { upsert?: boolean } = {},
+    ) {
+      return {
+        update: collection,
+        updates: [
+          {
+            q: filter,
+            u: update,
+            upsert: options.upsert,
+            multi: true,
+          },
+        ],
+      }
+    },
+    deleteOne(filter: object) {
+      return {
+        delete: collection,
+        deletes: [
+          {
+            q: filter,
+            limit: 1,
+          },
+        ],
+      }
+    },
+    deleteMany(filter: object) {
+      return {
+        delete: collection,
+        deletes: [
+          {
+            q: filter,
+            limit: 0,
+          },
+        ],
+      }
+    },
     getIndexes() {
       return {
         listIndexes: collection,

@@ -14,5 +14,19 @@ class Cursor {
 class Collection {
   find(filter: object = {}): Cursor
   findOne(filter: object = {}): void
+  insertOne(doc: object): void
+  insertMany(docs: object[])
+  updateOne(
+    filter: object,
+    update: object,
+    options: { upsert?: boolean } = {},
+  ): void
+  updateMany(
+    filter: object,
+    update: object,
+    options: { upsert?: boolean } = {},
+  ): void
+  deleteOne(filter: object): void
+  deleteMany(filter: object): void
   getIndexes(): void
 }
