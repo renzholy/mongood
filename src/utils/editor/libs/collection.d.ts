@@ -13,4 +13,6 @@ class Cursor {
 
 class Collection {
   find(filter: object = {}): Cursor
+  findOne(filter: object = {}): void
+  getIndexes(): void
 }

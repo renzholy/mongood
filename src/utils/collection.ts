@@ -46,6 +46,18 @@ function Collection(collection: string) {
         limit: 10,
       })
     },
+    findOne(filter?: object) {
+      return {
+        find: collection,
+        filter,
+        limit: 1,
+      }
+    },
+    getIndexes() {
+      return {
+        listIndexes: collection,
+      }
+    },
   }
 }
 
