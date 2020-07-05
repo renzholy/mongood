@@ -2,7 +2,7 @@
  * @see https://docs.mongodb.com/manual/reference/mongodb-extended-json/#example
  */
 
-import saferEval from 'safer-eval'
+import vm from 'vm'
 import _ from 'lodash'
 
 import { MongoData } from '@/types'
@@ -94,56 +94,55 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
   ).join(',\n')}\n${spaces}}`
 }
 
+const sandbox = vm.createContext({
+  ObjectId: (s: string) => ({
+    $oid: s,
+  }),
+  Date: (s: string | number) => ({
+    $date: {
+      $numberLong: new Date(s).getTime().toString(),
+    },
+  }),
+  ISODate: (s: string | number) => ({
+    $date: {
+      $numberLong: new Date(s).getTime().toString(),
+    },
+  }),
+  NumberDecimal: (s: string | number) => ({
+    $numberDecimal: s.toString(),
+  }),
+  NumberInt: (s: string | number) => ({
+    $numberInt: s.toString(),
+  }),
+  NumberLong: (s: string | number) => ({
+    $numberLong: s.toString(),
+  }),
+  Timestamp: (t: number, i: number) => ({
+    $timestamp: {
+      t,
+      i,
+    },
+  }),
+  BinData: (subType: number, base64: string) => ({
+    $binary: {
+      base64,
+      subType: subType.toString(16),
+    },
+  }),
+})
+
 export function parse(str: string): MongoData {
   return JSON.parse(
-    JSON.stringify(
-      saferEval(str, {
-        ObjectId: (s: string) => ({
-          $oid: s,
-        }),
-        Date: (s: string | number) => ({
-          $date: {
-            $numberLong: new Date(s).getTime().toString(),
+    JSON.stringify(vm.runInContext(str, sandbox) || null, (_key, value) => {
+      if (value instanceof RegExp) {
+        return {
+          $regularExpression: {
+            pattern: value.source,
+            options: value.flags,
           },
-        }),
-        ISODate: (s: string | number) => ({
-          $date: {
-            $numberLong: new Date(s).getTime().toString(),
-          },
-        }),
-        NumberDecimal: (s: string | number) => ({
-          $numberDecimal: s.toString(),
-        }),
-        NumberInt: (s: string | number) => ({
-          $numberInt: s.toString(),
-        }),
-        NumberLong: (s: string | number) => ({
-          $numberLong: s.toString(),
-        }),
-        Timestamp: (t: number, i: number) => ({
-          $timestamp: {
-            t,
-            i,
-          },
-        }),
-        BinData: (subType: number, base64: string) => ({
-          $binary: {
-            base64,
-            subType: subType.toString(16),
-          },
-        }),
-      }),
-      (_key, value) => {
-        if (value instanceof RegExp) {
-          return {
-            $regularExpression: {
-              pattern: value.source,
-              options: value.flags,
-            },
-          }
         }
-        return value
-      },
-    ),
+      }
+      return value
+    }),
   )
 }

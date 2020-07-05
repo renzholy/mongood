@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import saferEval from 'safer-eval'
+import vm from 'vm'
 
 class Cursor {
   #obj: any
@@ -33,15 +33,17 @@ class Collection {
   }
 }
 
-export function toCommand(str: string): object {
-  return saferEval(str, {
-    db: new Proxy(
-      {},
-      {
-        get(_target, name) {
-          return new Collection(name as string)
-        },
+const sandbox = vm.createContext({
+  db: new Proxy(
+    {},
+    {
+      get(_target, name) {
+        return new Collection(name as string)
       },
-    ),
-  })
+    },
+  ),
+})
+
+export function toCommand(str: string): object {
+  return vm.runInContext(str, sandbox)
 }
