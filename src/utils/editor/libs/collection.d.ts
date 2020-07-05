@@ -14,6 +14,14 @@ class Cursor {
 class Collection {
   find(filter: object = {}): Cursor
   findOne(filter: object = {}): void
+  insertOne(
+    doc: object,
+    options: { bypassDocumentValidation?: boolean } = {},
+  ): void
+  insertMany(
+    docs: object[],
+    options: { bypassDocumentValidation?: boolean } = {},
+  )
   updateOne(
     filter: object,
     update: object,
@@ -22,7 +30,7 @@ class Collection {
   updateMany(
     filter: object,
     update: object,
-    options: { upsert?: boolean } = {},
+    options: { upsert?: boolean; bypassDocumentValidation?: boolean } = {},
   ): void
   deleteOne(filter: object): void
   deleteMany(filter: object): void

@@ -53,6 +53,26 @@ function Collection(collection: string) {
         limit: 1,
       }
     },
+    insertOne(
+      doc: object,
+      options: { bypassDocumentValidation?: boolean } = {},
+    ) {
+      return {
+        insert: collection,
+        documents: [doc],
+        bypassDocumentValidation: options.bypassDocumentValidation,
+      }
+    },
+    insertMany(
+      docs: object[],
+      options: { bypassDocumentValidation?: boolean } = {},
+    ) {
+      return {
+        insert: collection,
+        documents: docs,
+        bypassDocumentValidation: options.bypassDocumentValidation,
+      }
+    },
     updateOne(
       filter: object,
       update: object,
@@ -65,16 +85,16 @@ function Collection(collection: string) {
             q: filter,
             u: update,
             upsert: options.upsert,
-            bypassDocumentValidation: options.bypassDocumentValidation,
             multi: false,
           },
         ],
+        bypassDocumentValidation: options.bypassDocumentValidation,
       }
     },
     updateMany(
       filter: object,
       update: object,
-      options: { upsert?: boolean } = {},
+      options: { upsert?: boolean; bypassDocumentValidation?: boolean } = {},
     ) {
       return {
         update: collection,
@@ -86,6 +106,7 @@ function Collection(collection: string) {
             multi: true,
           },
         ],
+        bypassDocumentValidation: options.bypassDocumentValidation,
       }
     },
     deleteOne(filter: object) {
