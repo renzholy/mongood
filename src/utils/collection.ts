@@ -4,13 +4,13 @@ import vm from 'vm'
 
 import { sandbox } from './ejson'
 
-function Cursor(obj: any = {}) {
+function Cursor(obj: any = { limit: 10 }) {
   return {
-    skip(skip: number = 0) {
+    skip(skip: number) {
       obj.skip = skip
       return this
     },
-    limit(limit: number = 10) {
+    limit(limit: number) {
       obj.limit = limit
       return this
     },
