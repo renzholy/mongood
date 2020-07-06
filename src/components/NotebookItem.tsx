@@ -63,10 +63,7 @@ export function NotebookItem(props: {
     },
     [connection, database],
   )
-  const resultStr = useMemo(
-    () => stringify(result?.cursor?.firstBatch || result?.cursot || result, 2),
-    [result],
-  )
+  const resultStr = useMemo(() => stringify(result, 2), [result])
   const resultHtml = useColorize(resultStr)
   const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
