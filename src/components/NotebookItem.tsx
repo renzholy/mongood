@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/no-danger */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
@@ -61,7 +63,7 @@ export function NotebookItem(props: {
     [result],
   )
   const resultHtml = useColorize(resultStr)
-  const [focus, setFocus] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
     setValue(props.in)
   }, [props.in])
@@ -91,10 +93,10 @@ export function NotebookItem(props: {
           },
         }}
         onFocus={() => {
-          setFocus(true)
+          setIsFocused(true)
         }}
         onBlur={async () => {
-          setFocus(false)
+          setIsFocused(false)
           handleRunCommand(value)
         }}>
         <Card.Item styles={{ root: { height: 5 * 18 } }}>
@@ -125,7 +127,7 @@ export function NotebookItem(props: {
             }}
           />
         </Card.Item>
-        {focus ? (
+        {isFocused ? (
           <Card.Item
             styles={{
               root: {
@@ -133,24 +135,31 @@ export function NotebookItem(props: {
                 right: 10,
                 bottom: 10,
                 userSelect: 'none',
+                cursor: 'pointer',
               },
             }}>
-            <span
-              style={{
-                fontSize: 14,
-                color: theme.palette.neutralSecondary,
+            <div
+              onClick={() => {
+                handleRunCommand(value)
               }}>
-              ⌘
-            </span>
-            <Icon
-              iconName="ReturnKey"
-              styles={{
-                root: {
-                  verticalAlign: 'text-bottom',
+              <span
+                style={{
+                  fontSize: 18,
                   color: theme.palette.neutralSecondary,
-                },
-              }}
-            />
+                }}>
+                ⌘
+              </span>
+              <Icon
+                iconName="ReturnKey"
+                styles={{
+                  root: {
+                    verticalAlign: 'text-bottom',
+                    marginBottom: 2,
+                    color: theme.palette.neutralSecondary,
+                  },
+                }}
+              />
+            </div>
           </Card.Item>
         ) : null}
       </Card>
