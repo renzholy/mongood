@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-classes-per-file */
-import vm from 'vm'
+
+import saferEval from 'safer-eval'
 
 import { sandbox } from './ejson'
 
@@ -129,7 +130,7 @@ function Collection(collection: string) {
   }
 }
 
-const context = vm.createContext({
+const context = {
   ...sandbox,
   db: new Proxy(
     {},
@@ -139,8 +140,8 @@ const context = vm.createContext({
       },
     },
   ),
-})
+}
 
 export function toCommand(str: string): object {
-  return vm.runInContext(str, context)
+  return saferEval(str, context)
 }

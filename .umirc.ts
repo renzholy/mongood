@@ -1,6 +1,5 @@
 import { defineConfig } from 'umi'
 import { resolve } from 'path'
-import { NormalModuleReplacementPlugin } from 'webpack'
 
 export default defineConfig({
   antd: false,
@@ -24,8 +23,5 @@ export default defineConfig({
       .end()
       .use('declaration')
       .loader('raw-loader')
-    config
-      .plugin('vm')
-      .use(new NormalModuleReplacementPlugin(/^vm$/, 'vm-browserify'))
   },
 })
