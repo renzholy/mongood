@@ -97,7 +97,7 @@ export function NotebookItem(props: {
         }}
         onBlur={async () => {
           setIsFocused(false)
-          handleRunCommand(value)
+          await handleRunCommand(value)
         }}>
         <Card.Item styles={{ root: { height: 5 * 18 } }}>
           <ControlledEditor
@@ -111,7 +111,7 @@ export function NotebookItem(props: {
               editor.onKeyDown(async (e) => {
                 if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
                   e.stopPropagation()
-                  handleRunCommand(getEditorValue())
+                  await handleRunCommand(getEditorValue())
                 }
               })
             }}
