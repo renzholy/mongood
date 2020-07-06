@@ -85,3 +85,14 @@ function BinData(
     subType: string
   }
 }
+
+const SubType = {
+  Generic: 0x0,
+  Function: 0x1,
+  Binary_old: 0x2,
+  UUID_old: 0x3,
+  UUID: 0x4,
+  MD5: 0x5,
+  Encrypted: 0x6,
+  UserDefined: 0x80,
+}

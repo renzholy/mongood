@@ -1,3 +1,6 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/no-danger */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
@@ -5,7 +8,7 @@ import { Card } from '@uifabric/react-cards'
 import { ControlledEditor } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor'
 import { useSelector } from 'react-redux'
-import { Icon, getTheme } from '@fluentui/react'
+import { Icon, getTheme, Spinner, SpinnerSize } from '@fluentui/react'
 
 import { toCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
@@ -32,6 +35,7 @@ export function NotebookItem(props: {
     }
     changeLib(collectionsMap[database])
   }, [database, collectionsMap])
+  const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<any>()
   const [error, setError] = useState<string>()
   const handleRunCommand = useCallback(
@@ -40,6 +44,7 @@ export function NotebookItem(props: {
         return
       }
       try {
+        setIsLoading(true)
         const command = toCommand(commandStr)
         setResult(
           await runCommand(connection, database, command, { canonical: true }),
@@ -52,16 +57,15 @@ export function NotebookItem(props: {
         } else {
           setError(err.message)
         }
+      } finally {
+        setIsLoading(false)
       }
     },
     [connection, database],
   )
-  const resultStr = useMemo(
-    () => stringify(result?.cursor?.firstBatch || result?.cursot || result, 2),
-    [result],
-  )
+  const resultStr = useMemo(() => stringify(result, 2), [result])
   const resultHtml = useColorize(resultStr)
-  const [focus, setFocus] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
     setValue(props.in)
   }, [props.in])
@@ -91,11 +95,11 @@ export function NotebookItem(props: {
           },
         }}
         onFocus={() => {
-          setFocus(true)
+          setIsFocused(true)
         }}
         onBlur={async () => {
-          setFocus(false)
-          handleRunCommand(value)
+          setIsFocused(false)
+          await handleRunCommand(value)
         }}>
         <Card.Item styles={{ root: { height: 5 * 18 } }}>
           <ControlledEditor
@@ -109,7 +113,7 @@ export function NotebookItem(props: {
               editor.onKeyDown(async (e) => {
                 if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
                   e.stopPropagation()
-                  handleRunCommand(getEditorValue())
+                  await handleRunCommand(getEditorValue())
                 }
               })
             }}
@@ -125,34 +129,43 @@ export function NotebookItem(props: {
             }}
           />
         </Card.Item>
-        {focus ? (
-          <Card.Item
-            styles={{
-              root: {
-                position: 'absolute',
-                right: 10,
-                bottom: 10,
-                userSelect: 'none',
-              },
-            }}>
-            <span
-              style={{
-                fontSize: 14,
-                color: theme.palette.neutralSecondary,
+        <Card.Item
+          styles={{
+            root: {
+              position: 'absolute',
+              right: 10,
+              bottom: 10,
+              userSelect: 'none',
+              cursor: 'pointer',
+            },
+          }}>
+          {isLoading ? (
+            <Spinner size={SpinnerSize.small} />
+          ) : isFocused ? (
+            <div
+              onClick={() => {
+                handleRunCommand(value)
               }}>
-              ⌘
-            </span>
-            <Icon
-              iconName="ReturnKey"
-              styles={{
-                root: {
-                  verticalAlign: 'text-bottom',
+              <span
+                style={{
+                  fontSize: 18,
                   color: theme.palette.neutralSecondary,
-                },
-              }}
-            />
-          </Card.Item>
-        ) : null}
+                }}>
+                ⌘
+              </span>
+              <Icon
+                iconName="ReturnKey"
+                styles={{
+                  root: {
+                    verticalAlign: 'text-bottom',
+                    marginBottom: 2,
+                    color: theme.palette.neutralSecondary,
+                  },
+                }}
+              />
+            </div>
+          ) : null}
+        </Card.Item>
       </Card>
       <Card.Item>
         {error || resultStr ? (
