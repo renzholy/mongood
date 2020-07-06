@@ -1,5 +1,6 @@
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
 import React, { useState, useEffect } from 'react'
+import { KeyCode } from 'monaco-editor'
 
 import { stringify, parse } from '@/utils/ejson'
 import { ControlledEditor } from '@/utils/editor'
@@ -83,7 +84,7 @@ export function EditorModal<T extends object>(props: {
             theme={isDarkMode ? 'vs-dark' : 'vs'}
             editorDidMount={(_getEditorValue, editor) => {
               editor.onKeyDown((e) => {
-                if (e.keyCode === 9) {
+                if (e.keyCode === KeyCode.Escape) {
                   e.stopPropagation()
                 }
               })
