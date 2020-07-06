@@ -28,5 +28,7 @@ class Collection {
   ): void
   deleteOne(filter: object): void
   deleteMany(filter: object): void
+  estimatedDocumentCount(): void
+  countDocuments(filter: object = {}): void
   getIndexes(): void
 }

@@ -122,6 +122,17 @@ function Collection(collection: string) {
         ],
       }
     },
+    estimatedDocumentCount() {
+      return {
+        count: collection,
+      }
+    },
+    countDocuments(filter: object = {}) {
+      return {
+        count: collection,
+        query: filter,
+      }
+    },
     getIndexes() {
       return {
         listIndexes: collection,
