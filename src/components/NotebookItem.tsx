@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/no-danger */
@@ -7,7 +8,7 @@ import { Card } from '@uifabric/react-cards'
 import { ControlledEditor } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor'
 import { useSelector } from 'react-redux'
-import { Icon, getTheme } from '@fluentui/react'
+import { Icon, getTheme, Spinner, SpinnerSize } from '@fluentui/react'
 
 import { toCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
@@ -34,6 +35,7 @@ export function NotebookItem(props: {
     }
     changeLib(collectionsMap[database])
   }, [database, collectionsMap])
+  const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<any>()
   const [error, setError] = useState<string>()
   const handleRunCommand = useCallback(
@@ -42,6 +44,7 @@ export function NotebookItem(props: {
         return
       }
       try {
+        setIsLoading(true)
         const command = toCommand(commandStr)
         setResult(
           await runCommand(connection, database, command, { canonical: true }),
@@ -54,6 +57,8 @@ export function NotebookItem(props: {
         } else {
           setError(err.message)
         }
+      } finally {
+        setIsLoading(false)
       }
     },
     [connection, database],
@@ -127,17 +132,19 @@ export function NotebookItem(props: {
             }}
           />
         </Card.Item>
-        {isFocused ? (
-          <Card.Item
-            styles={{
-              root: {
-                position: 'absolute',
-                right: 10,
-                bottom: 10,
-                userSelect: 'none',
-                cursor: 'pointer',
-              },
-            }}>
+        <Card.Item
+          styles={{
+            root: {
+              position: 'absolute',
+              right: 10,
+              bottom: 10,
+              userSelect: 'none',
+              cursor: 'pointer',
+            },
+          }}>
+          {isLoading ? (
+            <Spinner size={SpinnerSize.small} />
+          ) : isFocused ? (
             <div
               onClick={() => {
                 handleRunCommand(value)
@@ -160,8 +167,8 @@ export function NotebookItem(props: {
                 }}
               />
             </div>
-          </Card.Item>
-        ) : null}
+          ) : null}
+        </Card.Item>
       </Card>
       <Card.Item>
         {error || resultStr ? (
