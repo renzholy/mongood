@@ -10,7 +10,7 @@ export default createSlice({
     filter: {},
     sort: {},
     skip: 0,
-    limit: 25,
+    limit: parseInt(localStorage.getItem('limit') || '25', 10),
     count: 0,
     shouldRevalidate: Date.now(),
   } as {
@@ -58,10 +58,13 @@ export default createSlice({
       ...state,
       skip: Math.min(state.skip + state.limit, state.count),
     }),
-    setLimit: (state, { payload }: PayloadAction<number>) => ({
-      ...state,
-      limit: payload,
-    }),
+    setLimit: (state, { payload }: PayloadAction<number>) => {
+      localStorage.setItem('limit', payload.toString())
+      return {
+        ...state,
+        limit: payload,
+      }
+    },
     setCount: (state, { payload }: PayloadAction<number>) => ({
       ...state,
       count: payload,
