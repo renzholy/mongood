@@ -2,7 +2,7 @@
  * @see https://docs.mongodb.com/manual/reference/mongodb-extended-json/#example
  */
 
-import vm from 'vm'
+import saferEval from 'safer-eval'
 import _ from 'lodash'
 
 import { MongoData } from '@/types'
@@ -131,11 +131,9 @@ export const sandbox = {
   }),
 }
 
-const context = vm.createContext(sandbox)
-
 export function parse(str: string): MongoData {
   return JSON.parse(
-    JSON.stringify(vm.runInContext(str, context) || null, (_key, value) => {
+    JSON.stringify(saferEval(str, sandbox), (_key, value) => {
       if (value instanceof RegExp) {
         return {
           $regularExpression: {
