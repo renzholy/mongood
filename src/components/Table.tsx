@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback, useEffect } from 'react'
 import {
-  ShimmeredDetailsList,
   DetailsList,
   SelectionMode,
   DetailsListLayoutMode,
@@ -85,6 +84,9 @@ export const Table = React.memo(
       (item) => <DocumentRow value={item} />,
       [],
     )
+    const getKey = useCallback((item) => {
+      return item?._id?.$oid || item._id
+    }, [])
 
     if (error) {
       return (
@@ -118,8 +120,9 @@ export const Table = React.memo(
               selection={props.selection!}
               isEnabled={!!props.selection}>
               {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
-                <ShimmeredDetailsList
-                  enableShimmer={props.isValidating}
+                <DetailsList
+                  getKey={getKey}
+                  useReducedRowRenderer={true}
                   columns={columns}
                   constrainMode={ConstrainMode.unconstrained}
                   layoutMode={DetailsListLayoutMode.justified}
@@ -142,6 +145,8 @@ export const Table = React.memo(
               ) : null}
               {props.displayMode === DisplayMode.DOCUMENT ? (
                 <DetailsList
+                  getKey={getKey}
+                  useReducedRowRenderer={true}
                   columns={[
                     {
                       key: '',
