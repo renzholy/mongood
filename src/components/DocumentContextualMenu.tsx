@@ -140,6 +140,18 @@ export function DocumentContextualMenu<
             subMenuProps: {
               items: [
                 {
+                  key: '1-0',
+                  text: '_id',
+                  disabled:
+                    props.selectedItems.length !== 1 ||
+                    !props.selectedItems[0]._id,
+                  onClick() {
+                    window.navigator.clipboard.writeText(
+                      stringify(props.selectedItems[0]._id),
+                    )
+                  },
+                },
+                {
                   key: '1-1',
                   text: 'as Mongo-Shell Data',
                   secondaryText: 'array',
