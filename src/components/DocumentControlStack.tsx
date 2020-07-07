@@ -130,6 +130,8 @@ export function DocumentControlStack() {
                 iconProps: {
                   iconName: 'Table',
                 },
+                checked: displayMode === DisplayMode.TABLE,
+                canCheck: true,
                 onClick() {
                   dispatch(actions.docs.setDisplayMode(DisplayMode.TABLE))
                 },
@@ -140,6 +142,8 @@ export function DocumentControlStack() {
                 iconProps: {
                   iconName: 'Documentation',
                 },
+                checked: displayMode === DisplayMode.DOCUMENT,
+                canCheck: true,
                 onClick() {
                   dispatch(actions.docs.setDisplayMode(DisplayMode.DOCUMENT))
                 },
