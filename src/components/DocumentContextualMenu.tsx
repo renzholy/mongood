@@ -79,9 +79,16 @@ export function DocumentContextualMenu<
               ? 'Delete Document'
               : `Delete ${props.selectedItems.length} Documents`,
           subText: props.selectedItems
-            .map((item) => (hidden ? '' : stringify(item._id)))
+            .map((item) => stringify(item._id))
             .join('\n'),
           showCloseButton: true,
+          isMultiline: true,
+          styles: {
+            innerContent: {
+              maxHeight: 410,
+              overflow: 'scroll',
+            },
+          },
           onDismiss() {
             setHidden(true)
           },
