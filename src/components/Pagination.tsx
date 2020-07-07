@@ -41,6 +41,8 @@ export function Pagination() {
                 items: [25, 50, 100].map((l, i) => ({
                   key: i.toString(),
                   text: l.toString(),
+                  checked: l === limit,
+                  canCheck: true,
                   onClick() {
                     dispatch(actions.docs.setLimit(l))
                   },

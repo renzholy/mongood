@@ -83,11 +83,30 @@ export function DocumentFilterStack() {
             ? {
                 items: [
                   {
+                    key: 'o',
+                    text: 'Natural',
+                    iconProps: {
+                      iconName: 'Sort',
+                    },
+                    checked: sort[key] === undefined,
+                    canCheck: true,
+                    onClick() {
+                      dispatch(
+                        actions.docs.setSort({
+                          ...sort,
+                          [key]: undefined,
+                        }),
+                      )
+                    },
+                  },
+                  {
                     key: '1',
                     text: 'Ascending',
                     iconProps: {
                       iconName: 'SortUp',
                     },
+                    checked: sort[key] === 1,
+                    canCheck: true,
                     onClick() {
                       dispatch(
                         actions.docs.setSort({
@@ -103,6 +122,8 @@ export function DocumentFilterStack() {
                     iconProps: {
                       iconName: 'SortDown',
                     },
+                    checked: sort[key] === -1,
+                    canCheck: true,
                     onClick() {
                       dispatch(
                         actions.docs.setSort({

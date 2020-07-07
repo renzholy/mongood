@@ -194,7 +194,7 @@ export default () => {
               <ProfilingCard key={index.toString()} value={item} />
             ))
           ) : (
-            <LargeMessage iconName="Database" title="No Profile" />
+            <LargeMessage iconName="Database" title="No Profiling" />
           )
         ) : (
           <LargeMessage iconName="SearchData" title="Loading" />

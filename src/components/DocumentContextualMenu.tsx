@@ -79,9 +79,16 @@ export function DocumentContextualMenu<
               ? 'Delete Document'
               : `Delete ${props.selectedItems.length} Documents`,
           subText: props.selectedItems
-            .map((item) => (hidden ? '' : stringify(item._id)))
+            .map((item) => stringify(item._id))
             .join('\n'),
           showCloseButton: true,
+          isMultiline: true,
+          styles: {
+            innerContent: {
+              maxHeight: 410,
+              overflow: 'scroll',
+            },
+          },
           onDismiss() {
             setHidden(true)
           },
@@ -132,6 +139,18 @@ export function DocumentContextualMenu<
             iconProps: { iconName: 'Copy' },
             subMenuProps: {
               items: [
+                {
+                  key: '1-0',
+                  text: '_id',
+                  disabled:
+                    props.selectedItems.length !== 1 ||
+                    !props.selectedItems[0]._id,
+                  onClick() {
+                    window.navigator.clipboard.writeText(
+                      stringify(props.selectedItems[0]._id),
+                    )
+                  },
+                },
                 {
                   key: '1-1',
                   text: 'as Mongo-Shell Data',
