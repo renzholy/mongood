@@ -47,7 +47,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   )
   const theme = getTheme()
   const dispatch = useDispatch()
-  const { connections } = useSelector((state) => state.root)
+  const { connection, connections } = useSelector((state) => state.root)
   const menuProps: IContextualMenuProps | undefined = props.disabled
     ? undefined
     : {
@@ -62,11 +62,12 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
             onClick() {
               dispatch(
                 actions.root.setConnections(
-                  connections.filter(
-                    (connection) => connection !== props.connection,
-                  ),
+                  connections.filter((c) => c !== props.connection),
                 ),
               )
+              if (connection === props.connection) {
+                dispatch(actions.root.setConnection(undefined))
+              }
             },
           },
         ],

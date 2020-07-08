@@ -16,8 +16,12 @@ export default createSlice({
     collectionsMap: { [database: string]: string[] }
   },
   reducers: {
-    setConnection: (state, { payload }: PayloadAction<string>) => {
-      localStorage.setItem('connection', payload)
+    setConnection: (state, { payload }: PayloadAction<string | undefined>) => {
+      if (payload) {
+        localStorage.setItem('connection', payload)
+      } else {
+        localStorage.removeItem('connection')
+      }
       return {
         ...state,
         connection: payload,
