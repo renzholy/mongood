@@ -13,9 +13,11 @@ import useSWR from 'swr'
 import mongodbUri from 'mongodb-uri'
 import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
+import useAsyncEffect from 'use-async-effect'
 
 import { listConnections, runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
+import { ServerStats } from '@/types'
 
 function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const uri = useMemo(() => {
@@ -54,6 +56,14 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
           },
         ],
       }
+  const [serverStatus, setServerStatus] = useState<ServerStats>()
+  useAsyncEffect(async () => {
+    setServerStatus(
+      await runCommand<ServerStats>(props.connection, 'admin', {
+        serverStatus: 1,
+      }),
+    )
+  }, [props.connection])
 
   if (!uri) {
     return <DefaultButton text="parse error" menuProps={menuProps} />
@@ -61,7 +71,10 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   return (
     <CompoundButton
       disabled={props.disabled}
-      text={_.compact([
+      text={_.compact([serverStatus?.host, serverStatus?.repl?.setName]).join(
+        ' ',
+      )}
+      secondaryText={_.compact([
         'mongodb://',
         uri.username &&
           (uri.password
@@ -69,8 +82,8 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
             : `${uri.username}@`),
         ...uri.hosts.map((host) => `${host.host}:${host.port || 27017}`),
         uri.database && `/${uri.database}`,
+        secondaryText,
       ]).join('\n')}
-      secondaryText={secondaryText}
       styles={{
         description: {
           lineHeight: '1.2em',
