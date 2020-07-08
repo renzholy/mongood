@@ -1,17 +1,107 @@
-import { Modal, CompoundButton, Stack, Text, getTheme } from '@fluentui/react'
-import React from 'react'
+import {
+  Modal,
+  CompoundButton,
+  Stack,
+  Text,
+  getTheme,
+  TextField,
+  DefaultButton,
+  IContextualMenuProps,
+} from '@fluentui/react'
+import React, { useMemo, useCallback, useState } from 'react'
 import useSWR from 'swr'
 import mongodbUri from 'mongodb-uri'
 import _ from 'lodash'
+import { useSelector, useDispatch } from 'react-redux'
 
-import { listConnections } from '@/utils/fetcher'
+import { listConnections, runCommand } from '@/utils/fetcher'
+import { actions } from '@/stores'
+
+function ConnectionItem(props: { connection: string; disabled?: boolean }) {
+  const uri = useMemo(() => {
+    try {
+      return mongodbUri.parse(props.connection)
+    } catch {
+      return undefined
+    }
+  }, [props.connection])
+  const secondaryText = Object.entries(uri?.options || {})
+    .map(([k, v]) => `${k}=${v}`)
+    .join('\n')
+  const dispatch = useDispatch()
+  const { connections } = useSelector((state) => state.root)
+  const menuProps: IContextualMenuProps | undefined = props.disabled
+    ? undefined
+    : {
+        items: [
+          {
+            key: '1',
+            text: 'Remove',
+            iconProps: { iconName: 'Delete' },
+            onClick() {
+              dispatch(
+                actions.root.setConnections(
+                  connections.filter(
+                    (connection) => connection !== props.connection,
+                  ),
+                ),
+              )
+            },
+          },
+        ],
+      }
+
+  if (!uri) {
+    return <DefaultButton text="parse error" menuProps={menuProps} />
+  }
+  return (
+    <CompoundButton
+      disabled={props.disabled}
+      text={_.compact([
+        uri.username &&
+          (uri.password
+            ? `${uri.username}:${uri.password.replaceAll(/./g, '*')}@`
+            : `${uri.username}@`),
+        ...uri.hosts.map((host) => `${host.host}:${host.port || 27017}`),
+        uri.database && `/${uri.database}`,
+      ]).join('\n')}
+      secondaryText={secondaryText}
+      styles={{
+        root: {
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-all',
+          minHeight: 'unset',
+          maxWidth: 'unset',
+          marginBottom: 10,
+          userSelect: 'text',
+        },
+        label: secondaryText ? undefined : { marginBottom: 0 },
+      }}
+      menuProps={menuProps}
+    />
+  )
+}
 
 export function ConnectionEditModal(props: {
   isOpen: boolean
   onDismiss(): void
 }) {
   const { data } = useSWR('connections', listConnections)
+  const { connections } = useSelector((state) => state.root)
   const theme = getTheme()
+  const [value, setValue] = useState('')
+  const dispatch = useDispatch()
+  const handleAddConnection = useCallback(async () => {
+    if (!value) {
+      return
+    }
+    try {
+      await runCommand(value, 'admin', { ping: 1 })
+      dispatch(actions.root.setConnections([value, ...connections]))
+    } catch (err) {
+      console.error(err)
+    }
+  }, [value])
 
   return (
     <Modal
@@ -22,7 +112,40 @@ export function ConnectionEditModal(props: {
         variant="xLarge"
         block={true}
         styles={{
-          root: { color: theme.palette.neutralPrimary, marginBottom: 20 },
+          root: {
+            color: theme.palette.neutralPrimary,
+            marginTop: 20,
+            marginBottom: 20,
+          },
+        }}>
+        Edit Connections
+      </Text>
+      <Stack tokens={{ childrenGap: 10 }}>
+        <TextField
+          multiline={true}
+          resizable={false}
+          placeholder="mongodb://username:password@host1:port1,host2:port2/database?replicaSet=rs0"
+          value={value}
+          onChange={(_ev, newValue) => {
+            setValue(newValue || '')
+          }}
+          onBlur={() => {
+            handleAddConnection()
+          }}
+        />
+        {connections.map((connection) => (
+          <ConnectionItem key={connection} connection={connection} />
+        ))}
+      </Stack>
+      <Text
+        variant="xLarge"
+        block={true}
+        styles={{
+          root: {
+            color: theme.palette.neutralPrimary,
+            marginTop: 20,
+            marginBottom: 20,
+          },
         }}>
         Built-in Connections
         <Text
@@ -34,38 +157,13 @@ export function ConnectionEditModal(props: {
         </Text>
       </Text>
       <Stack tokens={{ childrenGap: 10 }}>
-        {data?.map((connection) => {
-          const uri = mongodbUri.parse(connection)
-          return (
-            <CompoundButton
-              key={connection}
-              disabled={true}
-              text={_.compact([
-                uri.username &&
-                  (uri.password
-                    ? `${uri.username}:${uri.password.replaceAll(/./g, '*')}@`
-                    : `${uri.username}@`),
-                ...uri.hosts.map(
-                  (host) => `${host.host}:${host.port || 27017}`,
-                ),
-                uri.database && `/${uri.database}`,
-              ]).join('\n')}
-              secondaryText={Object.entries(uri.options || {})
-                .map(([k, v]) => `${k}=${v}`)
-                .join('\n')}
-              styles={{
-                root: {
-                  whiteSpace: 'pre-wrap',
-                  wordBreak: 'break-all',
-                  minHeight: 'unset',
-                  maxWidth: 'unset',
-                  marginBottom: 10,
-                  userSelect: 'text',
-                },
-              }}
-            />
-          )
-        })}
+        {data?.map((connection) => (
+          <ConnectionItem
+            key={connection}
+            connection={connection}
+            disabled={true}
+          />
+        ))}
       </Stack>
     </Modal>
   )
