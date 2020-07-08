@@ -60,6 +60,10 @@ export function ExecStage(props: { value: ExecStats }) {
               whiteSpace: 'pre',
               lineHeight: '1.2em',
             },
+            label: {
+              whiteSpace: 'pre',
+              lineHeight: '1.2em',
+            },
             root: {
               paddingTop: 10,
               paddingBottom: 10,

@@ -62,6 +62,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
     <CompoundButton
       disabled={props.disabled}
       text={_.compact([
+        'mongodb://',
         uri.username &&
           (uri.password
             ? `${uri.username}:${uri.password.replaceAll(/./g, '*')}@`
@@ -71,6 +72,9 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
       ]).join('\n')}
       secondaryText={secondaryText}
       styles={{
+        description: {
+          lineHeight: '1.2em',
+        },
         root: {
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-all',
@@ -79,7 +83,9 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
           marginBottom: 10,
           userSelect: 'text',
         },
-        label: secondaryText ? undefined : { marginBottom: 0 },
+        label: secondaryText
+          ? { lineHeight: '1.2em' }
+          : { lineHeight: '1.2em', marginBottom: 0 },
       }}
       menuProps={menuProps}
     />
@@ -114,14 +120,20 @@ export function ConnectionEditModal(props: {
     <Modal
       isOpen={props.isOpen}
       onDismiss={props.onDismiss}
-      styles={{ scrollableContent: { padding: 20, width: 600 } }}>
+      styles={{
+        scrollableContent: {
+          padding: 20,
+          width: 600,
+          maxHeight: '80vh',
+          overflowY: 'scroll',
+        },
+      }}>
       <Text
         variant="xLarge"
         block={true}
         styles={{
           root: {
             color: theme.palette.neutralPrimary,
-            marginTop: 20,
             marginBottom: 20,
           },
         }}>
@@ -131,7 +143,7 @@ export function ConnectionEditModal(props: {
         <TextField
           multiline={true}
           resizable={false}
-          placeholder="mongodb://username:password@host1:port1,host2:port2/database?replicaSet=rs0"
+          placeholder="mongodb://username:password@host1:port1,host2:port2,host3:port3/admin?replicaSet=rs0"
           value={value}
           onChange={(_ev, newValue) => {
             setError(undefined)
