@@ -27,9 +27,24 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
       return undefined
     }
   }, [props.connection])
-  const secondaryText = Object.entries(uri?.options || {})
-    .map(([k, v]) => `${k}=${v}`)
-    .join('\n')
+  const secondaryText = useMemo(
+    () =>
+      uri
+        ? _.compact([
+            'mongodb://',
+            uri.username &&
+              (uri.password
+                ? `${uri.username}:${uri.password.replaceAll(/./g, '*')}@`
+                : `${uri.username}@`),
+            ...uri.hosts.map((host) => `${host.host}:${host.port || 27017}`),
+            uri.database && `/${uri.database}`,
+            Object.entries(uri?.options || {})
+              .map(([k, v]) => `${k}=${v}`)
+              .join('\n'),
+          ]).join('\n')
+        : undefined,
+    [uri],
+  )
   const theme = getTheme()
   const dispatch = useDispatch()
   const { connections } = useSelector((state) => state.root)
@@ -74,16 +89,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
       text={_.compact([serverStatus?.host, serverStatus?.repl?.setName]).join(
         ' ',
       )}
-      secondaryText={_.compact([
-        'mongodb://',
-        uri.username &&
-          (uri.password
-            ? `${uri.username}:${uri.password.replaceAll(/./g, '*')}@`
-            : `${uri.username}@`),
-        ...uri.hosts.map((host) => `${host.host}:${host.port || 27017}`),
-        uri.database && `/${uri.database}`,
-        secondaryText,
-      ]).join('\n')}
+      secondaryText={secondaryText}
       styles={{
         description: {
           lineHeight: '1.2em',
@@ -96,9 +102,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
           marginBottom: 10,
           userSelect: 'text',
         },
-        label: secondaryText
-          ? { lineHeight: '1.2em' }
-          : { lineHeight: '1.2em', marginBottom: 0 },
+        label: { lineHeight: '1.2em', minHeight: 16 },
       }}
       menuProps={menuProps}
     />
