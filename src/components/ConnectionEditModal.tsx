@@ -28,6 +28,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const secondaryText = Object.entries(uri?.options || {})
     .map(([k, v]) => `${k}=${v}`)
     .join('\n')
+  const theme = getTheme()
   const dispatch = useDispatch()
   const { connections } = useSelector((state) => state.root)
   const menuProps: IContextualMenuProps | undefined = props.disabled
@@ -37,7 +38,10 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
           {
             key: '1',
             text: 'Remove',
-            iconProps: { iconName: 'Delete' },
+            iconProps: {
+              iconName: 'Delete',
+              styles: { root: { color: theme.palette.red } },
+            },
             onClick() {
               dispatch(
                 actions.root.setConnections(
@@ -90,16 +94,19 @@ export function ConnectionEditModal(props: {
   const { connections } = useSelector((state) => state.root)
   const theme = getTheme()
   const [value, setValue] = useState('')
+  const [error, setError] = useState<Error>()
   const dispatch = useDispatch()
   const handleAddConnection = useCallback(async () => {
     if (!value) {
       return
     }
     try {
+      mongodbUri.parse(value)
       await runCommand(value, 'admin', { ping: 1 })
-      dispatch(actions.root.setConnections([value, ...connections]))
+      dispatch(actions.root.setConnections(_.uniq([value, ...connections])))
+      setValue('')
     } catch (err) {
-      console.error(err)
+      setError(err)
     }
   }, [value])
 
@@ -107,7 +114,7 @@ export function ConnectionEditModal(props: {
     <Modal
       isOpen={props.isOpen}
       onDismiss={props.onDismiss}
-      styles={{ scrollableContent: { padding: 20 } }}>
+      styles={{ scrollableContent: { padding: 20, width: 600 } }}>
       <Text
         variant="xLarge"
         block={true}
@@ -127,11 +134,13 @@ export function ConnectionEditModal(props: {
           placeholder="mongodb://username:password@host1:port1,host2:port2/database?replicaSet=rs0"
           value={value}
           onChange={(_ev, newValue) => {
+            setError(undefined)
             setValue(newValue || '')
           }}
           onBlur={() => {
             handleAddConnection()
           }}
+          errorMessage={error?.message}
         />
         {connections.map((connection) => (
           <ConnectionItem key={connection} connection={connection} />
