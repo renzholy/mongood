@@ -18,7 +18,7 @@ import { ServerStats } from '@/types'
 import { ConnectionEditModal } from './ConnectionEditModal'
 
 export function TopPivot() {
-  const { connection } = useSelector((state) => state.root)
+  const { connection, connections } = useSelector((state) => state.root)
   const dispatch = useDispatch()
   const history = useHistory()
   const theme = getTheme()
@@ -30,25 +30,25 @@ export function TopPivot() {
       }),
     [],
   )
-  const [connections, setConnections] = useState<
+  const [items, setItems] = useState<
     { c: string; host: string; replSetName?: string }[]
   >([])
   useAsyncEffect(async () => {
-    setConnections(
+    setItems(
       _.compact(
         await Promise.all(
-          data?.map(async (c) => {
+          [...connections, ...(data || [])].map(async (c) => {
             try {
               const { host, repl } = await serverStatus(c)
               return { c, host, replSetName: repl?.setName }
             } catch {
               return { c, host: c }
             }
-          }) || [],
+          }),
         ),
       ),
     )
-  }, [data, serverStatus])
+  }, [connections, data, serverStatus])
   useEffect(() => {
     if (data?.length && !connection) {
       dispatch(actions.root.setConnection(data[0]))
@@ -89,7 +89,7 @@ export function TopPivot() {
           <PivotItem headerText="Notebook (Alpha)" itemKey="/notebook" />
         </Pivot>
         <CommandButton
-          text={connections.find(({ c }) => c === connection)?.host}
+          text={items.find(({ c }) => c === connection)?.host}
           menuIconProps={{ iconName: 'Database' }}
           styles={{
             menuIcon: {
@@ -98,7 +98,7 @@ export function TopPivot() {
           }}
           menuProps={{
             items: [
-              ...connections.map(({ c, host, replSetName }) => ({
+              ...items.map(({ c, host, replSetName }) => ({
                 key: c,
                 text: host,
                 secondaryText: replSetName,
