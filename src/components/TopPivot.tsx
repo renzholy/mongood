@@ -49,12 +49,17 @@ export function TopPivot() {
       ),
     )
   }, [connections, data, serverStatus])
-  useEffect(() => {
-    if (data?.length && !connection) {
-      dispatch(actions.root.setConnection(data[0]))
-    }
-  }, [data, connection])
   const [isOpen, setIsOpen] = useState(false)
+  useEffect(() => {
+    if ((data?.length || connections.length) && !connection) {
+      dispatch(actions.root.setConnection([...connections, ...(data || [])][0]))
+    }
+  }, [connection, connections, data])
+  useEffect(() => {
+    if (connections.length === 0 && data?.length === 0) {
+      setIsOpen(true)
+    }
+  }, [connection, connections, data])
 
   return (
     <>
