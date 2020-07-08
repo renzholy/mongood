@@ -5,7 +5,6 @@ import {
   getTheme,
   CommandButton,
   ContextualMenuItemType,
-  Modal,
 } from '@fluentui/react'
 import { useHistory } from 'umi'
 import useSWR from 'swr'
@@ -16,6 +15,7 @@ import _ from 'lodash'
 import { listConnections, runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { ServerStats } from '@/types'
+import { ConnectionEditModal } from './ConnectionEditModal'
 
 export function TopPivot() {
   const { connection } = useSelector((state) => state.root)
@@ -57,67 +57,69 @@ export function TopPivot() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div
-      style={{
-        backgroundColor: theme.palette.neutralLight,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingLeft: 8,
-        paddingRight: 8,
-        flexShrink: 0,
-      }}>
-      <Modal
+    <>
+      <ConnectionEditModal
         isOpen={isOpen}
         onDismiss={() => {
           setIsOpen(false)
         }}
       />
-      <Pivot
-        selectedKey={history.location.pathname}
-        onLinkClick={(link) => {
-          history.push(link?.props.itemKey || '/')
+      <div
+        style={{
+          backgroundColor: theme.palette.neutralLight,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingLeft: 8,
+          paddingRight: 8,
+          flexShrink: 0,
         }}>
-        <PivotItem headerText="Stats" itemKey="/stats" />
-        <PivotItem headerText="Documents" itemKey="/documents" />
-        <PivotItem headerText="Indexes" itemKey="/indexes" />
-        <PivotItem headerText="Operations" itemKey="/operations" />
-        <PivotItem headerText="Profiling" itemKey="/profiling" />
-        <PivotItem headerText="Schema" itemKey="/schema" />
-        <PivotItem headerText="Users" itemKey="/users" />
-        <PivotItem headerText="Notebook (Alpha)" itemKey="/notebook" />
-      </Pivot>
-      <CommandButton
-        text={connections.find(({ c }) => c === connection)?.host}
-        menuIconProps={{ iconName: 'Database' }}
-        styles={{
-          menuIcon: {
-            color: theme.palette.themePrimary,
-          },
-        }}
-        menuProps={{
-          items: [
-            ...connections.map(({ c, host, replSetName }) => ({
-              key: c,
-              text: host,
-              secondaryText: replSetName,
-              canCheck: true,
-              checked: connection === c,
-              onClick() {
-                dispatch(actions.root.setConnection(c))
-              },
-            })),
-            { key: 'divider', itemType: ContextualMenuItemType.Divider },
-            {
-              key: 'create',
-              text: 'Edit Connections',
-              onClick() {
-                setIsOpen(true)
-              },
+        <Pivot
+          selectedKey={history.location.pathname}
+          onLinkClick={(link) => {
+            history.push(link?.props.itemKey || '/')
+          }}>
+          <PivotItem headerText="Stats" itemKey="/stats" />
+          <PivotItem headerText="Documents" itemKey="/documents" />
+          <PivotItem headerText="Indexes" itemKey="/indexes" />
+          <PivotItem headerText="Operations" itemKey="/operations" />
+          <PivotItem headerText="Profiling" itemKey="/profiling" />
+          <PivotItem headerText="Schema" itemKey="/schema" />
+          <PivotItem headerText="Users" itemKey="/users" />
+          <PivotItem headerText="Notebook (Alpha)" itemKey="/notebook" />
+        </Pivot>
+        <CommandButton
+          text={connections.find(({ c }) => c === connection)?.host}
+          menuIconProps={{ iconName: 'Database' }}
+          styles={{
+            menuIcon: {
+              color: theme.palette.themePrimary,
             },
-          ],
-        }}
-      />
-    </div>
+          }}
+          menuProps={{
+            items: [
+              ...connections.map(({ c, host, replSetName }) => ({
+                key: c,
+                text: host,
+                secondaryText: replSetName,
+                canCheck: true,
+                checked: connection === c,
+                onClick() {
+                  dispatch(actions.root.setConnection(c))
+                },
+              })),
+              { key: 'divider', itemType: ContextualMenuItemType.Divider },
+              {
+                key: 'create',
+                text: 'Edit Connections',
+                onClick() {
+                  setIsOpen(true)
+                },
+              },
+            ],
+          }}
+        />
+      </div>
+    </>
   )
 }
