@@ -1,5 +1,12 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { Pivot, PivotItem, getTheme, CommandButton } from '@fluentui/react'
+import {
+  Pivot,
+  PivotItem,
+  getTheme,
+  CommandButton,
+  ContextualMenuItemType,
+  Modal,
+} from '@fluentui/react'
 import { useHistory } from 'umi'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
@@ -47,6 +54,7 @@ export function TopPivot() {
       dispatch(actions.root.setConnection(data[0]))
     }
   }, [data, connection])
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div
@@ -59,6 +67,12 @@ export function TopPivot() {
         paddingRight: 8,
         flexShrink: 0,
       }}>
+      <Modal
+        isOpen={isOpen}
+        onDismiss={() => {
+          setIsOpen(false)
+        }}
+      />
       <Pivot
         selectedKey={history.location.pathname}
         onLinkClick={(link) => {
@@ -82,16 +96,26 @@ export function TopPivot() {
           },
         }}
         menuProps={{
-          items: connections.map(({ c, host, replSetName }) => ({
-            key: c,
-            text: host,
-            secondaryText: replSetName,
-            canCheck: true,
-            checked: connection === c,
-            onClick() {
-              dispatch(actions.root.setConnection(c))
+          items: [
+            ...connections.map(({ c, host, replSetName }) => ({
+              key: c,
+              text: host,
+              secondaryText: replSetName,
+              canCheck: true,
+              checked: connection === c,
+              onClick() {
+                dispatch(actions.root.setConnection(c))
+              },
+            })),
+            { key: 'divider', itemType: ContextualMenuItemType.Divider },
+            {
+              key: 'create',
+              text: 'Edit Connections',
+              onClick() {
+                setIsOpen(true)
+              },
             },
-          })),
+          ],
         }}
       />
     </div>
