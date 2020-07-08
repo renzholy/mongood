@@ -1,5 +1,11 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { Pivot, PivotItem, getTheme, CommandButton } from '@fluentui/react'
+import {
+  Pivot,
+  PivotItem,
+  getTheme,
+  CommandButton,
+  ContextualMenuItemType,
+} from '@fluentui/react'
 import { useHistory } from 'umi'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
@@ -9,9 +15,10 @@ import _ from 'lodash'
 import { listConnections, runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { ServerStats } from '@/types'
+import { ConnectionEditModal } from './ConnectionEditModal'
 
 export function TopPivot() {
-  const { connection } = useSelector((state) => state.root)
+  const { connection, connections } = useSelector((state) => state.root)
   const dispatch = useDispatch()
   const history = useHistory()
   const theme = getTheme()
@@ -23,77 +30,101 @@ export function TopPivot() {
       }),
     [],
   )
-  const [connections, setConnections] = useState<
+  const [items, setItems] = useState<
     { c: string; host: string; replSetName?: string }[]
   >([])
   useAsyncEffect(async () => {
-    setConnections(
+    setItems(
       _.compact(
         await Promise.all(
-          data?.map(async (c) => {
+          [...connections, ...(data || [])].map(async (c) => {
             try {
               const { host, repl } = await serverStatus(c)
               return { c, host, replSetName: repl?.setName }
             } catch {
               return { c, host: c }
             }
-          }) || [],
+          }),
         ),
       ),
     )
-  }, [data, serverStatus])
+  }, [connections, data, serverStatus])
+  const [isOpen, setIsOpen] = useState(false)
   useEffect(() => {
-    if (data?.length && !connection) {
-      dispatch(actions.root.setConnection(data[0]))
+    if ((data?.length || connections.length) && !connection) {
+      dispatch(actions.root.setConnection([...connections, ...(data || [])][0]))
     }
-  }, [data, connection])
+  }, [connection, connections, data])
+  useEffect(() => {
+    if (connections.length === 0 && data?.length === 0) {
+      setIsOpen(true)
+    }
+  }, [connection, connections, data])
 
   return (
-    <div
-      style={{
-        backgroundColor: theme.palette.neutralLight,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingLeft: 8,
-        paddingRight: 8,
-        flexShrink: 0,
-      }}>
-      <Pivot
-        selectedKey={history.location.pathname}
-        onLinkClick={(link) => {
-          history.push(link?.props.itemKey || '/')
-        }}>
-        <PivotItem headerText="Stats" itemKey="/stats" />
-        <PivotItem headerText="Documents" itemKey="/documents" />
-        <PivotItem headerText="Indexes" itemKey="/indexes" />
-        <PivotItem headerText="Operations" itemKey="/operations" />
-        <PivotItem headerText="Profiling" itemKey="/profiling" />
-        <PivotItem headerText="Schema" itemKey="/schema" />
-        <PivotItem headerText="Users" itemKey="/users" />
-        <PivotItem headerText="Notebook (Alpha)" itemKey="/notebook" />
-      </Pivot>
-      <CommandButton
-        text={connections.find(({ c }) => c === connection)?.host}
-        menuIconProps={{ iconName: 'Database' }}
-        styles={{
-          menuIcon: {
-            color: theme.palette.themePrimary,
-          },
-        }}
-        menuProps={{
-          items: connections.map(({ c, host, replSetName }) => ({
-            key: c,
-            text: host,
-            secondaryText: replSetName,
-            canCheck: true,
-            checked: connection === c,
-            onClick() {
-              dispatch(actions.root.setConnection(c))
-            },
-          })),
+    <>
+      <ConnectionEditModal
+        isOpen={isOpen}
+        onDismiss={() => {
+          setIsOpen(false)
         }}
       />
-    </div>
+      <div
+        style={{
+          backgroundColor: theme.palette.neutralLight,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingLeft: 8,
+          paddingRight: 8,
+          flexShrink: 0,
+        }}>
+        <Pivot
+          selectedKey={history.location.pathname}
+          onLinkClick={(link) => {
+            history.push(link?.props.itemKey || '/')
+          }}>
+          <PivotItem headerText="Stats" itemKey="/stats" />
+          <PivotItem headerText="Documents" itemKey="/documents" />
+          <PivotItem headerText="Indexes" itemKey="/indexes" />
+          <PivotItem headerText="Operations" itemKey="/operations" />
+          <PivotItem headerText="Profiling" itemKey="/profiling" />
+          <PivotItem headerText="Schema" itemKey="/schema" />
+          <PivotItem headerText="Users" itemKey="/users" />
+          <PivotItem headerText="Notebook (Alpha)" itemKey="/notebook" />
+        </Pivot>
+        <CommandButton
+          text={items.find(({ c }) => c === connection)?.host}
+          menuIconProps={{ iconName: 'Database' }}
+          styles={{
+            menuIcon: {
+              color: theme.palette.themePrimary,
+            },
+          }}
+          menuProps={{
+            items: [
+              ...items.map(({ c, host, replSetName }) => ({
+                key: c,
+                text: host,
+                secondaryText: replSetName,
+                canCheck: true,
+                checked: connection === c,
+                onClick() {
+                  dispatch(actions.root.setConnection(c))
+                },
+              })),
+              { key: 'divider', itemType: ContextualMenuItemType.Divider },
+              {
+                key: 'create',
+                text: 'Edit Connections',
+                onClick() {
+                  setIsOpen(true)
+                },
+              },
+            ],
+          }}
+        />
+      </div>
+    </>
   )
 }

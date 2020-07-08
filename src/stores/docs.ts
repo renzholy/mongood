@@ -6,7 +6,7 @@ import { DisplayMode } from '@/types.d'
 export default createSlice({
   name: 'docs',
   initialState: {
-    displayMode: DisplayMode.TABLE,
+    displayMode: localStorage.getItem('displayMode') || DisplayMode.TABLE,
     filter: {},
     sort: {},
     skip: 0,
@@ -24,10 +24,13 @@ export default createSlice({
     shouldRevalidate: number
   },
   reducers: {
-    setDisplayMode: (state, { payload }: PayloadAction<DisplayMode>) => ({
-      ...state,
-      displayMode: payload,
-    }),
+    setDisplayMode: (state, { payload }: PayloadAction<DisplayMode>) => {
+      localStorage.setItem('displayMode', payload)
+      return {
+        ...state,
+        displayMode: payload,
+      }
+    },
     setIndex: (
       state,
       { payload }: PayloadAction<IndexSpecification | undefined>,

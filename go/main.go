@@ -55,9 +55,6 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 }
 
 func create(uri string) (*mongo.Client, error) {
-	if uri == "" {
-		uri = "mongodb://localhost:27017"
-	}
 	cached, ok := clients.Load(uri)
 	if ok && cached != nil {
 		return cached.(*mongo.Client), nil
@@ -83,7 +80,13 @@ func destory() {
 
 func listConnections(w http.ResponseWriter, r *http.Request) {
 	uris := os.Getenv("MONGO_URIS")
-	data, err := json.Marshal(strings.Split(uris, "|"))
+	var data []byte
+	var err error
+	if uris == "" {
+		data = []byte("[]")
+	} else {
+		data, err = json.Marshal(strings.Split(uris, "|"))
+	}
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
