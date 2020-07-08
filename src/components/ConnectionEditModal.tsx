@@ -144,6 +144,9 @@ export function ConnectionEditModal(props: {
           maxHeight: '80vh',
           overflowY: 'scroll',
         },
+        main: {
+          minHeight: 'unset',
+        },
       }}>
       <Text
         variant="xLarge"
@@ -160,6 +163,7 @@ export function ConnectionEditModal(props: {
         <TextField
           multiline={true}
           resizable={false}
+          styles={{ root: { marginBottom: 10 } }}
           placeholder="mongodb://username:password@host1:port1,host2:port2,host3:port3/admin?replicaSet=rs0"
           value={value}
           onChange={(_ev, newValue) => {
@@ -175,34 +179,38 @@ export function ConnectionEditModal(props: {
           <ConnectionItem key={connection} connection={connection} />
         ))}
       </Stack>
-      <Text
-        variant="xLarge"
-        block={true}
-        styles={{
-          root: {
-            color: theme.palette.neutralPrimary,
-            marginTop: 20,
-            marginBottom: 20,
-          },
-        }}>
-        Built-in Connections
-        <Text
-          variant="large"
-          styles={{
-            root: { color: theme.palette.neutralPrimaryAlt },
-          }}>
-          &nbsp;(read-only)
-        </Text>
-      </Text>
-      <Stack tokens={{ childrenGap: 10 }}>
-        {data?.map((connection) => (
-          <ConnectionItem
-            key={connection}
-            connection={connection}
-            disabled={true}
-          />
-        ))}
-      </Stack>
+      {data?.length ? (
+        <>
+          <Text
+            variant="xLarge"
+            block={true}
+            styles={{
+              root: {
+                color: theme.palette.neutralPrimary,
+                marginTop: 20,
+                marginBottom: 20,
+              },
+            }}>
+            Built-in Connections
+            <Text
+              variant="large"
+              styles={{
+                root: { color: theme.palette.neutralPrimaryAlt },
+              }}>
+              &nbsp;(read-only)
+            </Text>
+          </Text>
+          <Stack tokens={{ childrenGap: 10 }}>
+            {data.map((connection) => (
+              <ConnectionItem
+                key={connection}
+                connection={connection}
+                disabled={true}
+              />
+            ))}
+          </Stack>
+        </>
+      ) : null}
     </Modal>
   )
 }
