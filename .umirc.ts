@@ -15,6 +15,12 @@ export default defineConfig({
     },
   },
   forkTSChecker: {},
+  alias: {
+    'react-redux':
+      process.env.NODE_ENV === 'development'
+        ? 'react-redux/lib'
+        : 'react-redux',
+  },
   chainWebpack(config) {
     config.module
       .rule('declaration')
