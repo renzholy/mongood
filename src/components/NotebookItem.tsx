@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Card } from '@uifabric/react-cards'
-import { ControlledEditor } from '@monaco-editor/react'
+import { ControlledEditor, EditorDidMount } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor'
 import { useSelector } from 'react-redux'
 import { Icon, getTheme, Spinner, SpinnerSize } from '@fluentui/react'
@@ -26,9 +26,9 @@ export function NotebookItem(props: {
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
   const theme = getTheme()
-  const { connection, database, collectionsMap } = useSelector(
-    (state) => state.root,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collectionsMap = useSelector((state) => state.root.collectionsMap)
   useEffect(() => {
     if (!database) {
       return
@@ -78,6 +78,17 @@ export function NotebookItem(props: {
   useEffect(() => {
     props.onNext({ in: value, out: result, error })
   }, [value, result, error])
+  const handleEditorDidMount = useCallback<EditorDidMount>(
+    (getEditorValue, editor) => {
+      editor.onKeyDown(async (e) => {
+        if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
+          e.stopPropagation()
+          await handleRunCommand(getEditorValue())
+        }
+      })
+    },
+    [handleRunCommand],
+  )
 
   return (
     <div>
@@ -109,14 +120,7 @@ export function NotebookItem(props: {
               setValue(_value || '')
             }}
             theme={isDarkMode ? 'vs-dark' : 'vs'}
-            editorDidMount={(getEditorValue, editor) => {
-              editor.onKeyDown(async (e) => {
-                if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
-                  e.stopPropagation()
-                  await handleRunCommand(getEditorValue())
-                }
-              })
-            }}
+            editorDidMount={handleEditorDidMount}
             options={{
               lineDecorationsWidth: 0,
               glyphMargin: false,

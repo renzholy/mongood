@@ -7,7 +7,8 @@ import { DocumentFilterStack } from '@/components/DocumentFilterStack'
 import { LargeMessage } from '@/components/LargeMessage'
 
 export default () => {
-  const { database, collection } = useSelector((state) => state.root)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />

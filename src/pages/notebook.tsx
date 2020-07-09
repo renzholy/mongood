@@ -8,10 +8,10 @@ import { NotebookItem } from '@/components/NotebookItem'
 import { actions } from '@/stores'
 
 export default () => {
-  const { notebooks } = useSelector((state) => state.notebook)
-  const { connection, database, collectionsMap } = useSelector(
-    (state) => state.root,
-  )
+  const notebooks = useSelector((state) => state.notebook.notebooks)
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collectionsMap = useSelector((state) => state.root.collectionsMap)
   useEffect(() => {
     if (!database) {
       return

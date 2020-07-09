@@ -13,9 +13,9 @@ import {
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import _ from 'lodash'
 import { useSelector } from 'react-redux'
-import { runCommand } from '@/utils/fetcher'
 import { EJSON } from 'bson'
 
+import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 import { Operation } from '@/types'
 import { EditorModal } from './EditorModal'
@@ -27,7 +27,7 @@ export function OperationCard(props: {
   onView(isOpen: boolean): void
   onKill(): void
 }) {
-  const { connection } = useSelector((state) => state.root)
+  const connection = useSelector((state) => state.root.connection)
   const theme = getTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [target, setTarget] = useState<MouseEvent>()

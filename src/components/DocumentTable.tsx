@@ -16,18 +16,16 @@ import { DocumentContextualMenu } from './DocumentContextualMenu'
 type Data = { _id: MongoData; [key: string]: MongoData }
 
 export const DocumentTable = React.memo(() => {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
-  const {
-    index,
-    filter,
-    sort,
-    skip,
-    limit,
-    shouldRevalidate,
-    displayMode,
-  } = useSelector((state) => state.docs)
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  const index = useSelector((state) => state.docs.index)
+  const filter = useSelector((state) => state.docs.filter)
+  const sort = useSelector((state) => state.docs.sort)
+  const skip = useSelector((state) => state.docs.skip)
+  const limit = useSelector((state) => state.docs.limit)
+  const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
+  const displayMode = useSelector((state) => state.docs.displayMode)
   const { data, error, isValidating, revalidate } = useSWR(
     database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(

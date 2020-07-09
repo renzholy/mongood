@@ -20,9 +20,9 @@ export function IndexContextualMenu(props: {
   onView: () => void
   onDrop: () => void
 }) {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
   const [isSucceed, setIsSucceed] = useState<boolean>()
   const [isDroping, setIsDroping] = useState(false)
   const [hidden, setHidden] = useState(true)

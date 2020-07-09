@@ -1,6 +1,7 @@
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { KeyCode } from 'monaco-editor'
+import { EditorDidMount } from '@monaco-editor/react'
 
 import { stringify, parse } from '@/utils/ejson'
 import { ControlledEditor } from '@/utils/editor'
@@ -21,6 +22,16 @@ export function EditorModal<T extends object>(props: {
   useEffect(() => {
     setValue(`return ${stringify(props.value, 2)}\n`)
   }, [props.value])
+  const handleEditorDidMount = useCallback<EditorDidMount>(
+    (_getEditorValue, editor) => {
+      editor.onKeyDown((e) => {
+        if (e.keyCode === KeyCode.Escape) {
+          e.stopPropagation()
+        }
+      })
+    },
+    [],
+  )
 
   return (
     <>
@@ -82,13 +93,7 @@ export function EditorModal<T extends object>(props: {
               setValue(_value || '')
             }}
             theme={isDarkMode ? 'vs-dark' : 'vs'}
-            editorDidMount={(_getEditorValue, editor) => {
-              editor.onKeyDown((e) => {
-                if (e.keyCode === KeyCode.Escape) {
-                  e.stopPropagation()
-                }
-              })
-            }}
+            editorDidMount={handleEditorDidMount}
             options={{
               readOnly: props.readOnly,
               wordWrap: 'on',

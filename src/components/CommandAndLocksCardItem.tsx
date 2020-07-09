@@ -2,11 +2,11 @@
 
 import React, { useMemo } from 'react'
 import _ from 'lodash'
+import { Card } from '@uifabric/react-cards'
 
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
 import { stringify } from '@/utils/ejson'
-import { Card } from '@uifabric/react-cards'
 
 export function CommandAndLocksCardItem(props: {
   command: MongoData
