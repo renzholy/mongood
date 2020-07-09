@@ -5,3 +5,9 @@ screenshot/
 src/.umi/
 npm-debug.log
 go/pkged.go
+go/mongood
+go/pkged.go
+go/mongood.app
+go/mongood-darwin
+go/mongood-windows.exe
+.DS_Store
