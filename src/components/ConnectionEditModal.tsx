@@ -47,7 +47,8 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   )
   const theme = getTheme()
   const dispatch = useDispatch()
-  const { connection, connections } = useSelector((state) => state.root)
+  const connection = useSelector((state) => state.root.connection)
+  const connections = useSelector((state) => state.root.connections)
   const menuProps: IContextualMenuProps | undefined = props.disabled
     ? undefined
     : {
@@ -115,7 +116,7 @@ export function ConnectionEditModal(props: {
   onDismiss(): void
 }) {
   const { data } = useSWR('connections', listConnections)
-  const { connections } = useSelector((state) => state.root)
+  const connections = useSelector((state) => state.root.connections)
   const theme = getTheme()
   const [value, setValue] = useState('')
   const [error, setError] = useState<Error>()

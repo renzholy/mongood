@@ -23,9 +23,9 @@ enum ValidationLevel {
 }
 
 export default () => {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
   const { data, revalidate } = useSWR(
     database && collection
       ? `listCollections/${connection}/${database}/${collection}`

@@ -8,7 +8,8 @@ import { Stack } from '@fluentui/react'
 import { UserCard } from '@/components/UserCard'
 
 export default () => {
-  const { connection, database } = useSelector((state) => state.root)
+  const database = useSelector((state) => state.root.database)
+  const connection = useSelector((state) => state.root.connection)
   const { data: usersInfo, error } = useSWR(
     `usersInfo/${connection}/${database}`,
     () =>

@@ -13,12 +13,13 @@ import { ProfilingCard } from '@/components/ProfilingCard'
 import { Pagination } from '@/components/Pagination'
 
 export default () => {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
-  const { filter, skip, limit, shouldRevalidate } = useSelector(
-    (state) => state.docs,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  const filter = useSelector((state) => state.docs.filter)
+  const skip = useSelector((state) => state.docs.skip)
+  const limit = useSelector((state) => state.docs.limit)
+  const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
   const { data: profile, revalidate } = useSWR(`profile/${connection}`, () =>
     runCommand<{ was: number; slowms: number; sampleRate: number }>(
       connection,

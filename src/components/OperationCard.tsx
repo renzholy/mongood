@@ -27,7 +27,7 @@ export function OperationCard(props: {
   onView(isOpen: boolean): void
   onKill(): void
 }) {
-  const { connection } = useSelector((state) => state.root)
+  const connection = useSelector((state) => state.root.connection)
   const theme = getTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [target, setTarget] = useState<MouseEvent>()

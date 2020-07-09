@@ -14,13 +14,11 @@ const splitter = '/'
 
 export function DatabaseNav() {
   const theme = getTheme()
-  const {
-    connection,
-    database,
-    collection,
-    expandedDatabases,
-    collectionsMap,
-  } = useSelector((state) => state.root)
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  const expandedDatabases = useSelector((state) => state.root.expandedDatabases)
+  const collectionsMap = useSelector((state) => state.root.collectionsMap)
   const [keyword, setKeyword] = useState('')
   const { data } = useSWR(
     `listDatabases/${connection}`,

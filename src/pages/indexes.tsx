@@ -11,9 +11,9 @@ import { EditorModal } from '@/components/EditorModal'
 import { ActionButton } from '@/components/ActionButton'
 
 export default () => {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
   const { data: stats, error } = useSWR(
     database && collection
       ? `collStats/${connection}/${database}/${collection}`

@@ -14,12 +14,13 @@ import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
 
 export function DocumentControlStack() {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
-  const { displayMode, index, shouldRevalidate, filter } = useSelector(
-    (state) => state.docs,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  const displayMode = useSelector((state) => state.docs.displayMode)
+  const index = useSelector((state) => state.docs.index)
+  const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
+  const filter = useSelector((state) => state.docs.filter)
   const { data: indexes } = useSWR(
     database && collection
       ? `listIndexes/${connection}/${database}/${collection}`

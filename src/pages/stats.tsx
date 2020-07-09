@@ -88,9 +88,9 @@ function StatsArea(props: {
 }
 
 export default () => {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
   const { data: collStats } = useSWR(
     database && collection
       ? `collStats/${connection}/${database}/${collection}`

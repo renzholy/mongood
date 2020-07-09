@@ -26,9 +26,9 @@ export function NotebookItem(props: {
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
   const theme = getTheme()
-  const { connection, database, collectionsMap } = useSelector(
-    (state) => state.root,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collectionsMap = useSelector((state) => state.root.collectionsMap)
   useEffect(() => {
     if (!database) {
       return

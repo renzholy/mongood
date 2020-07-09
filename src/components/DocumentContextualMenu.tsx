@@ -34,9 +34,9 @@ export function DocumentContextualMenu<
   selectedItems: T[]
   onEdit?(): void
 }) {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
   const dispatch = useDispatch()
   const [isSucceed, setIsSucceed] = useState<boolean>()
   const [isDeleting, setIsDeleting] = useState(false)

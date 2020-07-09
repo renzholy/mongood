@@ -12,7 +12,9 @@ import { actions } from '@/stores'
 import { Number } from '@/utils/formatter'
 
 export function Pagination() {
-  const { skip, limit, count } = useSelector((state) => state.docs)
+  const skip = useSelector((state) => state.docs.skip)
+  const limit = useSelector((state) => state.docs.limit)
+  const count = useSelector((state) => state.docs.count)
   const dispatch = useDispatch()
   const theme = getTheme()
 

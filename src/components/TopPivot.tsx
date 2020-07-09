@@ -18,7 +18,8 @@ import { ServerStats } from '@/types'
 import { ConnectionEditModal } from './ConnectionEditModal'
 
 export function TopPivot() {
-  const { connection, connections } = useSelector((state) => state.root)
+  const connection = useSelector((state) => state.root.connection)
+  const connections = useSelector((state) => state.root.connections)
   const dispatch = useDispatch()
   const history = useHistory()
   const theme = getTheme()

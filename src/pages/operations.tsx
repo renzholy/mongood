@@ -45,9 +45,9 @@ const examples: { [key: string]: object } = {
 }
 
 export default () => {
-  const { connection, database, collection } = useSelector(
-    (state) => state.root,
-  )
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
   const [filter, setFilter] = useState<object>({})
   const [example, setExample] = useState<string>()
   const ns = database && collection ? `${database}.${collection}` : undefined

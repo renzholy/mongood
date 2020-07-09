@@ -15,8 +15,11 @@ import { FilterInput } from './FilterInput'
 export function DocumentFilterStack() {
   const dispatch = useDispatch()
   const theme = getTheme()
-  const { database, collection } = useSelector((state) => state.root)
-  const { index, filter, sort } = useSelector((state) => state.docs)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  const index = useSelector((state) => state.docs.index)
+  const filter = useSelector((state) => state.docs.filter)
+  const sort = useSelector((state) => state.docs.sort)
   useEffect(() => {
     dispatch(actions.docs.setFilter(index?.partialFilterExpression || {}))
     dispatch(actions.docs.setSort({}))
