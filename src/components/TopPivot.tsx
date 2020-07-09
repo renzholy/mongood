@@ -60,6 +60,7 @@ export function TopPivot() {
       setIsOpen(true)
     }
   }, [connection, connections, data])
+  console.log(isOpen)
 
   return (
     <>
