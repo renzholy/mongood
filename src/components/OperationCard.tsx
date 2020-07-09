@@ -13,9 +13,9 @@ import {
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import _ from 'lodash'
 import { useSelector } from 'react-redux'
-import { runCommand } from '@/utils/fetcher'
 import { EJSON } from 'bson'
 
+import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 import { Operation } from '@/types'
 import { EditorModal } from './EditorModal'
