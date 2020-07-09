@@ -20,6 +20,7 @@ import _ from 'lodash'
 
 import { DisplayMode, MongoData } from '@/types.d'
 import { calcHeaders } from '@/utils/table'
+import { stringify } from '@/utils/ejson'
 import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'
 import { DocumentRow } from './DocumentRow'
@@ -85,7 +86,7 @@ export const Table = React.memo(
       [],
     )
     const getKey = useCallback((item) => {
-      return item?._id?.$oid || item._id
+      return stringify(item._id)
     }, [])
 
     if (error) {
