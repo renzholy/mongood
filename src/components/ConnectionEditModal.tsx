@@ -164,6 +164,11 @@ export function ConnectionEditModal(props: {
         <TextField
           multiline={true}
           resizable={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          autoSave="off"
+          spellCheck={false}
           styles={{ root: { marginBottom: 10 } }}
           placeholder="mongodb://username:password@host1:port1,host2:port2,host3:port3/admin?replicaSet=rs0"
           value={value}
