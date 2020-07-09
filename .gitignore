@@ -6,5 +6,6 @@ go/mongood
 go/pkged.go
 go/mongood.app
 go/mongood-darwin
-go/mongood-windows.exe
+go/mongood.exe
+go/mongood-windows
 .DS_Store

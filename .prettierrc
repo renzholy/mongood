@@ -12,6 +12,10 @@
     {
       "files": ".prettierrc",
       "options": { "parser": "json" }
+    },
+    {
+      "files": "app-assets/Info.plist",
+      "options": { "parser": "html" }
     }
   ]
 }
