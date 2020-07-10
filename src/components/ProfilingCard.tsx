@@ -6,19 +6,19 @@ import { Text, getTheme, ContextualMenu } from '@fluentui/react'
 import _ from 'lodash'
 import { EJSON } from 'bson'
 
-import { SystemProfileDoc } from '@/types'
+import { SystemProfileDoc, MongoData } from '@/types'
 import { Number } from '@/utils/formatter'
 import { ExecStage } from './ExecStage'
 import { EditorModal } from './EditorModal'
 import { CommandAndLocksCardItem } from './CommandAndLocksCardItem'
 
-export function ProfilingCard(props: { value: SystemProfileDoc }) {
+export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
   const theme = getTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [target, setTarget] = useState<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
   const value = useMemo<
-    Omit<SystemProfileDoc, 'command' | 'originatingCommand'>
+    Omit<SystemProfileDoc, 'command' | 'originatingCommand' | 'execStats'>
   >(
     () =>
       EJSON.parse(
@@ -125,7 +125,7 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
           ]).join(', ')}
         </Text>
       </Card.Item>
-      {value.execStats ? (
+      {props.value.execStats ? (
         <Card.Item
           styles={{
             root: {
@@ -140,7 +140,9 @@ export function ProfilingCard(props: { value: SystemProfileDoc }) {
               justifyContent: 'flex-end',
               alignItems: 'center',
             }}>
-            <ExecStage value={value.execStats} />
+            <ExecStage
+              value={props.value.execStats as { [key: string]: MongoData }}
+            />
           </div>
         </Card.Item>
       ) : null}

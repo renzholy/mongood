@@ -6,7 +6,7 @@ import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
-import { SystemProfileDoc } from '@/types'
+import { MongoData } from '@/types'
 import { actions } from '@/stores'
 import { LargeMessage } from '@/components/LargeMessage'
 import { ProfilingCard } from '@/components/ProfilingCard'
@@ -47,7 +47,7 @@ export default () => {
       : null,
     () =>
       runCommand<{
-        cursor: { firstBatch: SystemProfileDoc[] }
+        cursor: { firstBatch: { [key: string]: MongoData }[] }
       }>(
         connection,
         database!,

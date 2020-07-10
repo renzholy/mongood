@@ -10,14 +10,19 @@ import {
 } from '@fluentui/react'
 import _ from 'lodash'
 import bytes from 'bytes'
+import { EJSON } from 'bson'
 
-import { ExecStats } from '@/types'
+import { ExecStats, MongoData } from '@/types'
 import { stringify } from '@/utils/ejson'
 import { Number } from '@/utils/formatter'
 import { useColorize } from '@/hooks/use-colorize'
 
-export function ExecStage(props: { value: ExecStats }) {
+export function ExecStage(props: { value: { [key: string]: MongoData } }) {
   const theme = getTheme()
+  const value = useMemo<ExecStats>(
+    () => EJSON.parse(JSON.stringify(props.value)) as ExecStats,
+    [props.value],
+  )
   const str = useMemo(
     () => stringify(_.omit(props.value, ['inputStage', 'inputStages']), 2),
     [props.value],
@@ -73,33 +78,31 @@ export function ExecStage(props: { value: ExecStats }) {
           }}
           secondaryText={_.compact([
             `${Number.format(
-              props.value.executionTimeMillisEstimate -
-                (props.value.inputStage?.executionTimeMillisEstimate ||
+              value.executionTimeMillisEstimate -
+                (value.inputStage?.executionTimeMillisEstimate ||
                   Math.max(
-                    props.value.inputStages?.[0].executionTimeMillisEstimate ||
-                      0,
-                    props.value.inputStages?.[1].executionTimeMillisEstimate ||
-                      0,
+                    value.inputStages?.[0].executionTimeMillisEstimate || 0,
+                    value.inputStages?.[1].executionTimeMillisEstimate || 0,
                   ) ||
                   0),
             )} ms`,
-            props.value.keysExamined === undefined
+            value.keysExamined === undefined
               ? undefined
-              : `${Number.format(props.value.keysExamined)} keys examined`,
-            props.value.docsExamined === undefined
+              : `${Number.format(value.keysExamined)} keys examined`,
+            value.docsExamined === undefined
               ? undefined
-              : `${Number.format(props.value.docsExamined)} docs examined`,
-            props.value.nMatched === undefined
+              : `${Number.format(value.docsExamined)} docs examined`,
+            value.nMatched === undefined
               ? undefined
-              : `${Number.format(props.value.nMatched)} matched`,
-            props.value.memUsage === undefined
+              : `${Number.format(value.nMatched)} matched`,
+            value.memUsage === undefined
               ? undefined
-              : `${bytes(props.value.memUsage, {
+              : `${bytes(value.memUsage, {
                   unitSeparator: ' ',
                 }).toLocaleLowerCase()} mem used`,
-            `${Number.format(props.value.nReturned)} returned`,
+            `${Number.format(value.nReturned)} returned`,
           ]).join('\n')}>
-          {props.value.stage}
+          {value.stage}
         </CompoundButton>
       </HoverCard>
       {props.value.inputStage ? (
@@ -113,7 +116,9 @@ export function ExecStage(props: { value: ExecStats }) {
               },
             }}
           />
-          <ExecStage value={props.value.inputStage} />
+          <ExecStage
+            value={props.value.inputStage as { [key: string]: MongoData }}
+          />
         </>
       ) : null}
       {props.value.inputStages ? (
@@ -133,18 +138,20 @@ export function ExecStage(props: { value: ExecStats }) {
               flexDirection: 'column',
               alignItems: 'flex-end',
             }}>
-            {props.value.inputStages.map((inputStage, index) => (
-              <div
-                key={index.toString()}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'row-reverse',
-                  marginTop: index === 0 ? 0 : 34,
-                }}>
-                <ExecStage value={inputStage} />
-              </div>
-            ))}
+            {(props.value.inputStages as { [key: string]: MongoData }[]).map(
+              (inputStage, index) => (
+                <div
+                  key={index.toString()}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'row-reverse',
+                    marginTop: index === 0 ? 0 : 34,
+                  }}>
+                  <ExecStage value={inputStage} />
+                </div>
+              ),
+            )}
           </div>
         </>
       ) : null}
