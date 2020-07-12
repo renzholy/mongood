@@ -48,6 +48,7 @@ export const Table = React.memo(
           key,
           name: key,
           minWidth,
+          isResizable: true,
         })),
       )
     }, [props.items, props.order])
