@@ -125,6 +125,10 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
           ]).join(', ')}
         </Text>
       </Card.Item>
+      <CommandAndLocksCardItem
+        command={props.value.originatingCommand || props.value.command}
+        locks={value.locks}
+      />
       {props.value.execStats ? (
         <Card.Item
           styles={{
@@ -160,10 +164,6 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
           </Text>
         </Card.Item>
       ) : null}
-      <CommandAndLocksCardItem
-        command={props.value.originatingCommand || props.value.command}
-        locks={value.locks}
-      />
     </Card>
   )
 }
