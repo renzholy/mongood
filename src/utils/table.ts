@@ -2,13 +2,13 @@ import _ from 'lodash'
 
 import { MongoData } from '@/types'
 
-export function calcHeaders<T extends { [key: string]: MongoData }>(
+export function calcHeaders<T extends MongoData>(
   items: T[],
   order?: string[],
 ): { key: string; minWidth: number }[] {
   const keys: { [key: string]: { order: number; minWidth: 240 } } = {}
   items?.forEach((item) => {
-    Object.keys(item).forEach((key) => {
+    Object.keys(item as object).forEach((key) => {
       if (!keys[key] && order) {
         const index = order.indexOf(key)
         keys[key] = {
