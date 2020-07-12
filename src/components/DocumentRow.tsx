@@ -6,9 +6,7 @@ import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
 
-export function DocumentRow<T extends { [key: string]: MongoData }>(props: {
-  value: T
-}) {
+export function DocumentRow<T extends MongoData>(props: { value: T }) {
   const str = useMemo(() => stringify(props.value, 2), [props.value])
   const html = useColorize(str)
 

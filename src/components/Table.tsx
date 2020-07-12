@@ -44,10 +44,11 @@ export const Table = React.memo(
         return
       }
       setColumns(
-        calcHeaders(props.items, props.order).map((key) => ({
+        calcHeaders(props.items, props.order).map(({ key, minWidth }) => ({
           key,
           name: key,
-          minWidth: 240,
+          minWidth,
+          isResizable: true,
         })),
       )
     }, [props.items, props.order])

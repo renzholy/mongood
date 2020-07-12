@@ -6,8 +6,9 @@ import { EditorDidMount } from '@monaco-editor/react'
 import { stringify, parse } from '@/utils/ejson'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
+import { MongoData } from '@/types'
 
-export function EditorModal<T extends object>(props: {
+export function EditorModal<T extends MongoData>(props: {
   title: string
   readOnly?: boolean
   value?: T
