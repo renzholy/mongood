@@ -7,9 +7,13 @@ import _ from 'lodash'
 import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
+import { getMap, getLocation } from '@/utils/map'
 import { ColorizedData } from './ColorizedData'
 
-function PlainCard(props: { value: MongoData }) {
+function PlainCard(props: { value: MongoData; index2dsphere?: string }) {
+  const location =
+    props.index2dsphere && getLocation(props.value, props.index2dsphere)
+
   return (
     <div
       style={{
@@ -18,13 +22,26 @@ function PlainCard(props: { value: MongoData }) {
         maxHeight: 500,
         overflowY: 'scroll',
       }}>
+      {location ? (
+        <img
+          src={getMap({
+            ...location,
+            width: 500,
+            height: 250,
+          })}
+          alt="map"
+          width={500}
+          height={250}
+          style={{ marginBottom: 10 }}
+        />
+      ) : null}
       <ColorizedData value={props.value} />
     </div>
   )
 }
 
 export const TableCell = React.memo(
-  (props: { value: MongoData; length?: number }) => {
+  (props: { value: MongoData; length?: number; index2dsphere?: string }) => {
     const theme = getTheme()
     const str = useMemo(
       () => stringify(props.value).substr(0, Math.max(props.length || 0, 50)),
@@ -32,10 +49,12 @@ export const TableCell = React.memo(
     )
     const html = useColorize(str)
     const onRenderPlainCard = useCallback(() => {
-      return <PlainCard value={props.value} />
-    }, [props.value])
+      return (
+        <PlainCard value={props.value} index2dsphere={props.index2dsphere} />
+      )
+    }, [props.value, props.index2dsphere])
 
-    return props.length && str.length > props.length ? (
+    return props.index2dsphere || (props.length && str.length > 36) ? (
       <HoverCard
         type={HoverCardType.plain}
         plainCardProps={{

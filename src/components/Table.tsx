@@ -36,6 +36,7 @@ export const Table = React.memo(
     selection?: Selection
     error: Error
     isValidating: boolean
+    index2dsphere?: string
   }) => {
     const theme = getTheme()
     const [columns, setColumns] = useState<IColumn[]>([])
@@ -83,9 +84,10 @@ export const Table = React.memo(
         <TableCell
           value={item[column?.key as keyof typeof item]}
           length={(column?.currentWidth || 0) * 10}
+          index2dsphere={props.index2dsphere}
         />
       ),
-      [],
+      [props.index2dsphere],
     )
     const onRenderDocumentItemColumn = useCallback(
       (item) => <ColorizedData value={item} />,
