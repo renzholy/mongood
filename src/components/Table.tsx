@@ -15,6 +15,7 @@ import {
   IColumn,
   MarqueeSelection,
   Selection,
+  ColumnActionsMode,
 } from '@fluentui/react'
 import _ from 'lodash'
 
@@ -48,6 +49,7 @@ export const Table = React.memo(
           key,
           name: key,
           minWidth,
+          columnActionsMode: ColumnActionsMode.disabled,
           isResizable: true,
         })),
       )
@@ -77,8 +79,11 @@ export const Table = React.memo(
       [isValidating, theme],
     )
     const onRenderTableItemColumn = useCallback(
-      (item, _index, column) => (
-        <TableCell value={item[column?.key as keyof typeof item]} />
+      (item, _index, column?: IColumn) => (
+        <TableCell
+          value={item[column?.key as keyof typeof item]}
+          length={(column?.currentWidth || 0) * 10}
+        />
       ),
       [],
     )

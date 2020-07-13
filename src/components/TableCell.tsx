@@ -23,40 +23,46 @@ function PlainCard(props: { value: MongoData }) {
   )
 }
 
-export const TableCell = React.memo((props: { value: MongoData }) => {
-  const theme = getTheme()
-  const str = useMemo(() => stringify(props.value).substr(0, 50), [props.value])
-  const html = useColorize(str)
-  const onRenderPlainCard = useCallback(() => {
-    return <PlainCard value={props.value} />
-  }, [props.value])
+export const TableCell = React.memo(
+  (props: { value: MongoData; length?: number }) => {
+    const theme = getTheme()
+    const str = useMemo(
+      () => stringify(props.value).substr(0, Math.max(props.length || 0, 50)),
+      [props.value, props.length],
+    )
+    const html = useColorize(str)
+    const onRenderPlainCard = useCallback(() => {
+      return <PlainCard value={props.value} />
+    }, [props.value])
 
-  return str.length > 36 ? (
-    <HoverCard
-      type={HoverCardType.plain}
-      plainCardProps={{
-        onRenderPlainCard,
-      }}
-      styles={{
-        host: {
-          cursor: 'pointer',
-          color: theme.palette.neutralSecondary,
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-        },
-      }}
-      instantOpenOnClick={true}>
+    return props.length && str.length > props.length ? (
+      <HoverCard
+        type={HoverCardType.plain}
+        plainCardProps={{
+          onRenderPlainCard,
+        }}
+        styles={{
+          host: {
+            cursor: 'pointer',
+            color: theme.palette.neutralSecondary,
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+          },
+        }}
+        instantOpenOnClick={true}>
+        <span
+          style={{ verticalAlign: 'middle' }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </HoverCard>
+    ) : (
       <span
-        style={{ verticalAlign: 'middle' }}
+        style={{
+          verticalAlign: 'middle',
+        }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
-    </HoverCard>
-  ) : (
-    <span
-      style={{
-        verticalAlign: 'middle',
-      }}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
-  )
-}, _.isEqual)
+    )
+  },
+  _.isEqual,
+)
