@@ -3,6 +3,9 @@ import _ from 'lodash'
 
 import { MongoData } from '@/types'
 
+/**
+ * @see https://docs.mongodb.com/manual/core/2dsphere/#dsphere-data-restrictions
+ */
 export function getLocation(
   data: MongoData,
   index2dsphere: string,
@@ -41,6 +44,9 @@ export function getLocation(
   return undefined
 }
 
+/**
+ * @see https://tech.yandex.com/maps/staticapi/doc/1.x/dg/concepts/input_params-docpage/
+ */
 export function getMap({
   longitude,
   latitude,
