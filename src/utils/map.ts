@@ -58,5 +58,5 @@ export function getMap({
   width: number
   height: number
 }) {
-  return `https://static-maps.yandex.ru/1.x/?lang=en_US&ll=${longitude},${latitude}&size=${width},${height}&z=10&l=map&pt=${longitude},${latitude},round`
+  return `https://static-maps.yandex.ru/1.x/?lang=en_US&ll=${longitude},${latitude}&size=${width},${height}&z=8&l=map&pt=${longitude},${latitude},round`
 }
