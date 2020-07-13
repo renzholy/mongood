@@ -7,64 +7,62 @@ import _ from 'lodash'
 import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
+import { ColorizedData } from './ColorizedData'
 
 function PlainCard(props: { value: MongoData }) {
-  const str = useMemo(() => stringify(props.value, 2), [props.value])
-  const html = useColorize(str)
-  const theme = getTheme()
-
   return (
     <div
       style={{
-        paddingLeft: 10,
-        paddingRight: 10,
+        padding: 10,
         maxWidth: 500,
         maxHeight: 500,
         overflowY: 'scroll',
-        backgroundColor: theme.palette.neutralLighterAlt,
       }}>
-      <pre
-        style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <ColorizedData value={props.value} />
     </div>
   )
 }
 
-export const TableCell = React.memo((props: { value: MongoData }) => {
-  const theme = getTheme()
-  const str = useMemo(() => stringify(props.value).substr(0, 50), [props.value])
-  const html = useColorize(str)
-  const onRenderPlainCard = useCallback(() => {
-    return <PlainCard value={props.value} />
-  }, [props.value])
+export const TableCell = React.memo(
+  (props: { value: MongoData; length?: number }) => {
+    const theme = getTheme()
+    const str = useMemo(
+      () => stringify(props.value).substr(0, Math.max(props.length || 0, 50)),
+      [props.value, props.length],
+    )
+    const html = useColorize(str)
+    const onRenderPlainCard = useCallback(() => {
+      return <PlainCard value={props.value} />
+    }, [props.value])
 
-  return str.length > 36 ? (
-    <HoverCard
-      type={HoverCardType.plain}
-      plainCardProps={{
-        onRenderPlainCard,
-      }}
-      styles={{
-        host: {
-          cursor: 'pointer',
-          color: theme.palette.neutralSecondary,
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-        },
-      }}
-      instantOpenOnClick={true}>
+    return props.length && str.length > props.length ? (
+      <HoverCard
+        type={HoverCardType.plain}
+        plainCardProps={{
+          onRenderPlainCard,
+        }}
+        styles={{
+          host: {
+            cursor: 'pointer',
+            color: theme.palette.neutralSecondary,
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+          },
+        }}
+        instantOpenOnClick={true}>
+        <span
+          style={{ verticalAlign: 'middle' }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </HoverCard>
+    ) : (
       <span
-        style={{ verticalAlign: 'middle' }}
+        style={{
+          verticalAlign: 'middle',
+        }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
-    </HoverCard>
-  ) : (
-    <span
-      style={{
-        verticalAlign: 'middle',
-      }}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
-  )
-}, _.isEqual)
+    )
+  },
+  _.isEqual,
+)

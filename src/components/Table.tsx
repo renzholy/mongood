@@ -15,6 +15,7 @@ import {
   IColumn,
   MarqueeSelection,
   Selection,
+  ColumnActionsMode,
 } from '@fluentui/react'
 import _ from 'lodash'
 
@@ -23,7 +24,7 @@ import { calcHeaders } from '@/utils/table'
 import { stringify } from '@/utils/ejson'
 import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'
-import { DocumentRow } from './DocumentRow'
+import { ColorizedData } from './ColorizedData'
 
 export const Table = React.memo(
   <T extends { [key: string]: MongoData }>(props: {
@@ -48,6 +49,7 @@ export const Table = React.memo(
           key,
           name: key,
           minWidth,
+          columnActionsMode: ColumnActionsMode.disabled,
           isResizable: true,
         })),
       )
@@ -77,13 +79,16 @@ export const Table = React.memo(
       [isValidating, theme],
     )
     const onRenderTableItemColumn = useCallback(
-      (item, _index, column) => (
-        <TableCell value={item[column?.key as keyof typeof item]} />
+      (item, _index, column?: IColumn) => (
+        <TableCell
+          value={item[column?.key as keyof typeof item]}
+          length={(column?.currentWidth || 0) * 10}
+        />
       ),
       [],
     )
     const onRenderDocumentItemColumn = useCallback(
-      (item) => <DocumentRow value={item} />,
+      (item) => <ColorizedData value={item} />,
       [],
     )
     const getKey = useCallback((item) => {

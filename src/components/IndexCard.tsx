@@ -16,9 +16,9 @@ import _ from 'lodash'
 import bytes from 'bytes'
 import type { IndexSpecification, WiredTigerData } from 'mongodb'
 
-import { useColorize } from '@/hooks/use-colorize'
 import { EditorModal } from './EditorModal'
 import { IndexContextualMenu } from './IndexContextualMenu'
+import { ColorizedData } from './ColorizedData'
 
 function IndexInfo(props: { value: IndexSpecification }) {
   const theme = getTheme()
@@ -81,28 +81,21 @@ function IndexInfo(props: { value: IndexSpecification }) {
 
 function IndexFeature(props: { value: { text: string; data?: object } }) {
   const theme = getTheme()
-  const str = useMemo(() => JSON.stringify(props.value.data, null, 2), [
-    props.value.data,
-  ])
-  const html = useColorize(str)
+
   const onRenderPlainCard = useCallback(() => {
     return (
       <div
         style={{
-          paddingLeft: 10,
-          paddingRight: 10,
+          padding: 10,
           maxWidth: 500,
           maxHeight: 500,
           overflowY: 'scroll',
           backgroundColor: theme.palette.neutralLighterAlt,
         }}>
-        <pre
-          style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+        <ColorizedData value={props.value.data} />
       </div>
     )
-  }, [html, theme])
+  }, [props.value.data, theme])
 
   return (
     <HoverCard
