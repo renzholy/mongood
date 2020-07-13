@@ -7,26 +7,18 @@ import _ from 'lodash'
 import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
+import { ColorfulData } from './ColorfulData'
 
 function PlainCard(props: { value: MongoData }) {
-  const str = useMemo(() => stringify(props.value, 2), [props.value])
-  const html = useColorize(str)
-  const theme = getTheme()
-
   return (
     <div
       style={{
-        paddingLeft: 10,
-        paddingRight: 10,
+        padding: 10,
         maxWidth: 500,
         maxHeight: 500,
         overflowY: 'scroll',
-        backgroundColor: theme.palette.neutralLighterAlt,
       }}>
-      <pre
-        style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <ColorfulData value={props.value} />
     </div>
   )
 }

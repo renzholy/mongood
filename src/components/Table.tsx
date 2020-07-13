@@ -23,7 +23,7 @@ import { calcHeaders } from '@/utils/table'
 import { stringify } from '@/utils/ejson'
 import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'
-import { DocumentRow } from './DocumentRow'
+import { ColorfulData } from './ColorfulData'
 
 export const Table = React.memo(
   <T extends { [key: string]: MongoData }>(props: {
@@ -83,7 +83,7 @@ export const Table = React.memo(
       [],
     )
     const onRenderDocumentItemColumn = useCallback(
-      (item) => <DocumentRow value={item} />,
+      (item) => <ColorfulData value={item} />,
       [],
     )
     const getKey = useCallback((item) => {

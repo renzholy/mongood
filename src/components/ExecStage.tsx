@@ -13,9 +13,8 @@ import bytes from 'bytes'
 import { EJSON } from 'bson'
 
 import { ExecStats, MongoData } from '@/types'
-import { stringify } from '@/utils/ejson'
 import { Number } from '@/utils/formatter'
-import { useColorize } from '@/hooks/use-colorize'
+import { ColorfulData } from './ColorfulData'
 
 export function ExecStage(props: { value: { [key: string]: MongoData } }) {
   const theme = getTheme()
@@ -23,29 +22,22 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
     () => EJSON.parse(JSON.stringify(props.value)) as ExecStats,
     [props.value],
   )
-  const str = useMemo(
-    () => stringify(_.omit(props.value, ['inputStage', 'inputStages']), 2),
-    [props.value],
-  )
-  const html = useColorize(str)
   const onRenderPlainCard = useCallback(() => {
     return (
       <div
         style={{
-          paddingLeft: 10,
-          paddingRight: 10,
+          padding: 10,
           maxWidth: 500,
           maxHeight: 500,
           overflowY: 'scroll',
           backgroundColor: theme.palette.neutralLighterAlt,
         }}>
-        <pre
-          style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
-          dangerouslySetInnerHTML={{ __html: html }}
+        <ColorfulData
+          value={_.omit(props.value, ['inputStage', 'inputStages'])}
         />
       </div>
     )
-  }, [html])
+  }, [props.value])
 
   return (
     <>

@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/no-danger */
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Card } from '@uifabric/react-cards'
 import { ControlledEditor, EditorDidMount } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor'
@@ -14,8 +14,7 @@ import { toCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { changeLib } from '@/utils/editor'
 import { runCommand } from '@/utils/fetcher'
-import { useColorize } from '@/hooks/use-colorize'
-import { stringify } from '@/utils/ejson'
+import { ColorfulData } from './ColorfulData'
 
 export function NotebookItem(props: {
   in: string
@@ -63,8 +62,7 @@ export function NotebookItem(props: {
     },
     [connection, database],
   )
-  const resultStr = useMemo(() => stringify(result, 2), [result])
-  const resultHtml = useColorize(resultStr)
+
   const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
     setValue(props.in)
@@ -172,7 +170,7 @@ export function NotebookItem(props: {
         </Card.Item>
       </Card>
       <Card.Item>
-        {error || resultStr ? (
+        {error ? (
           <pre
             style={{
               minHeight: 100,
@@ -184,8 +182,17 @@ export function NotebookItem(props: {
               wordBreak: 'break-all',
               overflow: 'scroll',
               color: theme.palette.neutralPrimary,
+            }}>
+            {error}
+          </pre>
+        ) : result ? (
+          <ColorfulData
+            value={result}
+            style={{
+              minHeight: 100,
+              padding: '14px 20px',
+              paddingTop: 0,
             }}
-            dangerouslySetInnerHTML={{ __html: error || resultHtml }}
           />
         ) : (
           <div
