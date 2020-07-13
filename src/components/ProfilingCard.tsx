@@ -22,8 +22,13 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
   >(
     () =>
       EJSON.parse(
-        JSON.stringify(_.omit(props.value, ['command', 'originatingCommand'])),
-      ) as Omit<SystemProfileDoc, 'command' | 'originatingCommand'>,
+        JSON.stringify(
+          _.omit(props.value, ['command', 'originatingCommand', 'execStats']),
+        ),
+      ) as Omit<
+        SystemProfileDoc,
+        'command' | 'originatingCommand' | 'execStats'
+      >,
     [props.value],
   )
 
