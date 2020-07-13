@@ -14,7 +14,7 @@ export function getLocation(
   | undefined {
   const path = index2dsphere.split('.')
   path.shift()
-  const v = _.get(data, path.join('.'))
+  const v = path.length ? _.get(data, path.join('.')) : data
   if (!v) {
     return undefined
   }
@@ -29,6 +29,13 @@ export function getLocation(
     return {
       longitude: value.coordinates[0],
       latitude: value.coordinates[1],
+    }
+  }
+  if (typeof value === 'object') {
+    const keys = Object.keys(value)
+    return {
+      longitude: value[keys[0]],
+      latitude: value[keys[1]],
     }
   }
   return undefined
