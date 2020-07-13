@@ -130,7 +130,8 @@ export function OperationCard(props: {
           hidden={hidden}
           dialogContentProps={{
             type: DialogType.normal,
-            title: `Kill Operation ${value.opid}`,
+            title: 'Kill Operation',
+            subText: value.opid.toString(),
             showCloseButton: true,
             onDismiss() {
               setHidden(true)
