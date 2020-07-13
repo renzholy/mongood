@@ -146,6 +146,14 @@ export const DocumentTable = React.memo(() => {
         onItemInvoked={onItemInvoked}
         onItemContextMenu={onItemContextMenu}
         selection={selection}
+        index2dsphere={
+          index?.['2dsphereIndexVersion']
+            ? Object.entries(index.key).find(
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                ([_key, value]) => value === '2dsphere',
+              )?.[0]
+            : undefined
+        }
       />
     </>
   )

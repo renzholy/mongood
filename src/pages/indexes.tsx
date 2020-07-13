@@ -45,6 +45,7 @@ export default () => {
       createIndexes: collection,
       indexes: [value],
     })
+    setIsOpen(false)
   }, [connection, database, collection, value])
 
   if (error) {

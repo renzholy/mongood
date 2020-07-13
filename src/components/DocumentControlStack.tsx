@@ -42,6 +42,7 @@ export function DocumentControlStack() {
       insert: collection,
       documents: [doc],
     })
+    setIsInsertOpen(false)
     dispatch(actions.docs.setShouldRevalidate())
   }, [connection, database, collection, doc])
   const { data: count, revalidate } = useSWR(

@@ -56,7 +56,8 @@ export function IndexContextualMenu(props: {
         hidden={hidden}
         dialogContentProps={{
           type: DialogType.normal,
-          title: `Drop Index ${props.value.name}`,
+          title: 'Drop Index',
+          subText: props.value.name,
           showCloseButton: true,
           onDismiss() {
             setHidden(true)
