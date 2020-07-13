@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { Card } from '@uifabric/react-cards'
 
 import { MongoData } from '@/types'
-import { ColorfulData } from './ColorfulData'
+import { ColorizedData } from './ColorizedData'
 
 export function CommandAndLocksCardItem(props: {
   command: MongoData
@@ -16,7 +16,7 @@ export function CommandAndLocksCardItem(props: {
       styles={{
         root: { display: 'flex', justifyContent: 'space-between' },
       }}>
-      <ColorfulData
+      <ColorizedData
         style={{ marginRight: 10 }}
         value={_.omit(props.command as object, [
           'lsid',
@@ -31,7 +31,7 @@ export function CommandAndLocksCardItem(props: {
           'awaitData',
         ])}
       />
-      <ColorfulData value={props.locks} />
+      <ColorizedData value={props.locks} />
     </Card.Item>
   )
 }

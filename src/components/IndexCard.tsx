@@ -18,7 +18,7 @@ import type { IndexSpecification, WiredTigerData } from 'mongodb'
 
 import { EditorModal } from './EditorModal'
 import { IndexContextualMenu } from './IndexContextualMenu'
-import { ColorfulData } from './ColorfulData'
+import { ColorizedData } from './ColorizedData'
 
 function IndexInfo(props: { value: IndexSpecification }) {
   const theme = getTheme()
@@ -92,7 +92,7 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
           overflowY: 'scroll',
           backgroundColor: theme.palette.neutralLighterAlt,
         }}>
-        <ColorfulData value={props.value.data} />
+        <ColorizedData value={props.value.data} />
       </div>
     )
   }, [props.value.data, theme])

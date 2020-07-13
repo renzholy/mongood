@@ -24,7 +24,7 @@ import { calcHeaders } from '@/utils/table'
 import { stringify } from '@/utils/ejson'
 import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'
-import { ColorfulData } from './ColorfulData'
+import { ColorizedData } from './ColorizedData'
 
 export const Table = React.memo(
   <T extends { [key: string]: MongoData }>(props: {
@@ -88,7 +88,7 @@ export const Table = React.memo(
       [],
     )
     const onRenderDocumentItemColumn = useCallback(
-      (item) => <ColorfulData value={item} />,
+      (item) => <ColorizedData value={item} />,
       [],
     )
     const getKey = useCallback((item) => {

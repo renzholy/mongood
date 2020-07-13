@@ -7,7 +7,7 @@ import _ from 'lodash'
 import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
-import { ColorfulData } from './ColorfulData'
+import { ColorizedData } from './ColorizedData'
 
 function PlainCard(props: { value: MongoData }) {
   return (
@@ -18,7 +18,7 @@ function PlainCard(props: { value: MongoData }) {
         maxHeight: 500,
         overflowY: 'scroll',
       }}>
-      <ColorfulData value={props.value} />
+      <ColorizedData value={props.value} />
     </div>
   )
 }

@@ -14,7 +14,7 @@ import { toCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { changeLib } from '@/utils/editor'
 import { runCommand } from '@/utils/fetcher'
-import { ColorfulData } from './ColorfulData'
+import { ColorizedData } from './ColorizedData'
 
 export function NotebookItem(props: {
   in: string
@@ -186,7 +186,7 @@ export function NotebookItem(props: {
             {error}
           </pre>
         ) : result ? (
-          <ColorfulData
+          <ColorizedData
             value={result}
             style={{
               minHeight: 100,

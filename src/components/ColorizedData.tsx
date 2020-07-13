@@ -7,7 +7,7 @@ import { stringify } from '@/utils/ejson'
 import { MongoData } from '@/types'
 import { useColorize } from '@/hooks/use-colorize'
 
-export function ColorfulData(props: {
+export function ColorizedData(props: {
   style?: CSSProperties
   value: MongoData
 }) {
