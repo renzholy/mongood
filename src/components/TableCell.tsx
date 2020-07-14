@@ -25,11 +25,13 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
       }}>
       {location ? (
         <img
-          src={getMap({
+          src={getMap(
+            {
+              width: 500,
+              height: 250,
+            },
             ...location,
-            width: 500,
-            height: 250,
-          })}
+          )}
           alt="map"
           width={500}
           height={250}
