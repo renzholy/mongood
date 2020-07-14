@@ -21,7 +21,6 @@ import _ from 'lodash'
 
 import { DisplayMode, MongoData } from '@/types.d'
 import { calcHeaders } from '@/utils/table'
-import { stringify } from '@/utils/ejson'
 import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'
 import { ColorizedData } from './ColorizedData'
@@ -93,9 +92,6 @@ export const Table = React.memo(
       (item) => <ColorizedData value={item} />,
       [],
     )
-    const getKey = useCallback((item) => {
-      return stringify(item._id || item)
-    }, [])
 
     if (error) {
       return (
@@ -130,8 +126,6 @@ export const Table = React.memo(
               isEnabled={!!props.selection}>
               {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
                 <DetailsList
-                  getKey={getKey}
-                  useReducedRowRenderer={true}
                   columns={columns}
                   constrainMode={ConstrainMode.unconstrained}
                   layoutMode={DetailsListLayoutMode.justified}
@@ -154,8 +148,6 @@ export const Table = React.memo(
               ) : null}
               {props.displayMode === DisplayMode.DOCUMENT ? (
                 <DetailsList
-                  getKey={getKey}
-                  useReducedRowRenderer={true}
                   columns={[
                     {
                       key: '',
