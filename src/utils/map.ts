@@ -1,5 +1,4 @@
 import { EJSON } from 'bson'
-import _ from 'lodash'
 
 import { MongoData } from '@/types'
 
@@ -7,21 +6,17 @@ import { MongoData } from '@/types'
  * @see https://docs.mongodb.com/manual/core/2dsphere/#dsphere-data-restrictions
  */
 export function getLocation(
-  data: MongoData,
-  index2dsphere: string,
+  data?: MongoData,
 ):
   | {
       longitude: number
       latitude: number
     }
   | undefined {
-  const path = index2dsphere.split('.')
-  path.shift()
-  const v = path.length ? _.get(data, path.join('.')) : data
-  if (!v) {
+  if (!data) {
     return undefined
   }
-  const value = EJSON.parse(JSON.stringify(v)) as any
+  const value = EJSON.parse(JSON.stringify(data)) as any
   if (Array.isArray(value)) {
     return {
       longitude: value[0],

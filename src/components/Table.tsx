@@ -83,7 +83,13 @@ export const Table = React.memo(
         <TableCell
           value={item[column?.key as keyof typeof item]}
           length={(column?.currentWidth || 0) * 10}
-          index2dsphere={props.index2dsphere}
+          index2dsphere={
+            props.index2dsphere &&
+            column?.key &&
+            props.index2dsphere.startsWith(column?.key)
+              ? _.get(item, props.index2dsphere)
+              : undefined
+          }
         />
       ),
       [props.index2dsphere],

@@ -10,9 +10,10 @@ import { MongoData } from '@/types'
 import { getMap, getLocation } from '@/utils/map'
 import { ColorizedData } from './ColorizedData'
 
-function PlainCard(props: { value: MongoData; index2dsphere?: string }) {
-  const location =
-    props.index2dsphere && getLocation(props.value, props.index2dsphere)
+function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
+  const location = useMemo(() => getLocation(props.index2dsphere), [
+    props.index2dsphere,
+  ])
 
   return (
     <div
@@ -41,7 +42,7 @@ function PlainCard(props: { value: MongoData; index2dsphere?: string }) {
 }
 
 export const TableCell = React.memo(
-  (props: { value: MongoData; length?: number; index2dsphere?: string }) => {
+  (props: { value: MongoData; length?: number; index2dsphere?: MongoData }) => {
     const theme = getTheme()
     const str = useMemo(
       () => stringify(props.value).substr(0, Math.max(props.length || 0, 50)),
