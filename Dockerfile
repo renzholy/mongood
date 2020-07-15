@@ -5,6 +5,7 @@ ADD package-lock.json .
 RUN npm ci
 ADD .umirc.ts .
 ADD tsconfig.json .
+ADD public ./public
 ADD src ./src
 RUN npm run build
 
