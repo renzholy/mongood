@@ -20,12 +20,12 @@ mongood-windows: pkged.go
 
 # packaging mongood.app
 mac-app: mongood-darwin
-	CC=$(Darwin_CC) CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 $(Fyne) package -os darwin -icon ../app-assets/mongood.png -release --executable ./mongood-darwin
-	cp ../app-assets/Info.plist mongood.app/Contents/Info.plist 
+	CC=$(Darwin_CC) CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 $(Fyne) package -os darwin -icon ../assets/mongood.png -release --executable ./mongood-darwin
+	cp ../assets/Info.plist mongood.app/Contents/Info.plist 
 
 # packaging mongood.exe
 windows-app: mongood-windows
-	CC=$(WIN64_CC) CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(Fyne) package -os windows -icon ../app-assets/mongood.png -release --executable mongood-windows
+	CC=$(WIN64_CC) CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(Fyne) package -os windows -icon ../assets/mongood.png -release --executable mongood-windows
 
 clean:
 	rm -rf pkged.go

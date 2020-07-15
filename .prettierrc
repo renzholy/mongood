@@ -14,7 +14,7 @@
       "options": { "parser": "json" }
     },
     {
-      "files": "app-assets/Info.plist",
+      "files": "assets/Info.plist",
       "options": { "parser": "html" }
     }
   ]
