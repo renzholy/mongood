@@ -6,7 +6,6 @@ export default defineConfig({
   dva: false,
   title: 'Mongood',
   esbuild: {},
-  dynamicImport: {},
   history: { type: 'hash' },
   favicon: '/favicon.ico',
   hash: true,
