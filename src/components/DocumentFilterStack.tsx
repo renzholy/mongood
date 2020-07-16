@@ -15,6 +15,7 @@ import { FilterInput } from './FilterInput'
 export function DocumentFilterStack() {
   const dispatch = useDispatch()
   const theme = getTheme()
+  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const index = useSelector((state) => state.docs.index)
@@ -26,7 +27,8 @@ export function DocumentFilterStack() {
   }, [index])
   useEffect(() => {
     dispatch(actions.docs.setIndex(undefined))
-  }, [database, collection])
+    dispatch(actions.docs.setFilter({}))
+  }, [connection, database, collection])
 
   if (!database || !collection) {
     return <div style={{ height: 52 }} />
