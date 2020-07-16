@@ -1,5 +1,10 @@
 {
-  "extends": ["airbnb-typescript", "prettier", "prettier/@typescript-eslint"],
+  "extends": [
+    "airbnb-typescript",
+    "plugin:react-hooks/recommended",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
   "plugins": ["prettier", "react", "import"],
   "globals": {
     "Atomics": "readonly",

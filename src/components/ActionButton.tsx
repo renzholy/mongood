@@ -31,7 +31,7 @@ export function ActionButton(props: {
       setHidden(false)
     }
     setLoading(false)
-  }, [props.onClick])
+  }, [props])
   useEffect(() => {
     if (succeed) {
       setTimeout(() => {

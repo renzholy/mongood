@@ -21,7 +21,7 @@ export default () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(actions.notebook.clearNotebooks())
-  }, [connection, database])
+  }, [connection, database, dispatch])
 
   if (!database) {
     return <LargeMessage iconName="Back" title="Select Database" />

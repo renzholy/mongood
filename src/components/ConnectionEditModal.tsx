@@ -133,7 +133,7 @@ export function ConnectionEditModal(props: {
     } catch (err) {
       setError(err)
     }
-  }, [value])
+  }, [value, connections, dispatch])
 
   return (
     <Modal

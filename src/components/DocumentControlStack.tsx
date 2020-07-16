@@ -44,30 +44,31 @@ export function DocumentControlStack() {
     })
     setIsInsertOpen(false)
     dispatch(actions.docs.setShouldRevalidate())
-  }, [connection, database, collection, doc])
+  }, [connection, database, collection, doc, dispatch])
+  const hint = _.isEmpty(filter) ? undefined : index?.name
   const { data: count, revalidate } = useSWR(
     database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(
           filter,
-        )}/${JSON.stringify(index)}`
+        )}/${hint}`
       : null,
     () =>
       runCommand<{ n: number }>(connection, database!, {
         count: collection,
         query: filter,
-        hint: _.isEmpty(filter) ? undefined : index?.name,
+        hint,
       }),
   )
   useEffect(() => {
     dispatch(actions.docs.setCount(count?.n || 0))
-  }, [count])
+  }, [count, dispatch])
   useEffect(() => {
     dispatch(actions.docs.resetPage())
     dispatch(actions.docs.setIndex())
-  }, [database, collection])
+  }, [database, collection, dispatch])
   useEffect(() => {
     revalidate()
-  }, [shouldRevalidate])
+  }, [shouldRevalidate, revalidate])
 
   return (
     <Stack

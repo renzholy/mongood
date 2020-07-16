@@ -55,7 +55,7 @@ export function TopPivot() {
     if ((data?.length || connections.length) && !connection) {
       dispatch(actions.root.setConnection([...connections, ...(data || [])][0]))
     }
-  }, [connection, connections, data])
+  }, [connection, connections, data, dispatch])
   useEffect(() => {
     if (connections.length === 0 && data?.length === 0) {
       setIsOpen(true)

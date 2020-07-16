@@ -37,7 +37,7 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
         />
       </div>
     )
-  }, [props.value])
+  }, [props.value, theme.palette.neutralLighterAlt])
 
   return (
     <>

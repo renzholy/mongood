@@ -82,7 +82,7 @@ export function DatabaseNav() {
         } catch {}
       }
     },
-    [listCollections],
+    [listCollections, dispatch],
   )
   useAsyncEffect(async () => {
     await handleListCollectionOfDatabases(expandedDatabases)
@@ -157,7 +157,7 @@ export function DatabaseNav() {
     dispatch(actions.root.setCollection())
     dispatch(actions.root.setExpandedDatabases([]))
     dispatch(actions.root.resetCollectionsMap())
-  }, [connection])
+  }, [connection, dispatch])
 
   return (
     <div
@@ -169,7 +169,6 @@ export function DatabaseNav() {
         flexDirection: 'column',
       }}>
       <SearchBox
-        autoFocus={true}
         placeholder="Database & Collection"
         styles={{ root: { margin: 10 } }}
         value={keyword}

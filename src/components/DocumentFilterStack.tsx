@@ -12,9 +12,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@/stores'
 import { FilterInput } from './FilterInput'
 
+const height = 52
+
 export function DocumentFilterStack() {
   const dispatch = useDispatch()
   const theme = getTheme()
+  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const index = useSelector((state) => state.docs.index)
@@ -23,13 +26,14 @@ export function DocumentFilterStack() {
   useEffect(() => {
     dispatch(actions.docs.setFilter(index?.partialFilterExpression || {}))
     dispatch(actions.docs.setSort({}))
-  }, [index])
+  }, [index, dispatch])
   useEffect(() => {
     dispatch(actions.docs.setIndex(undefined))
-  }, [database, collection])
+    dispatch(actions.docs.setFilter({}))
+  }, [connection, database, collection, dispatch])
 
   if (!database || !collection) {
-    return <div style={{ height: 52 }} />
+    return <div style={{ height }} />
   }
 
   if (!index) {
@@ -37,12 +41,19 @@ export function DocumentFilterStack() {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52 } }}>
+        styles={{ root: { height } }}>
         <FilterInput
-          autoFocus={true}
+          prefix="query:"
           value={filter}
           onChange={(value) => {
             dispatch(actions.docs.setFilter((value as {}) || {}))
+          }}
+        />
+        <FilterInput
+          prefix="sort:"
+          value={sort}
+          onChange={(value) => {
+            dispatch(actions.docs.setSort((value as {}) || {}))
           }}
         />
       </Stack>
@@ -54,10 +65,9 @@ export function DocumentFilterStack() {
     <Stack
       horizontal={true}
       tokens={{ childrenGap: 10, padding: 10 }}
-      styles={{ root: { height: 52 } }}>
+      styles={{ root: { height } }}>
       {'textIndexVersion' in index ? (
         <FilterInput<string>
-          autoFocus={true}
           prefix="Text Search"
           onChange={(value) => {
             dispatch(actions.docs.setFilter({ $text: { $search: value } }))
@@ -148,7 +158,6 @@ export function DocumentFilterStack() {
             return (
               <FilterInput
                 key={key}
-                autoFocus={i === 0}
                 disabled={disableFilter}
                 prefix={`${key}:`}
                 iconProps={iconProps}
@@ -172,7 +181,6 @@ export function DocumentFilterStack() {
           return (
             <FilterInput
               key={key}
-              autoFocus={i === 0}
               disabled={disableFilter}
               prefix={`${key}:`}
               iconProps={iconProps}

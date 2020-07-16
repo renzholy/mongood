@@ -60,10 +60,10 @@ export function OperationCard(props: {
     } finally {
       setIsKilling(false)
     }
-  }, [connection, value.opid])
+  }, [connection, value.opid, props])
   useEffect(() => {
     props.onView(isOpen || !isMenuHidden)
-  }, [isOpen, isMenuHidden])
+  }, [isOpen, isMenuHidden, props])
 
   return (
     <Card
