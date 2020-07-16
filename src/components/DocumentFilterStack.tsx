@@ -12,6 +12,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@/stores'
 import { FilterInput } from './FilterInput'
 
+const height = 52
+
 export function DocumentFilterStack() {
   const dispatch = useDispatch()
   const theme = getTheme()
@@ -31,7 +33,7 @@ export function DocumentFilterStack() {
   }, [connection, database, collection, dispatch])
 
   if (!database || !collection) {
-    return <div style={{ height: 52 }} />
+    return <div style={{ height }} />
   }
 
   if (!index) {
@@ -39,11 +41,19 @@ export function DocumentFilterStack() {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52 } }}>
+        styles={{ root: { height } }}>
         <FilterInput
+          prefix="query:"
           value={filter}
           onChange={(value) => {
             dispatch(actions.docs.setFilter((value as {}) || {}))
+          }}
+        />
+        <FilterInput
+          prefix="sort:"
+          value={sort}
+          onChange={(value) => {
+            dispatch(actions.docs.setSort((value as {}) || {}))
           }}
         />
       </Stack>
@@ -55,7 +65,7 @@ export function DocumentFilterStack() {
     <Stack
       horizontal={true}
       tokens={{ childrenGap: 10, padding: 10 }}
-      styles={{ root: { height: 52 } }}>
+      styles={{ root: { height } }}>
       {'textIndexVersion' in index ? (
         <FilterInput<string>
           prefix="Text Search"
