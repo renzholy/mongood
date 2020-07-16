@@ -9,7 +9,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { parse, stringify } from '@/utils/ejson'
 
 export function FilterInput<T extends string | object | undefined>(props: {
-  autoFocus?: boolean
   disabled?: boolean
   prefix?: string
   iconProps?: IIconProps
@@ -34,7 +33,6 @@ export function FilterInput<T extends string | object | undefined>(props: {
   return (
     <div style={{ flex: 1, display: 'flex' }}>
       <TextField
-        autoFocus={props.autoFocus}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"

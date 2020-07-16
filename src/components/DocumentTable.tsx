@@ -26,11 +26,12 @@ export const DocumentTable = React.memo(() => {
   const limit = useSelector((state) => state.docs.limit)
   const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
   const displayMode = useSelector((state) => state.docs.displayMode)
+  const hint = filter.$text || _.isEmpty(filter) ? undefined : index?.name
   const { data, error, isValidating, revalidate } = useSWR(
     database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
-        )}/${JSON.stringify(sort)}/${JSON.stringify(index)}`
+        )}/${JSON.stringify(sort)}/${hint}`
       : null,
     () =>
       runCommand<{
@@ -42,7 +43,7 @@ export const DocumentTable = React.memo(() => {
           find: collection,
           filter,
           sort,
-          hint: filter.$text || _.isEmpty(filter) ? undefined : index?.name,
+          hint,
           skip,
           limit,
         },
