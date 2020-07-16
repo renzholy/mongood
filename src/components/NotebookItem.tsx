@@ -75,7 +75,7 @@ export function NotebookItem(props: {
   }, [props.error])
   useEffect(() => {
     props.onNext({ in: value, out: result, error })
-  }, [value, result, error])
+  }, [value, result, error, props])
   const handleEditorDidMount = useCallback<EditorDidMount>(
     (getEditorValue, editor) => {
       editor.onKeyDown(async (e) => {

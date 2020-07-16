@@ -75,7 +75,7 @@ export default () => {
           : {},
       ),
     )
-  }, [database, collection])
+  }, [database, collection, dispatch])
   const [loading, setLoading] = useState(false)
   const handleSetProfile = useCallback(
     async (_slowms: number, _sampleRate: number) => {
@@ -94,7 +94,7 @@ export default () => {
         revalidate()
       }
     },
-    [connection, database],
+    [connection, database, revalidate],
   )
   const { data: count } = useSWR(
     database
@@ -108,13 +108,13 @@ export default () => {
   )
   useEffect(() => {
     dispatch(actions.docs.setCount(count?.n || 0))
-  }, [count])
+  }, [count, dispatch])
   useEffect(() => {
     dispatch(actions.docs.resetPage())
-  }, [database, collection])
+  }, [database, collection, dispatch])
   useEffect(() => {
     revalidate()
-  }, [shouldRevalidate])
+  }, [shouldRevalidate, revalidate])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />

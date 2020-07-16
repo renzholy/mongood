@@ -5,6 +5,6 @@ export default () => {
   const history = useHistory()
   useEffect(() => {
     history.replace('/stats')
-  }, [])
+  }, [history])
   return <div />
 }

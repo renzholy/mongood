@@ -48,7 +48,7 @@ export function IndexContextualMenu(props: {
     } finally {
       setIsDroping(false)
     }
-  }, [connection, database, collection, props.value.name])
+  }, [connection, database, collection, props])
 
   return (
     <>

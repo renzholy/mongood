@@ -44,7 +44,7 @@ export function DocumentControlStack() {
     })
     setIsInsertOpen(false)
     dispatch(actions.docs.setShouldRevalidate())
-  }, [connection, database, collection, doc])
+  }, [connection, database, collection, doc, dispatch])
   const { data: count, revalidate } = useSWR(
     database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(
@@ -60,14 +60,14 @@ export function DocumentControlStack() {
   )
   useEffect(() => {
     dispatch(actions.docs.setCount(count?.n || 0))
-  }, [count])
+  }, [count, dispatch])
   useEffect(() => {
     dispatch(actions.docs.resetPage())
     dispatch(actions.docs.setIndex())
-  }, [database, collection])
+  }, [database, collection, dispatch])
   useEffect(() => {
     revalidate()
-  }, [shouldRevalidate])
+  }, [shouldRevalidate, revalidate])
 
   return (
     <Stack

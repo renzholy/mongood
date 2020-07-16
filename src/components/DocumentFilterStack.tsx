@@ -24,11 +24,11 @@ export function DocumentFilterStack() {
   useEffect(() => {
     dispatch(actions.docs.setFilter(index?.partialFilterExpression || {}))
     dispatch(actions.docs.setSort({}))
-  }, [index])
+  }, [index, dispatch])
   useEffect(() => {
     dispatch(actions.docs.setIndex(undefined))
     dispatch(actions.docs.setFilter({}))
-  }, [connection, database, collection])
+  }, [connection, database, collection, dispatch])
 
   if (!database || !collection) {
     return <div style={{ height: 52 }} />

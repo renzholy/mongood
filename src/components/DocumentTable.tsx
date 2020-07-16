@@ -52,7 +52,7 @@ export const DocumentTable = React.memo(() => {
   )
   useEffect(() => {
     revalidate()
-  }, [shouldRevalidate])
+  }, [shouldRevalidate, revalidate])
   const dispatch = useDispatch()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isMenuHidden, setIsMenuHidden] = useState(true)
@@ -66,7 +66,7 @@ export const DocumentTable = React.memo(() => {
     })
     dispatch(actions.docs.setShouldRevalidate())
     setIsUpdateOpen(false)
-  }, [connection, database, collection, invokedItem, editedItem])
+  }, [connection, database, collection, invokedItem, editedItem, dispatch])
 
   const [target, setTarget] = useState<MouseEvent>()
   const [selectedItems, setSelectedItems] = useState<Data[]>([])

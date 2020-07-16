@@ -29,7 +29,7 @@ export function FilterInput<T extends string | object | undefined>(props: {
       console.error(err)
       setErrorMessage(' ')
     }
-  }, [value])
+  }, [value, props])
 
   return (
     <div style={{ flex: 1, display: 'flex' }}>
