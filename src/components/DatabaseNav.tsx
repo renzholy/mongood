@@ -169,7 +169,6 @@ export function DatabaseNav() {
         flexDirection: 'column',
       }}>
       <SearchBox
-        autoFocus={true}
         placeholder="Database & Collection"
         styles={{ root: { margin: 10 } }}
         value={keyword}
