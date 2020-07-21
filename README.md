@@ -22,7 +22,7 @@ English | [简体中文](./README-zh_CN.md)
 - [x] HTTP/2
 - [x] Auto **dark** mode
 
-## 📷 Screenshot
+## Screenshot 📷
 
 <table>
   <tr>
