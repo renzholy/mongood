@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Card } from '@uifabric/react-cards'
 import { ControlledEditor, EditorDidMount } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor'
@@ -23,7 +23,7 @@ export function NotebookItem(props: {
   error?: string
 }) {
   const isDarkMode = useDarkMode()
-  const [value, setValue] = useState<string>()
+  const value = useRef<string>()
   const [result, setResult] = useState<MongoData>()
   const [error, setError] = useState<string>()
   const theme = getTheme()
@@ -37,22 +37,22 @@ export function NotebookItem(props: {
         dispatch(
           actions.notebook.updateNotebook({
             index: props.index,
-            value,
+            value: value.current,
             result,
             error,
           }),
         )
       } else {
-        setValue(undefined)
-        setResult(undefined)
-        setError(undefined)
         dispatch(
           actions.notebook.appendNotebook({
-            value,
+            value: value.current,
             result,
             error,
           }),
         )
+        value.current = undefined
+        setResult(undefined)
+        setError(undefined)
       }
     }
   }, [props, dispatch, value, result, error])
@@ -89,7 +89,7 @@ export function NotebookItem(props: {
   )
   const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
-    setValue(props.value)
+    value.current = props.value
   }, [props.value])
   useEffect(() => {
     setResult(props.result)
@@ -129,14 +129,14 @@ export function NotebookItem(props: {
         }}
         onBlur={async () => {
           setIsFocused(false)
-          await handleRunCommand(value)
+          await handleRunCommand(value.current)
         }}>
         <Card.Item styles={{ root: { height: 5 * 18 } }}>
           <ControlledEditor
             language="typescript"
-            value={value}
+            value={value.current}
             onChange={(_ev, _value) => {
-              setValue(_value)
+              value.current = _value
             }}
             theme={isDarkMode ? 'vs-dark' : 'vs'}
             editorDidMount={handleEditorDidMount}
@@ -167,7 +167,7 @@ export function NotebookItem(props: {
           ) : isFocused ? (
             <div
               onClick={() => {
-                handleRunCommand(value)
+                handleRunCommand(value.current)
               }}>
               <span
                 style={{
