@@ -14,10 +14,24 @@
 - [x] 与 [Mongo Shell](https://docs.mongodb.com/manual/core/shell-types/) 一致的数据表达格式，如 `ObjectId()` `ISODate()` `Timestamp()`
 - [x] 支持强制使用索引查询，避免拖慢数据库
 - [x] 强大的 Profiling 展示功能，轻松分析慢查询
+- [x] 支持为地理位置索引展示地图预览
 - [x] 支持 MongoDB 的 [JSON Schema Validator](https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/)
 - [x] 独特的 Notebook 功能，向 [Jupyter](https://jupyter.org/) 致敬
 - [x] 支持 HTTP/2
 - [x] 支持**黑暗**模式
+
+## 📷 截图
+
+<div>
+  <img src="./screenshot/stats.png" width="70%" style="vertical-align: middle"/> 数据库状态信息
+  <img src="./screenshot/index.png" width="70%" style="vertical-align: middle"/> 按索引进行查询和排序
+  <img src="./screenshot/geo.png" width="70%" style="vertical-align: middle"/> 地理位置地图预览
+  <img src="./screenshot/document.png" width="70%" style="vertical-align: middle"/> 以文档模式展示数据
+  <img src="./screenshot/editor.png" width="70%" style="vertical-align: middle"/> 使用 Monaco Editor 编辑
+  <img src="./screenshot/multi-select.png" width="70%" style="vertical-align: middle"/> 拖拽多选
+  <img src="./screenshot/export.png" width="70%" style="vertical-align: middle"/> 多选文档导出/删除
+
+</div>
 
 ## 安装 🔧
 
