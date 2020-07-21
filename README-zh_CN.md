@@ -24,20 +24,32 @@
 
 ## 📷 截图
 
-<div>
-  <img src="./screenshot/stats.png" width="70%" style="vertical-align: middle"/> 数据库状态信息
-  <img src="./screenshot/index.png" width="70%" style="vertical-align: middle"/> 按索引进行查询和排序
-  <img src="./screenshot/geo.png" width="70%" style="vertical-align: middle"/> 地理位置地图预览
-  <img src="./screenshot/document.png" width="70%" style="vertical-align: middle"/> 以文档模式展示数据
-  <img src="./screenshot/editor.png" width="70%" style="vertical-align: middle"/> 使用 Monaco Editor 编辑
-  <img src="./screenshot/multi-select.png" width="70%" style="vertical-align: middle"/> 拖拽多选
-  <img src="./screenshot/export.png" width="70%" style="vertical-align: middle"/> 多选文档导出/删除
-  <img src="./screenshot/indexes.png" width="70%" style="vertical-align: middle"/> 管理索引
-  <img src="./screenshot/profiling.png" width="70%" style="vertical-align: middle"/> 分析查询的每个步骤
-  <img src="./screenshot/schema.png" width="70%" style="vertical-align: middle"/> 编辑 JSON Schema
-  <img src="./screenshot/notebook.png" width="70%" style="vertical-align: middle"/> Notebook (Alpha)
-  <img src="./screenshot/dark.png" width="70%" style="vertical-align: middle"/> 黑暗模式
-</div>
+<table>
+  <tr>
+    <td align="center"><img src="./screenshot/stats.png" /> 数据库状态信息</td>
+    <td align="center"><img src="./screenshot/index.png" /> 按索引进行查询和排序</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/geo.png" /> 地理位置地图预览</td>
+    <td align="center"><img src="./screenshot/document.png" /> 以文档模式展示数据</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/editor.png" /> 使用 Monaco Editor 编辑</td>
+    <td align="center"><img src="./screenshot/multi-select.png" /> 拖拽多选</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/export.png" /> 多选文档导出/删除</td>
+    <td align="center"><img src="./screenshot/indexes.png" /> 管理索引</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/profiling.png" /> 分析查询的每个步骤</td>
+    <td align="center"><img src="./screenshot/schema.png" /> 编辑 JSON Schema</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/notebook.png" /> Notebook (Alpha)</td>
+    <td align="center"><img src="./screenshot/dark.png" /> 黑暗模式</td>
+  </tr>
+</table>
 
 ## 安装 🔧
 
@@ -75,7 +87,7 @@ cd go
 go run main.go headless.go
 ```
 
-## 未来计划 🚧
+## 开发计划 🚧
 
 - [ ] 用户角色管理
 - [ ] 性能监控

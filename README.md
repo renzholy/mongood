@@ -24,7 +24,7 @@ English | [简体中文](./README-zh_CN.md)
 
 ## 📷 Screenshot
 
-<table border="0">
+<table>
   <tr>
     <td align="center"><img src="./screenshot/stats.png"> Database status</td>
     <td align="center"><img src="./screenshot/index.png"> Find & sort with index</td>
