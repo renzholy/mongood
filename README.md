@@ -25,18 +25,22 @@ English | [简体中文](./README-zh_CN.md)
 ## 📷 Screenshot
 
 <div>
-  <img src="./screenshot/stats.png" width="70%" style="vertical-align: middle"/> Database status
-  <img src="./screenshot/index.png" width="70%" style="vertical-align: middle"/> Find & sort with index
-  <img src="./screenshot/geo.png" width="70%" style="vertical-align: middle"/> Geo preview
-  <img src="./screenshot/document.png" width="70%" style="vertical-align: middle"/> Document mode
-  <img src="./screenshot/editor.png" width="70%" style="vertical-align: middle"/> Edit with Monaco Editor
-  <img src="./screenshot/multi-select.png" width="70%" style="vertical-align: middle"/> Dragable multi-selection
-  <img src="./screenshot/export.png" width="70%" style="vertical-align: middle"/> Documents export
-  <img src="./screenshot/indexes.png" width="70%" style="vertical-align: middle"/> Indexes managment
-  <img src="./screenshot/profiling.png" width="70%" style="vertical-align: middle"/> Analyse profiling
-  <img src="./screenshot/schema.png" width="70%" style="vertical-align: middle"/> Edit JSON Schema
-  <img src="./screenshot/notebook.png" width="70%" style="vertical-align: middle"/> Notebook (Alpha)
-  <img src="./screenshot/dark.png" width="70%" style="vertical-align: middle"/> Dark mode
+  <img src="./screenshot/stats.png" width="70%" align="right"/> 
+  Database status
+  <br/>
+  <img src="./screenshot/index.png" width="70%" align="right"/> 
+  <br/>
+  Find & sort with index
+  <img src="./screenshot/geo.png" width="70%" align="right"/> Geo preview
+  <img src="./screenshot/document.png" width="70%" align="right"/> Document mode
+  <img src="./screenshot/editor.png" width="70%" align="right"/> Edit with Monaco Editor
+  <img src="./screenshot/multi-select.png" width="70%" align="right"/> Dragable multi-selection
+  <img src="./screenshot/export.png" width="70%" align="right"/> Documents export
+  <img src="./screenshot/indexes.png" width="70%" align="right"/> Indexes managment
+  <img src="./screenshot/profiling.png" width="70%" align="right"/> Analyse profiling
+  <img src="./screenshot/schema.png" width="70%" align="right"/> Edit JSON Schema
+  <img src="./screenshot/notebook.png" width="70%" align="right"/> Notebook (Alpha)
+  <img src="./screenshot/dark.png" width="70%" align="right"/> Dark mode
 </div>
 
 ## Setup 🔧
