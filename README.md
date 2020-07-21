@@ -91,5 +91,6 @@ go run main.go headless.go
 
 - [ ] Role management
 - [ ] Performance moniting
+- [ ] VSCode plugin
 
-Feel free to create a pull request or issue !
+Feel free to pull request or create a issue !

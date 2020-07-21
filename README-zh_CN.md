@@ -91,5 +91,6 @@ go run main.go headless.go
 
 - [ ] 用户角色管理
 - [ ] 性能监控
+- [ ] 做成 VSCode 插件
 
 欢迎提 PR 和 issue
