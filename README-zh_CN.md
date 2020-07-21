@@ -6,6 +6,8 @@
 [![](https://img.shields.io/docker/cloud/build/renzholy/mongood)](https://hub.docker.com/r/renzholy/mongood)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4b5f9ef66205961e4ddd/maintainability)](https://codeclimate.com/github/RenzHoly/Mongood/maintainability)
 
+[English](./README.md) | 简体中文
+
 ## 特性 🔮
 
 - [x] 既可以运行在服务端，也可以打包作为客户端使用（没有使用 Electron）
