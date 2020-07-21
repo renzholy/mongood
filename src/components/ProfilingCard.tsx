@@ -10,7 +10,7 @@ import { SystemProfileDoc, MongoData } from '@/types'
 import { Number } from '@/utils/formatter'
 import { ExecStage } from './ExecStage'
 import { EditorModal } from './EditorModal'
-import { CommandAndLocksCardItem } from './CommandAndLocksCardItem'
+import { CommandAndLocks } from './CommandAndLocks'
 
 export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
   const theme = getTheme()
@@ -131,10 +131,15 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
           ]).join(', ')}
         </Text>
       </Card.Item>
-      <CommandAndLocksCardItem
-        command={props.value.originatingCommand || props.value.command}
-        locks={value.locks}
-      />
+      <Card.Item
+        styles={{
+          root: { display: 'flex', justifyContent: 'space-between' },
+        }}>
+        <CommandAndLocks
+          command={props.value.originatingCommand || props.value.command}
+          locks={value.locks}
+        />
+      </Card.Item>
       {props.value.execStats ? (
         <Card.Item
           styles={{
