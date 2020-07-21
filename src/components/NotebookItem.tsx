@@ -31,26 +31,31 @@ export function NotebookItem(props: {
   const database = useSelector((state) => state.root.database)
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
-  const handleNext = useCallback(
-    (notebook: { value?: string; result?: MongoData; error?: string }) => {
-      if (notebook.value && (notebook.result || notebook.error)) {
-        if (props.index !== undefined) {
-          dispatch(
-            actions.notebook.updateNotebook({
-              index: props.index,
-              ...notebook,
-            }),
-          )
-        } else {
-          setValue(undefined)
-          setResult(undefined)
-          setError(undefined)
-          dispatch(actions.notebook.appendNotebook(notebook))
-        }
+  const handleNext = useCallback(() => {
+    if (value && (result || error)) {
+      if (props.index !== undefined) {
+        dispatch(
+          actions.notebook.updateNotebook({
+            index: props.index,
+            value,
+            result,
+            error,
+          }),
+        )
+      } else {
+        setValue(undefined)
+        setResult(undefined)
+        setError(undefined)
+        dispatch(
+          actions.notebook.appendNotebook({
+            value,
+            result,
+            error,
+          }),
+        )
       }
-    },
-    [props, dispatch],
-  )
+    }
+  }, [props, dispatch, value, result, error])
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
       if (!database || !commandStr) {
@@ -69,15 +74,14 @@ export function NotebookItem(props: {
         )
         setResult(_result)
         setError(undefined)
-        handleNext({ value: commandStr, result: _result })
       } catch (err) {
         setResult(undefined)
         const _error = err?.message?.startsWith('(CommandNotFound)')
           ? `Command Error: ${commandStr}`
           : err.message
         setError(_error)
-        handleNext({ value: commandStr, error: _error })
       } finally {
+        handleNext()
         setIsLoading(false)
       }
     },
