@@ -30,7 +30,11 @@
   <img src="./screenshot/editor.png" width="70%" style="vertical-align: middle"/> 使用 Monaco Editor 编辑
   <img src="./screenshot/multi-select.png" width="70%" style="vertical-align: middle"/> 拖拽多选
   <img src="./screenshot/export.png" width="70%" style="vertical-align: middle"/> 多选文档导出/删除
-
+  <img src="./screenshot/indexes.png" width="70%" style="vertical-align: middle"/> 管理索引
+  <img src="./screenshot/profiling.png" width="70%" style="vertical-align: middle"/> 分析查询的每个步骤
+  <img src="./screenshot/schema.png" width="70%" style="vertical-align: middle"/> 编辑 JSON Schema
+  <img src="./screenshot/notebook.png" width="70%" style="vertical-align: middle"/> Notebook (Alpha)
+  <img src="./screenshot/dark.png" width="70%" style="vertical-align: middle"/> 黑暗模式
 </div>
 
 ## 安装 🔧
