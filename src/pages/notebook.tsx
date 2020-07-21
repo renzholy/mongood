@@ -52,7 +52,7 @@ export default () => {
             cellExtraRightPadding: 0,
           }}
           onRenderItemColumn={NotebookItem}
-          onRenderDetailsFooter={() => <NotebookItem in="" />}
+          onRenderDetailsFooter={() => <NotebookItem />}
         />
       </ScrollablePane>
     </div>

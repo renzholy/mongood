@@ -14,35 +14,43 @@ import { toCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
+import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
 
 export function NotebookItem(props: {
-  in: string
-  out?: object
-  error?: string
   index?: number
+  value?: string
+  result?: MongoData
+  error?: string
 }) {
   const isDarkMode = useDarkMode()
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState<string>()
+  const [result, setResult] = useState<MongoData>()
+  const [error, setError] = useState<string>()
   const theme = getTheme()
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const [isLoading, setIsLoading] = useState(false)
-  const [result, setResult] = useState<object>()
-  const [error, setError] = useState<string>()
   const dispatch = useDispatch()
   const handleNext = useCallback(() => {
     if (value && (result || error)) {
-      const notebook = { in: value, out: result, error }
       if (props.index !== undefined) {
         dispatch(
           actions.notebook.updateNotebook({
-            ...notebook,
             index: props.index,
+            value,
+            result,
+            error,
           }),
         )
       } else {
-        dispatch(actions.notebook.appendNotebook(notebook))
+        dispatch(
+          actions.notebook.appendNotebook({
+            value,
+            result,
+            error,
+          }),
+        )
         setValue('')
         setResult(undefined)
         setError(undefined)
@@ -57,20 +65,19 @@ export function NotebookItem(props: {
       try {
         setIsLoading(true)
         const command = toCommand(commandStr)
-        const _result = await runCommand<object>(
-          connection,
-          database,
-          command,
-          { canonical: true },
+        setResult(
+          await runCommand<MongoData>(connection, database, command, {
+            canonical: true,
+          }),
         )
-        setResult(_result)
         setError(undefined)
       } catch (err) {
         setResult(undefined)
-        const _error: string = err?.message?.startsWith('(CommandNotFound)')
-          ? `Command Error: ${commandStr}`
-          : err.message
-        setError(_error)
+        setError(
+          err?.message?.startsWith('(CommandNotFound)')
+            ? `Command Error: ${commandStr}`
+            : err.message,
+        )
       } finally {
         handleNext()
         setIsLoading(false)
@@ -80,11 +87,11 @@ export function NotebookItem(props: {
   )
   const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
-    setValue(props.in)
-  }, [props.in])
+    setValue(props.value)
+  }, [props.value])
   useEffect(() => {
-    setResult(props.out)
-  }, [props.out])
+    setResult(props.result)
+  }, [props.result])
   useEffect(() => {
     setError(props.error)
   }, [props.error])
