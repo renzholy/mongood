@@ -78,6 +78,7 @@ export function OperationCard(props: {
       styles={{
         root: {
           backgroundColor: theme.palette.neutralLighterAlt,
+          flexShrink: '0 !important',
         },
       }}
       tokens={{

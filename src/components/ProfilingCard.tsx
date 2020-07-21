@@ -45,6 +45,7 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
       styles={{
         root: {
           backgroundColor: theme.palette.neutralLighterAlt,
+          flexShrink: '0 !important',
         },
       }}
       tokens={{
