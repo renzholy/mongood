@@ -1,8 +1,9 @@
 {
   "name": "mongood",
   "version": "0.1.0",
-  "description": "MongoDB Operation Dashboard",
+  "description": "A MongoDB GUI",
   "main": "index.js",
+  "private": "true",
   "scripts": {
     "dev": "umi dev",
     "build": "umi build",
