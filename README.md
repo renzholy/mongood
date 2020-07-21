@@ -10,17 +10,17 @@ English | [简体中文](./README-zh_CN.md)
 
 ## Feature 🔮
 
-- [x] 既可以运行在服务端，也可以打包作为客户端使用（没有使用 Electron）
-- [x] 使用 [Monaco Editor](https://microsoft.github.io/monaco-editor/index.html) 作为编辑器
-- [x] 使用 [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui) 框架
-- [x] 与 [Mongo Shell](https://docs.mongodb.com/manual/core/shell-types/) 一致的数据表达格式，如 `ObjectId()` `ISODate()` `Timestamp()`
-- [x] 支持强制使用索引查询，避免拖慢数据库
-- [x] 强大的 Profiling 展示功能，轻松分析慢查询
-- [x] 支持为地理位置索引展示地图预览
-- [x] 支持 MongoDB 的 [JSON Schema Validator](https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/)
-- [x] 独特的 Notebook 功能，向 [Jupyter](https://jupyter.org/) 致敬
-- [x] 支持 HTTP/2
-- [x] 支持**黑暗**模式
+- [x] Server or client mode (without Electron)
+- [x] Edit documents with [Monaco Editor](https://microsoft.github.io/monaco-editor/index.html)
+- [x] Designed with [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui)
+- [x] [Mongo Shell](https://docs.mongodb.com/manual/core/shell-types/) compatiable data type, eg: `ObjectId()` `ISODate()` `Timestamp()`
+- [x] Find documents with index hint, avoiding slow operation
+- [x] Fancy profiling exec stats
+- [x] Geo preview for 2dsphere index
+- [x] [JSON Schema Validator](https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/) supporting
+- [x] Notebook function, just like [Jupyter](https://jupyter.org/)
+- [x] HTTP/2
+- [x] Auto **dark** mode
 
 ## 📷 Screenshot
 
