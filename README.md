@@ -24,20 +24,32 @@ English | [简体中文](./README-zh_CN.md)
 
 ## 📷 Screenshot
 
-<div>
-  <img src="./screenshot/stats.png" width="70%" style="vertical-align: middle"/> Database status
-  <img src="./screenshot/index.png" width="70%" style="vertical-align: middle"/> Find & sort with index
-  <img src="./screenshot/geo.png" width="70%" style="vertical-align: middle"/> Geo preview
-  <img src="./screenshot/document.png" width="70%" style="vertical-align: middle"/> Document mode
-  <img src="./screenshot/editor.png" width="70%" style="vertical-align: middle"/> Edit with Monaco Editor
-  <img src="./screenshot/multi-select.png" width="70%" style="vertical-align: middle"/> Dragable multi-selection
-  <img src="./screenshot/export.png" width="70%" style="vertical-align: middle"/> Documents export
-  <img src="./screenshot/indexes.png" width="70%" style="vertical-align: middle"/> Indexes managment
-  <img src="./screenshot/profiling.png" width="70%" style="vertical-align: middle"/> Analyse profiling
-  <img src="./screenshot/schema.png" width="70%" style="vertical-align: middle"/> Edit JSON Schema
-  <img src="./screenshot/notebook.png" width="70%" style="vertical-align: middle"/> Notebook (Alpha)
-  <img src="./screenshot/dark.png" width="70%" style="vertical-align: middle"/> Dark mode
-</div>
+<table border="0">
+  <tr>
+    <td align="center"><img src="./screenshot/stats.png"> Database status</td>
+    <td align="center"><img src="./screenshot/index.png"> Find & sort with index</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/geo.png" /> Geo preview</td>
+    <td align="center"><img src="./screenshot/document.png" /> Document mode</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/editor.png" /> Edit with Monaco Editor</td>
+    <td align="center"><img src="./screenshot/multi-select.png" /> Dragable multi-selection</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/export.png" /> Documents export</td>
+    <td align="center"><img src="./screenshot/indexes.png" /> Indexes managment</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/profiling.png" /> Analyse profiling</td>
+    <td align="center"><img src="./screenshot/schema.png" /> Edit JSON Schema</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./screenshot/notebook.png" /> Notebook (Alpha)</td>
+    <td align="center"><img src="./screenshot/dark.png" /> Dark mode</td>
+  </tr>
+</table>
 
 ## Setup 🔧
 
