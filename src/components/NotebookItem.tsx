@@ -1,7 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable react/no-danger */
 
 import React, { useState, useEffect, useCallback } from 'react'
 import { Card } from '@uifabric/react-cards'
@@ -43,7 +42,7 @@ export function NotebookItem(props: {
             }),
           )
         } else {
-          setValue('')
+          setValue(undefined)
           setResult(undefined)
           setError(undefined)
           dispatch(actions.notebook.appendNotebook(notebook))
@@ -133,7 +132,7 @@ export function NotebookItem(props: {
             language="typescript"
             value={value}
             onChange={(_ev, _value) => {
-              setValue(_value || '')
+              setValue(_value)
             }}
             theme={isDarkMode ? 'vs-dark' : 'vs'}
             editorDidMount={handleEditorDidMount}
