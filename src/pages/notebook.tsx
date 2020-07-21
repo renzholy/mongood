@@ -34,7 +34,7 @@ export default () => {
           stickyBelow: { display: 'none' },
         }}>
         <DetailsList
-          items={[...notebooks, { index: Infinity, in: '' }]}
+          items={notebooks}
           selectionMode={SelectionMode.none}
           compact={true}
           isHeaderVisible={false}
@@ -51,32 +51,8 @@ export default () => {
             cellRightPadding: 0,
             cellExtraRightPadding: 0,
           }}
-          onRenderItemColumn={(item: {
-            index: number
-            in: string
-            out?: object
-            error?: string
-          }) => (
-            <NotebookItem
-              in={item.in}
-              out={item.out}
-              error={item.error}
-              onNext={(notebook) => {
-                if (notebook.in && (notebook.out || notebook.error)) {
-                  if (item.out || item.error) {
-                    dispatch(
-                      actions.notebook.updateNotebook({
-                        ...notebook,
-                        index: item.index,
-                      }),
-                    )
-                  } else {
-                    dispatch(actions.notebook.appendNotebook(notebook))
-                  }
-                }
-              }}
-            />
-          )}
+          onRenderItemColumn={NotebookItem}
+          onRenderDetailsFooter={() => <NotebookItem in="" />}
         />
       </ScrollablePane>
     </div>
