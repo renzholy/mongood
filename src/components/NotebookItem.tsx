@@ -1,42 +1,61 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable react/no-danger */
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Card } from '@uifabric/react-cards'
 import { ControlledEditor, EditorDidMount } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Icon, getTheme, Spinner, SpinnerSize } from '@fluentui/react'
 
 import { toCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
-import { changeLib } from '@/utils/editor'
 import { runCommand } from '@/utils/fetcher'
+import { actions } from '@/stores'
+import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
 
 export function NotebookItem(props: {
-  in: string
-  out?: object
+  index?: number
+  value?: string
+  result?: MongoData
   error?: string
-  onNext(value: { in: string; out?: object; error?: string }): void
 }) {
   const isDarkMode = useDarkMode()
-  const [value, setValue] = useState('')
+  const value = useRef<string>()
+  const [result, setResult] = useState<MongoData>()
+  const [error, setError] = useState<string>()
   const theme = getTheme()
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
-  const collectionsMap = useSelector((state) => state.root.collectionsMap)
-  useEffect(() => {
-    if (!database) {
-      return
-    }
-    changeLib(collectionsMap[database])
-  }, [database, collectionsMap])
   const [isLoading, setIsLoading] = useState(false)
-  const [result, setResult] = useState<any>()
-  const [error, setError] = useState<string>()
+  const dispatch = useDispatch()
+  const handleNext = useCallback(() => {
+    if (value && (result || error)) {
+      if (props.index !== undefined) {
+        dispatch(
+          actions.notebook.updateNotebook({
+            index: props.index,
+            value: value.current,
+            result,
+            error,
+          }),
+        )
+      } else {
+        dispatch(
+          actions.notebook.appendNotebook({
+            value: value.current,
+            result,
+            error,
+          }),
+        )
+        value.current = undefined
+        setResult(undefined)
+        setError(undefined)
+      }
+    }
+  }, [props, dispatch, value, result, error])
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
       if (!database || !commandStr) {
@@ -45,37 +64,39 @@ export function NotebookItem(props: {
       try {
         setIsLoading(true)
         const command = toCommand(commandStr)
-        setResult(
-          await runCommand(connection, database, command, { canonical: true }),
+        const _result = await runCommand<MongoData>(
+          connection,
+          database,
+          command,
+          {
+            canonical: true,
+          },
         )
+        setResult(_result)
         setError(undefined)
       } catch (err) {
         setResult(undefined)
-        if (err?.message?.startsWith('(CommandNotFound)')) {
-          setError(`Command Error: ${commandStr}`)
-        } else {
-          setError(err.message)
-        }
+        const _error = err?.message?.startsWith('(CommandNotFound)')
+          ? `Command Error: ${commandStr}`
+          : err.message
+        setError(_error)
       } finally {
+        handleNext()
         setIsLoading(false)
       }
     },
-    [connection, database],
+    [connection, database, handleNext],
   )
-
   const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
-    setValue(props.in)
-  }, [props.in])
+    value.current = props.value
+  }, [props.value])
   useEffect(() => {
-    setResult(props.out)
-  }, [props.out])
+    setResult(props.result)
+  }, [props.result])
   useEffect(() => {
     setError(props.error)
   }, [props.error])
-  useEffect(() => {
-    props.onNext({ in: value, out: result, error })
-  }, [value, result, error, props])
   const handleEditorDidMount = useCallback<EditorDidMount>(
     (getEditorValue, editor) => {
       editor.onKeyDown(async (e) => {
@@ -108,14 +129,14 @@ export function NotebookItem(props: {
         }}
         onBlur={async () => {
           setIsFocused(false)
-          await handleRunCommand(value)
+          await handleRunCommand(value.current)
         }}>
         <Card.Item styles={{ root: { height: 5 * 18 } }}>
           <ControlledEditor
             language="typescript"
-            value={value}
+            value={value.current}
             onChange={(_ev, _value) => {
-              setValue(_value || '')
+              value.current = _value
             }}
             theme={isDarkMode ? 'vs-dark' : 'vs'}
             editorDidMount={handleEditorDidMount}
@@ -146,7 +167,7 @@ export function NotebookItem(props: {
           ) : isFocused ? (
             <div
               onClick={() => {
-                handleRunCommand(value)
+                handleRunCommand(value.current)
               }}>
               <span
                 style={{

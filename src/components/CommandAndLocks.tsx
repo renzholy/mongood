@@ -1,21 +1,15 @@
-/* eslint-disable react/no-danger */
-
 import React from 'react'
 import _ from 'lodash'
-import { Card } from '@uifabric/react-cards'
 
 import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
 
-export function CommandAndLocksCardItem(props: {
+export function CommandAndLocks(props: {
   command: MongoData
   locks: MongoData
 }) {
   return (
-    <Card.Item
-      styles={{
-        root: { display: 'flex', justifyContent: 'space-between' },
-      }}>
+    <>
       <ColorizedData
         style={{ marginRight: 10 }}
         value={_.omit(props.command as object, [
@@ -32,6 +26,6 @@ export function CommandAndLocksCardItem(props: {
         ])}
       />
       <ColorizedData value={props.locks} />
-    </Card.Item>
+    </>
   )
 }

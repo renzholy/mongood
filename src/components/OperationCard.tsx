@@ -20,7 +20,7 @@ import { Number } from '@/utils/formatter'
 import { Operation } from '@/types'
 import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
-import { CommandAndLocksCardItem } from './CommandAndLocksCardItem'
+import { CommandAndLocks } from './CommandAndLocks'
 
 export function OperationCard(props: {
   value: Operation
@@ -198,10 +198,15 @@ export function OperationCard(props: {
           ]).join(', ')}
         </Text>
       </Card.Item>
-      <CommandAndLocksCardItem
-        command={props.value.originatingCommand || props.value.command}
-        locks={value.lockStats}
-      />
+      <Card.Item
+        styles={{
+          root: { display: 'flex', justifyContent: 'space-between' },
+        }}>
+        <CommandAndLocks
+          command={props.value.originatingCommand || props.value.command}
+          locks={value.lockStats}
+        />
+      </Card.Item>
       {value.client && value.clientMetadata ? (
         <Card.Item>
           <Text
