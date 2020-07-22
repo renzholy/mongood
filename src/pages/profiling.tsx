@@ -20,14 +20,16 @@ export default () => {
   const skip = useSelector((state) => state.docs.skip)
   const limit = useSelector((state) => state.docs.limit)
   const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
-  const { data: profile, revalidate } = useSWR(`profile/${connection}`, () =>
-    runCommand<{ was: number; slowms: number; sampleRate: number }>(
-      connection,
-      'admin',
-      {
-        profile: -1,
-      },
-    ),
+  const { data: profile, revalidate } = useSWR(
+    `profile/${connection}/${shouldRevalidate}`,
+    () =>
+      runCommand<{ was: number; slowms: number; sampleRate: number }>(
+        connection,
+        'admin',
+        {
+          profile: -1,
+        },
+      ),
   )
   const [slowms, setSlowms] = useState(0)
   const dispatch = useDispatch()
@@ -112,9 +114,6 @@ export default () => {
   useEffect(() => {
     dispatch(actions.docs.resetPage())
   }, [database, collection, dispatch])
-  useEffect(() => {
-    revalidate()
-  }, [shouldRevalidate, revalidate])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />

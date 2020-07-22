@@ -27,11 +27,11 @@ export const DocumentTable = React.memo(function DocumentTable() {
   const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
   const displayMode = useSelector((state) => state.docs.displayMode)
   const hint = filter.$text || isEmpty(filter) ? undefined : index?.name
-  const { data, error, isValidating, revalidate } = useSWR(
+  const { data, error, isValidating } = useSWR(
     connection && database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
-        )}/${JSON.stringify(sort)}/${hint}`
+        )}/${JSON.stringify(sort)}/${hint}/${shouldRevalidate}`
       : null,
     () =>
       runCommand<{
@@ -51,9 +51,6 @@ export const DocumentTable = React.memo(function DocumentTable() {
       ),
     { revalidateOnFocus: false },
   )
-  useEffect(() => {
-    revalidate()
-  }, [shouldRevalidate, revalidate])
   const dispatch = useDispatch()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isMenuHidden, setIsMenuHidden] = useState(true)

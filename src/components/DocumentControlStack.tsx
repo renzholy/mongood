@@ -46,11 +46,11 @@ export function DocumentControlStack() {
     dispatch(actions.docs.setShouldRevalidate())
   }, [connection, database, collection, doc, dispatch])
   const hint = isEmpty(filter) ? undefined : index?.name
-  const { data: count, revalidate } = useSWR(
+  const { data: count } = useSWR(
     connection && database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(
           filter,
-        )}/${hint}`
+        )}/${hint}/${shouldRevalidate}`
       : null,
     () =>
       runCommand<{ n: number }>(connection, database!, {
@@ -66,9 +66,6 @@ export function DocumentControlStack() {
     dispatch(actions.docs.resetPage())
     dispatch(actions.docs.setIndex())
   }, [database, collection, dispatch])
-  useEffect(() => {
-    revalidate()
-  }, [shouldRevalidate, revalidate])
 
   return (
     <Stack
