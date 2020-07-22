@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -68,7 +68,7 @@ export const DocumentTable = React.memo(function DocumentTable() {
     dispatch(actions.docs.setShouldRevalidate())
     setIsUpdateOpen(false)
   }, [connection, database, collection, invokedItem, editedItem, dispatch])
-  const [target, setTarget] = useState<MouseEvent>()
+  const target = useRef<MouseEvent>()
   const [selectedItems, setSelectedItems] = useState<Data[]>([])
   const selection = useMemo(
     () =>
@@ -92,7 +92,7 @@ export const DocumentTable = React.memo(function DocumentTable() {
       } else {
         setInvokedItem(undefined)
       }
-      setTarget(ev)
+      target.current = ev
       setIsMenuHidden(false)
     },
     [selectedItems],
@@ -122,7 +122,7 @@ export const DocumentTable = React.memo(function DocumentTable() {
         onDismiss={() => {
           setIsMenuHidden(true)
         }}
-        target={target as MouseEvent}
+        target={target.current}
         selectedItems={selectedItems}
         onEdit={
           invokedItem

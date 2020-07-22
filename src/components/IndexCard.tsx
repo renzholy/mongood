@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-indent */
 
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState, useMemo, useRef } from 'react'
 import { Card } from '@uifabric/react-cards'
 import {
   Text,
@@ -176,13 +176,13 @@ export function IndexCard(props: {
     [props.value],
   )
   const [isOpen, setIsOpen] = useState(false)
-  const [target, setTarget] = useState<MouseEvent>()
+  const target = useRef<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
 
   return (
     <Card
       onContextMenu={(ev) => {
-        setTarget(ev.nativeEvent)
+        target.current = ev.nativeEvent
         setIsMenuHidden(false)
         ev.preventDefault()
       }}
@@ -215,7 +215,7 @@ export function IndexCard(props: {
           />
           <IndexContextualMenu
             value={props.value}
-            target={target}
+            target={target.current}
             hidden={isMenuHidden}
             onDismiss={() => {
               setIsMenuHidden(true)
