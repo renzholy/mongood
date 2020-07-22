@@ -11,7 +11,7 @@ import {
   DefaultButton,
 } from '@fluentui/react'
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import _ from 'lodash'
+import { omit, compact } from 'lodash'
 import { useSelector } from 'react-redux'
 import { EJSON } from 'bson'
 
@@ -41,7 +41,7 @@ export function OperationCard(props: {
   const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
     () =>
       EJSON.parse(
-        JSON.stringify(_.omit(props.value, ['command', 'originatingCommand'])),
+        JSON.stringify(omit(props.value, ['command', 'originatingCommand'])),
       ) as Omit<Operation, 'command' | 'originatingCommand'>,
     [props.value],
   )
@@ -182,7 +182,7 @@ export function OperationCard(props: {
         <Text
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {_.compact([
+          {compact([
             value.microsecs_running
               ? `${Number.format(
                   value.microsecs_running > 1000

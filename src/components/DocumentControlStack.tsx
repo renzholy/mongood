@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import type { IndexSpecification } from 'mongodb'
-import _ from 'lodash'
+import { isEmpty } from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
@@ -45,7 +45,7 @@ export function DocumentControlStack() {
     setIsInsertOpen(false)
     dispatch(actions.docs.setShouldRevalidate())
   }, [connection, database, collection, doc, dispatch])
-  const hint = _.isEmpty(filter) ? undefined : index?.name
+  const hint = isEmpty(filter) ? undefined : index?.name
   const { data: count, revalidate } = useSWR(
     database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(

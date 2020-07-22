@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react'
 import { Icon, Text, getTheme } from '@fluentui/react'
-import _ from 'lodash'
+import { isEqual } from 'lodash'
 
 export const LargeMessage = React.memo(function LargeMessage(props: {
   iconName: string
@@ -61,4 +61,4 @@ export const LargeMessage = React.memo(function LargeMessage(props: {
     </div>
   )
 },
-_.isEqual)
+isEqual)

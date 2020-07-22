@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
-import _ from 'lodash'
+import { isEqual } from 'lodash'
 
 import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
@@ -87,4 +87,4 @@ export const TableCell = React.memo(function TableCell(props: {
     />
   )
 },
-_.isEqual)
+isEqual)

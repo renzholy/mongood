@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
 import { Text, getTheme, ContextualMenu } from '@fluentui/react'
-import _ from 'lodash'
+import { omit, compact } from 'lodash'
 import { EJSON } from 'bson'
 
 import { SystemProfileDoc, MongoData } from '@/types'
@@ -23,7 +23,7 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
     () =>
       EJSON.parse(
         JSON.stringify(
-          _.omit(props.value, ['command', 'originatingCommand', 'execStats']),
+          omit(props.value, ['command', 'originatingCommand', 'execStats']),
         ),
       ) as Omit<
         SystemProfileDoc,
@@ -117,7 +117,7 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
         <Text
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {_.compact([
+          {compact([
             `${Number.format(value.millis)} ms`,
             value.keysExamined === undefined
               ? undefined

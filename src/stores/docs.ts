@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { IndexSpecification, FilterQuery } from 'mongodb'
-import _ from 'lodash'
+import { isEqual } from 'lodash'
 
 import { DisplayMode } from '@/types.d'
 
@@ -40,7 +40,7 @@ export default createSlice({
       index: payload,
     }),
     setFilter: (state, { payload }: PayloadAction<FilterQuery<unknown>>) =>
-      _.isEqual(payload, state.filter)
+      isEqual(payload, state.filter)
         ? state
         : {
             ...state,
@@ -50,7 +50,7 @@ export default createSlice({
       state,
       { payload }: PayloadAction<{ [key: string]: 1 | -1 | undefined }>,
     ) =>
-      _.isEqual(payload, state.sort)
+      isEqual(payload, state.sort)
         ? state
         : {
             ...state,

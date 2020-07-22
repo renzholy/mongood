@@ -8,7 +8,7 @@ import {
   HoverCard,
   HoverCardType,
 } from '@fluentui/react'
-import _ from 'lodash'
+import { omit, compact } from 'lodash'
 import bytes from 'bytes'
 import { EJSON } from 'bson'
 
@@ -33,7 +33,7 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
           backgroundColor: theme.palette.neutralLighterAlt,
         }}>
         <ColorizedData
-          value={_.omit(props.value, ['inputStage', 'inputStages'])}
+          value={omit(props.value, ['inputStage', 'inputStages'])}
         />
       </div>
     )
@@ -77,7 +77,7 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
               height: 'fit-content',
             },
           }}
-          secondaryText={_.compact([
+          secondaryText={compact([
             `${Number.format(
               value.executionTimeMillisEstimate -
                 (value.inputStage?.executionTimeMillisEstimate ||

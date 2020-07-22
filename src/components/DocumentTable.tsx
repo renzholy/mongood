@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
-import _ from 'lodash'
+import { isEmpty } from 'lodash'
 import { Selection } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
@@ -26,7 +26,7 @@ export const DocumentTable = React.memo(function DocumentTable() {
   const limit = useSelector((state) => state.docs.limit)
   const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
   const displayMode = useSelector((state) => state.docs.displayMode)
-  const hint = filter.$text || _.isEmpty(filter) ? undefined : index?.name
+  const hint = filter.$text || isEmpty(filter) ? undefined : index?.name
   const { data, error, isValidating, revalidate } = useSWR(
     database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(

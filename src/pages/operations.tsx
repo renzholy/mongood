@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
-import _ from 'lodash'
+import { map, omit } from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
@@ -73,7 +73,7 @@ export default () => {
       revalidateOnFocus: false,
     },
   )
-  const value = useMemo(() => (ns ? { ...filter, ns } : _.omit(filter, 'ns')), [
+  const value = useMemo(() => (ns ? { ...filter, ns } : omit(filter, 'ns')), [
     ns,
     filter,
   ])
@@ -90,7 +90,7 @@ export default () => {
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { marginBottom: -10 } }}>
-        {_.map(examples, (_v, k) => (
+        {map(examples, (_v, k) => (
           <DefaultButton
             key={k}
             text={k}
