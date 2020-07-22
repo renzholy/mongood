@@ -57,11 +57,12 @@ English | [简体中文](./README-zh_CN.md)
 
 ```bash
 go get fyne.io/fyne/cmd/fyne
+go get github.com/markbates/pkger/cmd/pkger
 npm ci
 npm run build
 cd go
-make
-# open mongood.app or mongood.exe
+make mac-app
+# or `make windows-app`
 ```
 
 ### As server
