@@ -92,7 +92,7 @@ export default () => {
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const { data: collStats } = useSWR(
-    database && collection
+    connection && database && collection
       ? `collStats/${connection}/${database}/${collection}`
       : null,
     () =>
@@ -110,7 +110,9 @@ export default () => {
     { refreshInterval: 1000 },
   )
   const { data: serverStatus } = useSWR(
-    database && collection ? null : `serverStatus/${connection}`,
+    !connection || (database && collection)
+      ? null
+      : `serverStatus/${connection}`,
     () =>
       runCommand<ServerStats>(connection, 'admin', {
         serverStatus: 1,

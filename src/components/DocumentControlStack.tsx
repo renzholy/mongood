@@ -22,7 +22,7 @@ export function DocumentControlStack() {
   const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
   const filter = useSelector((state) => state.docs.filter)
   const { data: indexes } = useSWR(
-    database && collection
+    connection && database && collection
       ? `listIndexes/${connection}/${database}/${collection}`
       : null,
     () =>
@@ -47,7 +47,7 @@ export function DocumentControlStack() {
   }, [connection, database, collection, doc, dispatch])
   const hint = isEmpty(filter) ? undefined : index?.name
   const { data: count, revalidate } = useSWR(
-    database && collection
+    connection && database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(
           filter,
         )}/${hint}`

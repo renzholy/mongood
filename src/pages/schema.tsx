@@ -28,7 +28,7 @@ export default () => {
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const { data, revalidate } = useSWR(
-    database && collection
+    connection && database && collection
       ? `listCollections/${connection}/${database}/${collection}`
       : null,
     () =>

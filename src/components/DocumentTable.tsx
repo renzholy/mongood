@@ -28,7 +28,7 @@ export const DocumentTable = React.memo(function DocumentTable() {
   const displayMode = useSelector((state) => state.docs.displayMode)
   const hint = filter.$text || isEmpty(filter) ? undefined : index?.name
   const { data, error, isValidating, revalidate } = useSWR(
-    database && collection
+    connection && database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
         )}/${JSON.stringify(sort)}/${hint}`
