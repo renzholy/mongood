@@ -1,7 +1,7 @@
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { KeyCode } from 'monaco-editor'
-import { EditorDidMount } from '@monaco-editor/react'
+import { EditorDidMount, ControlledEditorProps } from '@monaco-editor/react'
 
 import { stringify, parse } from '@/utils/ejson'
 import { ControlledEditor } from '@/utils/editor'
@@ -32,6 +32,18 @@ export function EditorModal<T extends MongoData>(props: {
       })
     },
     [],
+  )
+  const handleChange = useCallback((_ev: unknown, _value?: string) => {
+    setValue(_value || '')
+  }, [])
+  const options = useMemo<ControlledEditorProps['options']>(
+    () => ({
+      readOnly: props.readOnly,
+      wordWrap: 'on',
+      contextmenu: false,
+      scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
+    }),
+    [props.readOnly],
   )
 
   return (
@@ -90,17 +102,10 @@ export function EditorModal<T extends MongoData>(props: {
           <ControlledEditor
             language="typescript"
             value={value}
-            onChange={(_ev, _value) => {
-              setValue(_value || '')
-            }}
+            onChange={handleChange}
             theme={isDarkMode ? 'vs-dark' : 'vs'}
             editorDidMount={handleEditorDidMount}
-            options={{
-              readOnly: props.readOnly,
-              wordWrap: 'on',
-              contextmenu: false,
-              scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
-            }}
+            options={options}
           />
         </div>
         {props.footer ? (

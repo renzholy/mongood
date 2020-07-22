@@ -38,6 +38,15 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
       </div>
     )
   }, [props.value, theme.palette.neutralLighterAlt])
+  const iconStyles = useMemo(
+    () => ({
+      root: {
+        color: theme.palette.neutralPrimary,
+        margin: 8,
+      },
+    }),
+    [theme],
+  )
 
   return (
     <>
@@ -99,15 +108,7 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
       </HoverCard>
       {props.value.inputStage ? (
         <>
-          <Icon
-            iconName="Forward"
-            styles={{
-              root: {
-                color: theme.palette.neutralPrimary,
-                margin: 8,
-              },
-            }}
-          />
+          <Icon iconName="Forward" styles={iconStyles} />
           <ExecStage
             value={props.value.inputStage as { [key: string]: MongoData }}
           />
@@ -115,15 +116,7 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
       ) : null}
       {props.value.inputStages ? (
         <>
-          <Icon
-            iconName="Forward"
-            styles={{
-              root: {
-                color: theme.palette.neutralPrimary,
-                margin: 8,
-              },
-            }}
-          />
+          <Icon iconName="Forward" styles={iconStyles} />
           <div
             style={{
               display: 'flex',
