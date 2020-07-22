@@ -11,7 +11,7 @@ import {
 import React, { useMemo, useCallback, useState } from 'react'
 import useSWR from 'swr'
 import mongodbUri from 'mongodb-uri'
-import _ from 'lodash'
+import { compact, uniq } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 import useAsyncEffect from 'use-async-effect'
 
@@ -30,7 +30,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const secondaryText = useMemo(
     () =>
       uri
-        ? _.compact([
+        ? compact([
             'mongodb://',
             uri.username &&
               (uri.password
@@ -88,7 +88,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   return (
     <CompoundButton
       disabled={props.disabled}
-      text={_.compact([serverStatus?.host, serverStatus?.repl?.setName]).join(
+      text={compact([serverStatus?.host, serverStatus?.repl?.setName]).join(
         ' ',
       )}
       secondaryText={secondaryText}
@@ -128,7 +128,7 @@ export function ConnectionEditModal(props: {
     try {
       mongodbUri.parse(value)
       await runCommand(value, 'admin', { ping: 1 })
-      dispatch(actions.root.setConnections(_.uniq([value, ...connections])))
+      dispatch(actions.root.setConnections(uniq([value, ...connections])))
       setValue('')
     } catch (err) {
       setError(err)

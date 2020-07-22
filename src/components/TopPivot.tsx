@@ -10,7 +10,7 @@ import { useHistory } from 'umi'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import useAsyncEffect from 'use-async-effect'
-import _ from 'lodash'
+import { compact } from 'lodash'
 
 import { listConnections, runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
@@ -36,7 +36,7 @@ export function TopPivot() {
   >([])
   useAsyncEffect(async () => {
     setItems(
-      _.compact(
+      compact(
         await Promise.all(
           [...connections, ...(data || [])].map(async (c) => {
             try {

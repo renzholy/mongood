@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 import { Dropdown, getTheme, Label } from '@fluentui/react'
@@ -10,6 +10,7 @@ import { useDarkMode } from '@/hooks/use-dark-mode'
 import { stringify, parse } from '@/utils/ejson'
 import { ActionButton } from '@/components/ActionButton'
 import { LargeMessage } from '@/components/LargeMessage'
+import { ControlledEditorProps } from '@monaco-editor/react'
 
 enum ValidationAction {
   WARN = 'warn',
@@ -27,7 +28,7 @@ export default () => {
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const { data, revalidate } = useSWR(
-    database && collection
+    connection && database && collection
       ? `listCollections/${connection}/${database}/${collection}`
       : null,
     () =>
@@ -96,6 +97,17 @@ export default () => {
     setValidationLevel(options.validationLevel || null)
     setValue(str ? `return ${str}` : 'return {}')
   }, [data])
+  const handleChange = useCallback((_ev: unknown, _value?: string) => {
+    setValue(_value || '')
+  }, [])
+  const options = useMemo<ControlledEditorProps['options']>(
+    () => ({
+      wordWrap: 'on',
+      contextmenu: false,
+      scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
+    }),
+    [],
+  )
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
@@ -106,14 +118,8 @@ export default () => {
         language="typescript"
         theme={isDarkMode ? 'vs-dark' : 'vs'}
         value={value}
-        onChange={(_ev, _value) => {
-          setValue(_value || '')
-        }}
-        options={{
-          wordWrap: 'on',
-          contextmenu: false,
-          scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
-        }}
+        onChange={handleChange}
+        options={options}
       />
       <div
         style={{

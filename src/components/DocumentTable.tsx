@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useRef } from 'react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
-import _ from 'lodash'
+import { isEmpty } from 'lodash'
 import { Selection } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
@@ -15,7 +15,7 @@ import { DocumentContextualMenu } from './DocumentContextualMenu'
 
 type Data = { _id: MongoData; [key: string]: MongoData }
 
-export const DocumentTable = React.memo(() => {
+export const DocumentTable = React.memo(function DocumentTable() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -26,12 +26,12 @@ export const DocumentTable = React.memo(() => {
   const limit = useSelector((state) => state.docs.limit)
   const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
   const displayMode = useSelector((state) => state.docs.displayMode)
-  const hint = filter.$text || _.isEmpty(filter) ? undefined : index?.name
-  const { data, error, isValidating, revalidate } = useSWR(
-    database && collection
+  const hint = filter.$text || isEmpty(filter) ? undefined : index?.name
+  const { data, error, isValidating } = useSWR(
+    connection && database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
-        )}/${JSON.stringify(sort)}/${hint}`
+        )}/${JSON.stringify(sort)}/${hint}/${shouldRevalidate}`
       : null,
     () =>
       runCommand<{
@@ -51,9 +51,6 @@ export const DocumentTable = React.memo(() => {
       ),
     { revalidateOnFocus: false },
   )
-  useEffect(() => {
-    revalidate()
-  }, [shouldRevalidate, revalidate])
   const dispatch = useDispatch()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isMenuHidden, setIsMenuHidden] = useState(true)
@@ -68,8 +65,7 @@ export const DocumentTable = React.memo(() => {
     dispatch(actions.docs.setShouldRevalidate())
     setIsUpdateOpen(false)
   }, [connection, database, collection, invokedItem, editedItem, dispatch])
-
-  const [target, setTarget] = useState<MouseEvent>()
+  const target = useRef<MouseEvent>()
   const [selectedItems, setSelectedItems] = useState<Data[]>([])
   const selection = useMemo(
     () =>
@@ -93,7 +89,7 @@ export const DocumentTable = React.memo(() => {
       } else {
         setInvokedItem(undefined)
       }
-      setTarget(ev)
+      target.current = ev
       setIsMenuHidden(false)
     },
     [selectedItems],
@@ -123,7 +119,7 @@ export const DocumentTable = React.memo(() => {
         onDismiss={() => {
           setIsMenuHidden(true)
         }}
-        target={target as MouseEvent}
+        target={target.current}
         selectedItems={selectedItems}
         onEdit={
           invokedItem

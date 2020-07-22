@@ -4,7 +4,7 @@ import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import { SearchBox, Nav, getTheme } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
-import _ from 'lodash'
+import { pullAll, compact, some, difference, union } from 'lodash'
 import useAsyncEffect from 'use-async-effect'
 
 import { actions } from '@/stores'
@@ -56,7 +56,7 @@ export function DatabaseNav() {
     )
     setDatabases([
       ...systemDatabases.sort(),
-      ..._.pullAll(_databases.sort(), systemDatabases),
+      ...pullAll(_databases.sort(), systemDatabases),
     ])
   }, [data])
   const handleListCollectionOfDatabases = useCallback(
@@ -74,7 +74,7 @@ export function DatabaseNav() {
               database: _database,
               collections: [
                 ...systemCollections.sort(),
-                ..._.pullAll(collections.sort(), systemCollections),
+                ...pullAll(collections.sort(), systemCollections),
               ],
             }),
           )
@@ -93,10 +93,10 @@ export function DatabaseNav() {
   const links = useMemo(
     () =>
       databases.length
-        ? _.compact(
+        ? compact(
             databases.map((_database) => {
               const databaseMatched = _database.includes(keyword)
-              const collectionMatched = _.some(
+              const collectionMatched = some(
                 collectionsMap[_database],
                 (_collection) => _collection.includes(keyword),
               )
@@ -202,8 +202,8 @@ export function DatabaseNav() {
               dispatch(
                 actions.root.setExpandedDatabases(
                   item.isExpanded
-                    ? _.difference(expandedDatabases, [item.key])
-                    : _.union(expandedDatabases, [item.key]),
+                    ? difference(expandedDatabases, [item.key])
+                    : union(expandedDatabases, [item.key]),
                 ),
               )
             }

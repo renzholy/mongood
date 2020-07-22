@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import type { IndexSpecification } from 'mongodb'
-import _ from 'lodash'
+import { isEmpty } from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
@@ -22,7 +22,7 @@ export function DocumentControlStack() {
   const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
   const filter = useSelector((state) => state.docs.filter)
   const { data: indexes } = useSWR(
-    database && collection
+    connection && database && collection
       ? `listIndexes/${connection}/${database}/${collection}`
       : null,
     () =>
@@ -45,12 +45,12 @@ export function DocumentControlStack() {
     setIsInsertOpen(false)
     dispatch(actions.docs.setShouldRevalidate())
   }, [connection, database, collection, doc, dispatch])
-  const hint = _.isEmpty(filter) ? undefined : index?.name
-  const { data: count, revalidate } = useSWR(
-    database && collection
+  const hint = isEmpty(filter) ? undefined : index?.name
+  const { data: count } = useSWR(
+    connection && database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(
           filter,
-        )}/${hint}`
+        )}/${hint}/${shouldRevalidate}`
       : null,
     () =>
       runCommand<{ n: number }>(connection, database!, {
@@ -66,9 +66,6 @@ export function DocumentControlStack() {
     dispatch(actions.docs.resetPage())
     dispatch(actions.docs.setIndex())
   }, [database, collection, dispatch])
-  useEffect(() => {
-    revalidate()
-  }, [shouldRevalidate, revalidate])
 
   return (
     <Stack

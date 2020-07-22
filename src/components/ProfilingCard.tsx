@@ -1,9 +1,9 @@
 /* eslint-disable react/no-danger */
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef } from 'react'
 import { Card } from '@uifabric/react-cards'
 import { Text, getTheme, ContextualMenu } from '@fluentui/react'
-import _ from 'lodash'
+import { omit, compact } from 'lodash'
 import { EJSON } from 'bson'
 
 import { SystemProfileDoc, MongoData } from '@/types'
@@ -15,7 +15,7 @@ import { CommandAndLocks } from './CommandAndLocks'
 export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
   const theme = getTheme()
   const [isOpen, setIsOpen] = useState(false)
-  const [target, setTarget] = useState<MouseEvent>()
+  const target = useRef<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
   const value = useMemo<
     Omit<SystemProfileDoc, 'command' | 'originatingCommand' | 'execStats'>
@@ -23,7 +23,7 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
     () =>
       EJSON.parse(
         JSON.stringify(
-          _.omit(props.value, ['command', 'originatingCommand', 'execStats']),
+          omit(props.value, ['command', 'originatingCommand', 'execStats']),
         ),
       ) as Omit<
         SystemProfileDoc,
@@ -35,7 +35,7 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
   return (
     <Card
       onContextMenu={(ev) => {
-        setTarget(ev.nativeEvent)
+        target.current = ev.nativeEvent
         setIsMenuHidden(false)
         ev.preventDefault()
       }}
@@ -78,7 +78,7 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
             }}
           />
           <ContextualMenu
-            target={target}
+            target={target.current}
             hidden={isMenuHidden}
             onDismiss={() => {
               setIsMenuHidden(true)
@@ -117,7 +117,7 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
         <Text
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {_.compact([
+          {compact([
             `${Number.format(value.millis)} ms`,
             value.keysExamined === undefined
               ? undefined

@@ -15,7 +15,7 @@ export default () => {
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const { data: stats, error } = useSWR(
-    database && collection
+    connection && database && collection
       ? `collStats/${connection}/${database}/${collection}`
       : null,
     () =>
@@ -24,7 +24,7 @@ export default () => {
       }),
   )
   const { data: indexes, revalidate } = useSWR(
-    database && collection
+    connection && database && collection
       ? `listIndexes/${connection}/${database}/${collection}`
       : null,
     () =>

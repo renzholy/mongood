@@ -3,7 +3,7 @@
  */
 
 import saferEval from 'safer-eval'
-import _ from 'lodash'
+import { map, repeat, size } from 'lodash'
 
 import { MongoData } from '@/types'
 
@@ -64,7 +64,7 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
       val.$binary.base64
     }")`
   }
-  const spaces = _.repeat(' ', depth)
+  const spaces = repeat(' ', depth)
   if (Array.isArray(val)) {
     if (indent === 0) {
       return `[${val
@@ -77,17 +77,17 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
           .join(',\n')}\n${spaces}]`
       : '[]'
   }
-  if (_.size(val) === 0) {
+  if (size(val) === 0) {
     return '{}'
   }
   if (indent === 0) {
-    return `{ ${_.map(
+    return `{ ${map(
       val,
       (value, key) =>
         `${wrapKey(key)}: ${stringify(value, indent, depth + indent)}`,
     ).join(', ')} }`
   }
-  return `{\n${_.map(
+  return `{\n${map(
     val,
     (value, key) =>
       `  ${spaces}${wrapKey(key)}: ${stringify(value, indent, depth + indent)}`,

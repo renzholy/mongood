@@ -1,5 +1,5 @@
 import React from 'react'
-import _ from 'lodash'
+import { omit } from 'lodash'
 
 import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
@@ -12,7 +12,7 @@ export function CommandAndLocks(props: {
     <>
       <ColorizedData
         style={{ marginRight: 10 }}
-        value={_.omit(props.command as object, [
+        value={omit(props.command as object, [
           'lsid',
           '$clusterTime',
           '$db',

@@ -2,9 +2,13 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
-import { ControlledEditor, EditorDidMount } from '@monaco-editor/react'
+import {
+  ControlledEditor,
+  EditorDidMount,
+  ControlledEditorProps,
+} from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor'
 import { useSelector, useDispatch } from 'react-redux'
 import { Icon, getTheme, Spinner, SpinnerSize } from '@fluentui/react'
@@ -108,6 +112,22 @@ export function NotebookItem(props: {
     },
     [handleRunCommand],
   )
+  const handleChange = useCallback((_ev: unknown, _value?: string) => {
+    value.current = _value
+  }, [])
+  const options = useMemo<ControlledEditorProps['options']>(
+    () => ({
+      lineDecorationsWidth: 0,
+      glyphMargin: false,
+      folding: false,
+      lineNumbers: 'off',
+      minimap: { enabled: false },
+      wordWrap: 'on',
+      contextmenu: false,
+      scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
+    }),
+    [],
+  )
 
   return (
     <div>
@@ -135,21 +155,10 @@ export function NotebookItem(props: {
           <ControlledEditor
             language="typescript"
             value={value.current}
-            onChange={(_ev, _value) => {
-              value.current = _value
-            }}
+            onChange={handleChange}
             theme={isDarkMode ? 'vs-dark' : 'vs'}
             editorDidMount={handleEditorDidMount}
-            options={{
-              lineDecorationsWidth: 0,
-              glyphMargin: false,
-              folding: false,
-              lineNumbers: 'off',
-              minimap: { enabled: false },
-              wordWrap: 'on',
-              contextmenu: false,
-              scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
-            }}
+            options={options}
           />
         </Card.Item>
         <Card.Item

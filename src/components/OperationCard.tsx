@@ -10,8 +10,8 @@ import {
   DialogFooter,
   DefaultButton,
 } from '@fluentui/react'
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import _ from 'lodash'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { omit, compact } from 'lodash'
 import { useSelector } from 'react-redux'
 import { EJSON } from 'bson'
 
@@ -30,7 +30,7 @@ export function OperationCard(props: {
   const connection = useSelector((state) => state.root.connection)
   const theme = getTheme()
   const [isOpen, setIsOpen] = useState(false)
-  const [target, setTarget] = useState<MouseEvent>()
+  const target = useRef<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
   const [isSucceed, setIsSucceed] = useState<boolean>()
   const [isKilling, setIsKilling] = useState(false)
@@ -41,7 +41,7 @@ export function OperationCard(props: {
   const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
     () =>
       EJSON.parse(
-        JSON.stringify(_.omit(props.value, ['command', 'originatingCommand'])),
+        JSON.stringify(omit(props.value, ['command', 'originatingCommand'])),
       ) as Omit<Operation, 'command' | 'originatingCommand'>,
     [props.value],
   )
@@ -68,7 +68,7 @@ export function OperationCard(props: {
   return (
     <Card
       onContextMenu={(ev) => {
-        setTarget(ev.nativeEvent)
+        target.current = ev.nativeEvent
         setIsMenuHidden(false)
         ev.preventDefault()
       }}
@@ -99,7 +99,7 @@ export function OperationCard(props: {
           footer={<ActionButton text="kill" onClick={handleKill} />}
         />
         <ContextualMenu
-          target={target}
+          target={target.current}
           hidden={isMenuHidden}
           onDismiss={() => {
             setIsMenuHidden(true)
@@ -182,7 +182,7 @@ export function OperationCard(props: {
         <Text
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {_.compact([
+          {compact([
             value.microsecs_running
               ? `${Number.format(
                   value.microsecs_running > 1000

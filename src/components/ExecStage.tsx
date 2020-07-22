@@ -8,7 +8,7 @@ import {
   HoverCard,
   HoverCardType,
 } from '@fluentui/react'
-import _ from 'lodash'
+import { omit, compact } from 'lodash'
 import bytes from 'bytes'
 import { EJSON } from 'bson'
 
@@ -33,11 +33,20 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
           backgroundColor: theme.palette.neutralLighterAlt,
         }}>
         <ColorizedData
-          value={_.omit(props.value, ['inputStage', 'inputStages'])}
+          value={omit(props.value, ['inputStage', 'inputStages'])}
         />
       </div>
     )
   }, [props.value, theme.palette.neutralLighterAlt])
+  const iconStyles = useMemo(
+    () => ({
+      root: {
+        color: theme.palette.neutralPrimary,
+        margin: 8,
+      },
+    }),
+    [theme],
+  )
 
   return (
     <>
@@ -68,7 +77,7 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
               height: 'fit-content',
             },
           }}
-          secondaryText={_.compact([
+          secondaryText={compact([
             `${Number.format(
               value.executionTimeMillisEstimate -
                 (value.inputStage?.executionTimeMillisEstimate ||
@@ -99,15 +108,7 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
       </HoverCard>
       {props.value.inputStage ? (
         <>
-          <Icon
-            iconName="Forward"
-            styles={{
-              root: {
-                color: theme.palette.neutralPrimary,
-                margin: 8,
-              },
-            }}
-          />
+          <Icon iconName="Forward" styles={iconStyles} />
           <ExecStage
             value={props.value.inputStage as { [key: string]: MongoData }}
           />
@@ -115,15 +116,7 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
       ) : null}
       {props.value.inputStages ? (
         <>
-          <Icon
-            iconName="Forward"
-            styles={{
-              root: {
-                color: theme.palette.neutralPrimary,
-                margin: 8,
-              },
-            }}
-          />
+          <Icon iconName="Forward" styles={iconStyles} />
           <div
             style={{
               display: 'flex',

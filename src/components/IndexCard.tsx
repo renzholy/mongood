@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-indent */
 
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState, useMemo, useRef } from 'react'
 import { Card } from '@uifabric/react-cards'
 import {
   Text,
@@ -12,7 +12,7 @@ import {
   HoverCard,
   HoverCardType,
 } from '@fluentui/react'
-import _ from 'lodash'
+import { map, compact } from 'lodash'
 import bytes from 'bytes'
 import type { IndexSpecification, WiredTigerData } from 'mongodb'
 
@@ -26,7 +26,7 @@ function IndexInfo(props: { value: IndexSpecification }) {
   return (
     <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
       {'textIndexVersion' in props.value
-        ? _.map(props.value.weights, (v, k) => (
+        ? map(props.value.weights, (v, k) => (
             <Text
               key={k}
               styles={{
@@ -40,7 +40,7 @@ function IndexInfo(props: { value: IndexSpecification }) {
               {v}
             </Text>
           ))
-        : _.map(props.value.key, (v, k) => (
+        : map(props.value.key, (v, k) => (
             <Text
               key={k}
               styles={{
@@ -133,7 +133,7 @@ export function IndexCard(props: {
   const theme = getTheme()
   const features = useMemo(
     () =>
-      _.compact([
+      compact([
         props.value.background ? { text: 'BACKGROUND' } : null,
         props.value.unique ? { text: 'UNIQUE' } : null,
         props.value.sparse ? { text: 'SPARSE' } : null,
@@ -176,13 +176,13 @@ export function IndexCard(props: {
     [props.value],
   )
   const [isOpen, setIsOpen] = useState(false)
-  const [target, setTarget] = useState<MouseEvent>()
+  const target = useRef<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
 
   return (
     <Card
       onContextMenu={(ev) => {
-        setTarget(ev.nativeEvent)
+        target.current = ev.nativeEvent
         setIsMenuHidden(false)
         ev.preventDefault()
       }}
@@ -215,7 +215,7 @@ export function IndexCard(props: {
           />
           <IndexContextualMenu
             value={props.value}
-            target={target}
+            target={target.current}
             hidden={isMenuHidden}
             onDismiss={() => {
               setIsMenuHidden(true)

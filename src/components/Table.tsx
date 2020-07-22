@@ -17,7 +17,7 @@ import {
   Selection,
   ColumnActionsMode,
 } from '@fluentui/react'
-import _ from 'lodash'
+import { get } from 'lodash'
 
 import { DisplayMode, MongoData } from '@/types.d'
 import { calcHeaders } from '@/utils/table'
@@ -86,7 +86,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
           props.index2dsphere &&
           column?.key &&
           props.index2dsphere.startsWith(column?.key)
-            ? _.get(item, props.index2dsphere)
+            ? get(item, props.index2dsphere)
             : undefined
         }
       />

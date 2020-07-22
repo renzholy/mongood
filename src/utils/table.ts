@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { sortBy } from 'lodash'
 
 import { MongoData } from '@/types'
 import { stringify } from './ejson'
@@ -23,7 +23,7 @@ export function calcHeaders<T extends { [key: string]: MongoData }>(
       keys[key].order += 1
     })
   })
-  return _.sortBy(Object.entries(keys), (k) => k[1].order)
+  return sortBy(Object.entries(keys), (k) => k[1].order)
     .reverse()
     .map(([k, { minWidth }]) => ({ key: k, minWidth }))
 }

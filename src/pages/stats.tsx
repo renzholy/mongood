@@ -6,7 +6,7 @@ import { Card } from '@uifabric/react-cards'
 import bytes from 'bytes'
 import prettyMilliseconds from 'pretty-ms'
 import type { CollStats } from 'mongodb'
-import _ from 'lodash'
+import { isEmpty, chunk, map, sortBy } from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
@@ -67,10 +67,10 @@ function StatsArea(props: {
           {props.subtitle}
         </span>
       </Text>
-      {_.isEmpty(props.data)
+      {isEmpty(props.data)
         ? null
-        : _.chunk(
-            _.map(props.data, (content, title) => ({ content, title })),
+        : chunk(
+            map(props.data, (content, title) => ({ content, title })),
             3,
           ).map((data, index) => (
             <Stack
@@ -92,7 +92,7 @@ export default () => {
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const { data: collStats } = useSWR(
-    database && collection
+    connection && database && collection
       ? `collStats/${connection}/${database}/${collection}`
       : null,
     () =>
@@ -110,7 +110,9 @@ export default () => {
     { refreshInterval: 1000 },
   )
   const { data: serverStatus } = useSWR(
-    database && collection ? null : `serverStatus/${connection}`,
+    !connection || (database && collection)
+      ? null
+      : `serverStatus/${connection}`,
     () =>
       runCommand<ServerStats>(connection, 'admin', {
         serverStatus: 1,
@@ -137,7 +139,7 @@ export default () => {
             <StatsArea
               title="Replica: "
               subtitle={serverStatus.repl.setName}
-              data={_.sortBy(serverStatus.repl.hosts, (host) =>
+              data={sortBy(serverStatus.repl.hosts, (host) =>
                 host === serverStatus.repl!.primary ? 0 : 1,
               ).reduce((prev, curr, index) => {
                 // eslint-disable-next-line no-param-reassign
