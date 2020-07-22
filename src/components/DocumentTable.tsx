@@ -15,7 +15,7 @@ import { DocumentContextualMenu } from './DocumentContextualMenu'
 
 type Data = { _id: MongoData; [key: string]: MongoData }
 
-export const DocumentTable = React.memo(() => {
+export const DocumentTable = React.memo(function DocumentTable() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
