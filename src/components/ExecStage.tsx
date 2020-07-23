@@ -30,14 +30,14 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
           maxWidth: 500,
           maxHeight: 500,
           overflowY: 'scroll',
-          backgroundColor: theme.palette.neutralLighterAlt,
+          backgroundColor: theme.palette.neutralLighter,
         }}>
         <ColorizedData
           value={omit(props.value, ['inputStage', 'inputStages'])}
         />
       </div>
     )
-  }, [props.value, theme.palette.neutralLighterAlt])
+  }, [props.value, theme.palette.neutralLighter])
   const iconStyles = useMemo(
     () => ({
       root: {
