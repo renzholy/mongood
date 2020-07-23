@@ -9,7 +9,7 @@ import {
   EditorDidMount,
   ControlledEditorProps,
 } from '@monaco-editor/react'
-import { KeyCode } from 'monaco-editor'
+import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useSelector, useDispatch } from 'react-redux'
 import { Icon, getTheme, Spinner, SpinnerSize } from '@fluentui/react'
 

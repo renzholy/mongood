@@ -1,5 +1,5 @@
 import { monaco, ControlledEditor, Monaco } from '@monaco-editor/react'
-import { IDisposable } from 'monaco-editor'
+import type { IDisposable } from 'monaco-editor'
 
 let _monaco: Monaco
 

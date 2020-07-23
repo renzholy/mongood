@@ -1,6 +1,6 @@
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import { KeyCode } from 'monaco-editor'
+import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { EditorDidMount, ControlledEditorProps } from '@monaco-editor/react'
 
 import { stringify, parse } from '@/utils/ejson'
