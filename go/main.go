@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/andybalholm/brotli"
 	"github.com/markbates/pkger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -51,7 +52,9 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(raw.String()))
+	compressor := brotli.HTTPCompressor(w, r)
+	compressor.Write([]byte(raw.String()))
+	compressor.Close()
 }
 
 func create(uri string) (*mongo.Client, error) {
@@ -92,7 +95,9 @@ func listConnections(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(data)
+	compressor := brotli.HTTPCompressor(w, r)
+	compressor.Write(data)
+	compressor.Close()
 }
 
 func main() {
