@@ -74,7 +74,7 @@ export function DocumentFilterStack() {
           }}
         />
       ) : (
-        keys.map((key, i) => {
+        keys.map((key) => {
           const k = index.key[key as keyof typeof index.key]
           const isSortKey = k === 1 || k === -1
           const iconProps: IIconProps | undefined = isSortKey
@@ -149,7 +149,6 @@ export function DocumentFilterStack() {
                 ],
               }
             : undefined
-          const disableFilter = i > 0 && !filter[keys[i - 1]]
           if (
             index.partialFilterExpression?.[
               key as keyof typeof index.partialFilterExpression
@@ -158,7 +157,6 @@ export function DocumentFilterStack() {
             return (
               <FilterInput
                 key={key}
-                disabled={disableFilter}
                 prefix={`${key}:`}
                 iconProps={iconProps}
                 menuProps={menuProps}
@@ -181,7 +179,6 @@ export function DocumentFilterStack() {
           return (
             <FilterInput
               key={key}
-              disabled={disableFilter}
               prefix={`${key}:`}
               iconProps={iconProps}
               menuProps={menuProps}
