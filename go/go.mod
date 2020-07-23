@@ -3,6 +3,7 @@ module github.com/renzholy/mongood
 go 1.14
 
 require (
+	github.com/NYTimes/gziphandler v1.1.1
 	github.com/andybalholm/brotli v1.0.0
 	github.com/markbates/pkger v0.17.0
 	github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2

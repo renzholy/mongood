@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/NYTimes/gziphandler"
 	"github.com/andybalholm/brotli"
 	"github.com/markbates/pkger"
 	"go.mongodb.org/mongo-driver/bson"
@@ -104,7 +105,7 @@ func main() {
 	ctx = context.Background()
 
 	// serve root dir
-	mux.Handle("/", http.FileServer(pkger.Dir("/dist")))
+	mux.Handle("/", gziphandler.GzipHandler(http.FileServer(pkger.Dir("/dist"))))
 
 	// handle runCommand
 	mux.HandleFunc("/api/runCommand", runCommand)
