@@ -10,7 +10,6 @@ import (
 	"sync"
 
 	"github.com/NYTimes/gziphandler"
-	"github.com/andybalholm/brotli"
 	"github.com/markbates/pkger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -53,9 +52,7 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	compressor := brotli.HTTPCompressor(w, r)
-	compressor.Write([]byte(raw.String()))
-	compressor.Close()
+	w.Write([]byte(raw.String()))
 }
 
 func create(uri string) (*mongo.Client, error) {
@@ -96,9 +93,7 @@ func listConnections(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	compressor := brotli.HTTPCompressor(w, r)
-	compressor.Write(data)
-	compressor.Close()
+	w.Write(data)
 }
 
 func main() {
@@ -108,10 +103,10 @@ func main() {
 	mux.Handle("/", gziphandler.GzipHandler(http.FileServer(pkger.Dir("/dist"))))
 
 	// handle runCommand
-	mux.HandleFunc("/api/runCommand", runCommand)
+	mux.Handle("/api/runCommand", gziphandler.GzipHandler(http.HandlerFunc(runCommand)))
 
 	// handle listConnections
-	mux.HandleFunc("/api/listConnections", listConnections)
+	mux.Handle("/api/listConnections", gziphandler.GzipHandler(http.HandlerFunc(listConnections)))
 
 	// start service
 	startService()
