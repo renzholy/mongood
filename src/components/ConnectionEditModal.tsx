@@ -7,6 +7,7 @@ import {
   TextField,
   DefaultButton,
   IContextualMenuProps,
+  IconButton,
 } from '@fluentui/react'
 import React, { useMemo, useCallback, useState } from 'react'
 import useSWR from 'swr'
@@ -34,7 +35,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
             'mongodb://',
             uri.username &&
               (uri.password
-                ? `${uri.username}:${uri.password.replaceAll(/./g, '*')}@`
+                ? `${uri.username}:${uri.password.replace(/./g, '*')}@`
                 : `${uri.username}@`),
             ...uri.hosts.map((host) => `${host.host}:${host.port || 27017}`),
             uri.database && `/${uri.database}`,
@@ -120,18 +121,22 @@ export function ConnectionEditModal(props: {
   const theme = getTheme()
   const [value, setValue] = useState('')
   const [error, setError] = useState<Error>()
+  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   const handleAddConnection = useCallback(async () => {
     if (!value) {
       return
     }
     try {
+      setLoading(true)
       mongodbUri.parse(value)
       await runCommand(value, 'admin', { ping: 1 })
       dispatch(actions.root.setConnections(uniq([value, ...connections])))
       setValue('')
     } catch (err) {
       setError(err)
+    } finally {
+      setLoading(false)
     }
   }, [value, connections, dispatch])
 
@@ -159,10 +164,11 @@ export function ConnectionEditModal(props: {
             marginBottom: 20,
           },
         }}>
-        Edit Connections
+        New Connection
       </Text>
       <Stack tokens={{ childrenGap: 10 }}>
         <TextField
+          disabled={loading}
           multiline={true}
           resizable={false}
           autoComplete="off"
@@ -170,18 +176,33 @@ export function ConnectionEditModal(props: {
           autoCapitalize="off"
           autoSave="off"
           spellCheck={false}
-          styles={{ root: { marginBottom: 10 } }}
           placeholder="mongodb://username:password@host1:port1,host2:port2,host3:port3/admin?replicaSet=rs0"
           value={value}
           onChange={(_ev, newValue) => {
             setError(undefined)
             setValue(newValue || '')
           }}
-          onBlur={() => {
-            handleAddConnection()
-          }}
           errorMessage={error?.message}
         />
+        <IconButton
+          disabled={!value || loading}
+          iconProps={{ iconName: 'CheckMark' }}
+          styles={{ root: { alignSelf: 'flex-end' } }}
+          onClick={handleAddConnection}
+        />
+      </Stack>
+      <Text
+        variant="xLarge"
+        block={true}
+        styles={{
+          root: {
+            color: theme.palette.neutralPrimary,
+            marginBottom: 20,
+          },
+        }}>
+        Self-added Connections
+      </Text>
+      <Stack tokens={{ childrenGap: 10 }}>
         {connections.map((connection) => (
           <ConnectionItem key={connection} connection={connection} />
         ))}

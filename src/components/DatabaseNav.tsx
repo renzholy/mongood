@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 
-import React, { useEffect, useCallback, useState, useMemo } from 'react'
-import { SearchBox, Nav, getTheme } from '@fluentui/react'
+import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
+import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
 import { pullAll, compact, some, difference, union } from 'lodash'
@@ -9,6 +9,7 @@ import useAsyncEffect from 'use-async-effect'
 
 import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
+import { DatabaseContextualMenu } from './DatabaseContextualMenu'
 
 const splitter = '/'
 
@@ -19,9 +20,10 @@ export function DatabaseNav() {
   const collection = useSelector((state) => state.root.collection)
   const expandedDatabases = useSelector((state) => state.root.expandedDatabases)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
+  const trigger = useSelector((state) => state.root.trigger)
   const [keyword, setKeyword] = useState('')
   const { data } = useSWR(
-    `listDatabases/${connection}`,
+    `listDatabases/${connection}/${trigger}`,
     () =>
       runCommand<{
         databases: {
@@ -90,7 +92,7 @@ export function DatabaseNav() {
   useAsyncEffect(async () => {
     await handleListCollectionOfDatabases(databases)
   }, [databases, handleListCollectionOfDatabases])
-  const links = useMemo(
+  const links = useMemo<INavLink[]>(
     () =>
       databases.length
         ? compact(
@@ -158,6 +160,9 @@ export function DatabaseNav() {
     dispatch(actions.root.setExpandedDatabases([]))
     dispatch(actions.root.resetCollectionsMap())
   }, [connection, dispatch])
+  const [isMenuHidden, setIsMenuHidden] = useState(true)
+  const target = useRef<MouseEvent>()
+  const [ns, setNs] = useState('')
 
   return (
     <div
@@ -168,9 +173,18 @@ export function DatabaseNav() {
         display: 'flex',
         flexDirection: 'column',
       }}>
+      <DatabaseContextualMenu
+        hidden={isMenuHidden}
+        onDismiss={() => {
+          setIsMenuHidden(true)
+        }}
+        target={target.current}
+        database={ns.split(splitter)[0]}
+        collection={ns.split(splitter)[1]}
+      />
       <SearchBox
         placeholder="Database & Collection"
-        styles={{ root: { margin: 10 } }}
+        styles={{ root: { margin: 10, flexShrink: 0 } }}
         value={keyword}
         onChange={(_ev, newValue) => {
           setKeyword(newValue || '')
@@ -207,6 +221,27 @@ export function DatabaseNav() {
                 ),
               )
             }
+          }}
+          onRenderLink={(l) => {
+            return l ? (
+              <div
+                style={{
+                  flex: 1,
+                  textAlign: 'start',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+                onContextMenu={(ev) => {
+                  target.current = ev.nativeEvent
+                  if (l.key) {
+                    setNs(l.key)
+                  }
+                  setIsMenuHidden(false)
+                  ev.preventDefault()
+                }}>
+                {l.name}
+              </div>
+            ) : null
           }}
         />
       </div>

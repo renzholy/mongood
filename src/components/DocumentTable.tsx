@@ -24,14 +24,14 @@ export const DocumentTable = React.memo(function DocumentTable() {
   const sort = useSelector((state) => state.docs.sort)
   const skip = useSelector((state) => state.docs.skip)
   const limit = useSelector((state) => state.docs.limit)
-  const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
+  const trigger = useSelector((state) => state.docs.trigger)
   const displayMode = useSelector((state) => state.docs.displayMode)
   const hint = filter.$text || isEmpty(filter) ? undefined : index?.name
   const { data, error, isValidating } = useSWR(
     connection && database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
-        )}/${JSON.stringify(sort)}/${hint}/${shouldRevalidate}`
+        )}/${JSON.stringify(sort)}/${hint}/${trigger}`
       : null,
     () =>
       runCommand<{
@@ -62,7 +62,7 @@ export const DocumentTable = React.memo(function DocumentTable() {
       query: { _id: (invokedItem as { _id: unknown })._id },
       update: editedItem,
     })
-    dispatch(actions.docs.setShouldRevalidate())
+    dispatch(actions.docs.setTrigger())
     setIsUpdateOpen(false)
   }, [connection, database, collection, invokedItem, editedItem, dispatch])
   const target = useRef<MouseEvent>()

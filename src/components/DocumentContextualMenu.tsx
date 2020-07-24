@@ -54,7 +54,7 @@ export function DocumentContextualMenu<
         })
         setIsSucceed(true)
         setHidden(true)
-        dispatch(actions.docs.setShouldRevalidate())
+        dispatch(actions.docs.setTrigger())
       } catch {
         setIsSucceed(false)
       } finally {
