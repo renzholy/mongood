@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { Stack, SpinButton, Slider, Label } from '@fluentui/react'
+import { Stack, SpinButton, Slider, Label, IconButton } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -79,25 +79,22 @@ export default () => {
     )
   }, [database, collection, dispatch])
   const [loading, setLoading] = useState(false)
-  const handleSetProfile = useCallback(
-    async (_slowms: number, _sampleRate: number) => {
-      if (!database) {
-        return
-      }
-      setLoading(true)
-      try {
-        await runCommand(connection, database, {
-          profile: 1,
-          slowms: _slowms,
-          sampleRate: { $numberDouble: _sampleRate.toString() },
-        })
-      } finally {
-        setLoading(false)
-        revalidate()
-      }
-    },
-    [connection, database, revalidate],
-  )
+  const handleSetProfile = useCallback(async () => {
+    if (!database) {
+      return
+    }
+    setLoading(true)
+    try {
+      await runCommand(connection, database, {
+        profile: 1,
+        slowms,
+        sampleRate: { $numberDouble: sampleRate.toString() },
+      })
+    } finally {
+      setLoading(false)
+      revalidate()
+    }
+  }, [connection, database, revalidate, slowms, sampleRate])
   const { data: count } = useSWR(
     database
       ? `systemProfileCount/${connection}/${database}/${JSON.stringify(filter)}`
@@ -135,19 +132,13 @@ export default () => {
           value={slowms.toString()}
           step={10}
           onBlur={(ev) => {
-            const _slowms = Math.max(parseInt(ev.target.value, 10), 0)
-            setSlowms(_slowms)
-            handleSetProfile(_slowms, sampleRate)
+            setSlowms(Math.max(parseInt(ev.target.value, 10), 0))
           }}
           onIncrement={(value) => {
-            const _slowms = Math.max(parseInt(value, 10) + 10, 0)
-            setSlowms(_slowms)
-            handleSetProfile(_slowms, sampleRate)
+            setSlowms(Math.max(parseInt(value, 10) + 10, 0))
           }}
           onDecrement={(value) => {
-            const _slowms = Math.max(parseInt(value, 10) - 10, 0)
-            setSlowms(_slowms)
-            handleSetProfile(_slowms, sampleRate)
+            setSlowms(Math.max(parseInt(value, 10) - 10, 0))
           }}
         />
         <Label disabled={loading}>Sample Rate:</Label>
@@ -164,9 +155,18 @@ export default () => {
           onChange={setSampleRate}
           onChanged={(_ev, value) => {
             setSampleRate(value)
-            handleSetProfile(slowms, value)
           }}
         />
+        {profile?.slowms === slowms &&
+        profile?.sampleRate === sampleRate ? null : (
+          <IconButton
+            disabled={loading}
+            iconProps={{ iconName: 'CheckMark' }}
+            onClick={() => {
+              handleSetProfile()
+            }}
+          />
+        )}
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
