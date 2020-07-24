@@ -7,6 +7,7 @@ import {
   getTheme,
   INavLink,
   ContextualMenu,
+  IconButton,
 } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
@@ -182,11 +183,11 @@ export function DatabaseNav() {
           setIsMenuHidden(true)
         }}
         target={target.current}
-        items={[{ name: '123', key: '123' }]}
+        items={[]}
       />
       <SearchBox
         placeholder="Database & Collection"
-        styles={{ root: { margin: 10 } }}
+        styles={{ root: { margin: 10, flexShrink: 0 } }}
         value={keyword}
         onChange={(_ev, newValue) => {
           setKeyword(newValue || '')
@@ -244,6 +245,10 @@ export function DatabaseNav() {
           }}
         />
       </div>
+      <IconButton
+        styles={{ root: { flexShrink: 0, alignSelf: 'flex-end', margin: 10 } }}
+        iconProps={{ iconName: 'Add' }}
+      />
     </div>
   )
 }
