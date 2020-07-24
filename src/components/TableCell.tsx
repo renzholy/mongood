@@ -14,6 +14,7 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
   const location = useMemo(() => getLocation(props.index2dsphere), [
     props.index2dsphere,
   ])
+  const theme = getTheme()
 
   return (
     <div
@@ -22,6 +23,7 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
         maxWidth: 500,
         maxHeight: 500,
         overflowY: 'scroll',
+        backgroundColor: theme.palette.neutralLighterAlt,
       }}>
       {location ? (
         <img

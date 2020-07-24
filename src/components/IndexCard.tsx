@@ -90,12 +90,12 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
           maxWidth: 500,
           maxHeight: 500,
           overflowY: 'scroll',
-          backgroundColor: theme.palette.neutralLighterAlt,
+          backgroundColor: theme.palette.neutralLighter,
         }}>
         <ColorizedData value={props.value.data} />
       </div>
     )
-  }, [props.value.data, theme])
+  }, [props.value.data, theme.palette.neutralLighter])
 
   return (
     <HoverCard
