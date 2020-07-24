@@ -1,14 +1,7 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
-import {
-  SearchBox,
-  Nav,
-  getTheme,
-  INavLink,
-  ContextualMenu,
-  IconButton,
-} from '@fluentui/react'
+import { SearchBox, Nav, getTheme, INavLink, IconButton } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
 import { pullAll, compact, some, difference, union } from 'lodash'
@@ -16,6 +9,7 @@ import useAsyncEffect from 'use-async-effect'
 
 import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
+import { DatabaseContextualMenu } from './DatabaseContextualMenu'
 
 const splitter = '/'
 
@@ -26,9 +20,10 @@ export function DatabaseNav() {
   const collection = useSelector((state) => state.root.collection)
   const expandedDatabases = useSelector((state) => state.root.expandedDatabases)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
+  const shouldRevalidate = useSelector((state) => state.root.shouldRevalidate)
   const [keyword, setKeyword] = useState('')
   const { data } = useSWR(
-    `listDatabases/${connection}`,
+    `listDatabases/${connection}/${shouldRevalidate}`,
     () =>
       runCommand<{
         databases: {
@@ -167,6 +162,7 @@ export function DatabaseNav() {
   }, [connection, dispatch])
   const [isMenuHidden, setIsMenuHidden] = useState(true)
   const target = useRef<MouseEvent>()
+  const [ns, setNs] = useState('')
 
   return (
     <div
@@ -177,13 +173,14 @@ export function DatabaseNav() {
         display: 'flex',
         flexDirection: 'column',
       }}>
-      <ContextualMenu
+      <DatabaseContextualMenu
         hidden={isMenuHidden}
         onDismiss={() => {
           setIsMenuHidden(true)
         }}
         target={target.current}
-        items={[]}
+        database={ns.split(splitter)[0]}
+        collection={ns.split(splitter)[1]}
       />
       <SearchBox
         placeholder="Database & Collection"
@@ -236,6 +233,9 @@ export function DatabaseNav() {
                 }}
                 onContextMenu={(ev) => {
                   target.current = ev.nativeEvent
+                  if (l.key) {
+                    setNs(l.key)
+                  }
                   setIsMenuHidden(false)
                   ev.preventDefault()
                 }}>
