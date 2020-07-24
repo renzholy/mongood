@@ -1,7 +1,13 @@
 /* eslint-disable no-nested-ternary */
 
-import React, { useEffect, useCallback, useState, useMemo } from 'react'
-import { SearchBox, Nav, getTheme } from '@fluentui/react'
+import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
+import {
+  SearchBox,
+  Nav,
+  getTheme,
+  INavLink,
+  ContextualMenu,
+} from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
 import { pullAll, compact, some, difference, union } from 'lodash'
@@ -90,7 +96,7 @@ export function DatabaseNav() {
   useAsyncEffect(async () => {
     await handleListCollectionOfDatabases(databases)
   }, [databases, handleListCollectionOfDatabases])
-  const links = useMemo(
+  const links = useMemo<INavLink[]>(
     () =>
       databases.length
         ? compact(
@@ -158,6 +164,8 @@ export function DatabaseNav() {
     dispatch(actions.root.setExpandedDatabases([]))
     dispatch(actions.root.resetCollectionsMap())
   }, [connection, dispatch])
+  const [isMenuHidden, setIsMenuHidden] = useState(true)
+  const target = useRef<MouseEvent>()
 
   return (
     <div
@@ -168,6 +176,14 @@ export function DatabaseNav() {
         display: 'flex',
         flexDirection: 'column',
       }}>
+      <ContextualMenu
+        hidden={isMenuHidden}
+        onDismiss={() => {
+          setIsMenuHidden(true)
+        }}
+        target={target.current}
+        items={[{ name: '123', key: '123' }]}
+      />
       <SearchBox
         placeholder="Database & Collection"
         styles={{ root: { margin: 10 } }}
@@ -207,6 +223,24 @@ export function DatabaseNav() {
                 ),
               )
             }
+          }}
+          onRenderLink={(l) => {
+            return l ? (
+              <div
+                style={{
+                  flex: 1,
+                  textAlign: 'start',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+                onContextMenu={(ev) => {
+                  target.current = ev.nativeEvent
+                  setIsMenuHidden(false)
+                  ev.preventDefault()
+                }}>
+                {l.name}
+              </div>
+            ) : null
           }}
         />
       </div>
