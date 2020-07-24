@@ -52,26 +52,11 @@ function IndexInfo(props: { value: IndexSpecification }) {
               }}>
               {k}:&nbsp;
               {v === 1 ? (
-                <Icon
-                  iconName="Up"
-                  styles={{
-                    root: { color: theme.palette.neutralPrimaryAlt },
-                  }}
-                />
+                <Icon iconName="Up" />
               ) : v === -1 ? (
-                <Icon
-                  iconName="Down"
-                  styles={{
-                    root: { color: theme.palette.neutralPrimaryAlt },
-                  }}
-                />
+                <Icon iconName="Down" />
               ) : v === '2dsphere' || v === '2d' ? (
-                <Icon
-                  iconName="MapPin"
-                  styles={{
-                    root: { color: theme.palette.neutralPrimaryAlt },
-                  }}
-                />
+                <Icon iconName="MapPin" />
               ) : null}
             </Text>
           ))}
