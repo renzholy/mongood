@@ -93,10 +93,10 @@ export function TopPivot() {
       compact([
         ...selfConnections.map(connectionToItem),
         selfConnections.length
-          ? { key: 'divider', itemType: ContextualMenuItemType.Divider }
+          ? { key: 'divider0', itemType: ContextualMenuItemType.Divider }
           : undefined,
         ...builtInConnections.map(connectionToItem),
-        { key: 'divider', itemType: ContextualMenuItemType.Divider },
+        { key: 'divider1', itemType: ContextualMenuItemType.Divider },
         {
           key: 'create',
           text: 'Edit Connections',
