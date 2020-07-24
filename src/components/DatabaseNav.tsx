@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
-import { SearchBox, Nav, getTheme, INavLink, IconButton } from '@fluentui/react'
+import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
 import { pullAll, compact, some, difference, union } from 'lodash'
@@ -245,10 +245,6 @@ export function DatabaseNav() {
           }}
         />
       </div>
-      <IconButton
-        styles={{ root: { flexShrink: 0, alignSelf: 'flex-end', margin: 10 } }}
-        iconProps={{ iconName: 'Add' }}
-      />
     </div>
   )
 }
