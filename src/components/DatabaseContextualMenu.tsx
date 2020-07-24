@@ -34,7 +34,7 @@ export function DatabaseContextualMenu(props: {
       )
       setIsSucceed(true)
       setHidden(true)
-      dispatch(actions.root.setShouldRevalidate())
+      dispatch(actions.root.setTrigger())
     } catch {
       setIsSucceed(false)
     } finally {

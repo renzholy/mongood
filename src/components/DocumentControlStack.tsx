@@ -19,7 +19,7 @@ export function DocumentControlStack() {
   const collection = useSelector((state) => state.root.collection)
   const displayMode = useSelector((state) => state.docs.displayMode)
   const index = useSelector((state) => state.docs.index)
-  const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
+  const trigger = useSelector((state) => state.docs.trigger)
   const filter = useSelector((state) => state.docs.filter)
   const { data: indexes } = useSWR(
     connection && database && collection
@@ -43,14 +43,14 @@ export function DocumentControlStack() {
       documents: [doc],
     })
     setIsInsertOpen(false)
-    dispatch(actions.docs.setShouldRevalidate())
+    dispatch(actions.docs.setTrigger())
   }, [connection, database, collection, doc, dispatch])
   const hint = isEmpty(filter) ? undefined : index?.name
   const { data: count } = useSWR(
     connection && database && collection
       ? `count/${connection}/${database}/${collection}/${JSON.stringify(
           filter,
-        )}/${hint}/${shouldRevalidate}`
+        )}/${hint}/${trigger}`
       : null,
     () =>
       runCommand<{ n: number }>(connection, database!, {

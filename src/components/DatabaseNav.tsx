@@ -20,10 +20,10 @@ export function DatabaseNav() {
   const collection = useSelector((state) => state.root.collection)
   const expandedDatabases = useSelector((state) => state.root.expandedDatabases)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
-  const shouldRevalidate = useSelector((state) => state.root.shouldRevalidate)
+  const trigger = useSelector((state) => state.root.trigger)
   const [keyword, setKeyword] = useState('')
   const { data } = useSWR(
-    `listDatabases/${connection}/${shouldRevalidate}`,
+    `listDatabases/${connection}/${trigger}`,
     () =>
       runCommand<{
         databases: {

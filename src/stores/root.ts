@@ -7,7 +7,7 @@ export default createSlice({
     connections: JSON.parse(localStorage.getItem('connections') || '[]'),
     expandedDatabases: [],
     collectionsMap: {},
-    shouldRevalidate: Date.now(),
+    trigger: Date.now(),
   } as {
     connection?: string
     connections: string[]
@@ -15,7 +15,7 @@ export default createSlice({
     collection?: string
     expandedDatabases: string[]
     collectionsMap: { [database: string]: string[] }
-    shouldRevalidate: number
+    trigger: number
   },
   reducers: {
     setConnection: (state, { payload }: PayloadAction<string | undefined>) => {
@@ -62,9 +62,9 @@ export default createSlice({
       ...state,
       collectionsMap: {},
     }),
-    setShouldRevalidate: (state) => ({
+    setTrigger: (state) => ({
       ...state,
-      shouldRevalidate: Date.now(),
+      trigger: Date.now(),
     }),
   },
 })

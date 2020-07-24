@@ -19,9 +19,9 @@ export default () => {
   const filter = useSelector((state) => state.docs.filter)
   const skip = useSelector((state) => state.docs.skip)
   const limit = useSelector((state) => state.docs.limit)
-  const shouldRevalidate = useSelector((state) => state.docs.shouldRevalidate)
+  const trigger = useSelector((state) => state.docs.trigger)
   const { data: profile, revalidate } = useSWR(
-    `profile/${connection}/${shouldRevalidate}`,
+    `profile/${connection}/${trigger}`,
     () =>
       runCommand<{ was: number; slowms: number; sampleRate: number }>(
         connection,
