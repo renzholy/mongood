@@ -34,7 +34,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
             'mongodb://',
             uri.username &&
               (uri.password
-                ? `${uri.username}:${uri.password.replaceAll(/./g, '*')}@`
+                ? `${uri.username}:${uri.password.replace(/./g, '*')}@`
                 : `${uri.username}@`),
             ...uri.hosts.map((host) => `${host.host}:${host.port || 27017}`),
             uri.database && `/${uri.database}`,
