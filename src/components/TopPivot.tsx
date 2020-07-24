@@ -1,10 +1,11 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import {
   Pivot,
   PivotItem,
   getTheme,
   CommandButton,
   ContextualMenuItemType,
+  IContextualMenuItem,
 } from '@fluentui/react'
 import { useHistory } from 'umi'
 import useSWR from 'swr'
@@ -31,25 +32,38 @@ export function TopPivot() {
       }),
     [],
   )
-  const [items, setItems] = useState<
+  const [selfConnections, setSelfConnections] = useState<
     { c: string; host: string; replSetName?: string }[]
   >([])
   useAsyncEffect(async () => {
-    setItems(
-      compact(
-        await Promise.all(
-          [...connections, ...(data || [])].map(async (c) => {
-            try {
-              const { host, repl } = await serverStatus(c)
-              return { c, host, replSetName: repl?.setName }
-            } catch {
-              return { c, host: c }
-            }
-          }),
-        ),
-      ),
+    const _connections = await Promise.all(
+      connections.map(async (c) => {
+        try {
+          const { host, repl } = await serverStatus(c)
+          return { c, host, replSetName: repl?.setName }
+        } catch {
+          return { c, host: c }
+        }
+      }),
     )
-  }, [connections, data, serverStatus])
+    setSelfConnections(compact(_connections))
+  }, [connections, serverStatus])
+  const [builtInConnections, setBuiltInConnections] = useState<
+    { c: string; host: string; replSetName?: string }[]
+  >([])
+  useAsyncEffect(async () => {
+    const _connections = await Promise.all(
+      (data || []).map(async (c) => {
+        try {
+          const { host, repl } = await serverStatus(c)
+          return { c, host, replSetName: repl?.setName }
+        } catch {
+          return { c, host: c }
+        }
+      }),
+    )
+    setBuiltInConnections(compact(_connections))
+  }, [data, serverStatus])
   const [isOpen, setIsOpen] = useState(false)
   useEffect(() => {
     if ((data?.length || connections.length) && !connection) {
@@ -61,6 +75,38 @@ export function TopPivot() {
       setIsOpen(true)
     }
   }, [connection, connections, data])
+  const connectionToItem = useCallback(
+    ({ c, host, replSetName }) => ({
+      key: c,
+      text: host,
+      secondaryText: replSetName,
+      canCheck: true,
+      checked: connection === c,
+      onClick() {
+        dispatch(actions.root.setConnection(c))
+      },
+    }),
+    [connection, dispatch],
+  )
+  const items = useMemo<IContextualMenuItem[]>(
+    () =>
+      compact([
+        ...selfConnections.map(connectionToItem),
+        selfConnections.length
+          ? { key: 'divider', itemType: ContextualMenuItemType.Divider }
+          : undefined,
+        ...builtInConnections.map(connectionToItem),
+        { key: 'divider', itemType: ContextualMenuItemType.Divider },
+        {
+          key: 'create',
+          text: 'Edit Connections',
+          onClick() {
+            setIsOpen(true)
+          },
+        },
+      ]),
+    [builtInConnections, connectionToItem, selfConnections],
+  )
 
   return (
     <>
@@ -95,7 +141,7 @@ export function TopPivot() {
           <PivotItem headerText="Notebook (Alpha)" itemKey="/notebook" />
         </Pivot>
         <CommandButton
-          text={items.find(({ c }) => c === connection)?.host}
+          text={selfConnections.find(({ c }) => c === connection)?.host}
           menuIconProps={{ iconName: 'Database' }}
           styles={{
             menuIcon: {
@@ -103,26 +149,7 @@ export function TopPivot() {
             },
           }}
           menuProps={{
-            items: [
-              ...items.map(({ c, host, replSetName }) => ({
-                key: c,
-                text: host,
-                secondaryText: replSetName,
-                canCheck: true,
-                checked: connection === c,
-                onClick() {
-                  dispatch(actions.root.setConnection(c))
-                },
-              })),
-              { key: 'divider', itemType: ContextualMenuItemType.Divider },
-              {
-                key: 'create',
-                text: 'Edit Connections',
-                onClick() {
-                  setIsOpen(true)
-                },
-              },
-            ],
+            items,
           }}
         />
       </div>
