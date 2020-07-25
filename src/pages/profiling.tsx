@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { Stack, SpinButton, Slider, Label, IconButton } from '@fluentui/react'
+import { Stack, SpinButton, Slider, Label } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -11,6 +11,7 @@ import { actions } from '@/stores'
 import { LargeMessage } from '@/components/LargeMessage'
 import { ProfilingCard } from '@/components/ProfilingCard'
 import { Pagination } from '@/components/Pagination'
+import { ActionButton } from '@/components/ActionButton'
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)
@@ -78,22 +79,16 @@ export default () => {
       ),
     )
   }, [database, collection, dispatch])
-  const [loading, setLoading] = useState(false)
   const handleSetProfile = useCallback(async () => {
     if (!database) {
       return
     }
-    setLoading(true)
-    try {
-      await runCommand(connection, database, {
-        profile: 1,
-        slowms,
-        sampleRate: { $numberDouble: sampleRate.toString() },
-      })
-    } finally {
-      setLoading(false)
-      revalidate()
-    }
+    await runCommand(connection, database, {
+      profile: 1,
+      slowms,
+      sampleRate: { $numberDouble: sampleRate.toString() },
+    })
+    revalidate()
   }, [connection, database, revalidate, slowms, sampleRate])
   const { data: count } = useSWR(
     database
@@ -157,13 +152,7 @@ export default () => {
         />
         {profile?.slowms === slowms &&
         profile?.sampleRate === sampleRate ? null : (
-          <IconButton
-            disabled={loading}
-            iconProps={{ iconName: 'CheckMark' }}
-            onClick={() => {
-              handleSetProfile()
-            }}
-          />
+          <ActionButton icon="CheckMark" onClick={handleSetProfile} />
         )}
         <Stack.Item grow={true}>
           <div />
