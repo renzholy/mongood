@@ -122,7 +122,6 @@ export default () => {
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height: 52, alignItems: 'center' } }}>
         <SpinButton
-          disabled={loading}
           label="Slow Ms:"
           styles={{
             spinButtonWrapper: { width: 80 },
@@ -141,9 +140,8 @@ export default () => {
             setSlowms(Math.max(parseInt(value, 10) - 10, 0))
           }}
         />
-        <Label disabled={loading}>Sample Rate:</Label>
+        <Label>Sample Rate:</Label>
         <Slider
-          disabled={loading}
           styles={{
             slideBox: { width: 100 },
           }}
