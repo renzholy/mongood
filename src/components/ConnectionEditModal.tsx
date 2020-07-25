@@ -7,7 +7,7 @@ import {
   TextField,
   DefaultButton,
   IContextualMenuProps,
-  IconButton,
+  DirectionalHint,
 } from '@fluentui/react'
 import React, { useMemo, useCallback, useState } from 'react'
 import useSWR from 'swr'
@@ -19,6 +19,7 @@ import useAsyncEffect from 'use-async-effect'
 import { listConnections, runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { ServerStats } from '@/types'
+import { ActionButton } from './ActionButton'
 
 function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const uri = useMemo(() => {
@@ -50,30 +51,42 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const dispatch = useDispatch()
   const connection = useSelector((state) => state.root.connection)
   const connections = useSelector((state) => state.root.connections)
-  const menuProps: IContextualMenuProps | undefined = props.disabled
-    ? undefined
-    : {
-        items: [
-          {
-            key: '1',
-            text: 'Remove',
-            iconProps: {
-              iconName: 'Delete',
-              styles: { root: { color: theme.palette.red } },
-            },
-            onClick() {
-              dispatch(
-                actions.root.setConnections(
-                  connections.filter((c) => c !== props.connection),
-                ),
-              )
-              if (connection === props.connection) {
-                dispatch(actions.root.setConnection(undefined))
-              }
-            },
+  const menuProps = useMemo<IContextualMenuProps | undefined>(
+    () =>
+      props.disabled
+        ? undefined
+        : {
+            directionalHint: DirectionalHint.topRightEdge,
+            items: [
+              {
+                key: '1',
+                text: 'Remove',
+                iconProps: {
+                  iconName: 'Delete',
+                  styles: { root: { color: theme.palette.red } },
+                },
+                onClick() {
+                  dispatch(
+                    actions.root.setConnections(
+                      connections.filter((c) => c !== props.connection),
+                    ),
+                  )
+                  if (connection === props.connection) {
+                    dispatch(actions.root.setConnection(undefined))
+                  }
+                },
+              },
+            ],
           },
-        ],
-      }
+    [
+      connection,
+      connections,
+      dispatch,
+      props.connection,
+      props.disabled,
+      theme.palette.red,
+    ],
+  )
   const [serverStatus, setServerStatus] = useState<ServerStats>()
   useAsyncEffect(async () => {
     setServerStatus(
@@ -121,22 +134,18 @@ export function ConnectionEditModal(props: {
   const theme = getTheme()
   const [value, setValue] = useState('')
   const [error, setError] = useState<Error>()
-  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   const handleAddConnection = useCallback(async () => {
     if (!value) {
       return
     }
     try {
-      setLoading(true)
       mongodbUri.parse(value)
       await runCommand(value, 'admin', { ping: 1 })
       dispatch(actions.root.setConnections(uniq([value, ...connections])))
       setValue('')
     } catch (err) {
       setError(err)
-    } finally {
-      setLoading(false)
     }
   }, [value, connections, dispatch])
 
@@ -166,9 +175,11 @@ export function ConnectionEditModal(props: {
         }}>
         New Connection
       </Text>
-      <Stack tokens={{ childrenGap: 10 }}>
+      <Stack
+        tokens={{ childrenGap: 10 }}
+        styles={{ root: { alignItems: 'flex-end' } }}>
         <TextField
-          disabled={loading}
+          styles={{ root: { width: '100%' } }}
           multiline={true}
           resizable={false}
           autoComplete="off"
@@ -184,10 +195,9 @@ export function ConnectionEditModal(props: {
           }}
           errorMessage={error?.message}
         />
-        <IconButton
-          disabled={!value || loading}
-          iconProps={{ iconName: 'CheckMark' }}
-          styles={{ root: { alignSelf: 'flex-end' } }}
+        <ActionButton
+          disabled={!value}
+          icon="CheckMark"
           onClick={handleAddConnection}
         />
       </Stack>
