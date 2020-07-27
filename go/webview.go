@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/phayes/freeport"
-	"github.com/wailsapp/wails/lib/renderer/webview"
+	"github.com/zserge/lorca"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
@@ -25,13 +25,10 @@ func startService() {
 		Handler: h2c.NewHandler(mux, &http2.Server{}),
 	}
 	go s.ListenAndServe()
-	w := webview.NewWebview(webview.Settings{
-		Title:     "Mongood",
-		URL:       "http://localhost:" + port,
-		Width:     1280,
-		Height:    800,
-		Resizable: true,
-	})
-	w.Run()
-	defer w.Terminate()
+	ui, err := lorca.New("http://localhost:"+port, "", 1280, 800)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer ui.Close()
+	<-ui.Done()
 }
