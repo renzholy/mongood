@@ -5,9 +5,8 @@ package main
 import (
 	"log"
 	"net/http"
-	"strconv"
+	"os"
 
-	"github.com/phayes/freeport"
 	"github.com/shibukawa/configdir"
 	"github.com/zserge/lorca"
 	"golang.org/x/net/http2"
@@ -15,12 +14,10 @@ import (
 )
 
 func startService() {
-	intPort, err := freeport.GetFreePort()
-	if err != nil {
-		log.Fatal(err)
-		return
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "54034" // 27017 * 2
 	}
-	port := strconv.Itoa(intPort)
 	s := &http.Server{
 		Addr:    ":" + port,
 		Handler: h2c.NewHandler(mux, &http2.Server{}),
