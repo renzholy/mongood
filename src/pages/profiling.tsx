@@ -124,9 +124,8 @@ export default () => {
             root: { width: 'fit-content', marginRight: 10 },
           }}
           value={slowms.toString()}
-          step={10}
-          onBlur={(ev) => {
-            setSlowms(Math.max(parseInt(ev.target.value, 10), 0))
+          onValidate={(value) => {
+            setSlowms(Math.max(parseInt(value, 10), 0))
           }}
           onIncrement={(value) => {
             setSlowms(Math.max(parseInt(value, 10) + 10, 0))
