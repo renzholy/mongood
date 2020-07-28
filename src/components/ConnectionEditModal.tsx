@@ -140,9 +140,10 @@ export function ConnectionEditModal(props: {
       return
     }
     try {
-      mongodbUri.parse(value)
-      await runCommand(value, 'admin', { ping: 1 })
-      dispatch(actions.root.setConnections(uniq([value, ...connections])))
+      const trimed = value.trim()
+      mongodbUri.parse(trimed)
+      await runCommand(trimed, 'admin', { ping: 1 })
+      dispatch(actions.root.setConnections(uniq([trimed, ...connections])))
       setValue('')
     } catch (err) {
       setError(err)
@@ -191,7 +192,7 @@ export function ConnectionEditModal(props: {
           value={value}
           onChange={(_ev, newValue) => {
             setError(undefined)
-            setValue(newValue?.trim() || '')
+            setValue(newValue || '')
           }}
           errorMessage={error?.message}
         />
