@@ -191,7 +191,7 @@ export function ConnectionEditModal(props: {
           value={value}
           onChange={(_ev, newValue) => {
             setError(undefined)
-            setValue(newValue || '')
+            setValue(newValue?.trim() || '')
           }}
           errorMessage={error?.message}
         />
