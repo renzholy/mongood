@@ -140,9 +140,10 @@ export function ConnectionEditModal(props: {
       return
     }
     try {
-      mongodbUri.parse(value)
-      await runCommand(value, 'admin', { ping: 1 })
-      dispatch(actions.root.setConnections(uniq([value, ...connections])))
+      const trimed = value.trim()
+      mongodbUri.parse(trimed)
+      await runCommand(trimed, 'admin', { ping: 1 })
+      dispatch(actions.root.setConnections(uniq([trimed, ...connections])))
       setValue('')
     } catch (err) {
       setError(err)
@@ -201,22 +202,26 @@ export function ConnectionEditModal(props: {
           onClick={handleAddConnection}
         />
       </Stack>
-      <Text
-        variant="xLarge"
-        block={true}
-        styles={{
-          root: {
-            color: theme.palette.neutralPrimary,
-            marginBottom: 20,
-          },
-        }}>
-        Self-added Connections
-      </Text>
-      <Stack tokens={{ childrenGap: 10 }}>
-        {connections.map((connection) => (
-          <ConnectionItem key={connection} connection={connection} />
-        ))}
-      </Stack>
+      {connections.length ? (
+        <>
+          <Text
+            variant="xLarge"
+            block={true}
+            styles={{
+              root: {
+                color: theme.palette.neutralPrimary,
+                marginBottom: 20,
+              },
+            }}>
+            Self-added Connections
+          </Text>
+          <Stack tokens={{ childrenGap: 10 }}>
+            {connections.map((connection) => (
+              <ConnectionItem key={connection} connection={connection} />
+            ))}
+          </Stack>
+        </>
+      ) : null}
       {data?.length ? (
         <>
           <Text
