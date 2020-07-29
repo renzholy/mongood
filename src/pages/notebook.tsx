@@ -50,30 +50,36 @@ export default () => {
     return <LargeMessage iconName="Back" title="Select Database" />
   }
   return (
-    <DetailsList
-      styles={{
-        contentWrapper: notebooks.length ? undefined : { height: 0 },
-      }}
-      items={notebooks}
-      selectionMode={SelectionMode.none}
-      compact={true}
-      isHeaderVisible={false}
-      columns={[
-        {
-          key: '',
-          name: 'Notebooks',
-          minWidth: 0,
-          isMultiline: true,
-        },
-      ]}
-      cellStyleProps={{
-        cellLeftPadding: 0,
-        cellRightPadding: 0,
-        cellExtraRightPadding: 0,
-      }}
-      onRenderRow={handleRenderRow}
-      onRenderItemColumn={NotebookItem}
-      onRenderDetailsFooter={() => <NotebookItem />}
-    />
+    <div style={{ overflowY: 'scroll' }}>
+      <DetailsList
+        styles={{
+          contentWrapper: notebooks.length ? undefined : { height: 0 },
+        }}
+        items={notebooks}
+        selectionMode={SelectionMode.none}
+        compact={true}
+        isHeaderVisible={false}
+        columns={[
+          {
+            key: '',
+            name: 'Notebooks',
+            minWidth: 0,
+            isMultiline: true,
+          },
+        ]}
+        cellStyleProps={{
+          cellLeftPadding: 0,
+          cellRightPadding: 0,
+          cellExtraRightPadding: 0,
+        }}
+        onRenderRow={handleRenderRow}
+        onRenderItemColumn={NotebookItem}
+        onRenderDetailsFooter={() => (
+          <div style={{ marginBottom: 'calc(100vh - 150px - 32px - 44px)' }}>
+            <NotebookItem />
+          </div>
+        )}
+      />
+    </div>
   )
 }

@@ -168,7 +168,6 @@ export function NotebookItem(props: {
       {error ? (
         <pre
           style={{
-            minHeight: 100,
             margin: 0,
             padding: 20,
             fontSize: 12,
@@ -183,19 +182,10 @@ export function NotebookItem(props: {
         <ColorizedData
           value={result}
           style={{
-            minHeight: 100,
             padding: 20,
           }}
         />
-      ) : (
-        <div
-          style={{
-            height: 100,
-            margin: 0,
-            padding: 20,
-          }}
-        />
-      )}
+      ) : null}
     </>
   )
 }
