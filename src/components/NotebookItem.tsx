@@ -149,7 +149,6 @@ export function NotebookItem(props: {
         }}
         onBlur={async () => {
           setIsFocused(false)
-          await handleRunCommand(value.current)
         }}>
         <Card.Item styles={{ root: { height: 5 * 18 } }}>
           <ControlledEditor
