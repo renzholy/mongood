@@ -1,6 +1,4 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
@@ -11,7 +9,7 @@ import {
 } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useSelector, useDispatch } from 'react-redux'
-import { Icon, getTheme, Spinner, SpinnerSize } from '@fluentui/react'
+import { getTheme, IconButton } from '@fluentui/react'
 
 import { toCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
@@ -35,31 +33,34 @@ export function NotebookItem(props: {
   const database = useSelector((state) => state.root.database)
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
-  const handleNext = useCallback(() => {
-    if (value && (result || error)) {
-      if (props.index !== undefined) {
-        dispatch(
-          actions.notebook.updateNotebook({
-            index: props.index,
-            value: value.current,
-            result,
-            error,
-          }),
-        )
-      } else {
-        dispatch(
-          actions.notebook.appendNotebook({
-            value: value.current,
-            result,
-            error,
-          }),
-        )
-        value.current = undefined
-        setResult(undefined)
-        setError(undefined)
+  const handleNext = useCallback(
+    ({ _result, _error }: { _result?: MongoData; _error?: string }) => {
+      if (value.current && (_result || _error)) {
+        if (props.index !== undefined) {
+          dispatch(
+            actions.notebook.updateNotebook({
+              index: props.index,
+              value: value.current,
+              result: _result,
+              error: _error,
+            }),
+          )
+        } else {
+          dispatch(
+            actions.notebook.appendNotebook({
+              value: value.current,
+              result: _result,
+              error: _error,
+            }),
+          )
+          setResult(undefined)
+          setError(undefined)
+          value.current = undefined
+        }
       }
-    }
-  }, [props, dispatch, value, result, error])
+    },
+    [props, dispatch],
+  )
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
       if (!database || !commandStr) {
@@ -78,20 +79,20 @@ export function NotebookItem(props: {
         )
         setResult(_result)
         setError(undefined)
+        handleNext({ _result })
       } catch (err) {
         setResult(undefined)
         const _error = err?.message?.startsWith('(CommandNotFound)')
           ? `Command Error: ${commandStr}`
           : err.message
         setError(_error)
+        handleNext({ _error })
       } finally {
-        handleNext()
         setIsLoading(false)
       }
     },
     [connection, database, handleNext],
   )
-  const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
     value.current = props.value
   }, [props.value])
@@ -117,6 +118,7 @@ export function NotebookItem(props: {
   }, [])
   const options = useMemo<ControlledEditorProps['options']>(
     () => ({
+      readOnly: isLoading,
       lineDecorationsWidth: 0,
       glyphMargin: false,
       folding: false,
@@ -126,11 +128,11 @@ export function NotebookItem(props: {
       contextmenu: false,
       scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
     }),
-    [],
+    [isLoading],
   )
 
   return (
-    <div>
+    <>
       <Card
         tokens={{
           padding: 10,
@@ -140,15 +142,8 @@ export function NotebookItem(props: {
         styles={{
           root: {
             backgroundColor: isDarkMode ? '#1e1e1e' : '#fffffe',
-            margin: '14px 20px',
-            position: 'relative',
+            margin: 20,
           },
-        }}
-        onFocus={() => {
-          setIsFocused(true)
-        }}
-        onBlur={async () => {
-          setIsFocused(false)
         }}>
         <Card.Item styles={{ root: { height: 5 * 18 } }}>
           <ControlledEditor
@@ -160,80 +155,37 @@ export function NotebookItem(props: {
             options={options}
           />
         </Card.Item>
-        <Card.Item
-          styles={{
-            root: {
-              position: 'absolute',
-              right: 10,
-              bottom: 10,
-              userSelect: 'none',
-              cursor: 'pointer',
-            },
-          }}>
-          {isLoading ? (
-            <Spinner size={SpinnerSize.small} />
-          ) : isFocused ? (
-            <div
-              onClick={() => {
-                handleRunCommand(value.current)
-              }}>
-              <span
-                style={{
-                  fontSize: 18,
-                  color: theme.palette.neutralSecondary,
-                }}>
-                ⌘
-              </span>
-              <Icon
-                iconName="ReturnKey"
-                styles={{
-                  root: {
-                    verticalAlign: 'text-bottom',
-                    marginBottom: 2,
-                    color: theme.palette.neutralSecondary,
-                  },
-                }}
-              />
-            </div>
-          ) : null}
-        </Card.Item>
       </Card>
-      <Card.Item>
-        {error ? (
-          <pre
-            style={{
-              minHeight: 100,
-              margin: 0,
-              padding: '14px 20px',
-              paddingTop: 0,
-              fontSize: 12,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-              overflow: 'scroll',
-              color: theme.palette.neutralPrimary,
-            }}>
-            {error}
-          </pre>
-        ) : result ? (
-          <ColorizedData
-            value={result}
-            style={{
-              minHeight: 100,
-              padding: '14px 20px',
-              paddingTop: 0,
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              height: 100,
-              margin: 0,
-              padding: '14px 20px',
-              paddingTop: 0,
-            }}
-          />
-        )}
-      </Card.Item>
-    </div>
+      <div style={{ marginLeft: 20, marginRight: 20 }}>
+        <IconButton
+          disabled={isLoading}
+          iconProps={{ iconName: 'Play' }}
+          onClick={() => {
+            handleRunCommand(value.current)
+          }}
+        />
+      </div>
+      {error ? (
+        <pre
+          style={{
+            margin: 0,
+            padding: 20,
+            fontSize: 12,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-all',
+            overflow: 'scroll',
+            color: theme.palette.neutralPrimary,
+          }}>
+          {error}
+        </pre>
+      ) : result ? (
+        <ColorizedData
+          value={result}
+          style={{
+            padding: 20,
+          }}
+        />
+      ) : null}
+    </>
   )
 }
