@@ -35,35 +35,45 @@ export function TopPivot() {
   const [selfConnections, setSelfConnections] = useState<
     { c: string; host: string; replSetName?: string }[]
   >([])
-  useAsyncEffect(async () => {
-    const _connections = await Promise.all(
-      connections.map(async (c) => {
-        try {
-          const { host, repl } = await serverStatus(c)
-          return { c, host, replSetName: repl?.setName }
-        } catch {
-          return { c, host: c }
-        }
-      }),
-    )
-    setSelfConnections(compact(_connections))
-  }, [connections, serverStatus])
+  useAsyncEffect(
+    async (isMounted) => {
+      const _connections = await Promise.all(
+        connections.map(async (c) => {
+          try {
+            const { host, repl } = await serverStatus(c)
+            return { c, host, replSetName: repl?.setName }
+          } catch {
+            return { c, host: c }
+          }
+        }),
+      )
+      if (isMounted()) {
+        setSelfConnections(compact(_connections))
+      }
+    },
+    [connections, serverStatus],
+  )
   const [builtInConnections, setBuiltInConnections] = useState<
     { c: string; host: string; replSetName?: string }[]
   >([])
-  useAsyncEffect(async () => {
-    const _connections = await Promise.all(
-      (data || []).map(async (c) => {
-        try {
-          const { host, repl } = await serverStatus(c)
-          return { c, host, replSetName: repl?.setName }
-        } catch {
-          return { c, host: c }
-        }
-      }),
-    )
-    setBuiltInConnections(compact(_connections))
-  }, [data, serverStatus])
+  useAsyncEffect(
+    async (isMounted) => {
+      const _connections = await Promise.all(
+        (data || []).map(async (c) => {
+          try {
+            const { host, repl } = await serverStatus(c)
+            return { c, host, replSetName: repl?.setName }
+          } catch {
+            return { c, host: c }
+          }
+        }),
+      )
+      if (isMounted()) {
+        setBuiltInConnections(compact(_connections))
+      }
+    },
+    [data, serverStatus],
+  )
   const [isOpen, setIsOpen] = useState(false)
   useEffect(() => {
     if ((data?.length || connections.length) && !connection) {

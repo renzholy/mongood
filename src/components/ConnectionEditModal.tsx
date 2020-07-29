@@ -88,13 +88,17 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
     ],
   )
   const [serverStatus, setServerStatus] = useState<ServerStats>()
-  useAsyncEffect(async () => {
-    setServerStatus(
-      await runCommand<ServerStats>(props.connection, 'admin', {
+  useAsyncEffect(
+    async (isMounted) => {
+      const status = await runCommand<ServerStats>(props.connection, 'admin', {
         serverStatus: 1,
-      }),
-    )
-  }, [props.connection])
+      })
+      if (isMounted()) {
+        setServerStatus(status)
+      }
+    },
+    [props.connection],
+  )
 
   if (!uri) {
     return <DefaultButton text="parse error" menuProps={menuProps} />
