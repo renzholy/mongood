@@ -35,31 +35,34 @@ export function NotebookItem(props: {
   const database = useSelector((state) => state.root.database)
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
-  const handleNext = useCallback(() => {
-    if (value && (result || error)) {
-      if (props.index !== undefined) {
-        dispatch(
-          actions.notebook.updateNotebook({
-            index: props.index,
-            value: value.current,
-            result,
-            error,
-          }),
-        )
-      } else {
-        dispatch(
-          actions.notebook.appendNotebook({
-            value: value.current,
-            result,
-            error,
-          }),
-        )
+  const handleNext = useCallback(
+    ({ _result, _error }: { _result?: MongoData; _error?: string }) => {
+      if (value.current && (_result || _error)) {
+        if (props.index !== undefined) {
+          dispatch(
+            actions.notebook.updateNotebook({
+              index: props.index,
+              value: value.current,
+              result: _result,
+              error: _error,
+            }),
+          )
+        } else {
+          dispatch(
+            actions.notebook.appendNotebook({
+              value: value.current,
+              result: _result,
+              error: _error,
+            }),
+          )
+          setResult(undefined)
+          setError(undefined)
+        }
         value.current = undefined
-        setResult(undefined)
-        setError(undefined)
       }
-    }
-  }, [props, dispatch, value, result, error])
+    },
+    [props, dispatch],
+  )
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
       if (!database || !commandStr) {
@@ -78,14 +81,15 @@ export function NotebookItem(props: {
         )
         setResult(_result)
         setError(undefined)
+        handleNext({ _result })
       } catch (err) {
         setResult(undefined)
         const _error = err?.message?.startsWith('(CommandNotFound)')
           ? `Command Error: ${commandStr}`
           : err.message
         setError(_error)
+        handleNext({ _error })
       } finally {
-        handleNext()
         setIsLoading(false)
       }
     },
