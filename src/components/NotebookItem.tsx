@@ -185,7 +185,7 @@ export function NotebookItem(props: {
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-all',
             overflow: 'scroll',
-            color: theme.palette.neutralPrimary,
+            color: theme.palette.red,
           }}>
           {error}
         </pre>
