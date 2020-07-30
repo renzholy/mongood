@@ -136,6 +136,7 @@ export function NotebookItem(props: {
       <Card
         tokens={{
           padding: 10,
+          childrenGap: 0,
           maxWidth: 'unset',
           minHeight: 'unset',
         }}
@@ -155,21 +156,21 @@ export function NotebookItem(props: {
             options={options}
           />
         </Card.Item>
+        <Card.Item>
+          <IconButton
+            disabled={isLoading}
+            iconProps={{ iconName: 'Play' }}
+            onClick={() => {
+              handleRunCommand(value.current)
+            }}
+          />
+        </Card.Item>
       </Card>
-      <div style={{ marginLeft: 20, marginRight: 20 }}>
-        <IconButton
-          disabled={isLoading}
-          iconProps={{ iconName: 'Play' }}
-          onClick={() => {
-            handleRunCommand(value.current)
-          }}
-        />
-      </div>
       {error ? (
         <pre
           style={{
-            margin: 0,
-            padding: 20,
+            margin: 20,
+            marginTop: 0,
             fontSize: 12,
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-all',
@@ -182,7 +183,8 @@ export function NotebookItem(props: {
         <ColorizedData
           value={result}
           style={{
-            padding: 20,
+            margin: 20,
+            marginTop: 0,
           }}
         />
       ) : null}
