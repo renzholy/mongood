@@ -25,6 +25,7 @@
   "dependencies": {
     "@fluentui/react": "7.123.9",
     "@monaco-editor/react": "3.4.2",
+    "@mongosh/browser-runtime-core": "0.0.8",
     "@reduxjs/toolkit": "1.4.0",
     "@uifabric/react-cards": "0.110.9",
     "bson": "4.0.4",

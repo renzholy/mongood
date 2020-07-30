@@ -18,7 +18,6 @@ import {
 
 import { toCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
-import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
@@ -68,20 +67,12 @@ export function NotebookItem(props: {
   )
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
-      if (!database || !commandStr) {
+      if (!connection || !database || !commandStr) {
         return
       }
       try {
         setIsLoading(true)
-        const command = toCommand(commandStr)
-        const _result = await runCommand<MongoData>(
-          connection,
-          database,
-          command,
-          {
-            canonical: true,
-          },
-        )
+        const _result = await toCommand(connection, commandStr)
         setResult(_result)
         setError(undefined)
         handleNext({ _result })
