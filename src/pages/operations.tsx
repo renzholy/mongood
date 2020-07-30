@@ -39,7 +39,15 @@ const examples: { [key: string]: object } = {
   'Indexing operations': {
     $or: [
       { op: 'command', 'command.createIndexes': { $exists: true } },
-      { op: 'none', msg: parse('/^Index Build/') },
+      {
+        op: 'none',
+        msg: {
+          $regularExpression: {
+            pattern: '^Index Build',
+            options: '',
+          },
+        },
+      },
     ],
   },
 }
