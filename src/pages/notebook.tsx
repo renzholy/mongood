@@ -38,8 +38,8 @@ export default () => {
           cell: {
             paddingTop: 0,
             paddingBottom: 0,
-            backgroundColor: theme.palette.white,
-            borderBottom: `1px solid ${theme.palette.neutralLighter}`,
+            backgroundColor: theme.palette.neutralLighter,
+            borderBottom: `1px solid ${theme.palette.neutralLight}`,
           },
         },
       }) || null,
@@ -50,7 +50,11 @@ export default () => {
     return <LargeMessage iconName="Back" title="Select Database" />
   }
   return (
-    <div style={{ overflowY: 'scroll' }}>
+    <div
+      style={{
+        overflowY: 'scroll',
+        backgroundColor: theme.palette.neutralLighter,
+      }}>
       <DetailsList
         styles={{
           contentWrapper: notebooks.length ? undefined : { height: 0 },
