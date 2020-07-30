@@ -4,7 +4,6 @@ import { map, omit } from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
-import { parse } from '@/utils/ejson'
 import { runCommand } from '@/utils/fetcher'
 import { FilterInput } from '@/components/FilterInput'
 import { OperationCard } from '@/components/OperationCard'
