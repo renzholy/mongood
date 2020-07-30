@@ -68,7 +68,6 @@ export default () => {
             key: '',
             name: 'Notebooks',
             minWidth: 0,
-            isMultiline: true,
           },
         ]}
         cellStyleProps={{
@@ -79,7 +78,7 @@ export default () => {
         onRenderRow={handleRenderRow}
         onRenderItemColumn={NotebookItem}
         onRenderDetailsFooter={() => (
-          <div style={{ marginBottom: 'calc(100vh - 150px - 32px - 44px)' }}>
+          <div style={{ marginBottom: 'calc(100vh - 130px - 32px - 44px)' }}>
             <NotebookItem />
           </div>
         )}

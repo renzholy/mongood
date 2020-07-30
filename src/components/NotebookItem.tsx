@@ -9,7 +9,12 @@ import {
 } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useSelector, useDispatch } from 'react-redux'
-import { getTheme, IconButton } from '@fluentui/react'
+import {
+  getTheme,
+  IconButton,
+  TooltipHost,
+  DirectionalHint,
+} from '@fluentui/react'
 
 import { toCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
@@ -157,13 +162,18 @@ export function NotebookItem(props: {
           />
         </Card.Item>
         <Card.Item>
-          <IconButton
-            disabled={isLoading}
-            iconProps={{ iconName: 'Play' }}
-            onClick={() => {
-              handleRunCommand(value.current)
-            }}
-          />
+          <TooltipHost
+            content="Run (⌘+↵)"
+            directionalHint={DirectionalHint.bottomCenter}
+            styles={{ root: { display: 'inline-block' } }}>
+            <IconButton
+              disabled={isLoading}
+              iconProps={{ iconName: 'Play' }}
+              onClick={() => {
+                handleRunCommand(value.current)
+              }}
+            />
+          </TooltipHost>
         </Card.Item>
       </Card>
       {error ? (
