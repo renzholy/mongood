@@ -67,7 +67,7 @@ export class RunCommandServiceProvider implements ServiceProvider {
       database,
       {
         count: collection,
-        filter,
+        query: filter,
         // options,
         // dbOptions,
       },
