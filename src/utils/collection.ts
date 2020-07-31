@@ -5,10 +5,9 @@ import { RunCommandServiceProvider } from './mongosh/service-provider'
 
 export async function toCommand(
   connection: string,
-  database: string,
   str: string,
 ): Promise<object> {
-  const serviceProvider = new RunCommandServiceProvider(connection, database)
+  const serviceProvider = new RunCommandServiceProvider(connection, '')
   const runtime = new IframeRuntime(serviceProvider)
   const result = await runtime.evaluate(str)
   return result.value
