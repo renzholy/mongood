@@ -11,5 +11,6 @@ export async function toCommand(
   const serviceProvider = new RunCommandServiceProvider(connection, database)
   const runtime = new IframeRuntime(serviceProvider)
   const result = await runtime.evaluate(str)
+  await runtime.destroy()
   return result.value
 }
