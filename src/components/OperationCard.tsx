@@ -60,10 +60,12 @@ export function OperationCard(props: {
     } finally {
       setIsKilling(false)
     }
-  }, [connection, value.opid, props])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connection, value.opid, props.onKill])
   useEffect(() => {
     props.onView(isOpen || !isMenuHidden)
-  }, [isOpen, isMenuHidden, props])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, isMenuHidden, props.onView])
 
   return (
     <Card

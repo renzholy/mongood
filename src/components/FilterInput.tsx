@@ -24,10 +24,12 @@ export function FilterInput<T extends string | object | undefined>(props: {
     try {
       props.onChange((value ? parse(value) : undefined) as T)
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err)
       setErrorMessage(' ')
     }
-  }, [value, props])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, props.value, props.onChange])
 
   return (
     <div style={{ flex: 1, display: 'flex' }}>

@@ -63,7 +63,7 @@ export function NotebookItem(props: {
         }
       }
     },
-    [props, dispatch],
+    [dispatch, props.index],
   )
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
