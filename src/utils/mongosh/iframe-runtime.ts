@@ -67,8 +67,8 @@ export class IframeRuntime implements Runtime {
       environment,
     )
 
-    // eslint-disable-next-line no-return-await, consistent-return
-    return await ready
+    // eslint-disable-next-line  consistent-return
+    return ready
   }
 
   async destroy(): Promise<void> {
