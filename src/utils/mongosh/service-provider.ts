@@ -11,7 +11,6 @@ import {
   BulkWriteResult,
   CommandOptions,
 } from '@mongosh/service-provider-core'
-
 import { runCommand } from '../fetcher'
 
 export class RunCommandServiceProvider implements ServiceProvider {
