@@ -4,7 +4,6 @@ import { map, omit } from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
-import { parse } from '@/utils/ejson'
 import { runCommand } from '@/utils/fetcher'
 import { FilterInput } from '@/components/FilterInput'
 import { OperationCard } from '@/components/OperationCard'
@@ -39,7 +38,15 @@ const examples: { [key: string]: object } = {
   'Indexing operations': {
     $or: [
       { op: 'command', 'command.createIndexes': { $exists: true } },
-      { op: 'none', msg: parse('/^Index Build/') },
+      {
+        op: 'none',
+        msg: {
+          $regularExpression: {
+            pattern: '^Index Build',
+            options: '',
+          },
+        },
+      },
     ],
   },
 }

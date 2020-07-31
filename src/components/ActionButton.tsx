@@ -33,7 +33,8 @@ export function ActionButton(props: {
       setHidden(false)
     }
     setLoading(false)
-  }, [props])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.onClick])
   useEffect(() => {
     if (succeed) {
       setTimeout(() => {

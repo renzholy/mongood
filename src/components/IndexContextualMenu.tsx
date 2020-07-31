@@ -48,7 +48,8 @@ export function IndexContextualMenu(props: {
     } finally {
       setIsDroping(false)
     }
-  }, [connection, database, collection, props])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connection, database, collection, props.value.name, props.onDrop])
 
   return (
     <>
