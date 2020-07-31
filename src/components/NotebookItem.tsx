@@ -64,7 +64,7 @@ export function NotebookItem(props: {
         }
       }
     },
-    [dispatch, props.index],
+    [dispatch, props.index, value],
   )
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
@@ -151,8 +151,9 @@ export function NotebookItem(props: {
             margin: 20,
           },
         }}>
-        <Card.Item styles={{ root: { height: 5 * 18 } }}>
+        <Card.Item>
           <ControlledEditor
+            height={5 * 18}
             language="typescript"
             value={value.current}
             onChange={handleChange}
