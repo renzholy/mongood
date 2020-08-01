@@ -7,140 +7,174 @@ import { Preprocessor } from '@mongosh/browser-runtime-core/lib/interpreter/prep
 import { sandbox } from './ejson'
 import { runCommand } from './fetcher'
 
-function Cursor(obj: any = {}) {
-  return {
-    skip(skip: number) {
-      obj.skip = skip
-      return this
-    },
-    limit(limit: number) {
-      obj.limit = limit
-      return this
-    },
-    sort(sorter: object) {
-      obj.sort = sorter
-      return this
-    },
-    hint(hint: object | string) {
-      obj.hint = hint
-      return this
-    },
-    project(projection: object) {
-      obj.projection = projection
-      return this
-    },
-    explain() {
-      return {
-        explain: obj,
-      }
-    },
-    toArray() {
-      return obj
-    },
+class Cursor {
+  obj: any
+
+  constructor(obj: any = {}) {
+    this.obj = obj
+  }
+
+  skip(skip: number) {
+    this.obj.skip = skip
+    return this
+  }
+
+  limit(limit: number) {
+    this.obj.limit = limit
+    return this
+  }
+
+  sort(sorter: object) {
+    this.obj.sort = sorter
+    return this
+  }
+
+  hint(hint: object | string) {
+    this.obj.hint = hint
+    return this
+  }
+
+  project(projection: object) {
+    this.obj.projection = projection
+    return this
+  }
+
+  explain() {
+    return {
+      explain: this.obj,
+    }
+  }
+
+  toArray() {
+    return this.obj
   }
 }
 
-function Collection(connection: string, database: string, collection: string) {
-  return {
-    find(filter?: object) {
-      return Cursor({
-        find: collection,
-        filter,
-        limit: 10,
-      })
-    },
-    findOne(filter?: object) {
-      return {
-        find: collection,
-        filter,
-        limit: 1,
-      }
-    },
-    insertOne(doc: object) {
-      return {
-        insert: collection,
-        documents: [doc],
-      }
-    },
-    insertMany(docs: object[]) {
-      return {
-        insert: collection,
-        documents: docs,
-      }
-    },
-    updateOne(
-      filter: object,
-      update: object,
-      options: { upsert?: boolean } = {},
-    ) {
-      return {
-        update: collection,
-        updates: [
-          {
-            q: filter,
-            u: update,
-            upsert: options.upsert,
-            multi: false,
-          },
-        ],
-      }
-    },
-    updateMany(
-      filter: object,
-      update: object,
-      options: { upsert?: boolean } = {},
-    ) {
-      return {
-        update: collection,
-        updates: [
-          {
-            q: filter,
-            u: update,
-            upsert: options.upsert,
-            multi: true,
-          },
-        ],
-      }
-    },
-    deleteOne(filter: object) {
-      return {
-        delete: collection,
-        deletes: [
-          {
-            q: filter,
-            limit: 1,
-          },
-        ],
-      }
-    },
-    deleteMany(filter: object) {
-      return {
-        delete: collection,
-        deletes: [
-          {
-            q: filter,
-            limit: 0,
-          },
-        ],
-      }
-    },
-    estimatedDocumentCount() {
-      return {
-        count: collection,
-      }
-    },
-    async countDocuments(filter: object = {}): Promise<number> {
-      const { n } = await runCommand<{ n: number }>(connection, database, {
-        count: collection,
+class Collection {
+  private connection: string
+
+  private database: string
+
+  private collection: string
+
+  constructor(connection: string, database: string, collection: string) {
+    this.connection = connection
+    this.database = database
+    this.collection = collection
+  }
+
+  find(filter?: object) {
+    return new Cursor({
+      find: this.collection,
+      filter,
+      limit: 10,
+    })
+  }
+
+  findOne(filter?: object) {
+    return {
+      find: this.collection,
+      filter,
+      limit: 1,
+    }
+  }
+
+  insertOne(doc: object) {
+    return {
+      insert: this.collection,
+      documents: [doc],
+    }
+  }
+
+  insertMany(docs: object[]) {
+    return {
+      insert: this.collection,
+      documents: docs,
+    }
+  }
+
+  updateOne(
+    filter: object,
+    update: object,
+    options: { upsert?: boolean } = {},
+  ) {
+    return {
+      update: this.collection,
+      updates: [
+        {
+          q: filter,
+          u: update,
+          upsert: options.upsert,
+          multi: false,
+        },
+      ],
+    }
+  }
+
+  updateMany(
+    filter: object,
+    update: object,
+    options: { upsert?: boolean } = {},
+  ) {
+    return {
+      update: this.collection,
+      updates: [
+        {
+          q: filter,
+          u: update,
+          upsert: options.upsert,
+          multi: true,
+        },
+      ],
+    }
+  }
+
+  deleteOne(filter: object) {
+    return {
+      delete: this.collection,
+      deletes: [
+        {
+          q: filter,
+          limit: 1,
+        },
+      ],
+    }
+  }
+
+  deleteMany(filter: object) {
+    return {
+      delete: this.collection,
+      deletes: [
+        {
+          q: filter,
+          limit: 0,
+        },
+      ],
+    }
+  }
+
+  estimatedDocumentCount() {
+    return {
+      count: this.collection,
+    }
+  }
+
+  async countDocuments(filter: object = {}): Promise<number> {
+    const { n } = await runCommand<{ n: number }>(
+      this.connection,
+      this.database,
+      {
+        count: this.collection,
         query: filter,
-      })
-      return n
-    },
-    getIndexes() {
-      return {
-        listIndexes: collection,
-      }
-    },
+      },
+    )
+    return n
+  }
+
+  getIndexes() {
+    return {
+      listIndexes: this.collection,
+    }
   }
 }
 
@@ -163,7 +197,7 @@ export async function evalCommand(
         {},
         {
           get(_target, name) {
-            return Collection(connection, database, name as string)
+            return new Collection(connection, database, name as string)
           },
         },
       ),
