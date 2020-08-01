@@ -146,7 +146,7 @@ function Collection(connection: string, database: string, collection: string) {
 const preprocessor = new Preprocessor({
   lastExpressionCallbackFunctionName:
     '__LAST_EXPRESSION_CALLBACK_FUNCTION_NAME__',
-  lexicalContextStoreVariableName: '',
+  lexicalContextStoreVariableName: '__LEXICAL_CONTEXT_STORE_VARIABLE_NAME__',
 })
 
 export async function evalCommand(
@@ -157,6 +157,7 @@ export async function evalCommand(
   return new Promise((resolve) => {
     const context = {
       ...sandbox,
+      __LEXICAL_CONTEXT_STORE_VARIABLE_NAME__: {},
       __LAST_EXPRESSION_CALLBACK_FUNCTION_NAME__: resolve,
       db: new Proxy(
         {},
