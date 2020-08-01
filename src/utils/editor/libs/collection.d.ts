@@ -29,6 +29,6 @@ class Collection {
   deleteOne(filter: object): void
   deleteMany(filter: object): void
   estimatedDocumentCount(): void
-  countDocuments(filter: object = {}): void
+  countDocuments(filter: object = {}): Promise<number>
   getIndexes(): void
 }

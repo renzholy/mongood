@@ -130,10 +130,11 @@ function Collection(connection: string, database: string, collection: string) {
       }
     },
     async countDocuments(filter: object = {}): Promise<number> {
-      return runCommand(connection, database, {
+      const { n } = await runCommand<{ n: number }>(connection, database, {
         count: collection,
         query: filter,
       })
+      return n
     },
     getIndexes() {
       return {
@@ -143,17 +144,16 @@ function Collection(connection: string, database: string, collection: string) {
   }
 }
 
-const preprocessor = new Preprocessor({
-  lastExpressionCallbackFunctionName:
-    '__LAST_EXPRESSION_CALLBACK_FUNCTION_NAME__',
-  lexicalContextStoreVariableName: '__LEXICAL_CONTEXT_STORE_VARIABLE_NAME__',
-})
-
 export async function evalCommand(
   connection: string,
   database: string,
   code: string,
 ): Promise<object> {
+  const preprocessor = new Preprocessor({
+    lastExpressionCallbackFunctionName:
+      '__LAST_EXPRESSION_CALLBACK_FUNCTION_NAME__',
+    lexicalContextStoreVariableName: '__LEXICAL_CONTEXT_STORE_VARIABLE_NAME__',
+  })
   return new Promise((resolve) => {
     const context = {
       ...sandbox,
@@ -168,6 +168,8 @@ export async function evalCommand(
         },
       ),
     }
-    saferEval(preprocessor.preprocess(code), context)
+    const str = preprocessor.preprocess(code)
+    console.log(str)
+    saferEval(str, context)
   })
 }

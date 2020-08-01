@@ -181,7 +181,7 @@ export function NotebookItem(props: {
           }}>
           {error}
         </pre>
-      ) : result ? (
+      ) : result !== undefined ? (
         <ColorizedData
           value={result}
           style={{
