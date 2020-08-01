@@ -1,7 +1,7 @@
 import { monaco, ControlledEditor, Monaco } from '@monaco-editor/react'
 import type { IDisposable } from 'monaco-editor'
 
-let _monaco: Monaco
+let _monaco: Monaco | undefined
 
 monaco.init().then((_m) => {
   if (_monaco) {
@@ -30,7 +30,7 @@ monaco.init().then((_m) => {
 
 export function changeLib(collectionsMap: {
   [database: string]: string[]
-}): IDisposable {
+}): IDisposable | undefined {
   const lib = `
 const db: {
   ${Object.entries(collectionsMap)
@@ -43,7 +43,7 @@ const db: {
     .join('\n  ')}
 }
   `
-  return _monaco.languages.typescript.typescriptDefaults.addExtraLib(lib)
+  return _monaco?.languages.typescript.typescriptDefaults.addExtraLib(lib)
 }
 
 export async function colorize(

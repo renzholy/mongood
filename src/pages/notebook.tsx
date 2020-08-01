@@ -21,7 +21,7 @@ export default () => {
   useEffect(() => {
     const disposable = changeLib(collectionsMap)
     return () => {
-      disposable.dispose()
+      disposable?.dispose()
     }
   }, [collectionsMap])
   const dispatch = useDispatch()
