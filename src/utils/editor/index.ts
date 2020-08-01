@@ -28,13 +28,22 @@ monaco.init().then((_m) => {
   )
 })
 
-let disposable: IDisposable
-
-export function changeLib(collections: string[]) {
-  disposable?.dispose()
-  disposable = _monaco.languages.typescript.typescriptDefaults.addExtraLib(`
-  const db: { [key in "${collections.join('" | "')}"]: Collection } = {}
-  `)
+export function changeLib(collectionsMap: {
+  [database: string]: string[]
+}): IDisposable {
+  const lib = `
+const db: {
+  ${Object.entries(collectionsMap)
+    .map(
+      ([database, collections]) =>
+        `"${database}": { [key in "${collections.join(
+          '" | "',
+        )}"]: Collection }`,
+    )
+    .join('\n  ')}
+}
+  `
+  return _monaco.languages.typescript.typescriptDefaults.addExtraLib(lib)
 }
 
 export async function colorize(

@@ -180,7 +180,6 @@ class Collection {
 
 export async function evalCommand(
   connection: string,
-  database: string,
   code: string,
 ): Promise<object> {
   const preprocessor = new Preprocessor({
@@ -196,8 +195,19 @@ export async function evalCommand(
       db: new Proxy(
         {},
         {
-          get(_target, name) {
-            return new Collection(connection, database, name as string)
+          get(_target, _database) {
+            return new Proxy(
+              {},
+              {
+                get(__target, _collection) {
+                  return new Collection(
+                    connection,
+                    _database as string,
+                    _collection as string,
+                  )
+                },
+              },
+            )
           },
         },
       ),

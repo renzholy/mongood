@@ -19,11 +19,11 @@ export default () => {
   const database = useSelector((state) => state.root.database)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
   useEffect(() => {
-    if (!database) {
-      return
+    const disposable = changeLib(collectionsMap)
+    return () => {
+      disposable.dispose()
     }
-    changeLib(collectionsMap[database])
-  }, [database, collectionsMap])
+  }, [collectionsMap])
   const dispatch = useDispatch()
   const theme = getTheme()
   useEffect(() => {

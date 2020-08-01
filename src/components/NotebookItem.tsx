@@ -72,7 +72,7 @@ export function NotebookItem(props: {
       }
       try {
         setIsLoading(true)
-        const _result = await evalCommand(connection, database, commandStr)
+        const _result = await evalCommand(connection, commandStr)
         setResult(_result)
         setError(undefined)
         handleNext({ _result })
