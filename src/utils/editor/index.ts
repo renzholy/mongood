@@ -9,7 +9,7 @@ monaco.init().then((_m) => {
   }
   _monaco = _m
   _monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-    diagnosticCodesToIgnore: [1108],
+    diagnosticCodesToIgnore: [1108, 1308],
   })
   _monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     noLib: true,
