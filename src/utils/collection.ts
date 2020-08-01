@@ -2,8 +2,10 @@
 /* eslint-disable max-classes-per-file */
 
 import saferEval from 'safer-eval'
+import { Preprocessor } from '@mongosh/browser-runtime-core/lib/interpreter/preprocessor/preprocessor'
 
 import { sandbox } from './ejson'
+import { runCommand } from './fetcher'
 
 function Cursor(obj: any = {}) {
   return {
@@ -38,7 +40,7 @@ function Cursor(obj: any = {}) {
   }
 }
 
-function Collection(collection: string) {
+function Collection(connection: string, database: string, collection: string) {
   return {
     find(filter?: object) {
       return Cursor({
@@ -127,11 +129,11 @@ function Collection(collection: string) {
         count: collection,
       }
     },
-    countDocuments(filter: object = {}) {
-      return {
+    async countDocuments(filter: object = {}): Promise<number> {
+      return runCommand(connection, database, {
         count: collection,
         query: filter,
-      }
+      })
     },
     getIndexes() {
       return {
@@ -141,18 +143,30 @@ function Collection(collection: string) {
   }
 }
 
-const context = {
-  ...sandbox,
-  db: new Proxy(
-    {},
-    {
-      get(_target, name) {
-        return Collection(name as string)
-      },
-    },
-  ),
-}
+const preprocessor = new Preprocessor({
+  lastExpressionCallbackFunctionName:
+    '__LAST_EXPRESSION_CALLBACK_FUNCTION_NAME__',
+  lexicalContextStoreVariableName: '',
+})
 
-export function toCommand(str: string): object {
-  return saferEval(str, context)
+export async function evalCommand(
+  connection: string,
+  database: string,
+  code: string,
+): Promise<object> {
+  return new Promise((resolve) => {
+    const context = {
+      ...sandbox,
+      __LAST_EXPRESSION_CALLBACK_FUNCTION_NAME__: resolve,
+      db: new Proxy(
+        {},
+        {
+          get(_target, name) {
+            return Collection(connection, database, name as string)
+          },
+        },
+      ),
+    }
+    saferEval(preprocessor.preprocess(code), context)
+  })
 }
