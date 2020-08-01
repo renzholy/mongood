@@ -16,10 +16,6 @@ export default createSlice({
     notebooks: Notebook[]
   },
   reducers: {
-    clearNotebooks: (state) => ({
-      ...state,
-      notebooks: [],
-    }),
     updateNotebook: (state, { payload }: PayloadAction<Notebook>) => ({
       ...state,
       notebooks: state.notebooks.map((n) =>

@@ -34,7 +34,6 @@ export function NotebookItem(props: {
   const [error, setError] = useState<string>()
   const theme = getTheme()
   const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
   const handleNext = useCallback(
@@ -67,7 +66,7 @@ export function NotebookItem(props: {
   )
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
-      if (!connection || !database || !commandStr) {
+      if (!connection || !commandStr) {
         return
       }
       try {
@@ -87,7 +86,7 @@ export function NotebookItem(props: {
         setIsLoading(false)
       }
     },
-    [connection, database, handleNext],
+    [connection, handleNext],
   )
   useEffect(() => {
     value.current = props.value
