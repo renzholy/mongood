@@ -6,6 +6,7 @@ type Notebook = {
   value?: string
   result?: MongoData
   error?: string
+  ts?: number
 }
 
 export default createSlice({

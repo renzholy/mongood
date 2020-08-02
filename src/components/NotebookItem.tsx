@@ -10,6 +10,7 @@ import {
 import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useSelector, useDispatch } from 'react-redux'
 import {
+  Text,
   getTheme,
   IconButton,
   TooltipHost,
@@ -21,12 +22,14 @@ import { useDarkMode } from '@/hooks/use-dark-mode'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
+import { DateTime } from '@/utils/formatter'
 
 export function NotebookItem(props: {
   index?: number
   value?: string
   result?: MongoData
   error?: string
+  ts?: number
 }) {
   const isDarkMode = useDarkMode()
   const value = useRef<string>()
@@ -46,6 +49,7 @@ export function NotebookItem(props: {
               value: value.current,
               result: _result,
               error: _error,
+              ts: Date.now(),
             }),
           )
         } else {
@@ -54,6 +58,7 @@ export function NotebookItem(props: {
               value: value.current,
               result: _result,
               error: _error,
+              ts: Date.now(),
             }),
           )
           setResult(undefined)
@@ -156,18 +161,26 @@ export function NotebookItem(props: {
           styles={{
             root: { display: 'flex', justifyContent: 'space-between' },
           }}>
-          <TooltipHost
-            content="Run (⌘+↵)"
-            directionalHint={DirectionalHint.bottomCenter}
-            styles={{ root: { display: 'inline-block' } }}>
-            <IconButton
-              disabled={isLoading}
-              iconProps={{ iconName: 'Play' }}
-              onClick={() => {
-                handleRunCommand(value.current)
-              }}
-            />
-          </TooltipHost>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <TooltipHost
+              content="Run (⌘+↵)"
+              directionalHint={DirectionalHint.bottomCenter}
+              styles={{ root: { display: 'inline-block' } }}>
+              <IconButton
+                disabled={isLoading}
+                iconProps={{ iconName: 'Play' }}
+                onClick={() => {
+                  handleRunCommand(value.current)
+                }}
+              />
+            </TooltipHost>
+            {props.ts ? (
+              <Text
+                styles={{ root: { color: theme.palette.neutralSecondary } }}>
+                {new Date(props.ts).toLocaleString([], { hour12: false })}
+              </Text>
+            ) : null}
+          </div>
           {props.index !== undefined ? (
             <IconButton
               disabled={isLoading}
