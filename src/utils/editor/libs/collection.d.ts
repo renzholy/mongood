@@ -1,6 +1,12 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+class AggregationCursor<T> {
+  async explain(): Promise<any>
+
+  async toArray(): Promise<T[]>
+}
+
 class Cursor<T> {
   skip(skip: number): Cursor<T>
 
@@ -18,6 +24,15 @@ class Cursor<T> {
 }
 
 class Collection<T = any> {
+  aggregate(
+    pipeline: object[],
+    options: {
+      allowDiskUse?: boolean
+      maxTimeMS?: number
+      hint?: string | object
+    } = {},
+  ): AggregationCursor<T>
+
   find(filter: object = {}): Cursor<T>
 
   async findOne(filter: object = {}): Promise<T | null>

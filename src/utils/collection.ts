@@ -11,7 +11,41 @@ import { MongoData } from '@/types'
 import { sandbox } from './ejson'
 import { runCommand } from './fetcher'
 
-class Cursor<T extends { [key: string]: any }> {
+class AggregationCursor<T> {
+  private connection: string
+
+  private database: string
+
+  private obj: any
+
+  constructor(connection: string, database: string, obj: any = {}) {
+    this.connection = connection
+    this.database = database
+    this.obj = obj
+  }
+
+  async explain(): Promise<any> {
+    return runCommand(
+      this.connection,
+      this.database,
+      {
+        explain: this.obj,
+      },
+      { canonical: true },
+    )
+  }
+
+  async toArray(): Promise<T[]> {
+    const {
+      cursor: { firstBatch },
+    } = await runCommand(this.connection, this.database, this.obj, {
+      canonical: true,
+    })
+    return firstBatch
+  }
+}
+
+class Cursor<T> {
   private connection: string
 
   private database: string
@@ -70,7 +104,7 @@ class Cursor<T extends { [key: string]: any }> {
   }
 }
 
-class Collection<T extends { [key: string]: any }> {
+class Collection<T> {
   private connection: string
 
   private database: string
@@ -81,6 +115,25 @@ class Collection<T extends { [key: string]: any }> {
     this.connection = connection
     this.database = database
     this.collection = collection
+  }
+
+  aggregate(
+    pipeline: object[],
+    options: {
+      batchSize?: number
+      allowDiskUse?: boolean
+      maxTimeMS?: number
+      hint?: string | object
+    } = {},
+  ): AggregationCursor<T> {
+    return new AggregationCursor<T>(this.connection, this.database, {
+      aggregate: this.collection,
+      pipeline,
+      cursor: options.batchSize ? { batchSize: options.batchSize } : {},
+      allowDiskUse: options.allowDiskUse,
+      maxTimeMS: options.maxTimeMS,
+      hint: options.hint,
+    })
   }
 
   find(filter?: object): Cursor<T> {
@@ -346,8 +399,6 @@ export async function evalCommand(
         },
       ),
     }
-    const str = preprocessor.preprocess(code)
-    console.log(str)
-    saferEval(str, context)
+    saferEval(preprocessor.preprocess(code), context)
   })
 }
