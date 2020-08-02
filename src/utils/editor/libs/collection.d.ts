@@ -1,10 +1,10 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-class AggregationCursor<T> {
+class AggregationCursor {
   async explain(): Promise<any>
 
-  async toArray(): Promise<T[]>
+  async toArray(): Promise<any[]>
 }
 
 class Cursor<T> {

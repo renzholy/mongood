@@ -11,7 +11,7 @@ import { MongoData } from '@/types'
 import { sandbox } from './ejson'
 import { runCommand } from './fetcher'
 
-class AggregationCursor<T> {
+class AggregationCursor {
   private connection: string
 
   private database: string
@@ -35,7 +35,7 @@ class AggregationCursor<T> {
     )
   }
 
-  async toArray(): Promise<T[]> {
+  async toArray(): Promise<any[]> {
     const {
       cursor: { firstBatch },
     } = await runCommand(this.connection, this.database, this.obj, {
@@ -125,8 +125,8 @@ class Collection<T> {
       maxTimeMS?: number
       hint?: string | object
     } = {},
-  ): AggregationCursor<T> {
-    return new AggregationCursor<T>(this.connection, this.database, {
+  ): AggregationCursor {
+    return new AggregationCursor(this.connection, this.database, {
       aggregate: this.collection,
       pipeline,
       cursor: options.batchSize ? { batchSize: options.batchSize } : {},
