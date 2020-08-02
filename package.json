@@ -23,10 +23,11 @@
   },
   "homepage": "https://github.com/RenzHoly/Mongood#readme",
   "dependencies": {
-    "@fluentui/react": "7.124.0",
+    "@fluentui/react": "7.124.1",
     "@monaco-editor/react": "3.5.1",
+    "@mongosh/browser-runtime-core": "0.0.8",
     "@reduxjs/toolkit": "1.4.0",
-    "@uifabric/react-cards": "0.110.10",
+    "@uifabric/react-cards": "0.110.11",
     "bson": "4.0.4",
     "bytes": "3.1.0",
     "csv-stringify": "5.5.0",
@@ -48,7 +49,7 @@
     "@types/markdown-table": "2.0.0",
     "@types/mongodb": "3.5.25",
     "@types/mongodb-uri": "0.9.0",
-    "@types/react": "16.9.43",
+    "@types/react": "16.9.44",
     "@types/react-dom": "16.9.8",
     "@types/react-redux": "7.1.9",
     "@typescript-eslint/eslint-plugin": "3.7.1",
@@ -56,7 +57,7 @@
     "@umijs/plugin-esbuild": "1.0.0-beta.2",
     "@umijs/preset-react": "1.5.19",
     "@welldone-software/why-did-you-render": "4.2.7",
-    "eslint": "7.5.0",
+    "eslint": "7.6.0",
     "eslint-config-airbnb-typescript": "9.0.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-import": "2.22.0",
@@ -71,7 +72,7 @@
     "prettier": "2.0.5",
     "raw-loader": "4.0.1",
     "typescript": "3.9.7",
-    "umi": "3.2.13"
+    "umi": "3.2.14"
   },
   "husky": {
     "hooks": {

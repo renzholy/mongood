@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import {
   DetailsList,
   SelectionMode,
@@ -9,26 +9,18 @@ import {
 } from '@fluentui/react'
 
 import { changeLib } from '@/utils/editor'
-import { LargeMessage } from '@/components/LargeMessage'
 import { NotebookItem } from '@/components/NotebookItem'
-import { actions } from '@/stores'
 
 export default () => {
   const notebooks = useSelector((state) => state.notebook.notebooks)
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
   useEffect(() => {
-    if (!database) {
-      return
+    const disposable = changeLib(collectionsMap)
+    return () => {
+      disposable?.dispose()
     }
-    changeLib(collectionsMap[database])
-  }, [database, collectionsMap])
-  const dispatch = useDispatch()
+  }, [collectionsMap])
   const theme = getTheme()
-  useEffect(() => {
-    dispatch(actions.notebook.clearNotebooks())
-  }, [connection, database, dispatch])
   const handleRenderRow = useCallback<IRenderFunction<IDetailsRowProps>>(
     (_props, defaultRender) =>
       defaultRender?.({
@@ -46,9 +38,6 @@ export default () => {
     [theme],
   )
 
-  if (!database) {
-    return <LargeMessage iconName="Back" title="Select Database" />
-  }
   return (
     <div
       style={{

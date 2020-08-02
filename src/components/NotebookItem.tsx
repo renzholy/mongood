@@ -10,24 +10,26 @@ import {
 import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useSelector, useDispatch } from 'react-redux'
 import {
+  Text,
   getTheme,
   IconButton,
   TooltipHost,
   DirectionalHint,
 } from '@fluentui/react'
 
-import { toCommand } from '@/utils/collection'
+import { evalCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
-import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
+import { DateTime } from '@/utils/formatter'
 
 export function NotebookItem(props: {
   index?: number
   value?: string
   result?: MongoData
   error?: string
+  ts?: number
 }) {
   const isDarkMode = useDarkMode()
   const value = useRef<string>()
@@ -35,7 +37,6 @@ export function NotebookItem(props: {
   const [error, setError] = useState<string>()
   const theme = getTheme()
   const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
   const handleNext = useCallback(
@@ -48,6 +49,7 @@ export function NotebookItem(props: {
               value: value.current,
               result: _result,
               error: _error,
+              ts: Date.now(),
             }),
           )
         } else {
@@ -56,6 +58,7 @@ export function NotebookItem(props: {
               value: value.current,
               result: _result,
               error: _error,
+              ts: Date.now(),
             }),
           )
           setResult(undefined)
@@ -68,20 +71,12 @@ export function NotebookItem(props: {
   )
   const handleRunCommand = useCallback(
     async (commandStr?: string) => {
-      if (!database || !commandStr) {
+      if (!connection || !commandStr) {
         return
       }
       try {
         setIsLoading(true)
-        const command = toCommand(commandStr)
-        const _result = await runCommand<MongoData>(
-          connection,
-          database,
-          command,
-          {
-            canonical: true,
-          },
-        )
+        const _result = await evalCommand(connection, commandStr)
         setResult(_result)
         setError(undefined)
         handleNext({ _result })
@@ -96,7 +91,7 @@ export function NotebookItem(props: {
         setIsLoading(false)
       }
     },
-    [connection, database, handleNext],
+    [connection, handleNext],
   )
   useEffect(() => {
     value.current = props.value
@@ -162,19 +157,44 @@ export function NotebookItem(props: {
             options={options}
           />
         </Card.Item>
-        <Card.Item>
-          <TooltipHost
-            content="Run (⌘+↵)"
-            directionalHint={DirectionalHint.bottomCenter}
-            styles={{ root: { display: 'inline-block' } }}>
+        <Card.Item
+          styles={{
+            root: { display: 'flex', justifyContent: 'space-between' },
+          }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <TooltipHost
+              content="Run (⌘+↵)"
+              directionalHint={DirectionalHint.bottomCenter}
+              styles={{ root: { display: 'inline-block' } }}>
+              <IconButton
+                disabled={isLoading}
+                iconProps={{ iconName: 'Play' }}
+                onClick={() => {
+                  handleRunCommand(value.current)
+                }}
+              />
+            </TooltipHost>
+            {props.ts ? (
+              <Text
+                styles={{ root: { color: theme.palette.neutralSecondary } }}>
+                {new Date(props.ts).toLocaleString([], { hour12: false })}
+              </Text>
+            ) : null}
+          </div>
+          {props.index !== undefined ? (
             <IconButton
               disabled={isLoading}
-              iconProps={{ iconName: 'Play' }}
+              iconProps={{
+                iconName: 'Delete',
+                styles: { root: { color: theme.palette.red } },
+              }}
               onClick={() => {
-                handleRunCommand(value.current)
+                if (props.index !== undefined) {
+                  dispatch(actions.notebook.removeNotebook(props.index))
+                }
               }}
             />
-          </TooltipHost>
+          ) : null}
         </Card.Item>
       </Card>
       {error ? (
@@ -190,7 +210,7 @@ export function NotebookItem(props: {
           }}>
           {error}
         </pre>
-      ) : result ? (
+      ) : result !== undefined ? (
         <ColorizedData
           value={result}
           style={{

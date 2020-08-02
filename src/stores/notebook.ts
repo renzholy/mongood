@@ -6,6 +6,7 @@ type Notebook = {
   value?: string
   result?: MongoData
   error?: string
+  ts?: number
 }
 
 export default createSlice({
@@ -16,10 +17,6 @@ export default createSlice({
     notebooks: Notebook[]
   },
   reducers: {
-    clearNotebooks: (state) => ({
-      ...state,
-      notebooks: [],
-    }),
     updateNotebook: (state, { payload }: PayloadAction<Notebook>) => ({
       ...state,
       notebooks: state.notebooks.map((n) =>
@@ -35,6 +32,10 @@ export default createSlice({
         ...state.notebooks,
         { ...payload, index: state.notebooks.length },
       ],
+    }),
+    removeNotebook: (state, { payload }: PayloadAction<number>) => ({
+      ...state,
+      notebooks: state.notebooks.filter(({ index }) => index !== payload),
     }),
   },
 })

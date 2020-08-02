@@ -1,7 +1,7 @@
 import { monaco, ControlledEditor, Monaco } from '@monaco-editor/react'
 import type { IDisposable } from 'monaco-editor'
 
-let _monaco: Monaco
+let _monaco: Monaco | undefined
 
 monaco.init().then((_m) => {
   if (_monaco) {
@@ -9,7 +9,7 @@ monaco.init().then((_m) => {
   }
   _monaco = _m
   _monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-    diagnosticCodesToIgnore: [1108],
+    diagnosticCodesToIgnore: [1108, 1308],
   })
   _monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     noLib: true,
@@ -28,13 +28,22 @@ monaco.init().then((_m) => {
   )
 })
 
-let disposable: IDisposable
-
-export function changeLib(collections: string[]) {
-  disposable?.dispose()
-  disposable = _monaco.languages.typescript.typescriptDefaults.addExtraLib(`
-  const db: { [key in "${collections.join('" | "')}"]: Collection } = {}
-  `)
+export function changeLib(collectionsMap: {
+  [database: string]: string[]
+}): IDisposable | undefined {
+  const lib = `
+const db: {
+  ${Object.entries(collectionsMap)
+    .map(
+      ([database, collections]) =>
+        `"${database}": { [key in "${collections.join(
+          '" | "',
+        )}"]: Collection }`,
+    )
+    .join('\n  ')}
+}
+  `
+  return _monaco?.languages.typescript.typescriptDefaults.addExtraLib(lib)
 }
 
 export async function colorize(
