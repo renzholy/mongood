@@ -27,6 +27,7 @@ class Collection<T = any> {
   aggregate(
     pipeline: object[],
     options: {
+      batchSize?: number
       allowDiskUse?: boolean
       maxTimeMS?: number
       hint?: string | object
