@@ -12,9 +12,15 @@ import { sandbox } from './ejson'
 import { runCommand } from './fetcher'
 
 class Cursor<T extends { [key: string]: any }> {
-  obj: any
+  private connection: string
 
-  constructor(obj: any = {}) {
+  private database: string
+
+  private obj: any
+
+  constructor(connection: string, database: string, obj: any = {}) {
+    this.connection = connection
+    this.database = database
     this.obj = obj
   }
 
@@ -43,14 +49,24 @@ class Cursor<T extends { [key: string]: any }> {
     return this
   }
 
-  explain() {
-    return {
-      explain: this.obj,
-    }
+  async explain(): Promise<any> {
+    return runCommand(
+      this.connection,
+      this.database,
+      {
+        explain: this.obj,
+      },
+      { canonical: true },
+    )
   }
 
-  toArray() {
-    return this.obj
+  async toArray(): Promise<T[]> {
+    const {
+      cursor: { firstBatch },
+    } = await runCommand(this.connection, this.database, this.obj, {
+      canonical: true,
+    })
+    return firstBatch
   }
 }
 
@@ -68,10 +84,10 @@ class Collection<T extends { [key: string]: any }> {
   }
 
   find(filter?: object): Cursor<T> {
-    return new Cursor<T>({
+    return new Cursor<T>(this.connection, this.database, {
       find: this.collection,
       filter,
-      limit: 10,
+      limit: 100,
     })
   }
 
