@@ -140,7 +140,6 @@ class Collection<T> {
     return new Cursor<T>(this.connection, this.database, {
       find: this.collection,
       filter,
-      limit: 100,
     })
   }
 

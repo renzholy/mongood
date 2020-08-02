@@ -32,7 +32,7 @@ class Collection<T = any> {
       maxTimeMS?: number
       hint?: string | object
     } = {},
-  ): AggregationCursor<T>
+  ): AggregationCursor
 
   find(filter: object = {}): Cursor<T>
 
