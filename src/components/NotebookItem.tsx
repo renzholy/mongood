@@ -152,7 +152,10 @@ export function NotebookItem(props: {
             options={options}
           />
         </Card.Item>
-        <Card.Item>
+        <Card.Item
+          styles={{
+            root: { display: 'flex', justifyContent: 'space-between' },
+          }}>
           <TooltipHost
             content="Run (⌘+↵)"
             directionalHint={DirectionalHint.bottomCenter}
@@ -165,6 +168,20 @@ export function NotebookItem(props: {
               }}
             />
           </TooltipHost>
+          {props.index !== undefined ? (
+            <IconButton
+              disabled={isLoading}
+              iconProps={{
+                iconName: 'Delete',
+                styles: { root: { color: theme.palette.red } },
+              }}
+              onClick={() => {
+                if (props.index !== undefined) {
+                  dispatch(actions.notebook.removeNotebook(props.index))
+                }
+              }}
+            />
+          ) : null}
         </Card.Item>
       </Card>
       {error ? (

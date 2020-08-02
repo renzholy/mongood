@@ -32,5 +32,9 @@ export default createSlice({
         { ...payload, index: state.notebooks.length },
       ],
     }),
+    removeNotebook: (state, { payload }: PayloadAction<number>) => ({
+      ...state,
+      notebooks: state.notebooks.filter(({ index }) => index !== payload),
+    }),
   },
 })
