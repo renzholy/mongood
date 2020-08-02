@@ -3,11 +3,15 @@
 
 import saferEval from 'safer-eval'
 import { Preprocessor } from '@mongosh/browser-runtime-core/lib/interpreter/preprocessor/preprocessor'
+import { EJSON } from 'bson'
+import omitBy from 'lodash/omitBy'
+import isNil from 'lodash/isNil'
 
+import { MongoData } from '@/types'
 import { sandbox } from './ejson'
 import { runCommand } from './fetcher'
 
-class Cursor {
+class Cursor<T extends { [key: string]: any }> {
   obj: any
 
   constructor(obj: any = {}) {
@@ -50,7 +54,7 @@ class Cursor {
   }
 }
 
-class Collection {
+class Collection<T extends { [key: string]: any }> {
   private connection: string
 
   private database: string
@@ -63,74 +67,172 @@ class Collection {
     this.collection = collection
   }
 
-  find(filter?: object) {
-    return new Cursor({
+  find(filter?: object): Cursor<T> {
+    return new Cursor<T>({
       find: this.collection,
       filter,
       limit: 10,
     })
   }
 
-  findOne(filter?: object) {
+  async findOne(filter?: object): Promise<T | null> {
+    const {
+      cursor: { firstBatch },
+    } = await runCommand(
+      this.connection,
+      this.database,
+      {
+        find: this.collection,
+        filter,
+        limit: 1,
+      },
+      { canonical: true },
+    )
+    return firstBatch?.[0] || null
+  }
+
+  async insertOne(
+    doc: object,
+  ): Promise<{
+    insertedCount: number
+  }> {
+    const { n } = await runCommand<{ n: number }>(
+      this.connection,
+      this.database,
+      {
+        insert: this.collection,
+        documents: [doc],
+      },
+    )
     return {
-      find: this.collection,
-      filter,
-      limit: 1,
+      insertedCount: n,
     }
   }
 
-  insertOne(doc: object) {
+  async insertMany(
+    docs: object[],
+  ): Promise<{
+    insertedCount: number
+  }> {
+    const { n } = await runCommand<{ n: number }>(
+      this.connection,
+      this.database,
+      {
+        insert: this.collection,
+        documents: docs,
+      },
+    )
     return {
-      insert: this.collection,
-      documents: [doc],
+      insertedCount: n,
     }
   }
 
-  insertMany(docs: object[]) {
-    return {
-      insert: this.collection,
-      documents: docs,
-    }
-  }
-
-  updateOne(
+  async updateOne(
     filter: object,
     update: object,
     options: { upsert?: boolean } = {},
-  ) {
-    return {
-      update: this.collection,
-      updates: [
-        {
-          q: filter,
-          u: update,
-          upsert: options.upsert,
-          multi: false,
-        },
-      ],
+  ): Promise<{
+    matchedCount: number
+    modifiedCount: number
+    upsertedCount: number
+    upsertedId?: MongoData
+  }> {
+    const { upserted, ...rest } = await runCommand<{
+      n: MongoData
+      nModified: MongoData
+      upserted?: { _id: MongoData }[]
+    }>(
+      this.connection,
+      this.database,
+      {
+        update: this.collection,
+        updates: [
+          {
+            q: filter,
+            u: update,
+            upsert: options.upsert,
+            multi: false,
+          },
+        ],
+      },
+      { canonical: true },
+    )
+    const { n, nModified } = EJSON.parse(JSON.stringify(rest)) as {
+      n: number
+      nModified: number
+    }
+    return omitBy(
+      {
+        matchedCount: n,
+        modifiedCount: nModified,
+        upsertedCount: upserted?.length || 0,
+        upsertedId: upserted?.[0]._id,
+      },
+      isNil,
+    ) as {
+      matchedCount: number
+      modifiedCount: number
+      upsertedCount: number
+      upsertedId?: MongoData
     }
   }
 
-  updateMany(
+  async updateMany(
     filter: object,
     update: object,
     options: { upsert?: boolean } = {},
-  ) {
-    return {
-      update: this.collection,
-      updates: [
-        {
-          q: filter,
-          u: update,
-          upsert: options.upsert,
-          multi: true,
-        },
-      ],
+  ): Promise<{
+    matchedCount: number
+    modifiedCount: number
+    upsertedCount: number
+    upsertedId?: MongoData
+  }> {
+    const { upserted, ...rest } = await runCommand<{
+      n: MongoData
+      nModified: MongoData
+      upserted?: { _id: MongoData }[]
+    }>(
+      this.connection,
+      this.database,
+      {
+        update: this.collection,
+        updates: [
+          {
+            q: filter,
+            u: update,
+            upsert: options.upsert,
+            multi: true,
+          },
+        ],
+      },
+      { canonical: true },
+    )
+    const { n, nModified } = EJSON.parse(JSON.stringify(rest)) as {
+      n: number
+      nModified: number
+    }
+    return omitBy(
+      {
+        matchedCount: n,
+        modifiedCount: nModified,
+        upsertedCount: upserted?.length || 0,
+        upsertedId: upserted?.[0]?._id,
+      },
+      isNil,
+    ) as {
+      matchedCount: number
+      modifiedCount: number
+      upsertedCount: number
+      upsertedId?: MongoData
     }
   }
 
-  deleteOne(filter: object) {
-    return {
+  async deleteOne(
+    filter: object,
+  ): Promise<{
+    deletedCount: number
+  }> {
+    const { n } = await runCommand(this.connection, this.database, {
       delete: this.collection,
       deletes: [
         {
@@ -138,11 +240,16 @@ class Collection {
           limit: 1,
         },
       ],
-    }
+    })
+    return { deletedCount: n }
   }
 
-  deleteMany(filter: object) {
-    return {
+  async deleteMany(
+    filter: object,
+  ): Promise<{
+    deletedCount: number
+  }> {
+    const { n } = await runCommand(this.connection, this.database, {
       delete: this.collection,
       deletes: [
         {
@@ -150,13 +257,21 @@ class Collection {
           limit: 0,
         },
       ],
+    })
+    return {
+      deletedCount: n,
     }
   }
 
-  estimatedDocumentCount() {
-    return {
-      count: this.collection,
-    }
+  async estimatedDocumentCount(): Promise<number> {
+    const { n } = await runCommand<{ n: number }>(
+      this.connection,
+      this.database,
+      {
+        count: this.collection,
+      },
+    )
+    return n
   }
 
   async countDocuments(filter: object = {}): Promise<number> {
@@ -171,10 +286,13 @@ class Collection {
     return n
   }
 
-  getIndexes() {
-    return {
+  async listIndexes(): Promise<any[]> {
+    const {
+      cursor: { firstBatch },
+    } = await runCommand(this.connection, this.database, {
       listIndexes: this.collection,
-    }
+    })
+    return firstBatch
   }
 }
 
