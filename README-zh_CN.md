@@ -47,7 +47,7 @@
     <td align="center"><img src="./screenshot/schema.png" /> 编辑 JSON Schema</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/notebook.png" /> Notebook (Alpha)</td>
+    <td align="center"><img src="./screenshot/notebook.png" /> Notebook (Beta)</td>
     <td align="center"><img src="./screenshot/dark.png" /> 黑暗模式</td>
   </tr>
 </table>

@@ -47,7 +47,7 @@ English | [简体中文](./README-zh_CN.md)
     <td align="center"><img src="./screenshot/schema.png" /> Edit JSON Schema</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/notebook.png" /> Notebook (Alpha)</td>
+    <td align="center"><img src="./screenshot/notebook.png" /> Notebook (Beta)</td>
     <td align="center"><img src="./screenshot/dark.png" /> Dark mode</td>
   </tr>
 </table>

@@ -148,7 +148,7 @@ export function TopPivot() {
           <PivotItem headerText="Profiling" itemKey="/profiling" />
           <PivotItem headerText="Schema" itemKey="/schema" />
           <PivotItem headerText="Users" itemKey="/users" />
-          <PivotItem headerText="Notebook (Alpha)" itemKey="/notebook" />
+          <PivotItem headerText="Notebook (Beta)" itemKey="/notebook" />
         </Pivot>
         <CommandButton
           text={selfConnections.find(({ c }) => c === connection)?.host}
