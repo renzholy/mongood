@@ -6,8 +6,8 @@ on:
 name: Create Release
 
 jobs:
-  build:
-    name: Create Release
+  build-macos:
+    name: Create MacOS Release
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -33,10 +33,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
           draft: true
           prerelease: true
       - name: Upload Release Asset
@@ -49,3 +45,42 @@ jobs:
           asset_path: ./go/Mongood.zip
           asset_name: Mongood.zip
           asset_content_type: application/zip
+  build-windows:
+    name: Create Windows Release
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.14
+      - run: go get fyne.io/fyne/cmd/fyne
+      - run: go get github.com/markbates/pkger/cmd/pkger
+      - run: npm ci
+      - run: npm run build
+      - run: cd go && make windows-app
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: true
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./go/mongood.exe
+          asset_name: mongood.exe
+          asset_content_type: application/vnd.microsoft.portable-executable
