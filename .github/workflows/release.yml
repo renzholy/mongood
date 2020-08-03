@@ -8,10 +8,25 @@ name: Create Release
 jobs:
   build:
     name: Create Release
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.14
+      - name: Build
+      - run: go get fyne.io/fyne/cmd/fyne
+      - run: go get github.com/markbates/pkger/cmd/pkger
+      - run: npm ci
+      - run: npm run build
+      - run: cd go
+      - run: make mac-app
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -24,5 +39,5 @@ jobs:
             Changes in this Release
             - First Change
             - Second Change
-          draft: false
-          prerelease: false
+          draft: true
+          prerelease: true
