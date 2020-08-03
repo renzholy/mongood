@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   DetailsList,
   SelectionMode,
@@ -10,8 +10,10 @@ import {
 
 import { changeLib } from '@/utils/editor'
 import { NotebookItem } from '@/components/NotebookItem'
+import { actions } from '@/stores'
 
 export default () => {
+  const connection = useSelector((state) => state.root.connection)
   const notebooks = useSelector((state) => state.notebook.notebooks)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
   useEffect(() => {
@@ -37,6 +39,10 @@ export default () => {
       }) || null,
     [theme],
   )
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(actions.notebook.clearNotebook())
+  }, [connection, dispatch])
 
   return (
     <div
