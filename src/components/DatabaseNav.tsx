@@ -50,16 +50,15 @@ export function DatabaseNav() {
     },
     [connection],
   )
-  const [databases, setDatabases] = useState<string[]>([])
-  useEffect(() => {
+  const databases = useMemo(() => {
     const _databases = data?.databases.map(({ name }) => name) || []
     const systemDatabases = _databases.filter(
       (d) => d === 'admin' || d === 'local' || d === 'config',
     )
-    setDatabases([
+    return [
       ...systemDatabases.sort(),
       ...pullAll(_databases.sort(), systemDatabases),
-    ])
+    ]
   }, [data])
   const handleListCollectionOfDatabases = useCallback(
     async (_databases: string[]) => {

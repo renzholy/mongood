@@ -12,24 +12,24 @@ import { sandbox } from './ejson'
 import { runCommand } from './fetcher'
 
 class AggregationCursor {
-  private connection: string
+  #connection: string
 
-  private database: string
+  #database: string
 
-  private obj: any
+  #obj: any
 
   constructor(connection: string, database: string, obj: any = {}) {
-    this.connection = connection
-    this.database = database
-    this.obj = obj
+    this.#connection = connection
+    this.#database = database
+    this.#obj = obj
   }
 
   async explain(): Promise<any> {
     return runCommand(
-      this.connection,
-      this.database,
+      this.#connection,
+      this.#database,
       {
-        explain: this.obj,
+        explain: this.#obj,
       },
       { canonical: true },
     )
@@ -38,7 +38,7 @@ class AggregationCursor {
   async toArray(): Promise<any[]> {
     const {
       cursor: { firstBatch },
-    } = await runCommand(this.connection, this.database, this.obj, {
+    } = await runCommand(this.#connection, this.#database, this.#obj, {
       canonical: true,
     })
     return firstBatch
@@ -46,49 +46,49 @@ class AggregationCursor {
 }
 
 class Cursor<T> {
-  private connection: string
+  #connection: string
 
-  private database: string
+  #database: string
 
-  private obj: any
+  #obj: any
 
   constructor(connection: string, database: string, obj: any = {}) {
-    this.connection = connection
-    this.database = database
-    this.obj = obj
+    this.#connection = connection
+    this.#database = database
+    this.#obj = obj
   }
 
   skip(skip: number) {
-    this.obj.skip = skip
+    this.#obj.skip = skip
     return this
   }
 
   limit(limit: number) {
-    this.obj.limit = limit
+    this.#obj.limit = limit
     return this
   }
 
   sort(sorter: object) {
-    this.obj.sort = sorter
+    this.#obj.sort = sorter
     return this
   }
 
   hint(hint: object | string) {
-    this.obj.hint = hint
+    this.#obj.hint = hint
     return this
   }
 
   project(projection: object) {
-    this.obj.projection = projection
+    this.#obj.projection = projection
     return this
   }
 
   async explain(): Promise<any> {
     return runCommand(
-      this.connection,
-      this.database,
+      this.#connection,
+      this.#database,
       {
-        explain: this.obj,
+        explain: this.#obj,
       },
       { canonical: true },
     )
@@ -97,7 +97,7 @@ class Cursor<T> {
   async toArray(): Promise<T[]> {
     const {
       cursor: { firstBatch },
-    } = await runCommand(this.connection, this.database, this.obj, {
+    } = await runCommand(this.#connection, this.#database, this.#obj, {
       canonical: true,
     })
     return firstBatch
@@ -105,16 +105,16 @@ class Cursor<T> {
 }
 
 class Collection<T> {
-  private connection: string
+  #connection: string
 
-  private database: string
+  #database: string
 
-  private collection: string
+  #collection: string
 
   constructor(connection: string, database: string, collection: string) {
-    this.connection = connection
-    this.database = database
-    this.collection = collection
+    this.#connection = connection
+    this.#database = database
+    this.#collection = collection
   }
 
   aggregate(
@@ -126,8 +126,8 @@ class Collection<T> {
       hint?: string | object
     } = {},
   ): AggregationCursor {
-    return new AggregationCursor(this.connection, this.database, {
-      aggregate: this.collection,
+    return new AggregationCursor(this.#connection, this.#database, {
+      aggregate: this.#collection,
       pipeline,
       cursor: options.batchSize ? { batchSize: options.batchSize } : {},
       allowDiskUse: options.allowDiskUse,
@@ -137,8 +137,8 @@ class Collection<T> {
   }
 
   find(filter?: object): Cursor<T> {
-    return new Cursor<T>(this.connection, this.database, {
-      find: this.collection,
+    return new Cursor<T>(this.#connection, this.#database, {
+      find: this.#collection,
       filter,
     })
   }
@@ -147,10 +147,10 @@ class Collection<T> {
     const {
       cursor: { firstBatch },
     } = await runCommand(
-      this.connection,
-      this.database,
+      this.#connection,
+      this.#database,
       {
-        find: this.collection,
+        find: this.#collection,
         filter,
         limit: 1,
       },
@@ -165,10 +165,10 @@ class Collection<T> {
     insertedCount: number
   }> {
     const { n } = await runCommand<{ n: number }>(
-      this.connection,
-      this.database,
+      this.#connection,
+      this.#database,
       {
-        insert: this.collection,
+        insert: this.#collection,
         documents: [doc],
       },
     )
@@ -183,10 +183,10 @@ class Collection<T> {
     insertedCount: number
   }> {
     const { n } = await runCommand<{ n: number }>(
-      this.connection,
-      this.database,
+      this.#connection,
+      this.#database,
       {
-        insert: this.collection,
+        insert: this.#collection,
         documents: docs,
       },
     )
@@ -210,10 +210,10 @@ class Collection<T> {
       nModified: MongoData
       upserted?: { _id: MongoData }[]
     }>(
-      this.connection,
-      this.database,
+      this.#connection,
+      this.#database,
       {
-        update: this.collection,
+        update: this.#collection,
         updates: [
           {
             q: filter,
@@ -260,10 +260,10 @@ class Collection<T> {
       nModified: MongoData
       upserted?: { _id: MongoData }[]
     }>(
-      this.connection,
-      this.database,
+      this.#connection,
+      this.#database,
       {
-        update: this.collection,
+        update: this.#collection,
         updates: [
           {
             q: filter,
@@ -300,8 +300,8 @@ class Collection<T> {
   ): Promise<{
     deletedCount: number
   }> {
-    const { n } = await runCommand(this.connection, this.database, {
-      delete: this.collection,
+    const { n } = await runCommand(this.#connection, this.#database, {
+      delete: this.#collection,
       deletes: [
         {
           q: filter,
@@ -317,8 +317,8 @@ class Collection<T> {
   ): Promise<{
     deletedCount: number
   }> {
-    const { n } = await runCommand(this.connection, this.database, {
-      delete: this.collection,
+    const { n } = await runCommand(this.#connection, this.#database, {
+      delete: this.#collection,
       deletes: [
         {
           q: filter,
@@ -333,10 +333,10 @@ class Collection<T> {
 
   async estimatedDocumentCount(): Promise<number> {
     const { n } = await runCommand<{ n: number }>(
-      this.connection,
-      this.database,
+      this.#connection,
+      this.#database,
       {
-        count: this.collection,
+        count: this.#collection,
       },
     )
     return n
@@ -344,10 +344,10 @@ class Collection<T> {
 
   async countDocuments(filter: object = {}): Promise<number> {
     const { n } = await runCommand<{ n: number }>(
-      this.connection,
-      this.database,
+      this.#connection,
+      this.#database,
       {
-        count: this.collection,
+        count: this.#collection,
         query: filter,
       },
     )
@@ -357,8 +357,8 @@ class Collection<T> {
   async listIndexes(): Promise<any[]> {
     const {
       cursor: { firstBatch },
-    } = await runCommand(this.connection, this.database, {
-      listIndexes: this.collection,
+    } = await runCommand(this.#connection, this.#database, {
+      listIndexes: this.#collection,
     })
     return firstBatch
   }

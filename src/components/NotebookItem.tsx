@@ -22,7 +22,6 @@ import { useDarkMode } from '@/hooks/use-dark-mode'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
-import { DateTime } from '@/utils/formatter'
 
 export function NotebookItem(props: {
   index?: number
