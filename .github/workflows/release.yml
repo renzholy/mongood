@@ -55,11 +55,14 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
-            zip_name: Mongood-linux
+            asset_name: Mongood-linux.zip
+            asset_content_type: application/zip
           - os: macos-latest
-            zip_name: Mongood-macos
+            asset_name: Mongood-macos.zip
+            asset_content_type: application/zip
           - os: windows-latest
-            zip_name: Mongood-win64
+            asset_name: Mongood-win64.exe
+            asset_content_type: application/vnd.microsoft.portable-executable
     defaults:
       run:
         working-directory: go
@@ -81,20 +84,19 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           fyne package -os linux -icon ./assets/mongood.png -release --executable mongood
-          zip -r ${{ matrix.zip_name }}.zip mongood
+          zip -r ${{ matrix.asset_name }} mongood
 
       - name: Build macOS
         if: matrix.os == 'macos-latest'
         run: |
           fyne package -os darwin -icon ./assets/mongood.png -release --executable ./mongood
           cp ./assets/Info.plist ./mongood.app/Contents/Info.plist
-          zip -r ${{ matrix.zip_name }}.zip mongood.app
+          zip -r ${{ matrix.asset_name }} mongood.app
 
       - name: Build Windows
         if: matrix.os == 'windows-latest'
         run: |
           fyne package -os windows -icon ./assets/mongood.png -release --executable mongood
-          zip -r ${{ matrix.zip_name }}.zip mongood.exe
 
       - name: Create Release
         id: create_release
@@ -113,6 +115,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./go/${{ matrix.zip_name }}.zip
-          asset_name: ${{ matrix.zip_name }}.zip
-          asset_content_type: application/zip
+          asset_path: ./go/${{ matrix.asset_name }}
+          asset_name: ${{ matrix.asset_name }}
+          asset_content_type: ${{ matrix.asset_content_type }}
