@@ -73,7 +73,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: pkged.go
-          path: go/pkged.go
+          path: ./go
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
@@ -84,6 +84,7 @@ jobs:
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
+          ls .
           fyne package -os linux -icon ./assets/mongood.png -release --executable mongood
           zip -r ${{ matrix.asset_name }} mongood
 
