@@ -53,28 +53,6 @@ English | [简体中文](./README-zh_CN.md)
   </tr>
 </table>
 
-## Setup 🔧
-
-### As client
-
-```bash
-export PATH=$PATH:$(go env GOPATH)/bin
-go get fyne.io/fyne/cmd/fyne
-go get github.com/markbates/pkger/cmd/pkger
-npm ci
-npm run build
-cd go
-make mac-app
-# or `make windows-app`
-```
-
-### As server
-
-```bash
-docker run -p 3000:3000 -e MONGO_URIS="mongodb://localhost:27017|mongodb://user:password@example.com:27017" renzholy/mongood
-# open in browser http://localhost:3000
-```
-
 ## Development 👨‍💻
 
 ### Frontend

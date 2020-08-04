@@ -53,28 +53,6 @@
   </tr>
 </table>
 
-## 安装 🔧
-
-### 作为客户端使用
-
-```bash
-export PATH=$PATH:$(go env GOPATH)/bin
-go get fyne.io/fyne/cmd/fyne
-go get github.com/markbates/pkger/cmd/pkger
-npm ci
-npm run build
-cd go
-make mac-app
-# 或者 `make windows-app`
-```
-
-### 作为服务端使用
-
-```bash
-docker run -p 3000:3000 -e MONGO_URIS="mongodb://localhost:27017|mongodb://user:password@example.com:27017" renzholy/mongood
-# 浏览器中打开 http://localhost:3000
-```
-
 ## 开发 👨‍💻
 
 ### 前端
