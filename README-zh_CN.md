@@ -10,9 +10,14 @@
 
 [English](./README.md) | 简体中文
 
+## 下载 ⚡️
+
+- [客户端](https://github.com/RenzHoly/Mongood/releases)
+- [服务端](https://hub.docker.com/r/renzholy/mongood)
+
 ## 特性 🔮
 
-- [x] 既可以运行在服务端，也可以打包作为客户端使用（没有使用 Electron）
+- [x] 既可以运行在服务端，也可以打包作为客户端使用（没有使用 Electron，但需要安装 Chrome）
 - [x] 使用 [Monaco Editor](https://microsoft.github.io/monaco-editor/index.html) 作为编辑器
 - [x] 使用 [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui) 框架
 - [x] 与 [Mongo Shell](https://docs.mongodb.com/manual/core/shell-types/) 一致的数据表达格式，如 `ObjectId()` `ISODate()` `Timestamp()`
