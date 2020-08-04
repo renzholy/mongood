@@ -1,7 +1,7 @@
 on:
   push:
-    # tags:
-    #   - 'v*'
+    tags:
+      - 'v*'
 
 name: Release
 
@@ -84,7 +84,6 @@ jobs:
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          ls .
           fyne package -os linux -icon ./assets/mongood.png -release --executable mongood
           zip -r ${{ matrix.asset_name }} mongood
 
