@@ -10,9 +10,14 @@ A [MongoDB](https://www.mongodb.com/) GUI with [Fluent Design](https://www.micro
 
 English | [简体中文](./README-zh_CN.md)
 
+## Download ⚡️
+
+- [Run as Client](https://github.com/RenzHoly/Mongood/releases)
+- [Run as Server](https://hub.docker.com/r/renzholy/mongood)
+
 ## Feature 🔮
 
-- [x] Server or client mode (without Electron)
+- [x] Server or client mode (without Electron, but need Chrome)
 - [x] Edit documents with [Monaco Editor](https://microsoft.github.io/monaco-editor/index.html)
 - [x] Designed with [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui)
 - [x] [Mongo Shell](https://docs.mongodb.com/manual/core/shell-types/) compatiable data type, eg: `ObjectId()` `ISODate()` `Timestamp()`
@@ -52,28 +57,6 @@ English | [简体中文](./README-zh_CN.md)
     <td align="center"><img src="./screenshot/dark.png" /> Dark mode</td>
   </tr>
 </table>
-
-## Setup 🔧
-
-### As client
-
-```bash
-export PATH=$PATH:$(go env GOPATH)/bin
-go get fyne.io/fyne/cmd/fyne
-go get github.com/markbates/pkger/cmd/pkger
-npm ci
-npm run build
-cd go
-make mac-app
-# or `make windows-app`
-```
-
-### As server
-
-```bash
-docker run -p 3000:3000 -e MONGO_URIS="mongodb://localhost:27017|mongodb://user:password@example.com:27017" renzholy/mongood
-# open in browser http://localhost:3000
-```
 
 ## Development 👨‍💻
 

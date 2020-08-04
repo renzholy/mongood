@@ -5,9 +5,9 @@
     <key>CFBundleName</key>
     <string>mongood</string>
     <key>CFBundleExecutable</key>
-    <string>mongood-darwin</string>
+    <string>mongood</string>
     <key>CFBundleIdentifier</key>
-    <string>com.example.mongood</string>
+    <string>app.mongood.macos</string>
     <key>CFBundleIconFile</key>
     <string>icon.icns</string>
     <key>CFBundleShortVersionString</key>

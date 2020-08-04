@@ -10,9 +10,14 @@
 
 [English](./README.md) | 简体中文
 
+## 下载 ⚡️
+
+- [客户端](https://github.com/RenzHoly/Mongood/releases)
+- [服务端](https://hub.docker.com/r/renzholy/mongood)
+
 ## 特性 🔮
 
-- [x] 既可以运行在服务端，也可以打包作为客户端使用（没有使用 Electron）
+- [x] 既可以运行在服务端，也可以打包作为客户端使用（没有使用 Electron，但需要安装 Chrome）
 - [x] 使用 [Monaco Editor](https://microsoft.github.io/monaco-editor/index.html) 作为编辑器
 - [x] 使用 [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui) 框架
 - [x] 与 [Mongo Shell](https://docs.mongodb.com/manual/core/shell-types/) 一致的数据表达格式，如 `ObjectId()` `ISODate()` `Timestamp()`
@@ -52,28 +57,6 @@
     <td align="center"><img src="./screenshot/dark.png" /> 黑暗模式</td>
   </tr>
 </table>
-
-## 安装 🔧
-
-### 作为客户端使用
-
-```bash
-export PATH=$PATH:$(go env GOPATH)/bin
-go get fyne.io/fyne/cmd/fyne
-go get github.com/markbates/pkger/cmd/pkger
-npm ci
-npm run build
-cd go
-make mac-app
-# 或者 `make windows-app`
-```
-
-### 作为服务端使用
-
-```bash
-docker run -p 3000:3000 -e MONGO_URIS="mongodb://localhost:27017|mongodb://user:password@example.com:27017" renzholy/mongood
-# 浏览器中打开 http://localhost:3000
-```
 
 ## 开发 👨‍💻
 
