@@ -16,6 +16,7 @@ import {
   TooltipHost,
   DirectionalHint,
 } from '@fluentui/react'
+import { stringify, parse } from '@/utils/ejson'
 
 import { evalCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
@@ -75,7 +76,8 @@ export function NotebookItem(props: {
       }
       try {
         setIsLoading(true)
-        const _result = await evalCommand(connection, commandStr)
+        const r = await evalCommand(connection, commandStr)
+        const _result = typeof r === 'function' ? `Function ${r.name}` : r
         setResult(_result)
         setError(undefined)
         handleNext({ _result })
