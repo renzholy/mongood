@@ -97,6 +97,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           fyne package -os windows -icon ./assets/mongood.png -release --executable mongood
+          mv mongood.exe ${{ matrix.asset_name }}
 
       - name: Upload Release Asset
         id: upload-release-asset
