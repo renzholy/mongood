@@ -6,7 +6,7 @@ on:
 name: Release
 
 jobs:
-  build-js-bundle:
+  build_js_bundle:
     name: Build JS Bundle
     runs-on: ubuntu-latest
     steps:
@@ -30,10 +30,36 @@ jobs:
           name: pkged.go
           path: go/pkged.go
 
-  build-macos:
-    name: Create MacOS Release
-    runs-on: macos-latest
-    needs: build-js-bundle
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    needs: build_js_bundle
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+
+  build_macos:
+    name: Build release
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            zip_name: Mongood-linux
+          - os: macos-latest
+            zip_name: Mongood-macos
+          - os: windows-latest
+            zip_name: Mongood-win64
     defaults:
       run:
         working-directory: go
@@ -50,9 +76,26 @@ jobs:
           go-version: ^1.14
       - run: go get fyne.io/fyne/cmd/fyne
       - run: go build -o mongood
-      - run: fyne package -os darwin -icon ./assets/mongood.png -release --executable ./mongood
-      - run: cp ./assets/Info.plist ./mongood.app/Contents/Info.plist
-      - run: zip -r Mongood.zip mongood.app
+
+      - name: Build Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          fyne package -os linux -icon ../assets/mongood.png -release --executable mongood
+          zip -r ${{ matrix.zip_name }}.zip mongood
+
+      - name: Build macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          fyne package -os darwin -icon ./assets/mongood.png -release --executable ./mongood
+          cp ./assets/Info.plist ./mongood.app/Contents/Info.plist
+          zip -r ${{ matrix.zip_name }}.zip mongood.app
+
+      - name: Build Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          fyne package -os windows -icon ../assets/mongood.png -release --executable mongood
+          zip -r ${{ matrix.zip_name }}.zip mongood.exe
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -70,6 +113,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./go/Mongood.zip
-          asset_name: Mongood.zip
+          asset_path: ./go/${{ matrix.zip_name }}.zip
+          asset_name: ${{ matrix.zip_name }}.zip
           asset_content_type: application/zip
