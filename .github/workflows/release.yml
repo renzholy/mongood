@@ -50,7 +50,7 @@ jobs:
           go-version: ^1.14
       - run: go get fyne.io/fyne/cmd/fyne
       - run: go build -o mongood
-      - run: fyne package -os darwin -icon ./assets/mongood.png -release --executable ./mongood-darwin
+      - run: fyne package -os darwin -icon ./assets/mongood.png -release --executable ./mongood
       - run: cp ./assets/Info.plist ./mongood.app/Contents/Info.plist
       - run: zip -r Mongood.zip mongood.app
       - name: Create Release
