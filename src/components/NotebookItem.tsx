@@ -16,7 +16,6 @@ import {
   TooltipHost,
   DirectionalHint,
 } from '@fluentui/react'
-import { stringify, parse } from '@/utils/ejson'
 
 import { evalCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'

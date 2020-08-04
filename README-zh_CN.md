@@ -57,6 +57,7 @@
 ### 作为客户端使用
 
 ```bash
+export PATH=$PATH:$(go env GOPATH)/bin
 go get fyne.io/fyne/cmd/fyne
 go get github.com/markbates/pkger/cmd/pkger
 npm ci
