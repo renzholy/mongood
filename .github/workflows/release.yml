@@ -34,7 +34,9 @@ jobs:
     name: Create MacOS Release
     runs-on: macos-latest
     needs: build-js-bundle
-    working-directory: ./go
+    defaults:
+      run:
+        working-directory: go
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
