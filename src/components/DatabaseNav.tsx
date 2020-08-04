@@ -22,7 +22,7 @@ export function DatabaseNav() {
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
   const trigger = useSelector((state) => state.root.trigger)
   const [keyword, setKeyword] = useState('')
-  const { data } = useSWR(
+  const { data, revalidate } = useSWR(
     `listDatabases/${connection}/${trigger}`,
     () =>
       runCommand<{
@@ -180,6 +180,13 @@ export function DatabaseNav() {
         target={target.current}
         database={ns.split(splitter)[0]}
         collection={ns.split(splitter)[1]}
+        onDrop={(_database) => {
+          if (_database) {
+            handleListCollectionOfDatabases([_database])
+          } else {
+            revalidate()
+          }
+        }}
       />
       <SearchBox
         placeholder="Database & Collection"

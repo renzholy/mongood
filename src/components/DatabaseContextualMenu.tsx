@@ -18,6 +18,7 @@ export function DatabaseContextualMenu(props: {
   target?: MouseEvent
   database: string
   collection?: string
+  onDrop(database?: string): void
 }) {
   const connection = useSelector((state) => state.root.connection)
   const [isSucceed, setIsSucceed] = useState<boolean>()
@@ -35,12 +36,13 @@ export function DatabaseContextualMenu(props: {
       setIsSucceed(true)
       setHidden(true)
       dispatch(actions.root.setTrigger())
+      props.onDrop(props.collection ? props.database : undefined)
     } catch {
       setIsSucceed(false)
     } finally {
       setIsDeleting(false)
     }
-  }, [connection, props.database, props.collection, dispatch])
+  }, [connection, props, dispatch])
   const theme = getTheme()
   useEffect(() => {
     setIsSucceed(undefined)
