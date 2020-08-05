@@ -1,12 +1,12 @@
 FROM node:slim AS node-builder
 WORKDIR /src/node
-ADD package.json .
-ADD package-lock.json .
+COPY package.json .
+COPY package-lock.json .
 RUN npm ci
-ADD .umirc.ts .
-ADD tsconfig.json .
-ADD public ./public
-ADD src ./src
+COPY .umirc.ts .
+COPY tsconfig.json .
+COPY public ./public
+COPY src ./src
 RUN npm run build
 
 FROM golang:alpine AS golang-builder
