@@ -21,6 +21,7 @@ import { get } from 'lodash'
 
 import { DisplayMode, MongoData } from '@/types.d'
 import { calcHeaders } from '@/utils/table'
+import { stringify } from '@/utils/ejson'
 import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'
 import { ColorizedData } from './ColorizedData'
@@ -97,6 +98,9 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     (item) => <ColorizedData value={item} />,
     [],
   )
+  const handleGetKey = useCallback((item: T, index?: number) => {
+    return stringify(item._id || item) + index
+  }, [])
 
   if (error) {
     return (
@@ -132,6 +136,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
               <DetailsList
                 columns={columns}
+                getKey={handleGetKey}
                 constrainMode={ConstrainMode.unconstrained}
                 layoutMode={DetailsListLayoutMode.justified}
                 items={items || []}
