@@ -1,9 +1,9 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import {
-  getTheme,
   CommandButton,
   ContextualMenuItemType,
   IContextualMenuItem,
+  IStyle,
 } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,11 +15,10 @@ import { actions } from '@/stores'
 import { ServerStats } from '@/types'
 import { ConnectionEditModal } from './ConnectionEditModal'
 
-export function ConnectionButton() {
+export function ConnectionButton(props: { style?: IStyle }) {
   const connection = useSelector((state) => state.root.connection)
   const connections = useSelector((state) => state.root.connections)
   const dispatch = useDispatch()
-  const theme = getTheme()
   const { data } = useSWR('connections', listConnections)
   const serverStatus = useCallback(
     async (_connection: string) =>
@@ -126,14 +125,20 @@ export function ConnectionButton() {
         text={
           [...builtInConnections, ...selfConnections].find(
             ({ c }) => c === connection,
-          )?.host
+          )?.host || 'Connection'
         }
-        menuIconProps={{ iconName: 'Database' }}
         styles={{
-          menuIcon: {
-            color: theme.palette.themePrimary,
+          root: props.style,
+          label: {
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: 'block',
+            textAlign: 'start',
+            wordBreak: 'break-all',
           },
         }}
+        iconProps={{ iconName: 'Database' }}
+        menuIconProps={{ hidden: true }}
         menuProps={{
           items,
         }}

@@ -10,6 +10,7 @@ import useAsyncEffect from 'use-async-effect'
 import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
 import { DatabaseContextualMenu } from './DatabaseContextualMenu'
+import { ConnectionButton } from './ConnectionButton'
 
 const splitter = '/'
 
@@ -248,6 +249,19 @@ export function DatabaseNav() {
                 {l.name}
               </div>
             ) : null
+          }}
+        />
+      </div>
+      <div
+        style={{
+          flexShrink: 0,
+          backgroundColor: theme.palette.neutralLight,
+        }}>
+        <ConnectionButton
+          style={{
+            width: '100%',
+            marginTop: 10,
+            marginBottom: 10,
           }}
         />
       </div>
