@@ -33,11 +33,11 @@ export function changeLib(collectionsMap: {
 }): IDisposable | undefined {
   const lib = `
 const db: {
-  [key: string]: { [key: string]: Collection }
+  [key: string]: Database & { [key: string]: Collection }
   ${Object.entries(collectionsMap)
     .map(
       ([database, collections]) =>
-        `"${database}": { [key in "${collections.join(
+        `"${database}": Database & { [key in "${collections.join(
           '" | "',
         )}"]: Collection }`,
     )
