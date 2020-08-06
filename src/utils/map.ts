@@ -46,13 +46,17 @@ export function getMap(
   height: number,
   longitude: number,
   latitude: number,
-) {
-  return (
-    localStorage.getItem(STATIC_MAP_URL_TEMPLATE_KEY) ||
-    STATIC_MAP_URL_TEMPLATE_DEFAULT
-  )
-    .replace(/\{\{longitude\}\}/g, longitude.toString())
-    .replace(/\{\{latitude\}\}/g, latitude.toString())
-    .replace(/\{\{width\}\}/g, width.toString())
-    .replace(/\{\{height\}\}/g, height.toString())
+): string | undefined {
+  try {
+    return (
+      localStorage.getItem(STATIC_MAP_URL_TEMPLATE_KEY) ||
+      STATIC_MAP_URL_TEMPLATE_DEFAULT
+    )
+      .replace(/\{\{longitude\}\}/g, longitude.toString())
+      .replace(/\{\{latitude\}\}/g, latitude.toString())
+      .replace(/\{\{width\}\}/g, width.toString())
+      .replace(/\{\{height\}\}/g, height.toString())
+  } catch {
+    return undefined
+  }
 }
