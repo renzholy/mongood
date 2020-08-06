@@ -17,6 +17,9 @@ export default () => {
   return (
     <div style={{ margin: 20 }}>
       <TextField
+        autoCapitalize="off"
+        autoComplete="off"
+        autoCorrect="off"
         label="Static map url template for geo point preview:"
         description="Supported parameters: {{longitude}}, {{latitude}}, {{width}} and {{height}}"
         value={staticMapUrlTemplate}
