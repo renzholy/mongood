@@ -15,6 +15,7 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
     props.index2dsphere,
   ])
   const theme = getTheme()
+  const mapSrc = location ? getMap(500, 250, ...location) : undefined
 
   return (
     <div
@@ -25,15 +26,9 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
         overflowY: 'scroll',
         backgroundColor: theme.palette.neutralLighterAlt,
       }}>
-      {location ? (
+      {mapSrc ? (
         <img
-          src={getMap(
-            {
-              width: 500,
-              height: 250,
-            },
-            ...location,
-          )}
+          src={mapSrc}
           alt="map"
           width={500}
           height={250}
