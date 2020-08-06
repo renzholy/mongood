@@ -91,7 +91,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           MACOSX_DEPLOYMENT_TARGET=10.13 go build -o mongood
-          fyne package -os darwin -icon ./assets/mongood.png -release --executable ./mongood
+          fyne package -os darwin -icon ./assets/logo-macos.png -release --executable ./mongood
           cp ./assets/Info.plist ./mongood.app/Contents/Info.plist
           zip -r ${{ matrix.asset_name }} mongood.app
 
