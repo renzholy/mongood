@@ -1,5 +1,7 @@
 # Mongood
 
+<img src="./go/assets/logo.png" width="100" height="100" />
+
 A [MongoDB](https://www.mongodb.com/) GUI with [Fluent Design](https://www.microsoft.com/design/fluent/)
 
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
