@@ -12,6 +12,8 @@
     <string>icon.icns</string>
     <key>CFBundleShortVersionString</key>
     <string>1.0</string>
+    <key>LSMinimumSystemVersion</key>
+	  <string>10.13</string>
     <key>NSHumanReadableCopyright</key>
     <string>Copyright © 2020 Mongood Authors. All rights reserved.</string>
     <key>NSHighResolutionCapable</key>
