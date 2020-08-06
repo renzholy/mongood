@@ -43,7 +43,10 @@ export default () => {
         }}
       />
       <TextField
+<<<<<<< dev
         styles={{ root: { marginTop: 20 } }}
+=======
+>>>>>>> master
         autoCapitalize="off"
         autoComplete="off"
         autoCorrect="off"
