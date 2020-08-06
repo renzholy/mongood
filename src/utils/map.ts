@@ -33,19 +33,26 @@ export function getLocation(data?: MongoData): [number, number] | undefined {
   return undefined
 }
 
+export const STATIC_MAP_URL_TEMPLATE_DEFAULT =
+  'https://static-maps.yandex.ru/1.x/?lang=en_US&ll={{longitude}},{{latitude}}&size={{width}},{{height}}&z=8&l=map&pt={{longitude}},{{latitude}},round'
+
+export const STATIC_MAP_URL_TEMPLATE_KEY = 'setting.staticMapUrlTemplate'
+
 /**
  * @see https://tech.yandex.com/maps/staticapi/doc/1.x/dg/concepts/input_params-docpage/
  */
 export function getMap(
-  {
-    width,
-    height,
-  }: {
-    width: number
-    height: number
-  },
+  width: number,
+  height: number,
   longitude: number,
   latitude: number,
 ) {
-  return `https://static-maps.yandex.ru/1.x/?lang=en_US&ll=${longitude},${latitude}&size=${width},${height}&z=8&l=map&pt=${longitude},${latitude},round`
+  return (
+    localStorage.getItem(STATIC_MAP_URL_TEMPLATE_KEY) ||
+    STATIC_MAP_URL_TEMPLATE_DEFAULT
+  )
+    .replace(/\{\{longitude\}\}/g, longitude.toString())
+    .replace(/\{\{latitude\}\}/g, latitude.toString())
+    .replace(/\{\{width\}\}/g, width.toString())
+    .replace(/\{\{height\}\}/g, height.toString())
 }
