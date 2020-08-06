@@ -17,7 +17,7 @@ export default () => {
   return (
     <div style={{ margin: 20 }}>
       <TextField
-        label="Static map url template:"
+        label="Static map url template for geo point preview:"
         description="Supported parameters: {{longitude}}, {{latitude}}, {{width}} and {{height}}"
         value={staticMapUrlTemplate}
         onBlur={() => {
