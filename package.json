@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/RenzHoly/Mongood#readme",
   "dependencies": {
-    "@fluentui/react": "7.126.0",
+    "@fluentui/react": "7.126.1",
     "@monaco-editor/react": "3.5.5",
     "@mongosh/browser-runtime-core": "0.1.0",
     "@reduxjs/toolkit": "1.4.0",
