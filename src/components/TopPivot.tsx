@@ -151,7 +151,11 @@ export function TopPivot() {
           <PivotItem headerText="Notebook (Beta)" itemKey="/notebook" />
         </Pivot>
         <CommandButton
-          text={selfConnections.find(({ c }) => c === connection)?.host}
+          text={
+            [...builtInConnections, ...selfConnections].find(
+              ({ c }) => c === connection,
+            )?.host
+          }
           menuIconProps={{ iconName: 'Database' }}
           styles={{
             menuIcon: {
