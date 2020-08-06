@@ -90,3 +90,32 @@ class Collection<T = any> {
 
   async listIndexes(): Promise<any[]>
 }
+
+class Database<T = any> {
+  async createCollection(
+    name: string,
+    options: {
+      capped?: boolean
+      autoIndexId?: boolean
+      size?: number
+      max?: number
+      storageEngine?: object
+      validator?: object
+      validationLevel?: 'off' | 'strict' | 'moderate'
+      validationAction?: 'error' | 'warn'
+      indexOptionDefaults?: object
+      viewOn?: string
+      pipeline?: any[]
+    } = {},
+  ): Promise<Collection<T>>
+
+  async dropDatabase(): Promise<void>
+
+  async dropCollection(name: string): Promise<void>
+
+  async renameCollection(
+    fromCollection: string,
+    toCollection: string,
+    options: { dropTarget?: boolean } = {},
+  ): Promise<void>
+}

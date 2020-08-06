@@ -1,5 +1,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-classes-per-file */
+/**
+ * @see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/mongodb/index.d.ts
+ */
 
 import saferEval from 'safer-eval'
 import { Preprocessor } from '@mongosh/browser-runtime-core/lib/interpreter/preprocessor/preprocessor'
@@ -364,6 +367,64 @@ class Collection<T> {
   }
 }
 
+class Database {
+  #connection: string
+
+  #database: string
+
+  constructor(connection: string, database: string) {
+    this.#connection = connection
+    this.#database = database
+  }
+
+  async createCollection(
+    name: string,
+    options: {
+      capped?: boolean
+      autoIndexId?: boolean
+      size?: number
+      max?: number
+      storageEngine?: object
+      validator?: object
+      validationLevel?: 'off' | 'strict' | 'moderate'
+      validationAction?: 'error' | 'warn'
+      indexOptionDefaults?: object
+      viewOn?: string
+      pipeline?: any[]
+    } = {},
+  ): Promise<Collection<any>> {
+    await runCommand(this.#connection, this.#database, {
+      create: name,
+      ...options,
+    })
+    return new Collection(this.#connection, this.#database, name)
+  }
+
+  async dropDatabase(): Promise<void> {
+    await runCommand(this.#connection, this.#database, {
+      dropDatabase: 1,
+    })
+  }
+
+  async dropCollection(name: string): Promise<void> {
+    await runCommand(this.#connection, this.#database, {
+      drop: name,
+    })
+  }
+
+  async renameCollection(
+    fromCollection: string,
+    toCollection: string,
+    options: { dropTarget?: boolean } = {},
+  ): Promise<void> {
+    await runCommand(this.#connection, this.#database, {
+      renameCollection: fromCollection,
+      to: toCollection,
+      dropTarget: options.dropTarget,
+    })
+  }
+}
+
 export async function evalCommand(
   connection: string,
   code: string,
@@ -381,19 +442,14 @@ export async function evalCommand(
       db: new Proxy(
         {},
         {
-          get(_target, _database) {
-            return new Proxy(
-              {},
-              {
-                get(__target, _collection) {
-                  return new Collection(
-                    connection,
-                    _database as string,
-                    _collection as string,
-                  )
-                },
+          get(_target, _database: string) {
+            return new Proxy(new Database(connection, _database), {
+              get(__target, _collection: string) {
+                return _collection in __target
+                  ? __target[_collection as keyof typeof __target]
+                  : new Collection(connection, _database, _collection)
               },
-            )
+            })
           },
         },
       ),

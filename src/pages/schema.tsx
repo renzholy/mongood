@@ -11,6 +11,7 @@ import { stringify, parse } from '@/utils/ejson'
 import { ActionButton } from '@/components/ActionButton'
 import { LargeMessage } from '@/components/LargeMessage'
 import { ControlledEditorProps } from '@monaco-editor/react'
+import { TAB_SIZE_KEY } from './settings'
 
 enum ValidationAction {
   WARN = 'warn',
@@ -92,7 +93,7 @@ export default () => {
       return
     }
     const { options } = data.cursor.firstBatch[0]
-    const str = stringify(options.validator?.$jsonSchema, 2)
+    const str = stringify(options.validator?.$jsonSchema, true)
     setValidationAction(options.validationAction || null)
     setValidationLevel(options.validationLevel || null)
     setValue(str ? `return ${str}` : 'return {}')
@@ -102,6 +103,7 @@ export default () => {
   }, [])
   const options = useMemo<ControlledEditorProps['options']>(
     () => ({
+      tabSize: parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10),
       wordWrap: 'on',
       contextmenu: false,
       scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },

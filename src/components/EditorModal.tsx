@@ -7,6 +7,7 @@ import { stringify, parse } from '@/utils/ejson'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { MongoData } from '@/types'
+import { TAB_SIZE_KEY } from '@/pages/settings'
 
 export function EditorModal<T extends MongoData>(props: {
   title: string
@@ -21,7 +22,7 @@ export function EditorModal<T extends MongoData>(props: {
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
   useEffect(() => {
-    setValue(`return ${stringify(props.value, 2)}\n`)
+    setValue(`return ${stringify(props.value, true)}\n`)
   }, [props.value])
   const handleEditorDidMount = useCallback<EditorDidMount>(
     (_getEditorValue, editor) => {
@@ -38,6 +39,7 @@ export function EditorModal<T extends MongoData>(props: {
   }, [])
   const options = useMemo<ControlledEditorProps['options']>(
     () => ({
+      tabSize: parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10),
       readOnly: props.readOnly,
       wordWrap: 'on',
       contextmenu: false,
