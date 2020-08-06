@@ -260,8 +260,6 @@ export function DatabaseNav() {
         <ConnectionButton
           style={{
             width: '100%',
-            marginTop: 10,
-            marginBottom: 10,
           }}
         />
       </div>

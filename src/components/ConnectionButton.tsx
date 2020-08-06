@@ -134,7 +134,11 @@ export function ConnectionButton(props: { style?: IStyle }) {
             textOverflow: 'ellipsis',
             display: 'block',
             textAlign: 'start',
-            wordBreak: 'break-all',
+            whiteSpace: 'nowrap',
+          },
+          textContainer: {
+            flex: 1,
+            width: 0,
           },
         }}
         iconProps={{ iconName: 'Database' }}
