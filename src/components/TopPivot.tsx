@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pivot, PivotItem, getTheme } from '@fluentui/react'
+import { Pivot, PivotItem, getTheme, IconButton } from '@fluentui/react'
 import { useHistory } from 'umi'
 
 export function TopPivot() {
@@ -7,29 +7,50 @@ export function TopPivot() {
   const theme = getTheme()
 
   return (
-    <Pivot
-      styles={{
-        root: {
-          backgroundColor: theme.palette.neutralLight,
-          display: 'flex',
-          alignItems: 'center',
-          paddingLeft: 8,
-          paddingRight: 8,
-          flexShrink: 0,
-        },
-      }}
-      selectedKey={history.location.pathname}
-      onLinkClick={(link) => {
-        history.push(link?.props.itemKey || '/')
+    <div
+      style={{
+        backgroundColor: theme.palette.neutralLight,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingLeft: 8,
+        paddingRight: 8,
+        flexShrink: 0,
       }}>
-      <PivotItem headerText="Stats" itemKey="/stats" />
-      <PivotItem headerText="Documents" itemKey="/documents" />
-      <PivotItem headerText="Indexes" itemKey="/indexes" />
-      <PivotItem headerText="Operations" itemKey="/operations" />
-      <PivotItem headerText="Profiling" itemKey="/profiling" />
-      <PivotItem headerText="Schema" itemKey="/schema" />
-      <PivotItem headerText="Users" itemKey="/users" />
-      <PivotItem headerText="Notebook (Beta)" itemKey="/notebook" />
-    </Pivot>
+      <Pivot
+        selectedKey={
+          history.location.pathname === '/settings'
+            ? null
+            : history.location.pathname
+        }
+        onLinkClick={(link) => {
+          history.push(link?.props.itemKey || '/')
+        }}>
+        <PivotItem headerText="Stats" itemKey="/stats" />
+        <PivotItem headerText="Documents" itemKey="/documents" />
+        <PivotItem headerText="Indexes" itemKey="/indexes" />
+        <PivotItem headerText="Operations" itemKey="/operations" />
+        <PivotItem headerText="Profiling" itemKey="/profiling" />
+        <PivotItem headerText="Schema" itemKey="/schema" />
+        <PivotItem headerText="Users" itemKey="/users" />
+        <PivotItem headerText="Notebook (Beta)" itemKey="/notebook" />
+      </Pivot>
+      <IconButton
+        iconProps={{
+          iconName: 'Settings',
+          styles: {
+            root: {
+              color:
+                history.location.pathname === '/settings'
+                  ? theme.palette.themePrimary
+                  : theme.palette.neutralPrimary,
+            },
+          },
+        }}
+        onClick={() => {
+          history.push('/settings')
+        }}
+      />
+    </div>
   )
 }
