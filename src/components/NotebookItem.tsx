@@ -16,6 +16,7 @@ import {
   TooltipHost,
   DirectionalHint,
 } from '@fluentui/react'
+import { TAB_SIZE_KEY } from '@/pages/settings'
 
 import { evalCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
@@ -118,6 +119,7 @@ export function NotebookItem(props: {
   }, [])
   const options = useMemo<ControlledEditorProps['options']>(
     () => ({
+      tabSize: parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10),
       readOnly: isLoading,
       lineDecorationsWidth: 0,
       glyphMargin: false,
