@@ -6,6 +6,7 @@ import saferEval from 'safer-eval'
 import { map, repeat, size } from 'lodash'
 
 import { MongoData } from '@/types'
+import { TAB_SIZE_KEY } from '@/pages/settings'
 
 function wrapKey(key: string) {
   const strKey = key.toString()
@@ -15,7 +16,13 @@ function wrapKey(key: string) {
   return key
 }
 
-export function stringify(val: MongoData, indent = 0, depth = 0): string {
+const tabSize = parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10)
+
+export function stringify(
+  val: MongoData,
+  hasIndent = false,
+  depth = 0,
+): string {
   if (typeof val === 'string') {
     return JSON.stringify(val)
   }
@@ -65,32 +72,44 @@ export function stringify(val: MongoData, indent = 0, depth = 0): string {
     }")`
   }
   const spaces = repeat(' ', depth)
+  const extraSpaces = repeat(' ', tabSize)
   if (Array.isArray(val)) {
-    if (indent === 0) {
+    if (!hasIndent) {
       return `[${val
-        .map((v) => `${stringify(v, indent, depth + indent)}`)
+        .map((v) => `${stringify(v, hasIndent, depth + tabSize)}`)
         .join(', ')}]`
     }
     return val.length
       ? `[\n${val
-          .map((v) => `  ${spaces}${stringify(v, indent, depth + indent)}`)
+          .map(
+            (v) =>
+              `${extraSpaces}${spaces}${stringify(
+                v,
+                hasIndent,
+                depth + tabSize,
+              )}`,
+          )
           .join(',\n')}\n${spaces}]`
       : '[]'
   }
   if (size(val) === 0) {
     return '{}'
   }
-  if (indent === 0) {
+  if (!hasIndent) {
     return `{ ${map(
       val,
       (value, key) =>
-        `${wrapKey(key)}: ${stringify(value, indent, depth + indent)}`,
+        `${wrapKey(key)}: ${stringify(value, hasIndent, depth + tabSize)}`,
     ).join(', ')} }`
   }
   return `{\n${map(
     val,
     (value, key) =>
-      `  ${spaces}${wrapKey(key)}: ${stringify(value, indent, depth + indent)}`,
+      `${extraSpaces}${spaces}${wrapKey(key)}: ${stringify(
+        value,
+        hasIndent,
+        depth + tabSize,
+      )}`,
   ).join(',\n')}\n${spaces}}`
 }
 

@@ -92,7 +92,7 @@ export default () => {
       return
     }
     const { options } = data.cursor.firstBatch[0]
-    const str = stringify(options.validator?.$jsonSchema, 2)
+    const str = stringify(options.validator?.$jsonSchema, true)
     setValidationAction(options.validationAction || null)
     setValidationLevel(options.validationLevel || null)
     setValue(str ? `return ${str}` : 'return {}')

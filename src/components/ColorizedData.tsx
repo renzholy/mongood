@@ -11,7 +11,7 @@ export function ColorizedData(props: {
   style?: CSSProperties
   value: MongoData
 }) {
-  const str = useMemo(() => stringify(props.value, 2), [props.value])
+  const str = useMemo(() => stringify(props.value, true), [props.value])
   const html = useColorize(str)
   const theme = getTheme()
 

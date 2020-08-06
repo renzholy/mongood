@@ -21,7 +21,7 @@ export function EditorModal<T extends MongoData>(props: {
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
   useEffect(() => {
-    setValue(`return ${stringify(props.value, 2)}\n`)
+    setValue(`return ${stringify(props.value, true)}\n`)
   }, [props.value])
   const handleEditorDidMount = useCallback<EditorDidMount>(
     (_getEditorValue, editor) => {

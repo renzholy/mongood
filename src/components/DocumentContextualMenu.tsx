@@ -158,8 +158,8 @@ export function DocumentContextualMenu<
                   onClick() {
                     window.navigator.clipboard.writeText(
                       props.selectedItems.length === 1
-                        ? stringify(props.selectedItems[0], 2)
-                        : stringify(props.selectedItems, 2),
+                        ? stringify(props.selectedItems[0], true)
+                        : stringify(props.selectedItems, true),
                     )
                   },
                 },
