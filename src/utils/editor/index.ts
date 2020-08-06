@@ -1,6 +1,8 @@
 import { monaco, ControlledEditor, Monaco } from '@monaco-editor/react'
 import type { IDisposable } from 'monaco-editor'
 
+import { TAB_SIZE_KEY } from '@/pages/settings'
+
 let _monaco: Monaco | undefined
 
 monaco.init().then((_m) => {
@@ -52,7 +54,11 @@ export async function colorize(
   isDarkMode: boolean,
 ): Promise<string> {
   _monaco?.editor.setTheme(isDarkMode ? 'vs-dark' : 'vs')
-  return _monaco?.editor.colorize(text, 'javascript', { tabSize: 2 }) || ''
+  return (
+    _monaco?.editor.colorize(text, 'javascript', {
+      tabSize: parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10),
+    }) || ''
+  )
 }
 
 export { ControlledEditor }

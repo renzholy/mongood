@@ -1,6 +1,10 @@
 import { EJSON } from 'bson'
 
 import { MongoData } from '@/types'
+import {
+  STATIC_MAP_URL_TEMPLATE_KEY,
+  STATIC_MAP_URL_TEMPLATE_DEFAULT,
+} from '@/pages/settings'
 
 /**
  * @see https://docs.mongodb.com/manual/core/2dsphere/#dsphere-data-restrictions
@@ -33,14 +37,6 @@ export function getLocation(data?: MongoData): [number, number] | undefined {
   return undefined
 }
 
-export const STATIC_MAP_URL_TEMPLATE_DEFAULT =
-  'https://static-maps.yandex.ru/1.x/?lang=en_US&ll={{longitude}},{{latitude}}&size={{width}},{{height}}&z=8&l=map&pt={{longitude}},{{latitude}},round'
-
-export const STATIC_MAP_URL_TEMPLATE_KEY = 'setting.staticMapUrlTemplate'
-
-/**
- * @see https://tech.yandex.com/maps/staticapi/doc/1.x/dg/concepts/input_params-docpage/
- */
 export function getMap(
   width: number,
   height: number,
