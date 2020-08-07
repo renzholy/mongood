@@ -96,12 +96,6 @@ export function ConnectionButton(props: { style?: IStyle }) {
   const items = useMemo<IContextualMenuItem[]>(
     () =>
       compact([
-        ...selfConnections.map(connectionToItem),
-        selfConnections.length
-          ? { key: 'divider0', itemType: ContextualMenuItemType.Divider }
-          : undefined,
-        ...builtInConnections.map(connectionToItem),
-        { key: 'divider1', itemType: ContextualMenuItemType.Divider },
         {
           key: 'create',
           text: 'Edit Connections',
@@ -109,6 +103,12 @@ export function ConnectionButton(props: { style?: IStyle }) {
             setIsOpen(true)
           },
         },
+        { key: 'divider1', itemType: ContextualMenuItemType.Divider },
+        ...selfConnections.map(connectionToItem),
+        selfConnections.length
+          ? { key: 'divider0', itemType: ContextualMenuItemType.Divider }
+          : undefined,
+        ...builtInConnections.map(connectionToItem),
       ]),
     [builtInConnections, connectionToItem, selfConnections],
   )
