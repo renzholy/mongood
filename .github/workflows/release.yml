@@ -84,8 +84,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           go build -o mongood
-          fyne package -os linux -name Mongood -icon ./assets/logo.png -release --executable mongood
-          zip -r ${{ matrix.asset_name }} Mongood
+          fyne package -os linux -icon ./assets/logo.png -release --executable mongood
+          zip -r ${{ matrix.asset_name }} mongood
 
       - name: Build macOS
         if: matrix.os == 'macos-latest'
@@ -100,8 +100,8 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           go build -o mongood
-          fyne package -os windows -name Mongood -icon ./assets/logo.png -release --executable mongood
-          mv Mongood.exe ${{ matrix.asset_name }}
+          fyne package -os windows -icon ./assets/logo.png -release --executable mongood
+          mv mongood.exe ${{ matrix.asset_name }}
 
       - name: Upload Release Asset
         id: upload-release-asset
