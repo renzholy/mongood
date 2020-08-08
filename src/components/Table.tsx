@@ -119,79 +119,80 @@ export function Table<T extends { [key: string]: string }>(props: {
       />
     )
   }
+  if (items?.length === 0) {
+    return (
+      <LargeMessage
+        style={{
+          borderTop: `1px solid ${theme.palette.neutralLight}`,
+        }}
+        iconName="Database"
+        title="No Data"
+      />
+    )
+  }
   return (
     <div style={{ position: 'relative', height: 0, flex: 1 }}>
-      {items?.length === 0 ? (
-        <LargeMessage
-          style={{
-            borderTop: `1px solid ${theme.palette.neutralLight}`,
-          }}
-          iconName="Database"
-          title="No Data"
-        />
-      ) : (
-        <ScrollablePane
-          styles={{
-            root: { maxWidth: '100%' },
-            stickyBelow: { display: 'none' },
-          }}>
-          <MarqueeSelection
-            selection={props.selection!}
-            isEnabled={!!props.selection}>
-            {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
-              <DetailsList
-                columns={columns}
-                getKey={handleGetKey}
-                usePageCache={true}
-                onShouldVirtualize={() => false}
-                useReducedRowRenderer={true}
-                constrainMode={ConstrainMode.unconstrained}
-                layoutMode={DetailsListLayoutMode.justified}
-                items={items || []}
-                onRenderItemColumn={onRenderTableItemColumn}
-                onRenderDetailsHeader={onRenderDetailsHeader}
-                onItemInvoked={props.onItemInvoked}
-                onItemContextMenu={(item, _index, ev) => {
-                  props.onItemContextMenu?.(ev as MouseEvent, item)
-                }}
-                selectionMode={
-                  props.selection ? SelectionMode.multiple : SelectionMode.none
-                }
-                selection={props.selection}
-                enterModalSelectionOnTouch={true}
-                selectionPreservedOnEmptyClick={true}
-              />
-            ) : null}
-            {props.displayMode === DisplayMode.DOCUMENT ? (
-              <DetailsList
-                columns={[
-                  {
-                    key: '',
-                    name: 'Documents',
-                    minWidth: 0,
-                    isMultiline: true,
-                  },
-                ]}
-                constrainMode={ConstrainMode.unconstrained}
-                layoutMode={DetailsListLayoutMode.justified}
-                items={items || []}
-                onRenderItemColumn={onRenderDocumentItemColumn}
-                onRenderDetailsHeader={onRenderDetailsHeader}
-                onItemInvoked={props.onItemInvoked}
-                onItemContextMenu={(item, _index, ev) => {
-                  props.onItemContextMenu?.(ev as MouseEvent, item)
-                }}
-                selectionMode={
-                  props.selection ? SelectionMode.multiple : SelectionMode.none
-                }
-                selection={props.selection}
-                enterModalSelectionOnTouch={true}
-                selectionPreservedOnEmptyClick={true}
-              />
-            ) : null}
-          </MarqueeSelection>
-        </ScrollablePane>
-      )}
+      <ScrollablePane
+        styles={{
+          root: { maxWidth: '100%' },
+          stickyBelow: { display: 'none' },
+        }}>
+        <MarqueeSelection
+          selection={props.selection!}
+          isEnabled={!!props.selection}>
+          {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
+            <DetailsList
+              columns={columns}
+              getKey={handleGetKey}
+              usePageCache={true}
+              onShouldVirtualize={() => false}
+              useReducedRowRenderer={true}
+              constrainMode={ConstrainMode.unconstrained}
+              layoutMode={DetailsListLayoutMode.justified}
+              items={items || []}
+              onRenderItemColumn={onRenderTableItemColumn}
+              onRenderDetailsHeader={onRenderDetailsHeader}
+              onItemInvoked={props.onItemInvoked}
+              onItemContextMenu={(item, _index, ev) => {
+                props.onItemContextMenu?.(ev as MouseEvent, item)
+              }}
+              selectionMode={
+                props.selection ? SelectionMode.multiple : SelectionMode.none
+              }
+              selection={props.selection}
+              enterModalSelectionOnTouch={true}
+              selectionPreservedOnEmptyClick={true}
+            />
+          ) : null}
+          {props.displayMode === DisplayMode.DOCUMENT ? (
+            <DetailsList
+              columns={[
+                {
+                  key: '',
+                  name: 'Documents',
+                  minWidth: 0,
+                  isMultiline: true,
+                },
+              ]}
+              constrainMode={ConstrainMode.unconstrained}
+              layoutMode={DetailsListLayoutMode.justified}
+              items={items || []}
+              onRenderItemColumn={onRenderDocumentItemColumn}
+              onRenderDetailsHeader={onRenderDetailsHeader}
+              onItemInvoked={props.onItemInvoked}
+              onItemContextMenu={(item, _index, ev) => {
+                props.onItemContextMenu?.(ev as MouseEvent, item)
+              }}
+              selectionMode={
+                props.selection ? SelectionMode.multiple : SelectionMode.none
+              }
+              selection={props.selection}
+              enterModalSelectionOnTouch={true}
+              selectionPreservedOnEmptyClick={true}
+            />
+          ) : null}
+        </MarqueeSelection>
+      </ScrollablePane>
     </div>
   )
 }
