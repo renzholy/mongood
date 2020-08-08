@@ -137,6 +137,9 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
               <DetailsList
                 columns={columns}
                 getKey={handleGetKey}
+                usePageCache={true}
+                onShouldVirtualize={() => false}
+                useReducedRowRenderer={true}
                 constrainMode={ConstrainMode.unconstrained}
                 layoutMode={DetailsListLayoutMode.justified}
                 items={items || []}
