@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react'
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import { isEmpty, mapValues } from 'lodash'
 import { Selection } from '@fluentui/react'
 import useAsyncEffect from 'use-async-effect'
-import { useWorker } from '@koale/useworker'
+import { useWorker, WORKER_STATUS } from '@koale/useworker'
 
 import { runCommand } from '@/utils/fetcher'
 import { stringify, batchStringify, parse } from '@/utils/ejson'
@@ -97,15 +97,20 @@ export function DocumentTable() {
     [selectedItems],
   )
   const [items, setItems] = useState<{ [key: string]: string }[]>()
-  const [batchStringifyWorker, { kill }] = useWorker(batchStringify)
+  useEffect(() => {
+    setItems(undefined)
+  }, [connection, database, collection])
+  const [batchStringifyWorker, { kill, status }] = useWorker(batchStringify)
   useAsyncEffect(
     async (isMounted) => {
-      if (data?.cursor.firstBatch.length === 0) {
+      if (!data) {
+        return
+      }
+      if (data.cursor.firstBatch.length === 0) {
         setItems([])
         return
       }
-      setItems(undefined)
-      const _items = await batchStringifyWorker(data?.cursor.firstBatch || [])
+      const _items = await batchStringifyWorker(data.cursor.firstBatch)
       if (isMounted()) {
         setItems(_items)
       }
@@ -160,7 +165,11 @@ export function DocumentTable() {
           ...Object.keys(index?.weights || {}).map((key) => key.split('.')[0]),
         ]}
         error={error}
-        isValidating={isValidating}
+        isValidating={
+          isValidating ||
+          status === WORKER_STATUS.RUNNING ||
+          status === WORKER_STATUS.PENDING
+        }
         onItemInvoked={onItemInvoked}
         onItemContextMenu={onItemContextMenu}
         selection={selection}
