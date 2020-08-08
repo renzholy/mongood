@@ -1,3 +1,5 @@
+/* eslint-disable no-bitwise */
+
 import { sortBy } from 'lodash'
 
 import { MongoData } from '@/types'
@@ -13,10 +15,10 @@ export function calcHeaders<T extends { [key: string]: MongoData }>(
       if (!keys[key] && order) {
         const index = order.indexOf(key)
         keys[key] = {
-          order: index >= 0 ? (order.length - index) * 8 : 0,
+          order: index >= 0 ? (order.length - index) << 10 : 0,
           minWidth: Math.max(
-            100,
-            Math.min(240, stringify(item[key]).length * 10),
+            80,
+            Math.min(240, stringify(item[key]).length << 3),
           ),
         }
       }
