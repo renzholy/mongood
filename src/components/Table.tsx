@@ -79,18 +79,21 @@ export function Table<T extends { [key: string]: string }>(props: {
     [isValidating, theme],
   )
   const onRenderTableItemColumn = useCallback(
-    (item?: T, _index?: number, column?: IColumn) => (
-      <TableCell
-        value={item?.[column?.key as keyof typeof item] || ''}
-        index2dsphere={
-          props.index2dsphere &&
-          column?.key &&
-          props.index2dsphere.startsWith(column?.key)
-            ? get(item, props.index2dsphere)
-            : undefined
-        }
-      />
-    ),
+    (item?: T, _index?: number, column?: IColumn) => {
+      return (
+        <TableCell
+          value={item?.[column?.key as keyof typeof item] || ''}
+          renderWidth={column?.currentWidth || column?.minWidth}
+          index2dsphere={
+            props.index2dsphere &&
+            column?.key &&
+            props.index2dsphere.startsWith(column?.key)
+              ? get(item, props.index2dsphere)
+              : undefined
+          }
+        />
+      )
+    },
     [props.index2dsphere],
   )
   const onRenderDocumentItemColumn = useCallback(
@@ -143,7 +146,6 @@ export function Table<T extends { [key: string]: string }>(props: {
             <DetailsList
               columns={columns}
               getKey={handleGetKey}
-              usePageCache={true}
               onShouldVirtualize={() => false}
               useReducedRowRenderer={true}
               constrainMode={ConstrainMode.unconstrained}
@@ -174,7 +176,6 @@ export function Table<T extends { [key: string]: string }>(props: {
                 },
               ]}
               getKey={handleGetKey}
-              usePageCache={true}
               onShouldVirtualize={() => false}
               useReducedRowRenderer={true}
               constrainMode={ConstrainMode.unconstrained}

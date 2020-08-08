@@ -2,7 +2,6 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
-import { isEqual } from 'lodash'
 
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
@@ -50,15 +49,22 @@ function PlainCard(props: { value: string; index2dsphere?: MongoData }) {
   )
 }
 
-export const TableCell = React.memo(function TableCell(props: {
+export function TableCell(props: {
   value: string
+  renderWidth?: number
   index2dsphere?: MongoData
 }) {
   const theme = getTheme()
-  const html = useColorize(props.value)
+  const html = useColorize(
+    props.renderWidth
+      ? // eslint-disable-next-line no-bitwise
+        props.value.substr(0, props.renderWidth >> 3)
+      : props.value,
+  )
   const onRenderPlainCard = useCallback(() => {
     return <PlainCard value={props.value} index2dsphere={props.index2dsphere} />
   }, [props.value, props.index2dsphere])
+
   return (
     <HoverCard
       type={HoverCardType.plain}
@@ -80,5 +86,4 @@ export const TableCell = React.memo(function TableCell(props: {
       />
     </HoverCard>
   )
-},
-isEqual)
+}
