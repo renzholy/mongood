@@ -1,10 +1,11 @@
 /* eslint-disable react/no-danger */
 
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 import { isEqual } from 'lodash'
+import { useAsyncEffect } from 'use-async-effect'
 
-import { stringify } from '@/utils/ejson'
+import { stringifyAsync } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
 import { getMap, getLocation } from '@/utils/map'
@@ -46,8 +47,14 @@ export const TableCell = React.memo(function TableCell(props: {
   index2dsphere?: MongoData
 }) {
   const theme = getTheme()
-  const str = useMemo(
-    () => stringify(props.value).substr(0, Math.max(props.length || 0, 50)),
+  const [str, setStr] = useState('')
+  useAsyncEffect(
+    async (isMounted) => {
+      const s = await stringifyAsync(props.value)
+      if (isMounted()) {
+        setStr(s.substr(0, Math.max(props.length || 0, 50)))
+      }
+    },
     [props.value, props.length],
   )
   const html = useColorize(str)

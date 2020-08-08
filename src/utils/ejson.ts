@@ -18,6 +18,23 @@ function wrapKey(key: string) {
 
 const tabSize = parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10)
 
+export async function stringifyAsync(
+  val: MongoData,
+  hasIndent = false,
+): Promise<string> {
+  const worker = new Worker('../workers/stringify.js', { type: 'module' })
+  return new Promise((resolve) => {
+    worker.onmessage = (event) => {
+      resolve(event.data)
+    }
+    worker.postMessage({
+      val,
+      tabSize,
+      hasIndent,
+    })
+  })
+}
+
 export function stringify(
   val: MongoData,
   hasIndent = false,
