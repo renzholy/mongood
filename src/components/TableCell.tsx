@@ -40,42 +40,48 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
   )
 }
 
-export function TableCell(props: {
-  value: MongoData
-  minWidth?: number
-  index2dsphere?: MongoData
-}) {
-  const theme = getTheme()
-  const minChars =
-    props.minWidth === undefined ? undefined : props.minWidth >> 2
-  const str = useMemo(() => stringify(props.value).substr(0, minChars), [
-    props.value,
-    minChars,
-  ])
-  const html = useColorize(str)
-  const onRenderPlainCard = useCallback(() => {
-    return <PlainCard value={props.value} index2dsphere={props.index2dsphere} />
-  }, [props.value, props.index2dsphere])
+export const TableCell = React.memo(
+  function TableCell(props: {
+    value: MongoData
+    subStringLength?: number
+    index2dsphere?: MongoData
+  }) {
+    const theme = getTheme()
+    const str = useMemo(
+      () => stringify(props.value).substr(0, props.subStringLength),
+      [props.value, props.subStringLength],
+    )
+    const html = useColorize(str)
+    const onRenderPlainCard = useCallback(() => {
+      return (
+        <PlainCard value={props.value} index2dsphere={props.index2dsphere} />
+      )
+    }, [props.value, props.index2dsphere])
 
-  return (
-    <HoverCard
-      type={HoverCardType.plain}
-      plainCardProps={{
-        onRenderPlainCard,
-      }}
-      styles={{
-        host: {
-          cursor: 'pointer',
-          color: theme.palette.neutralSecondary,
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-        },
-      }}
-      instantOpenOnClick={true}>
-      <span
-        style={{ verticalAlign: 'middle' }}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    </HoverCard>
-  )
-}
+    return (
+      <HoverCard
+        type={HoverCardType.plain}
+        plainCardProps={{
+          onRenderPlainCard,
+        }}
+        styles={{
+          host: {
+            cursor: 'pointer',
+            color: theme.palette.neutralSecondary,
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+          },
+        }}
+        instantOpenOnClick={true}>
+        <span
+          style={{ verticalAlign: 'middle' }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </HoverCard>
+    )
+  },
+  (prevProps, nextProps) =>
+    prevProps.value === nextProps.value &&
+    prevProps.subStringLength === nextProps.subStringLength &&
+    prevProps.index2dsphere === nextProps.index2dsphere,
+)
