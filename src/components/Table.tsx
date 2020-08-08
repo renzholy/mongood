@@ -40,10 +40,7 @@ export function Table<T extends { [key: string]: string }>(props: {
   const [columns, setColumns] = useState<IColumn[]>([])
   const { items, error, isValidating } = props
   useEffect(() => {
-    if (!props.items) {
-      return
-    }
-    if (props.items.length === 0) {
+    if (!props.items || props.items.length === 0) {
       setColumns([])
       return
     }
