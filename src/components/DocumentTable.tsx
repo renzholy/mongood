@@ -1,11 +1,13 @@
 import React, { useState, useCallback, useMemo, useRef } from 'react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { isEmpty, mapValues } from 'lodash'
 import { Selection } from '@fluentui/react'
+import useAsyncEffect from 'use-async-effect'
+import { useWorker } from '@koale/useworker'
 
 import { runCommand } from '@/utils/fetcher'
-import { stringify } from '@/utils/ejson'
+import { stringify, batchStringify, parse } from '@/utils/ejson'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { Table } from './Table'
@@ -13,7 +15,7 @@ import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 
-type Data = { _id: MongoData; [key: string]: MongoData }
+type Data = { [key: string]: MongoData }
 
 export function DocumentTable() {
   const connection = useSelector((state) => state.root.connection)
@@ -77,8 +79,8 @@ export function DocumentTable() {
     [],
   )
   const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
-  const onItemInvoked = useCallback((item: Data) => {
-    setInvokedItem(item)
+  const onItemInvoked = useCallback((item: { [key: string]: string }) => {
+    setInvokedItem(mapValues(item, (val) => parse(val)))
     setIsUpdateOpen(true)
   }, [])
   const onItemContextMenu = useCallback(
@@ -93,6 +95,23 @@ export function DocumentTable() {
       setIsMenuHidden(false)
     },
     [selectedItems],
+  )
+  const [items, setItems] = useState<{ [key: string]: string }[]>([])
+  const [batchStringifyWorker, { kill }] = useWorker(batchStringify)
+  useAsyncEffect(
+    async (isMounted) => {
+      if (!data?.cursor.firstBatch.length) {
+        return
+      }
+      const _items = await batchStringifyWorker(data?.cursor.firstBatch)
+      if (isMounted()) {
+        setItems(_items)
+      }
+    },
+    () => {
+      kill()
+    },
+    [data?.cursor.firstBatch, batchStringifyWorker, kill],
   )
 
   return (
@@ -132,7 +151,7 @@ export function DocumentTable() {
       />
       <Table
         displayMode={displayMode}
-        items={data?.cursor.firstBatch}
+        items={items}
         order={[
           '_id',
           ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),

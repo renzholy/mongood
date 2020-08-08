@@ -19,14 +19,13 @@ import {
 } from '@fluentui/react'
 import { get } from 'lodash'
 
-import { DisplayMode, MongoData } from '@/types.d'
+import { DisplayMode } from '@/types.d'
 import { calcHeaders } from '@/utils/table'
-import { stringify } from '@/utils/ejson'
 import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'
 import { ColorizedData } from './ColorizedData'
 
-export function Table<T extends { [key: string]: MongoData }>(props: {
+export function Table<T extends { [key: string]: string }>(props: {
   displayMode?: DisplayMode
   items?: T[]
   order?: string[]
@@ -79,9 +78,9 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     [isValidating, theme],
   )
   const onRenderTableItemColumn = useCallback(
-    (item, _index, column?: IColumn) => (
+    (item?: T, _index?: number, column?: IColumn) => (
       <TableCell
-        value={item[column?.key as keyof typeof item]}
+        value={item?.[column?.key as keyof typeof item] || ''}
         length={(column?.currentWidth || 0) * 10}
         index2dsphere={
           props.index2dsphere &&
@@ -99,7 +98,12 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     [],
   )
   const handleGetKey = useCallback((item: T, index?: number) => {
-    return stringify(item._id || item) + index
+    return (
+      (item._id ||
+        Object.entries(item)
+          .map(([key, value]) => `${key}:${value}`)
+          .join('')) + index
+    )
   }, [])
 
   if (error) {

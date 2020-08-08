@@ -1,23 +1,22 @@
 /* eslint-disable react/no-danger */
 
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 import { isEqual } from 'lodash'
-import { useAsyncEffect } from 'use-async-effect'
-import { useWorker } from '@koale/useworker'
 
-import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
 import { getMap, getLocation } from '@/utils/map'
-import { ColorizedData } from './ColorizedData'
+import { parse, stringify } from '@/utils/ejson'
 
-function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
+function PlainCard(props: { value: string; index2dsphere?: MongoData }) {
   const location = useMemo(() => getLocation(props.index2dsphere), [
     props.index2dsphere,
   ])
   const theme = getTheme()
   const mapSrc = location ? getMap(500, 250, ...location) : undefined
+  const str = useMemo(() => stringify(parse(props.value), true), [props.value])
+  const html = useColorize(str)
 
   return (
     <div
@@ -37,34 +36,31 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
           style={{ marginBottom: 10 }}
         />
       ) : null}
-      <ColorizedData value={props.value} />
+      <pre
+        style={{
+          fontSize: 12,
+          margin: 0,
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-all',
+          color: theme.palette.neutralPrimary,
+        }}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     </div>
   )
 }
 
 export const TableCell = React.memo(function TableCell(props: {
-  value: MongoData
+  value: string
   length?: number
   index2dsphere?: MongoData
 }) {
   const theme = getTheme()
-  const [str, setStr] = useState('')
-  const [stringifyWorker] = useWorker(stringify)
-  useAsyncEffect(
-    async (isMounted) => {
-      const s = await stringifyWorker(props.value)
-      if (isMounted()) {
-        setStr(s.substr(0, Math.max(props.length || 0, 50)))
-      }
-    },
-    [stringifyWorker, props.value, props.length],
-  )
-  const html = useColorize(str)
+  const html = useColorize(props.value)
   const onRenderPlainCard = useCallback(() => {
     return <PlainCard value={props.value} index2dsphere={props.index2dsphere} />
   }, [props.value, props.index2dsphere])
-
-  return props.index2dsphere || (props.length && str.length > 36) ? (
+  return props.index2dsphere || (props.length && props.value.length > 36) ? (
     <HoverCard
       type={HoverCardType.plain}
       plainCardProps={{
