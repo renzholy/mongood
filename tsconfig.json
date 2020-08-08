@@ -10,10 +10,8 @@
     "baseUrl": "./",
     "alwaysStrict": true,
     "strict": true,
-    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "lib": ["WebWorker", "DOM"],
     "paths": {
       "@/*": ["src/*"],
       "@@/*": ["src/.umi/*"]

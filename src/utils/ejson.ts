@@ -3,7 +3,6 @@
  */
 
 import saferEval from 'safer-eval'
-import { map, repeat, size } from 'lodash'
 
 import { MongoData } from '@/types'
 import { TAB_SIZE_KEY } from '@/pages/settings'
@@ -17,23 +16,6 @@ function wrapKey(key: string) {
 }
 
 const tabSize = parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10)
-
-export async function stringifyAsync(
-  val: MongoData,
-  hasIndent = false,
-): Promise<string> {
-  const worker = new Worker('../workers/stringify.js', { type: 'module' })
-  return new Promise((resolve) => {
-    worker.onmessage = (event) => {
-      resolve(event.data)
-    }
-    worker.postMessage({
-      val,
-      tabSize,
-      hasIndent,
-    })
-  })
-}
 
 export function stringify(
   val: MongoData,
@@ -88,8 +70,12 @@ export function stringify(
       val.$binary.base64
     }")`
   }
-  const spaces = repeat(' ', depth)
-  const extraSpaces = repeat(' ', tabSize)
+  const spaces = Array.from({ length: depth })
+    .map(() => ' ')
+    .join('')
+  const extraSpaces = Array.from({ length: tabSize })
+    .map(() => ' ')
+    .join('')
   if (Array.isArray(val)) {
     if (!hasIndent) {
       return `[${val
@@ -109,25 +95,28 @@ export function stringify(
           .join(',\n')}\n${spaces}]`
       : '[]'
   }
-  if (size(val) === 0) {
+  const entries = Object.entries(val)
+  if (entries.length === 0) {
     return '{}'
   }
   if (!hasIndent) {
-    return `{ ${map(
-      val,
-      (value, key) =>
-        `${wrapKey(key)}: ${stringify(value, hasIndent, depth + tabSize)}`,
-    ).join(', ')} }`
+    return `{ ${entries
+      .map(
+        ([key, value]) =>
+          `${wrapKey(key)}: ${stringify(value, hasIndent, depth + tabSize)}`,
+      )
+      .join(', ')} }`
   }
-  return `{\n${map(
-    val,
-    (value, key) =>
-      `${extraSpaces}${spaces}${wrapKey(key)}: ${stringify(
-        value,
-        hasIndent,
-        depth + tabSize,
-      )}`,
-  ).join(',\n')}\n${spaces}}`
+  return `{\n${entries
+    .map(
+      ([key, value]) =>
+        `${extraSpaces}${spaces}${wrapKey(key)}: ${stringify(
+          value,
+          hasIndent,
+          depth + tabSize,
+        )}`,
+    )
+    .join(',\n')}\n${spaces}}`
 }
 
 export const sandbox = {

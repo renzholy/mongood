@@ -4,8 +4,9 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 import { isEqual } from 'lodash'
 import { useAsyncEffect } from 'use-async-effect'
+import { useWorker } from '@koale/useworker'
 
-import { stringifyAsync } from '@/utils/ejson'
+import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
 import { getMap, getLocation } from '@/utils/map'
@@ -48,14 +49,15 @@ export const TableCell = React.memo(function TableCell(props: {
 }) {
   const theme = getTheme()
   const [str, setStr] = useState('')
+  const [stringifyWorker] = useWorker(stringify)
   useAsyncEffect(
     async (isMounted) => {
-      const s = await stringifyAsync(props.value)
+      const s = await stringifyWorker(props.value)
       if (isMounted()) {
         setStr(s.substr(0, Math.max(props.length || 0, 50)))
       }
     },
-    [props.value, props.length],
+    [stringifyWorker, props.value, props.length],
   )
   const html = useColorize(str)
   const onRenderPlainCard = useCallback(() => {

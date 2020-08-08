@@ -1,6 +1,5 @@
 import { defineConfig } from 'umi'
 import { resolve } from 'path'
-import WorkerPlugin from 'worker-plugin'
 
 export default defineConfig({
   antd: false,
@@ -31,6 +30,5 @@ export default defineConfig({
       .end()
       .use('declaration')
       .loader('raw-loader')
-    config.plugin('worker').use(WorkerPlugin)
   },
 })

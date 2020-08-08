@@ -3,8 +3,9 @@
 import React, { CSSProperties, useState } from 'react'
 import { getTheme } from '@fluentui/react'
 import useAsyncEffect from 'use-async-effect'
+import { useWorker } from '@koale/useworker'
 
-import { stringifyAsync } from '@/utils/ejson'
+import { stringify } from '@/utils/ejson'
 import { MongoData } from '@/types'
 import { useColorize } from '@/hooks/use-colorize'
 
@@ -13,14 +14,15 @@ export function ColorizedData(props: {
   value: MongoData
 }) {
   const [str, setStr] = useState('')
+  const [stringifyWorker] = useWorker(stringify)
   useAsyncEffect(
     async (isMounted) => {
-      const s = await stringifyAsync(props.value, true)
+      const s = await stringifyWorker(props.value, true)
       if (isMounted()) {
         setStr(s)
       }
     },
-    [props.value],
+    [stringifyWorker, props.value],
   )
   const html = useColorize(str)
   const theme = getTheme()
