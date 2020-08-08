@@ -13,7 +13,7 @@ import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 
-type Data = { _id: MongoData; [key: string]: MongoData }
+type Data = { [key: string]: MongoData }
 
 export function DocumentTable() {
   const connection = useSelector((state) => state.root.connection)
@@ -94,6 +94,14 @@ export function DocumentTable() {
     },
     [selectedItems],
   )
+  const order = useMemo(
+    () => [
+      '_id',
+      ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),
+      ...Object.keys(index?.weights || {}).map((key) => key.split('.')[0]),
+    ],
+    [index],
+  )
 
   return (
     <>
@@ -133,11 +141,7 @@ export function DocumentTable() {
       <Table
         displayMode={displayMode}
         items={data?.cursor.firstBatch}
-        order={[
-          '_id',
-          ...Object.keys(index?.key || {}).map((key) => key.split('.')[0]),
-          ...Object.keys(index?.weights || {}).map((key) => key.split('.')[0]),
-        ]}
+        order={order}
         error={error}
         isValidating={isValidating}
         onItemInvoked={onItemInvoked}

@@ -1,8 +1,8 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable react/no-danger */
 
 import React, { useCallback, useMemo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
-import { isEqual } from 'lodash'
 
 import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
@@ -40,22 +40,24 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
   )
 }
 
-export const TableCell = React.memo(function TableCell(props: {
+export function TableCell(props: {
   value: MongoData
-  length?: number
+  minWidth?: number
   index2dsphere?: MongoData
 }) {
   const theme = getTheme()
-  const str = useMemo(
-    () => stringify(props.value).substr(0, Math.max(props.length || 0, 50)),
-    [props.value, props.length],
-  )
+  const minChars =
+    props.minWidth === undefined ? undefined : props.minWidth >> 2
+  const str = useMemo(() => stringify(props.value).substr(0, minChars), [
+    props.value,
+    minChars,
+  ])
   const html = useColorize(str)
   const onRenderPlainCard = useCallback(() => {
     return <PlainCard value={props.value} index2dsphere={props.index2dsphere} />
   }, [props.value, props.index2dsphere])
 
-  return props.index2dsphere || (props.length && str.length > 36) ? (
+  return (
     <HoverCard
       type={HoverCardType.plain}
       plainCardProps={{
@@ -75,13 +77,5 @@ export const TableCell = React.memo(function TableCell(props: {
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </HoverCard>
-  ) : (
-    <span
-      style={{
-        verticalAlign: 'middle',
-      }}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
   )
-},
-isEqual)
+}
