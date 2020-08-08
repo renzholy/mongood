@@ -82,7 +82,6 @@ export function Table<T extends { [key: string]: string }>(props: {
     (item?: T, _index?: number, column?: IColumn) => (
       <TableCell
         value={item?.[column?.key as keyof typeof item] || ''}
-        length={(column?.currentWidth || 0) * 10}
         index2dsphere={
           props.index2dsphere &&
           column?.key &&

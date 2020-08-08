@@ -52,7 +52,6 @@ function PlainCard(props: { value: string; index2dsphere?: MongoData }) {
 
 export const TableCell = React.memo(function TableCell(props: {
   value: string
-  length?: number
   index2dsphere?: MongoData
 }) {
   const theme = getTheme()
@@ -60,7 +59,7 @@ export const TableCell = React.memo(function TableCell(props: {
   const onRenderPlainCard = useCallback(() => {
     return <PlainCard value={props.value} index2dsphere={props.index2dsphere} />
   }, [props.value, props.index2dsphere])
-  return props.index2dsphere || (props.length && props.value.length > 36) ? (
+  return (
     <HoverCard
       type={HoverCardType.plain}
       plainCardProps={{
@@ -80,13 +79,6 @@ export const TableCell = React.memo(function TableCell(props: {
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </HoverCard>
-  ) : (
-    <span
-      style={{
-        verticalAlign: 'middle',
-      }}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
   )
 },
 isEqual)
