@@ -43,6 +43,10 @@ export function Table<T extends { [key: string]: string }>(props: {
     if (!props.items) {
       return
     }
+    if (props.items.length === 0) {
+      setColumns([])
+      return
+    }
     setColumns(
       calcHeaders(props.items, props.order).map(({ key, minWidth }) => ({
         key,

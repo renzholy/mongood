@@ -100,15 +100,12 @@ export function DocumentTable() {
   const [batchStringifyWorker, { kill }] = useWorker(batchStringify)
   useAsyncEffect(
     async (isMounted) => {
-      if (!data) {
-        setItems(undefined)
-        return
-      }
-      if (!data.cursor.firstBatch.length) {
+      if (data?.cursor.firstBatch.length === 0) {
         setItems([])
         return
       }
-      const _items = await batchStringifyWorker(data?.cursor.firstBatch)
+      setItems(undefined)
+      const _items = await batchStringifyWorker(data?.cursor.firstBatch || [])
       if (isMounted()) {
         setItems(_items)
       }
