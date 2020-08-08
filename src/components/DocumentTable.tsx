@@ -15,7 +15,7 @@ import { DocumentContextualMenu } from './DocumentContextualMenu'
 
 type Data = { _id: MongoData; [key: string]: MongoData }
 
-export const DocumentTable = React.memo(function DocumentTable() {
+export function DocumentTable() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -66,12 +66,12 @@ export const DocumentTable = React.memo(function DocumentTable() {
     setIsUpdateOpen(false)
   }, [connection, database, collection, invokedItem, editedItem, dispatch])
   const target = useRef<MouseEvent>()
-  const [selectedItems, setSelectedItems] = useState<Data[]>([])
+  const selectedItems = useRef<Data[]>([])
   const selection = useMemo(
     () =>
       new Selection({
         onSelectionChanged() {
-          setSelectedItems(selection.getSelection() as Data[])
+          selectedItems.current = selection.getSelection() as Data[]
         },
       }),
     [],
@@ -83,8 +83,8 @@ export const DocumentTable = React.memo(function DocumentTable() {
   }, [])
   const onItemContextMenu = useCallback(
     (ev: MouseEvent) => {
-      if (selectedItems.length === 1) {
-        const [item] = selectedItems
+      if (selectedItems.current.length === 1) {
+        const [item] = selectedItems.current
         setInvokedItem(item)
       } else {
         setInvokedItem(undefined)
@@ -120,7 +120,7 @@ export const DocumentTable = React.memo(function DocumentTable() {
           setIsMenuHidden(true)
         }}
         target={target.current}
-        selectedItems={selectedItems}
+        selectedItems={selectedItems.current}
         onEdit={
           invokedItem
             ? () => {
@@ -154,4 +154,4 @@ export const DocumentTable = React.memo(function DocumentTable() {
       />
     </>
   )
-})
+}
