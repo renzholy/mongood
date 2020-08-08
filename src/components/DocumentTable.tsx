@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
-import { isEmpty, mapValues } from 'lodash'
+import { isEmpty } from 'lodash'
 import { Selection } from '@fluentui/react'
 import useAsyncEffect from 'use-async-effect'
 import { useWorker, WORKER_STATUS } from '@koale/useworker'
 import { batchStringify } from '@/workers/stringify'
 
 import { runCommand } from '@/utils/fetcher'
-import { stringify, parse } from '@/utils/ejson'
+import { stringify } from '@/utils/ejson'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { Table } from './Table'
@@ -16,7 +16,7 @@ import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 
-type Data = { [key: string]: MongoData }
+type Data = { [key: string]: string }
 
 export function DocumentTable() {
   const connection = useSelector((state) => state.root.connection)
@@ -38,7 +38,7 @@ export function DocumentTable() {
       : null,
     () =>
       runCommand<{
-        cursor: { firstBatch: Data[] }
+        cursor: { firstBatch: { [key: string]: MongoData }[] }
       }>(
         connection,
         database!,
@@ -81,7 +81,7 @@ export function DocumentTable() {
   )
   const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
   const onItemInvoked = useCallback((item: { [key: string]: string }) => {
-    setInvokedItem(mapValues(item, (val) => parse(val)))
+    setInvokedItem(item)
     setIsUpdateOpen(true)
   }, [])
   const onItemContextMenu = useCallback(

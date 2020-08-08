@@ -2,10 +2,7 @@
 
 import { sortBy } from 'lodash'
 
-import { MongoData } from '@/types'
-import { stringify } from './ejson'
-
-export function calcHeaders<T extends { [key: string]: MongoData }>(
+export function calcHeaders<T extends { [key: string]: string }>(
   items: T[],
   order?: string[],
 ): { key: string; minWidth: number }[] {
@@ -16,10 +13,7 @@ export function calcHeaders<T extends { [key: string]: MongoData }>(
         const index = order.indexOf(key)
         keys[key] = {
           order: index >= 0 ? (order.length - index) << 10 : 0,
-          minWidth: Math.max(
-            80,
-            Math.min(240, stringify(item[key]).length << 3),
-          ),
+          minWidth: Math.max(80, Math.min(240, item[key].length << 3)),
         }
       }
       keys[key].order += 1
