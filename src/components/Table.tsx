@@ -23,7 +23,7 @@ import { DisplayMode } from '@/types.d'
 import { calcHeaders } from '@/utils/table'
 import { TableCell } from './TableCell'
 import { LargeMessage } from './LargeMessage'
-import { ColorizedData } from './ColorizedData'
+import { TableDocument } from './TableDocument'
 
 export function Table<T extends { [key: string]: string }>(props: {
   displayMode?: DisplayMode
@@ -97,7 +97,7 @@ export function Table<T extends { [key: string]: string }>(props: {
     [props.index2dsphere],
   )
   const onRenderDocumentItemColumn = useCallback(
-    (item) => <ColorizedData value={item} />,
+    (item) => <TableDocument value={item} />,
     [],
   )
   const handleGetKey = useCallback((item: T, index?: number) => {
