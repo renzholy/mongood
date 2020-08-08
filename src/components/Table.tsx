@@ -144,7 +144,7 @@ export function Table<T extends { [key: string]: string }>(props: {
               columns={columns}
               getKey={handleGetKey}
               usePageCache={true}
-              onShouldVirtualize={() => false}
+              onShouldVirtualize={() => true}
               useReducedRowRenderer={true}
               constrainMode={ConstrainMode.unconstrained}
               layoutMode={DetailsListLayoutMode.justified}
@@ -173,6 +173,10 @@ export function Table<T extends { [key: string]: string }>(props: {
                   isMultiline: true,
                 },
               ]}
+              getKey={handleGetKey}
+              usePageCache={true}
+              onShouldVirtualize={() => true}
+              useReducedRowRenderer={true}
               constrainMode={ConstrainMode.unconstrained}
               layoutMode={DetailsListLayoutMode.justified}
               items={items || []}
