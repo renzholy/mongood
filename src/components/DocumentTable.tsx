@@ -13,7 +13,7 @@ import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 
-type Data = { _id: MongoData; [key: string]: MongoData }
+type Data = { [key: string]: MongoData }
 
 export function DocumentTable() {
   const connection = useSelector((state) => state.root.connection)
