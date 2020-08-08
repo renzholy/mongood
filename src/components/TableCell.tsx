@@ -58,7 +58,7 @@ export function TableCell(props: {
   const html = useColorize(
     props.renderWidth
       ? // eslint-disable-next-line no-bitwise
-        props.value.substr(0, props.renderWidth >> 3)
+        props.value.substr(0, props.renderWidth >> 2)
       : props.value,
   )
   const onRenderPlainCard = useCallback(() => {
