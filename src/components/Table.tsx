@@ -79,10 +79,9 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     [isValidating, theme],
   )
   const onRenderTableItemColumn = useCallback(
-    (item, _index, column?: IColumn) => (
+    (item?: T, _index?: number, column?: IColumn) => (
       <TableCell
-        value={item[column?.key as keyof typeof item]}
-        length={(column?.currentWidth || 0) * 10}
+        value={item?.[column?.key as keyof typeof item]}
         index2dsphere={
           props.index2dsphere &&
           column?.key &&

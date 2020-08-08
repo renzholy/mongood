@@ -41,14 +41,10 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
 
 export function TableCell(props: {
   value: MongoData
-  length?: number
   index2dsphere?: MongoData
 }) {
   const theme = getTheme()
-  const str = useMemo(
-    () => stringify(props.value).substr(0, Math.max(props.length || 0, 50)),
-    [props.value, props.length],
-  )
+  const str = useMemo(() => stringify(props.value), [props.value])
   const html = useColorize(str)
   const onRenderPlainCard = useCallback(() => {
     return <PlainCard value={props.value} index2dsphere={props.index2dsphere} />
