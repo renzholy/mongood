@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable react/no-danger */
 
 import React, { useCallback, useMemo } from 'react'
@@ -41,10 +42,16 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
 
 export function TableCell(props: {
   value: MongoData
+  minWidth?: number
   index2dsphere?: MongoData
 }) {
   const theme = getTheme()
-  const str = useMemo(() => stringify(props.value), [props.value])
+  const minChars =
+    props.minWidth === undefined ? undefined : props.minWidth >> 2
+  const str = useMemo(() => stringify(props.value).substr(0, minChars), [
+    props.value,
+    minChars,
+  ])
   const html = useColorize(str)
   const onRenderPlainCard = useCallback(() => {
     return <PlainCard value={props.value} index2dsphere={props.index2dsphere} />

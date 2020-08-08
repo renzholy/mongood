@@ -82,6 +82,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     (item?: T, _index?: number, column?: IColumn) => (
       <TableCell
         value={item?.[column?.key as keyof typeof item]}
+        minWidth={column?.currentWidth || column?.minWidth}
         index2dsphere={
           props.index2dsphere &&
           column?.key &&
