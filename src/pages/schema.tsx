@@ -17,7 +17,7 @@ import { stringify, parse } from '@/utils/ejson'
 import { ActionButton } from '@/components/ActionButton'
 import { LargeMessage } from '@/components/LargeMessage'
 import { ControlledEditorProps } from '@monaco-editor/react'
-import { generateJSONSchema } from '@/utils/schema'
+import { generateMongoJsonSchema } from '@/utils/schema'
 import { MongoData } from '@/types'
 import { TAB_SIZE_KEY } from './settings'
 
@@ -123,11 +123,13 @@ export default () => {
       cursor: { firstBatch },
     } = await runCommand<{
       cursor: {
-        firstBatch: { [key: string]: MongoData }[]
+        firstBatch: MongoData[]
       }
     }>(connection, database!, { find: collection }, { canonical: true })
-    const str = stringify(generateJSONSchema(firstBatch), true)
+    const str = stringify(generateMongoJsonSchema(firstBatch), true)
     setValue(str ? `return ${str}` : 'return {}')
+    setValidationAction(ValidationAction.WARN)
+    setValidationLevel(ValidationLevel.OFF)
   }, [collection, connection, database])
 
   if (!database || !collection) {
@@ -189,6 +191,7 @@ export default () => {
           <div />
         </Stack.Item>
         <DefaultButton
+          disabled={value !== 'return {}'}
           styles={{ root: { marginRight: 10 } }}
           onClick={handleGenerate}>
           Generate
