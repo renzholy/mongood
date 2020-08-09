@@ -31,6 +31,7 @@
     "bson": "4.0.4",
     "bytes": "3.1.0",
     "csv-stringify": "5.5.1",
+    "deepmerge": "4.2.2",
     "markdown-table": "2.0.0",
     "mongodb-uri": "0.9.7",
     "normalize.css": "8.0.1",
@@ -45,6 +46,7 @@
   "devDependencies": {
     "@types/bson": "4.0.2",
     "@types/bytes": "3.1.0",
+    "@types/deepmerge": "2.2.0",
     "@types/lodash": "4.14.159",
     "@types/markdown-table": "2.0.0",
     "@types/mongodb": "3.5.25",

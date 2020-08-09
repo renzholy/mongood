@@ -1,9 +1,11 @@
+/* eslint-disable no-nested-ternary */
 /**
  * @see https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/
  * @see https://docs.mongodb.com/manual/reference/operator/query/type/#document-type-available-types
  */
 
-import { mapValues, omit } from 'lodash'
+import { mapValues, omit, uniq, omitBy, isNil } from 'lodash'
+import deepmerge from 'deepmerge'
 
 import { MongoData } from '@/types'
 
@@ -13,90 +15,104 @@ type Schema = {
   properties?: { [key: string]: Schema }
 }
 
-function merge(schemas: Schema[]): Schema {
-  return schemas[0]
-}
-
 function generate(doc: MongoData): Schema {
   if (typeof doc === 'string') {
     return {
-      bsonType: 'string',
+      bsonType: ['string'],
     }
   }
   if (typeof doc === 'number') {
     return {
-      bsonType: 'number',
+      bsonType: ['number'],
     }
   }
   if (typeof doc === 'boolean') {
     return {
-      bsonType: 'bool',
+      bsonType: ['bool'],
     }
   }
   if (doc === undefined || doc === null) {
     return {
-      bsonType: 'null',
+      bsonType: ['null'],
     }
   }
   if ('$oid' in doc) {
     return {
-      bsonType: 'objectId',
+      bsonType: ['objectId'],
     }
   }
   if ('$date' in doc && '$numberLong' in doc.$date) {
     return {
-      bsonType: 'date',
+      bsonType: ['date'],
     }
   }
   if ('$numberDecimal' in doc) {
     return {
-      bsonType: 'decimal',
+      bsonType: ['decimal'],
     }
   }
   if ('$numberDouble' in doc) {
     return {
-      bsonType: 'double',
+      bsonType: ['double'],
     }
   }
   if ('$numberInt' in doc) {
     return {
-      bsonType: 'int',
+      bsonType: ['int'],
     }
   }
   if ('$numberLong' in doc) {
     return {
-      bsonType: 'long',
+      bsonType: ['long'],
     }
   }
   if ('$regularExpression' in doc) {
     return {
-      bsonType: 'regex',
+      bsonType: ['regex'],
     }
   }
   if ('$timestamp' in doc) {
     return {
-      bsonType: 'timestamp',
+      bsonType: ['timestamp'],
     }
   }
   if ('$binary' in doc) {
     return {
-      bsonType: 'binData',
+      bsonType: ['binData'],
     }
   }
   if (Array.isArray(doc)) {
     return {
-      bsonType: 'array',
-      items: merge(doc.map(generate)),
+      bsonType: ['array'],
+      items: deepmerge.all(doc.map(generate)) as Schema,
     }
   }
   return {
-    bsonType: 'object',
+    bsonType: ['object'],
     properties: mapValues(omit(doc, ['__v']), generate) as {
       [key: string]: Schema
     },
   }
 }
 
-export function generateMongoJsonSchema(docs: MongoData[]): object {
-  return merge(docs.map(generate))
+function postProcessSchema(schema: Schema): Schema {
+  const bsonTypes = uniq(schema.bsonType)
+  return omitBy(
+    {
+      bsonType: bsonTypes.length === 1 ? bsonTypes[0] : bsonTypes,
+      items: Array.isArray(schema.items)
+        ? schema.items.map(postProcessSchema)
+        : schema.items
+        ? postProcessSchema(schema.items)
+        : undefined,
+      properties: schema.properties
+        ? mapValues(schema.properties, postProcessSchema)
+        : undefined,
+    },
+    isNil,
+  ) as Schema
+}
+
+export function generateMongoJsonSchema(docs: MongoData[]): Schema {
+  return postProcessSchema(deepmerge.all(docs.map(generate)) as Schema)
 }
