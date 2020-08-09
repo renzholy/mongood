@@ -1,7 +1,13 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import { Dropdown, getTheme, Label } from '@fluentui/react'
+import {
+  Dropdown,
+  getTheme,
+  Label,
+  DefaultButton,
+  Stack,
+} from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
@@ -123,57 +129,62 @@ export default () => {
         onChange={handleChange}
         options={options}
       />
-      <div
-        style={{
-          height: 32,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 10,
-          backgroundColor: theme.palette.neutralLight,
+      <Stack
+        horizontal={true}
+        tokens={{ padding: 10 }}
+        styles={{
+          root: {
+            height: 52,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: theme.palette.neutralLight,
+          },
         }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Label styles={{ root: { marginRight: 10 } }}>
-            Validation Action:
-          </Label>
-          <Dropdown
-            selectedKey={validationAction}
-            onChange={(_ev, option) => {
-              setValidationAction(option?.key as ValidationAction | null)
-            }}
-            errorMessage={value && !validationAction ? ' ' : undefined}
-            styles={{ root: { marginRight: 10, width: 140, height: 32 } }}
-            options={[
-              { key: ValidationAction.WARN, text: ValidationAction.WARN },
-              { key: ValidationAction.ERROR, text: ValidationAction.ERROR },
-            ]}
-            placeholder="please select"
-          />
-          <Label styles={{ root: { marginRight: 10, marginLeft: 10 } }}>
-            Validation Level:
-          </Label>
-          <Dropdown
-            selectedKey={validationLevel}
-            onChange={(_ev, option) => {
-              setValidationLevel(option?.key as ValidationLevel | null)
-            }}
-            errorMessage={value && !validationLevel ? ' ' : undefined}
-            styles={{ root: { marginRight: 10, width: 140, height: 32 } }}
-            options={[
-              { key: ValidationLevel.OFF, text: ValidationLevel.OFF },
-              { key: ValidationLevel.MODERATE, text: ValidationLevel.MODERATE },
-              { key: ValidationLevel.STRICT, text: ValidationLevel.STRICT },
-            ]}
-            placeholder="please select"
-          />
-        </div>
+        <Label styles={{ root: { marginRight: 10 } }}>Validation Action:</Label>
+        <Dropdown
+          selectedKey={validationAction}
+          onChange={(_ev, option) => {
+            setValidationAction(option?.key as ValidationAction | null)
+          }}
+          errorMessage={value && !validationAction ? ' ' : undefined}
+          styles={{ root: { marginRight: 10, width: 140, height: 32 } }}
+          options={[
+            { key: ValidationAction.WARN, text: ValidationAction.WARN },
+            { key: ValidationAction.ERROR, text: ValidationAction.ERROR },
+          ]}
+          placeholder="please select"
+        />
+        <Label styles={{ root: { marginRight: 10, marginLeft: 10 } }}>
+          Validation Level:
+        </Label>
+        <Dropdown
+          selectedKey={validationLevel}
+          onChange={(_ev, option) => {
+            setValidationLevel(option?.key as ValidationLevel | null)
+          }}
+          errorMessage={value && !validationLevel ? ' ' : undefined}
+          styles={{ root: { width: 140, height: 32 } }}
+          options={[
+            { key: ValidationLevel.OFF, text: ValidationLevel.OFF },
+            { key: ValidationLevel.MODERATE, text: ValidationLevel.MODERATE },
+            { key: ValidationLevel.STRICT, text: ValidationLevel.STRICT },
+          ]}
+          placeholder="please select"
+        />
+        <Stack.Item grow={true}>
+          <div />
+        </Stack.Item>
+        <DefaultButton styles={{ root: { marginRight: 10 } }}>
+          Generate
+        </DefaultButton>
         <ActionButton
           text="Update"
           disabled={!validationAction || !validationLevel || !value}
           primary={true}
           onClick={handleUpdate}
         />
-      </div>
+      </Stack>
     </>
   )
 }
