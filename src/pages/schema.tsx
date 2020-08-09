@@ -191,7 +191,7 @@ export default () => {
           <div />
         </Stack.Item>
         <DefaultButton
-          disabled={value !== 'return {}'}
+          disabled={!!value && value !== 'return {}'}
           styles={{ root: { marginRight: 10 } }}
           onClick={handleGenerate}>
           Generate

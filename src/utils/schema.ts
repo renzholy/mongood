@@ -3,11 +3,21 @@
  * @see https://docs.mongodb.com/manual/reference/operator/query/type/#document-type-available-types
  */
 
-import { mapValues } from 'lodash'
+import { mapValues, omit } from 'lodash'
 
 import { MongoData } from '@/types'
 
-function generate(doc: MongoData): object {
+type Schema = {
+  bsonType: string | string[]
+  items?: Schema | Schema[]
+  properties?: { [key: string]: Schema }
+}
+
+function merge(schemas: Schema[]): Schema {
+  return schemas[0]
+}
+
+function generate(doc: MongoData): Schema {
   if (typeof doc === 'string') {
     return {
       bsonType: 'string',
@@ -76,15 +86,17 @@ function generate(doc: MongoData): object {
   if (Array.isArray(doc)) {
     return {
       bsonType: 'array',
-      items: generate(doc[0]),
+      items: merge(doc.map(generate)),
     }
   }
   return {
     bsonType: 'object',
-    properties: mapValues(doc, generate),
+    properties: mapValues(omit(doc, ['__v']), generate) as {
+      [key: string]: Schema
+    },
   }
 }
 
 export function generateMongoJsonSchema(docs: MongoData[]): object {
-  return generate(docs[0])
+  return merge(docs.map(generate))
 }
