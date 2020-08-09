@@ -1,13 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import {
-  Dropdown,
-  getTheme,
-  Label,
-  DefaultButton,
-  Stack,
-} from '@fluentui/react'
+import { Dropdown, getTheme, Label, Stack } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
@@ -77,7 +71,7 @@ export default () => {
     setValidationLevel,
   ] = useState<ValidationLevel | null>(null)
   const [value, setValue] = useState('')
-  const handleUpdate = useCallback(async () => {
+  const handleSave = useCallback(async () => {
     await runCommand(connection, database!, {
       collMod: collection,
       validationAction,
@@ -190,18 +184,20 @@ export default () => {
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
-        <DefaultButton
-          disabled={!!value && value !== 'return {}'}
-          styles={{ root: { marginRight: 10 } }}
-          onClick={handleGenerate}>
-          Generate
-        </DefaultButton>
-        <ActionButton
-          text="Update"
-          disabled={!validationAction || !validationLevel || !value}
-          primary={true}
-          onClick={handleUpdate}
-        />
+        {value && value !== 'return {}' ? (
+          <ActionButton
+            text="Save"
+            disabled={!validationAction || !validationLevel || !value}
+            primary={true}
+            onClick={handleSave}
+          />
+        ) : (
+          <ActionButton
+            text="Generate"
+            disabled={!!value && value !== 'return {}'}
+            onClick={handleGenerate}
+          />
+        )}
       </Stack>
     </>
   )
