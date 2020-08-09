@@ -17,6 +17,8 @@ import { stringify, parse } from '@/utils/ejson'
 import { ActionButton } from '@/components/ActionButton'
 import { LargeMessage } from '@/components/LargeMessage'
 import { ControlledEditorProps } from '@monaco-editor/react'
+import { generateJSONSchema } from '@/utils/schema'
+import { MongoData } from '@/types'
 import { TAB_SIZE_KEY } from './settings'
 
 enum ValidationAction {
@@ -116,6 +118,17 @@ export default () => {
     }),
     [],
   )
+  const handleGenerate = useCallback(async () => {
+    const {
+      cursor: { firstBatch },
+    } = await runCommand<{
+      cursor: {
+        firstBatch: { [key: string]: MongoData }[]
+      }
+    }>(connection, database!, { find: collection }, { canonical: true })
+    const str = stringify(generateJSONSchema(firstBatch), true)
+    setValue(str ? `return ${str}` : 'return {}')
+  }, [collection, connection, database])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
@@ -175,7 +188,9 @@ export default () => {
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
-        <DefaultButton styles={{ root: { marginRight: 10 } }}>
+        <DefaultButton
+          styles={{ root: { marginRight: 10 } }}
+          onClick={handleGenerate}>
           Generate
         </DefaultButton>
         <ActionButton
