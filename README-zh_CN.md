@@ -12,7 +12,6 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/4b5f9ef66205961e4ddd/maintainability)](https://codeclimate.com/github/RenzHoly/Mongood/maintainability)
 
 <a href="https://www.producthunt.com/posts/mongood?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-mongood" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=230555&theme=light" alt="Mongood - A MongoDB GUI with Fluent Design | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
-<a href="https://www.buymeacoffee.com/renzholy" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" style="height: 52px !important;width: 217px !important; border: solid 1px black; border-radius: 8px" ></a>
 
 [English](./README.md) | 简体中文
 
