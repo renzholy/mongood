@@ -1,6 +1,6 @@
 # Mongood
 
-<img src="./go/assets/logo.png" width="100" height="100" />
+<img src="./go/assets/logo.png" width="100" height="100" align="left" />
 
 A [MongoDB](https://www.mongodb.com/) GUI with [Fluent Design](https://www.microsoft.com/design/fluent/)
 
@@ -10,6 +10,9 @@ A [MongoDB](https://www.mongodb.com/) GUI with [Fluent Design](https://www.micro
 ![GitHub Actions](https://github.com/renzholy/mongood/workflows/Release/badge.svg?branch=v0.1.0)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f7b2974cfea2417a8bd489a9bdbea4a7)](https://app.codacy.com/manual/RenzHoly/Mongood?utm_source=github.com&utm_medium=referral&utm_content=RenzHoly/Mongood&utm_campaign=Badge_Grade_Dashboard)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4b5f9ef66205961e4ddd/maintainability)](https://codeclimate.com/github/RenzHoly/Mongood/maintainability)
+
+<a href="https://www.producthunt.com/posts/mongood?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-mongood" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=230555&theme=light" alt="Mongood - A MongoDB GUI with Fluent Design | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+<a href="https://www.buymeacoffee.com/renzholy" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" style="height: 52px !important;width: 217px !important; border: solid 1px black; border-radius: 8px" ></a>
 
 English | [简体中文](./README-zh_CN.md)
 
@@ -21,13 +24,13 @@ English | [简体中文](./README-zh_CN.md)
 ## Feature 🔮
 
 - [x] Server or client mode (without Electron, but need Chrome)
-- [x] Edit documents with [Monaco Editor](https://microsoft.github.io/monaco-editor/index.html)
+- [x] Edit documents using [Monaco Editor](https://microsoft.github.io/monaco-editor/index.html) with intellisense
 - [x] Designed with [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui)
 - [x] [Mongo Shell](https://docs.mongodb.com/manual/core/shell-types/) compatiable data type, eg: `ObjectId()` `ISODate()` `Timestamp()`
 - [x] Find documents with index hint, avoiding slow operation
 - [x] Fancy profiling exec stats
 - [x] Geo preview for 2dsphere index
-- [x] [JSON Schema Validator](https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/) supporting
+- [x] Auto generate [JSON Schema Validator](https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/)
 - [x] Notebook function, just like [Jupyter](https://jupyter.org/)
 - [x] HTTP/2
 - [x] Auto **dark** mode
