@@ -24,7 +24,7 @@
   "homepage": "https://github.com/RenzHoly/Mongood#readme",
   "dependencies": {
     "@fluentui/react": "7.126.3",
-    "@monaco-editor/react": "3.5.6",
+    "@monaco-editor/react": "3.5.7",
     "@mongosh/browser-runtime-core": "0.1.0",
     "@reduxjs/toolkit": "1.4.0",
     "@uifabric/react-cards": "0.110.18",
