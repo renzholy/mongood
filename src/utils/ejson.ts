@@ -3,9 +3,13 @@
  */
 
 import saferEval from 'safer-eval'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 
 import { MongoData } from '@/types'
-import { TAB_SIZE_KEY } from '@/pages/settings'
+import { TAB_SIZE_KEY, TIME_ZONE_KEY } from '@/pages/settings'
+
+dayjs.extend(utc)
 
 function wrapKey(key: string) {
   const strKey = key.toString()
@@ -21,6 +25,8 @@ function wrapKey(key: string) {
 }
 
 const tabSize = parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10)
+
+const timezone = parseInt(localStorage.getItem(TIME_ZONE_KEY) || '0', 10)
 
 const extraSpaces = Array.from({ length: tabSize })
   .map(() => ' ')
@@ -50,9 +56,14 @@ export function stringify(
     return `ObjectId("${val.$oid}")`
   }
   if ('$date' in val && '$numberLong' in val.$date) {
-    return `ISODate("${new Date(
-      parseInt(val.$date.$numberLong, 10),
-    ).toISOString()}")`
+    return timezone
+      ? `Date("${dayjs(parseInt(val.$date.$numberLong, 10))
+          .utcOffset(timezone)
+          .local()
+          .format()}")`
+      : `ISODate("${new Date(
+          parseInt(val.$date.$numberLong, 10),
+        ).toISOString()}")`
   }
   if ('$numberDecimal' in val) {
     return `NumberDecimal("${val.$numberDecimal}")`
@@ -150,12 +161,16 @@ export const sandbox = {
   }),
   Date: (s: string | number) => ({
     $date: {
-      $numberLong: new Date(s).getTime().toString(),
+      $numberLong: s
+        ? new Date(s).getTime().toString()
+        : new Date().getTime().toString(),
     },
   }),
   ISODate: (s: string | number) => ({
     $date: {
-      $numberLong: new Date(s).getTime().toString(),
+      $numberLong: s
+        ? new Date(s).getTime().toString()
+        : new Date().getTime().toString(),
     },
   }),
   NumberDecimal: (s: string | number) => ({

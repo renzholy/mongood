@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { padStart } from 'lodash'
 
 export const TAB_SIZE_KEY = 'settings.tabSize'
-const TIME_ZONE_KEY = 'settings.timezone'
+export const TIME_ZONE_KEY = 'settings.timezone'
 export const STATIC_MAP_URL_TEMPLATE_KEY = 'setting.staticMapUrlTemplate'
 /**
  * @see https://tech.yandex.com/maps/staticapi/doc/1.x/dg/concepts/input_params-docpage/
