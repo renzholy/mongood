@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import { Dropdown, getTheme, Label, Stack } from '@fluentui/react'
+import { Dropdown, Label, Stack, Separator, TooltipHost } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
@@ -61,7 +61,6 @@ export default () => {
     },
   )
   const isDarkMode = useDarkMode()
-  const theme = getTheme()
   const [
     validationAction,
     setValidationAction,
@@ -135,13 +134,6 @@ export default () => {
   }
   return (
     <>
-      <ControlledEditor
-        language="typescript"
-        theme={isDarkMode ? 'vs-dark' : 'vs'}
-        value={value}
-        onChange={handleChange}
-        options={options}
-      />
       <Stack
         horizontal={true}
         tokens={{ padding: 10 }}
@@ -151,7 +143,7 @@ export default () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: theme.palette.neutralLighter,
+            marginBottom: -8,
           },
         }}>
         <Label styles={{ root: { marginRight: 10 } }}>Validation Action:</Label>
@@ -188,21 +180,23 @@ export default () => {
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
+        <TooltipHost content="Auto generate schema">
+          <ActionButton icon="AutoEnhanceOn" onClick={handleGenerate} />
+        </TooltipHost>
         <ActionButton
-          text="Generate"
-          disabled={
-            !!data?.cursor.firstBatch[0]?.options.validator?.$jsonSchema
-          }
-          style={{ marginRight: 10 }}
-          onClick={handleGenerate}
-        />
-        <ActionButton
-          text="Save"
+          icon="Save"
           disabled={!validationAction || !validationLevel || !value}
-          primary={true}
           onClick={handleSave}
         />
       </Stack>
+      <Separator styles={{ root: { padding: 0 } }} />
+      <ControlledEditor
+        language="typescript"
+        theme={isDarkMode ? 'vs-dark' : 'vs'}
+        value={value}
+        onChange={handleChange}
+        options={options}
+      />
     </>
   )
 }
