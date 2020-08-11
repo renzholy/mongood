@@ -122,9 +122,13 @@ export default () => {
     }>(connection, database!, { find: collection }, { canonical: true })
     const str = stringify(generateMongoJsonSchema(firstBatch), true)
     setValue(str ? `return ${str}` : 'return {}')
-    setValidationAction(ValidationAction.WARN)
-    setValidationLevel(ValidationLevel.OFF)
-  }, [collection, connection, database])
+    if (!validationAction) {
+      setValidationAction(ValidationAction.WARN)
+    }
+    if (!validationLevel) {
+      setValidationLevel(ValidationLevel.OFF)
+    }
+  }, [collection, connection, database, validationAction, validationLevel])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
@@ -147,7 +151,7 @@ export default () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: theme.palette.neutralLight,
+            backgroundColor: theme.palette.neutralLighter,
           },
         }}>
         <Label styles={{ root: { marginRight: 10 } }}>Validation Action:</Label>
@@ -184,20 +188,20 @@ export default () => {
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
-        {value && value !== 'return {}' ? (
-          <ActionButton
-            text="Save"
-            disabled={!validationAction || !validationLevel || !value}
-            primary={true}
-            onClick={handleSave}
-          />
-        ) : (
-          <ActionButton
-            text="Generate"
-            disabled={!!value && value !== 'return {}'}
-            onClick={handleGenerate}
-          />
-        )}
+        <ActionButton
+          text="Generate"
+          disabled={
+            !!data?.cursor.firstBatch[0]?.options.validator?.$jsonSchema
+          }
+          style={{ marginRight: 10 }}
+          onClick={handleGenerate}
+        />
+        <ActionButton
+          text="Save"
+          disabled={!validationAction || !validationLevel || !value}
+          primary={true}
+          onClick={handleSave}
+        />
       </Stack>
     </>
   )
