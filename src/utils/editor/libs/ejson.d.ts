@@ -13,7 +13,7 @@ function ObjectId(
  * @param {string} date An ISO-8601 date string
  */
 function ISODate(
-  date: string,
+  date?: string,
 ): {
   $date: {
     $numberLong: string
@@ -24,7 +24,7 @@ function ISODate(
  * @param {number|string} date
  */
 function Date(
-  date: number | string,
+  date?: number | string,
 ): {
   $date: {
     $numberLong: string

@@ -162,18 +162,20 @@ export const sandbox = {
   ObjectId: (s: string) => ({
     $oid: s,
   }),
-  Date: (s: string | number) => ({
+  Date: (s?: string | number) => ({
     $date: {
-      $numberLong: s
-        ? new Date(s).getTime().toString()
-        : new Date().getTime().toString(),
+      $numberLong:
+        s !== undefined
+          ? new Date(s).getTime().toString()
+          : new Date().getTime().toString(),
     },
   }),
-  ISODate: (s: string | number) => ({
+  ISODate: (s?: string | number) => ({
     $date: {
-      $numberLong: s
-        ? new Date(s).getTime().toString()
-        : new Date().getTime().toString(),
+      $numberLong:
+        s !== undefined
+          ? new Date(s).getTime().toString()
+          : new Date().getTime().toString(),
     },
   }),
   NumberDecimal: (s: string | number) => ({
