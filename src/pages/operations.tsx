@@ -116,7 +116,7 @@ export default () => {
         </Stack.Item>
         <Toggle
           inlineLabel={true}
-          label="Auto Refresh"
+          label="Auto Refresh:"
           onText=" "
           offText=" "
           styles={{
