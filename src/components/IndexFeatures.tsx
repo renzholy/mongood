@@ -90,7 +90,7 @@ export function IndexFeatures(props: { value: IndexSpecification }) {
           : null,
         '2dsphereIndexVersion' in props.value
           ? {
-              text: 'GEOSPATIAL',
+              text: '2DSPHERE',
               data: {
                 '2dsphereIndexVersion': props.value['2dsphereIndexVersion'],
               },
