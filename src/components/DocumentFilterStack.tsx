@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import React, { useEffect } from 'react'
 import {
   Stack,

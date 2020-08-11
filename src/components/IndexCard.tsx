@@ -1,5 +1,3 @@
-/* eslint-disable react/no-danger */
-/* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-indent */
 
 import React, { useCallback, useState, useMemo, useRef } from 'react'

@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import React, { useState, useEffect, useCallback } from 'react'
 import { Stack, SpinButton, Slider, Label, Separator } from '@fluentui/react'
 import useSWR from 'swr'

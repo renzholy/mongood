@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import React, { useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'

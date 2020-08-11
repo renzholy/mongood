@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
 import {

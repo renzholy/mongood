@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'

@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import React, { useState, useMemo } from 'react'
 import {
   Stack,

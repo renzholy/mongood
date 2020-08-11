@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 /**
  * @see https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/
  * @see https://docs.mongodb.com/manual/reference/operator/query/type/#document-type-available-types
