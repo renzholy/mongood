@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import React, { useState, useMemo } from 'react'
 import {
   Stack,
@@ -137,7 +135,7 @@ export default () => {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52, marginBottom: -8 } }}>
+        styles={{ root: { height: 52 } }}>
         <FilterInput
           value={value}
           onChange={(_value) => {
@@ -146,13 +144,13 @@ export default () => {
           }}
         />
       </Stack>
-      <Separator styles={{ root: { padding: 0 } }} />
+      <Separator styles={{ root: { padding: 0, height: 2 } }} />
       {error ? (
         <LargeMessage iconName="Error" title="Error" content={error.message} />
       ) : !data ? (
-        <LargeMessage iconName="SearchData" title="Loading" />
+        <LargeMessage iconName="HourGlass" title="Loading" />
       ) : data.inprog.length === 0 ? (
-        <LargeMessage iconName="Database" title="No Operation" />
+        <LargeMessage iconName="AnalyticsReport" title="No Operation" />
       ) : (
         <Stack
           tokens={{ childrenGap: 20 }}

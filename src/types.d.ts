@@ -5,22 +5,6 @@ export type MongoData =
   | undefined
   | null
   | { $oid: string }
-  | {
-      id: {
-        '0': number
-        '1': number
-        '2': number
-        '3': number
-        '4': number
-        '5': number
-        '6': number
-        '7': number
-        '8': number
-        '9': number
-        '10': number
-        '11': number
-      }
-    }
   | { $date: { $numberLong: string } }
   | { $numberDecimal: string }
   | { $numberDouble: string }
@@ -29,6 +13,8 @@ export type MongoData =
   | { $regularExpression: { pattern: string; options: string } }
   | { $timestamp: { t: number; i: number } }
   | { $binary: { base64: string; subType: string } }
+  | { $minKey: 1 }
+  | { $maxKey: 1 }
   | object[]
   | object
 

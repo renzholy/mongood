@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 /**
  * @see https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/
  * @see https://docs.mongodb.com/manual/reference/operator/query/type/#document-type-available-types
@@ -79,6 +78,16 @@ function generate(doc: MongoData): Schema {
   if ('$binary' in doc) {
     return {
       bsonType: ['binData'],
+    }
+  }
+  if ('$minKey' in doc && doc.$minKey === 1) {
+    return {
+      bsonType: ['minKey'],
+    }
+  }
+  if ('$maxKey' in doc && doc.$maxKey === 1) {
+    return {
+      bsonType: ['maxKey'],
     }
   }
   if (Array.isArray(doc)) {

@@ -143,7 +143,6 @@ export default () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: -8,
           },
         }}>
         <Label styles={{ root: { marginRight: 10 } }}>Validation Action:</Label>
@@ -189,7 +188,7 @@ export default () => {
           onClick={handleSave}
         />
       </Stack>
-      <Separator styles={{ root: { padding: 0 } }} />
+      <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <ControlledEditor
         language="typescript"
         theme={isDarkMode ? 'vs-dark' : 'vs'}

@@ -18,6 +18,7 @@ export function IndexContextualMenu(props: {
   target?: MouseEvent
   value: IndexSpecification
   onView: () => void
+  onViewDetail: () => void
   onDrop: () => void
 }) {
   const connection = useSelector((state) => state.root.connection)
@@ -105,6 +106,12 @@ export function IndexContextualMenu(props: {
           },
           {
             key: '1',
+            text: 'View Detail',
+            iconProps: { iconName: 'EntryView' },
+            onClick: props.onViewDetail,
+          },
+          {
+            key: '2',
             text: 'Drop',
             iconProps: {
               iconName: 'Delete',

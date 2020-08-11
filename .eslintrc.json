@@ -27,6 +27,7 @@
     "react/jsx-wrap-multilines": "off",
     "react/require-default-props": "off",
     "no-underscore-dangle": "off",
+    "no-nested-ternary": "off",
     "@typescript-eslint/naming-convention": "off"
   }
 }

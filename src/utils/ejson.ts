@@ -9,7 +9,12 @@ import { TAB_SIZE_KEY } from '@/pages/settings'
 
 function wrapKey(key: string) {
   const strKey = key.toString()
-  if (strKey.includes('-') || strKey.includes('.') || /^\d/.test(strKey)) {
+  if (
+    strKey.includes('-') ||
+    strKey.includes(' ') ||
+    strKey.includes('.') ||
+    /^\d/.test(strKey)
+  ) {
     return `"${key}"`
   }
   return key
@@ -73,6 +78,12 @@ export function stringify(
     return `BinData(${parseInt(val.$binary.subType, 16)}, "${
       val.$binary.base64
     }")`
+  }
+  if ('$minKey' in val && val.$minKey === 1) {
+    return `MinKey()`
+  }
+  if ('$maxKey' in val && val.$maxKey === 1) {
+    return `MaxKey()`
   }
   if (Array.isArray(val)) {
     if (!hasIndent) {
@@ -167,6 +178,12 @@ export const sandbox = {
       base64,
       subType: subType.toString(16),
     },
+  }),
+  MinKey: () => ({
+    $minKey: 1,
+  }),
+  MaxKey: () => ({
+    $maxKey: 1,
   }),
 }
 
