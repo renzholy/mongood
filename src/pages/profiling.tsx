@@ -117,7 +117,7 @@ export default () => {
           root: { height: 52, alignItems: 'center' },
         }}>
         <SpinButton
-          label="Slow Ms:"
+          label="Slow ms:"
           styles={{
             spinButtonWrapper: { width: 80 },
             label: { marginLeft: 10 },
@@ -134,7 +134,7 @@ export default () => {
             setSlowms(Math.max(parseInt(value, 10) - 10, 0))
           }}
         />
-        <Label>Sample Rate:</Label>
+        <Label>Sample rate:</Label>
         <Slider
           styles={{
             slideBox: { width: 100 },

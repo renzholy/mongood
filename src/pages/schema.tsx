@@ -145,7 +145,7 @@ export default () => {
             justifyContent: 'space-between',
           },
         }}>
-        <Label styles={{ root: { marginRight: 10 } }}>Validation Action:</Label>
+        <Label styles={{ root: { marginRight: 10 } }}>Validation action:</Label>
         <Dropdown
           selectedKey={validationAction}
           onChange={(_ev, option) => {
@@ -160,7 +160,7 @@ export default () => {
           placeholder="please select"
         />
         <Label styles={{ root: { marginRight: 10, marginLeft: 10 } }}>
-          Validation Level:
+          Validation level:
         </Label>
         <Dropdown
           selectedKey={validationLevel}
