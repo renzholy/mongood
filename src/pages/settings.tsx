@@ -1,7 +1,9 @@
-import { TextField, SpinButton } from '@fluentui/react'
+import { TextField, SpinButton, Stack } from '@fluentui/react'
 import React, { useState, useEffect } from 'react'
+import { padStart } from 'lodash'
 
 export const TAB_SIZE_KEY = 'settings.tabSize'
+export const TIMEZONE_OFFSET_KEY = 'settings.timezoneOffset'
 export const STATIC_MAP_URL_TEMPLATE_KEY = 'setting.staticMapUrlTemplate'
 /**
  * @see https://tech.yandex.com/maps/staticapi/doc/1.x/dg/concepts/input_params-docpage/
@@ -22,9 +24,15 @@ export default () => {
   useEffect(() => {
     localStorage.setItem(TAB_SIZE_KEY, tabSize.toString())
   }, [tabSize])
+  const [timezoneOffset, setTimezoneOffset] = useState<number>(
+    parseInt(localStorage.getItem(TIMEZONE_OFFSET_KEY) || '0', 10),
+  )
+  useEffect(() => {
+    localStorage.setItem(TIMEZONE_OFFSET_KEY, timezoneOffset.toString())
+  }, [timezoneOffset])
 
   return (
-    <div style={{ margin: 20 }}>
+    <Stack tokens={{ padding: 20, childrenGap: 10 }}>
       <SpinButton
         autoCapitalize="off"
         autoCorrect="off"
@@ -42,8 +50,34 @@ export default () => {
           setTabSize(Math.max(parseInt(value, 10) - 2, 0).toString())
         }}
       />
+      <SpinButton
+        autoCapitalize="off"
+        autoCorrect="off"
+        label="Timezone offset:"
+        labelPosition={0}
+        styles={{
+          root: { width: 120 },
+        }}
+        value={
+          timezoneOffset >= 0
+            ? `+${padStart(timezoneOffset.toString(), 2, '0')}:00`
+            : `-${padStart((-timezoneOffset).toString(), 2, '0')}:00`
+        }
+        onValidate={(value) => {
+          setTimezoneOffset(parseInt(value.split(':')?.[0] || '0', 10))
+        }}
+        onIncrement={(value) => {
+          setTimezoneOffset(
+            Math.min(parseInt(value.split(':')?.[0] || '0', 10) + 1, 15),
+          )
+        }}
+        onDecrement={(value) => {
+          setTimezoneOffset(
+            Math.max(parseInt(value.split(':')?.[0] || '0', 10) - 1, -15),
+          )
+        }}
+      />
       <TextField
-        styles={{ root: { marginTop: 20 } }}
         autoCapitalize="off"
         autoComplete="off"
         autoCorrect="off"
@@ -60,6 +94,6 @@ export default () => {
           setStaticMapUrlTemplate(newValue)
         }}
       />
-    </div>
+    </Stack>
   )
 }
