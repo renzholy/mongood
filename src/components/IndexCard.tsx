@@ -99,7 +99,7 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
       <Text
         styles={{
           root: {
-            color: theme.palette.neutralSecondary,
+            color: theme.palette.themePrimary,
           },
         }}>
         {props.value.text}
