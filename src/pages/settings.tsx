@@ -53,7 +53,7 @@ export default () => {
       <SpinButton
         autoCapitalize="off"
         autoCorrect="off"
-        label="Time zone offset:"
+        label="Timezone offset:"
         labelPosition={0}
         styles={{
           root: { width: 120 },
