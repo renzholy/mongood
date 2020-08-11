@@ -159,6 +159,7 @@ export function IndexCard(props: {
     [props.value],
   )
   const [isOpen, setIsOpen] = useState(false)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
   const target = useRef<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
 
@@ -196,6 +197,15 @@ export function IndexCard(props: {
               setIsOpen(false)
             }}
           />
+          <EditorModal
+            title="View Index Detail"
+            readOnly={true}
+            value={props.statDetail}
+            isOpen={isDetailOpen}
+            onDismiss={() => {
+              setIsDetailOpen(false)
+            }}
+          />
           <IndexContextualMenu
             value={props.value}
             target={target.current}
@@ -206,6 +216,10 @@ export function IndexCard(props: {
             onView={() => {
               setIsMenuHidden(true)
               setIsOpen(true)
+            }}
+            onViewDetail={() => {
+              setIsMenuHidden(true)
+              setIsDetailOpen(true)
             }}
             onDrop={() => {
               setIsMenuHidden(true)

@@ -9,7 +9,12 @@ import { TAB_SIZE_KEY } from '@/pages/settings'
 
 function wrapKey(key: string) {
   const strKey = key.toString()
-  if (strKey.includes('-') || strKey.includes('.') || /^\d/.test(strKey)) {
+  if (
+    strKey.includes('-') ||
+    strKey.includes(' ') ||
+    strKey.includes('.') ||
+    /^\d/.test(strKey)
+  ) {
     return `"${key}"`
   }
   return key
