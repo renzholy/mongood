@@ -5,7 +5,7 @@ import type { CollStats, IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
 import { LargeMessage } from '@/components/LargeMessage'
-import { Stack, DefaultButton } from '@fluentui/react'
+import { Stack, IconButton, Separator } from '@fluentui/react'
 import { IndexCard } from '@/components/IndexCard'
 import { EditorModal } from '@/components/EditorModal'
 import { ActionButton } from '@/components/ActionButton'
@@ -65,6 +65,22 @@ export default () => {
   return (
     <>
       <Stack
+        horizontal={true}
+        tokens={{ childrenGap: 10, padding: 10 }}
+        styles={{ root: { marginBottom: -8 } }}>
+        <Stack.Item grow={true}>
+          <div />
+        </Stack.Item>
+        <IconButton
+          iconProps={{ iconName: 'Add' }}
+          onClick={() => {
+            setIsOpen(true)
+          }}>
+          Create
+        </IconButton>
+      </Stack>
+      <Separator styles={{ root: { padding: 0 } }} />
+      <Stack
         tokens={{ childrenGap: 20 }}
         styles={{
           root: {
@@ -83,12 +99,6 @@ export default () => {
             statDetail={stats.indexDetails[item.name!]}
           />
         ))}
-        <DefaultButton
-          onClick={() => {
-            setIsOpen(true)
-          }}>
-          Create
-        </DefaultButton>
       </Stack>
       <EditorModal
         title="Create Index"

@@ -1,5 +1,13 @@
+/* eslint-disable no-nested-ternary */
+
 import React, { useState, useMemo } from 'react'
-import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
+import {
+  Stack,
+  DefaultButton,
+  IconButton,
+  Toggle,
+  Separator,
+} from '@fluentui/react'
 import { map, omit } from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
@@ -85,17 +93,6 @@ export default () => {
     filter,
   ])
 
-  if (error) {
-    return (
-      <LargeMessage iconName="Error" title="Error" content={error.message} />
-    )
-  }
-  if (!data) {
-    return <LargeMessage iconName="SearchData" title="Loading" />
-  }
-  if (data.inprog.length === 0) {
-    return <LargeMessage iconName="Database" title="No Operation" />
-  }
   return (
     <>
       <Stack
@@ -119,7 +116,7 @@ export default () => {
         </Stack.Item>
         <Toggle
           inlineLabel={true}
-          label="Auto Refresh"
+          label="Auto Refresh:"
           onText=" "
           offText=" "
           styles={{
@@ -140,7 +137,7 @@ export default () => {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52 } }}>
+        styles={{ root: { height: 52, marginBottom: -8 } }}>
         <FilterInput
           value={value}
           onChange={(_value) => {
@@ -149,25 +146,34 @@ export default () => {
           }}
         />
       </Stack>
-      <Stack
-        tokens={{ childrenGap: 20 }}
-        styles={{
-          root: {
-            overflowY: 'scroll',
-            padding: 20,
-            flex: 1,
-            alignItems: 'center',
-          },
-        }}>
-        {data.inprog.map((item, index) => (
-          <OperationCard
-            key={index.toString()}
-            value={item}
-            onView={setIsOpen}
-            onKill={revalidate}
-          />
-        ))}
-      </Stack>
+      <Separator styles={{ root: { padding: 0 } }} />
+      {error ? (
+        <LargeMessage iconName="Error" title="Error" content={error.message} />
+      ) : !data ? (
+        <LargeMessage iconName="SearchData" title="Loading" />
+      ) : data.inprog.length === 0 ? (
+        <LargeMessage iconName="Database" title="No Operation" />
+      ) : (
+        <Stack
+          tokens={{ childrenGap: 20 }}
+          styles={{
+            root: {
+              overflowY: 'scroll',
+              padding: 20,
+              flex: 1,
+              alignItems: 'center',
+            },
+          }}>
+          {data.inprog.map((item, index) => (
+            <OperationCard
+              key={index.toString()}
+              value={item}
+              onView={setIsOpen}
+              onKill={revalidate}
+            />
+          ))}
+        </Stack>
+      )}
     </>
   )
 }

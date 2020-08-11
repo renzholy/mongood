@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
-import { Dropdown, getTheme, Label, Stack } from '@fluentui/react'
+import { Dropdown, Label, Stack, Separator, TooltipHost } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { JsonSchema } from '@/types/schema'
@@ -61,7 +61,6 @@ export default () => {
     },
   )
   const isDarkMode = useDarkMode()
-  const theme = getTheme()
   const [
     validationAction,
     setValidationAction,
@@ -122,22 +121,19 @@ export default () => {
     }>(connection, database!, { find: collection }, { canonical: true })
     const str = stringify(generateMongoJsonSchema(firstBatch), true)
     setValue(str ? `return ${str}` : 'return {}')
-    setValidationAction(ValidationAction.WARN)
-    setValidationLevel(ValidationLevel.OFF)
-  }, [collection, connection, database])
+    if (!validationAction) {
+      setValidationAction(ValidationAction.WARN)
+    }
+    if (!validationLevel) {
+      setValidationLevel(ValidationLevel.OFF)
+    }
+  }, [collection, connection, database, validationAction, validationLevel])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
   }
   return (
     <>
-      <ControlledEditor
-        language="typescript"
-        theme={isDarkMode ? 'vs-dark' : 'vs'}
-        value={value}
-        onChange={handleChange}
-        options={options}
-      />
       <Stack
         horizontal={true}
         tokens={{ padding: 10 }}
@@ -147,7 +143,7 @@ export default () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: theme.palette.neutralLight,
+            marginBottom: -8,
           },
         }}>
         <Label styles={{ root: { marginRight: 10 } }}>Validation Action:</Label>
@@ -184,21 +180,23 @@ export default () => {
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
-        {value && value !== 'return {}' ? (
-          <ActionButton
-            text="Save"
-            disabled={!validationAction || !validationLevel || !value}
-            primary={true}
-            onClick={handleSave}
-          />
-        ) : (
-          <ActionButton
-            text="Generate"
-            disabled={!!value && value !== 'return {}'}
-            onClick={handleGenerate}
-          />
-        )}
+        <TooltipHost content="Auto generate schema">
+          <ActionButton icon="AutoEnhanceOn" onClick={handleGenerate} />
+        </TooltipHost>
+        <ActionButton
+          icon="Save"
+          disabled={!validationAction || !validationLevel || !value}
+          onClick={handleSave}
+        />
       </Stack>
+      <Separator styles={{ root: { padding: 0 } }} />
+      <ControlledEditor
+        language="typescript"
+        theme={isDarkMode ? 'vs-dark' : 'vs'}
+        value={value}
+        onChange={handleChange}
+        options={options}
+      />
     </>
   )
 }
