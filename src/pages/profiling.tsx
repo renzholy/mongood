@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { Stack, SpinButton, Slider, Label, Separator } from '@fluentui/react'
+import React, { useEffect } from 'react'
+import { Stack, Separator } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -8,8 +8,7 @@ import { MongoData } from '@/types'
 import { actions } from '@/stores'
 import { LargeMessage } from '@/components/LargeMessage'
 import { ProfilingCard } from '@/components/ProfilingCard'
-import { Pagination } from '@/components/Pagination'
-import { ActionButton } from '@/components/ActionButton'
+import { ProfilingControlStack } from '@/components/ProfilingControlStack'
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)
@@ -18,28 +17,7 @@ export default () => {
   const filter = useSelector((state) => state.docs.filter)
   const skip = useSelector((state) => state.docs.skip)
   const limit = useSelector((state) => state.docs.limit)
-  const trigger = useSelector((state) => state.docs.trigger)
-  const { data: profile, revalidate } = useSWR(
-    `profile/${connection}/${trigger}`,
-    () =>
-      runCommand<{ was: number; slowms: number; sampleRate: number }>(
-        connection,
-        'admin',
-        {
-          profile: -1,
-        },
-      ),
-  )
-  const [slowms, setSlowms] = useState(0)
   const dispatch = useDispatch()
-  const [sampleRate, setSampleRate] = useState(0)
-  useEffect(() => {
-    if (!profile) {
-      return
-    }
-    setSlowms(profile.slowms)
-    setSampleRate(profile.sampleRate)
-  }, [profile])
   const { data, error } = useSWR(
     database
       ? `systemProfile/${connection}/${database}/${JSON.stringify(
@@ -77,17 +55,6 @@ export default () => {
       ),
     )
   }, [database, collection, dispatch])
-  const handleSetProfile = useCallback(async () => {
-    if (!database) {
-      return
-    }
-    await runCommand(connection, database, {
-      profile: 1,
-      slowms,
-      sampleRate: { $numberDouble: sampleRate.toString() },
-    })
-    revalidate()
-  }, [connection, database, revalidate, slowms, sampleRate])
   const { data: count } = useSWR(
     database
       ? `systemProfileCount/${connection}/${database}/${JSON.stringify(filter)}`
@@ -110,54 +77,7 @@ export default () => {
   }
   return (
     <>
-      <Stack
-        horizontal={true}
-        tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{
-          root: { height: 52, alignItems: 'center' },
-        }}>
-        <SpinButton
-          label="Slow ms:"
-          styles={{
-            spinButtonWrapper: { width: 80 },
-            label: { marginLeft: 10 },
-            root: { width: 'fit-content', marginRight: 10 },
-          }}
-          value={slowms.toString()}
-          onValidate={(value) => {
-            setSlowms(Math.max(parseInt(value, 10), 0))
-          }}
-          onIncrement={(value) => {
-            setSlowms(Math.max(parseInt(value, 10) + 10, 0))
-          }}
-          onDecrement={(value) => {
-            setSlowms(Math.max(parseInt(value, 10) - 10, 0))
-          }}
-        />
-        <Label>Sample rate:</Label>
-        <Slider
-          styles={{
-            slideBox: { width: 100 },
-          }}
-          min={0}
-          max={1}
-          step={0.01}
-          valueFormat={(value) => `${Math.round(value * 100)}%`}
-          value={sampleRate}
-          onChange={setSampleRate}
-          onChanged={(_ev, value) => {
-            setSampleRate(value)
-          }}
-        />
-        {profile?.slowms === slowms &&
-        profile?.sampleRate === sampleRate ? null : (
-          <ActionButton icon="CheckMark" onClick={handleSetProfile} />
-        )}
-        <Stack.Item grow={true}>
-          <div />
-        </Stack.Item>
-        <Pagination />
-      </Stack>
+      <ProfilingControlStack />
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <Stack
         tokens={{ childrenGap: 20 }}
