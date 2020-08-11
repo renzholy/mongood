@@ -1,11 +1,13 @@
+/* eslint-disable no-nested-ternary */
+
 import React, { useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 import type { CollStats, IndexSpecification } from 'mongodb'
+import { Stack, IconButton, Separator } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { LargeMessage } from '@/components/LargeMessage'
-import { Stack, IconButton, Separator } from '@fluentui/react'
 import { IndexCard } from '@/components/IndexCard'
 import { EditorModal } from '@/components/EditorModal'
 import { ActionButton } from '@/components/ActionButton'
@@ -48,19 +50,8 @@ export default () => {
     setIsOpen(false)
   }, [connection, database, collection, value])
 
-  if (error) {
-    return (
-      <LargeMessage iconName="Error" title="Error" content={error.message} />
-    )
-  }
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
-  }
-  if (!indexes || !stats) {
-    return <LargeMessage iconName="SearchData" title="Loading" />
-  }
-  if (!indexes.cursor.firstBatch.length) {
-    return <LargeMessage iconName="Database" title="No Index" />
   }
   return (
     <>
@@ -77,26 +68,34 @@ export default () => {
         </IconButton>
       </Stack>
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
-      <Stack
-        tokens={{ childrenGap: 20 }}
-        styles={{
-          root: {
-            overflowY: 'scroll',
-            padding: 20,
-            flex: 1,
-            alignItems: 'center',
-          },
-        }}>
-        {indexes.cursor.firstBatch.map((item) => (
-          <IndexCard
-            key={item.name}
-            value={item}
-            onDrop={revalidate}
-            size={stats.indexSizes[item.name!]}
-            statDetail={stats.indexDetails[item.name!]}
-          />
-        ))}
-      </Stack>
+      {error ? (
+        <LargeMessage iconName="Error" title="Error" content={error.message} />
+      ) : !indexes || !stats ? (
+        <LargeMessage iconName="SearchData" title="Loading" />
+      ) : indexes.cursor.firstBatch.length === 0 ? (
+        <LargeMessage iconName="Database" title="No Index" />
+      ) : (
+        <Stack
+          tokens={{ childrenGap: 20 }}
+          styles={{
+            root: {
+              overflowY: 'scroll',
+              padding: 20,
+              flex: 1,
+              alignItems: 'center',
+            },
+          }}>
+          {indexes.cursor.firstBatch.map((item) => (
+            <IndexCard
+              key={item.name}
+              value={item}
+              onDrop={revalidate}
+              size={stats.indexSizes[item.name!]}
+              statDetail={stats.indexDetails[item.name!]}
+            />
+          ))}
+        </Stack>
+      )}
       <EditorModal
         title="Create Index"
         value={value}
