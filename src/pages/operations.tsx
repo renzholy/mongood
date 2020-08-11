@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+
 import React, { useState, useMemo } from 'react'
 import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
 import { map, omit } from 'lodash'
@@ -85,17 +87,6 @@ export default () => {
     filter,
   ])
 
-  if (error) {
-    return (
-      <LargeMessage iconName="Error" title="Error" content={error.message} />
-    )
-  }
-  if (!data) {
-    return <LargeMessage iconName="SearchData" title="Loading" />
-  }
-  if (data.inprog.length === 0) {
-    return <LargeMessage iconName="Database" title="No Operation" />
-  }
   return (
     <>
       <Stack
@@ -149,25 +140,33 @@ export default () => {
           }}
         />
       </Stack>
-      <Stack
-        tokens={{ childrenGap: 20 }}
-        styles={{
-          root: {
-            overflowY: 'scroll',
-            padding: 20,
-            flex: 1,
-            alignItems: 'center',
-          },
-        }}>
-        {data.inprog.map((item, index) => (
-          <OperationCard
-            key={index.toString()}
-            value={item}
-            onView={setIsOpen}
-            onKill={revalidate}
-          />
-        ))}
-      </Stack>
+      {error ? (
+        <LargeMessage iconName="Error" title="Error" content={error.message} />
+      ) : !data ? (
+        <LargeMessage iconName="SearchData" title="Loading" />
+      ) : data.inprog.length === 0 ? (
+        <LargeMessage iconName="Database" title="No Operation" />
+      ) : (
+        <Stack
+          tokens={{ childrenGap: 20 }}
+          styles={{
+            root: {
+              overflowY: 'scroll',
+              padding: 20,
+              flex: 1,
+              alignItems: 'center',
+            },
+          }}>
+          {data.inprog.map((item, index) => (
+            <OperationCard
+              key={index.toString()}
+              value={item}
+              onView={setIsOpen}
+              onKill={revalidate}
+            />
+          ))}
+        </Stack>
+      )}
     </>
   )
 }
