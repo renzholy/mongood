@@ -5,7 +5,7 @@ import type { CollStats, IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
 import { LargeMessage } from '@/components/LargeMessage'
-import { Stack, IconButton } from '@fluentui/react'
+import { Stack, IconButton, Separator } from '@fluentui/react'
 import { IndexCard } from '@/components/IndexCard'
 import { EditorModal } from '@/components/EditorModal'
 import { ActionButton } from '@/components/ActionButton'
@@ -67,7 +67,7 @@ export default () => {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { marginBottom: -10 } }}>
+        styles={{ root: { marginBottom: -8 } }}>
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
@@ -79,6 +79,7 @@ export default () => {
           Create
         </IconButton>
       </Stack>
+      <Separator styles={{ root: { padding: 0 } }} />
       <Stack
         tokens={{ childrenGap: 20 }}
         styles={{

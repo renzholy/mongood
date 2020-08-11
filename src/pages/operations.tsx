@@ -1,7 +1,13 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useState, useMemo } from 'react'
-import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
+import {
+  Stack,
+  DefaultButton,
+  IconButton,
+  Toggle,
+  Separator,
+} from '@fluentui/react'
 import { map, omit } from 'lodash'
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
@@ -131,7 +137,7 @@ export default () => {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52 } }}>
+        styles={{ root: { height: 52, marginBottom: -8 } }}>
         <FilterInput
           value={value}
           onChange={(_value) => {
@@ -140,6 +146,7 @@ export default () => {
           }}
         />
       </Stack>
+      <Separator styles={{ root: { padding: 0 } }} />
       {error ? (
         <LargeMessage iconName="Error" title="Error" content={error.message} />
       ) : !data ? (

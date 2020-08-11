@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { Stack, SpinButton, Slider, Label } from '@fluentui/react'
+import { Stack, SpinButton, Slider, Label, Separator } from '@fluentui/react'
 import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -115,7 +115,9 @@ export default () => {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52, alignItems: 'center' } }}>
+        styles={{
+          root: { height: 52, alignItems: 'center', marginBottom: -8 },
+        }}>
         <SpinButton
           label="Slow Ms:"
           styles={{
@@ -158,6 +160,7 @@ export default () => {
         </Stack.Item>
         <Pagination />
       </Stack>
+      <Separator styles={{ root: { padding: 0 } }} />
       <Stack
         tokens={{ childrenGap: 20 }}
         styles={{
