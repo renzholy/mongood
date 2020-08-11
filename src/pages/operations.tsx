@@ -90,6 +90,12 @@ export default () => {
       <LargeMessage iconName="Error" title="Error" content={error.message} />
     )
   }
+  if (!data) {
+    return <LargeMessage iconName="SearchData" title="Loading" />
+  }
+  if (data.inprog.length === 0) {
+    return <LargeMessage iconName="Database" title="No Operation" />
+  }
   return (
     <>
       <Stack
@@ -153,7 +159,7 @@ export default () => {
             alignItems: 'center',
           },
         }}>
-        {data?.inprog.map((item, index) => (
+        {data.inprog.map((item, index) => (
           <OperationCard
             key={index.toString()}
             value={item}
