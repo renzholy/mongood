@@ -64,10 +64,7 @@ export default () => {
   }
   return (
     <>
-      <Stack
-        horizontal={true}
-        tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { marginBottom: -8 } }}>
+      <Stack horizontal={true} tokens={{ childrenGap: 10, padding: 10 }}>
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
@@ -79,7 +76,7 @@ export default () => {
           Create
         </IconButton>
       </Stack>
-      <Separator styles={{ root: { padding: 0 } }} />
+      <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <Stack
         tokens={{ childrenGap: 20 }}
         styles={{

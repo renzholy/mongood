@@ -137,7 +137,7 @@ export default () => {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52, marginBottom: -8 } }}>
+        styles={{ root: { height: 52 } }}>
         <FilterInput
           value={value}
           onChange={(_value) => {
@@ -146,7 +146,7 @@ export default () => {
           }}
         />
       </Stack>
-      <Separator styles={{ root: { padding: 0 } }} />
+      <Separator styles={{ root: { padding: 0, height: 2 } }} />
       {error ? (
         <LargeMessage iconName="Error" title="Error" content={error.message} />
       ) : !data ? (

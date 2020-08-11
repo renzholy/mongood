@@ -116,7 +116,7 @@ export default () => {
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{
-          root: { height: 52, alignItems: 'center', marginBottom: -8 },
+          root: { height: 52, alignItems: 'center' },
         }}>
         <SpinButton
           label="Slow Ms:"
@@ -160,7 +160,7 @@ export default () => {
         </Stack.Item>
         <Pagination />
       </Stack>
-      <Separator styles={{ root: { padding: 0 } }} />
+      <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <Stack
         tokens={{ childrenGap: 20 }}
         styles={{
