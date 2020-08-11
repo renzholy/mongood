@@ -29,6 +29,8 @@ export type MongoData =
   | { $regularExpression: { pattern: string; options: string } }
   | { $timestamp: { t: number; i: number } }
   | { $binary: { base64: string; subType: string } }
+  | { $minKey: 1 }
+  | { $maxKey: 1 }
   | object[]
   | object
 

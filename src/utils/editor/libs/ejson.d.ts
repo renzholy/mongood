@@ -86,6 +86,29 @@ function BinData(
   }
 }
 
+/**
+ *
+ * The MinKey BSON data type compares lower than all other types.
+ */
+function MinKey(): {
+  $minKey: 1
+} {
+  return {
+    $minKey: 1,
+  }
+}
+
+/**
+ * The MaxKey BSON data type compares higher than all other types.
+ */
+function MaxKey(): {
+  $maxKey: 1
+} {
+  return {
+    $maxKey: 1,
+  }
+}
+
 const SubType = {
   Generic: 0x0,
   Function: 0x1,

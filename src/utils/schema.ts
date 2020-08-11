@@ -80,6 +80,16 @@ function generate(doc: MongoData): Schema {
       bsonType: ['binData'],
     }
   }
+  if ('$minKey' in doc && doc.$minKey === 1) {
+    return {
+      bsonType: ['minKey'],
+    }
+  }
+  if ('$maxKey' in doc && doc.$maxKey === 1) {
+    return {
+      bsonType: ['maxKey'],
+    }
+  }
   if (Array.isArray(doc)) {
     return {
       bsonType: ['array'],

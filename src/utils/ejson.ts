@@ -74,6 +74,12 @@ export function stringify(
       val.$binary.base64
     }")`
   }
+  if ('$minKey' in val && val.$minKey === 1) {
+    return `MinKey()`
+  }
+  if ('$maxKey' in val && val.$maxKey === 1) {
+    return `MaxKey()`
+  }
   if (Array.isArray(val)) {
     if (!hasIndent) {
       return `[${val
@@ -167,6 +173,12 @@ export const sandbox = {
       base64,
       subType: subType.toString(16),
     },
+  }),
+  MinKey: () => ({
+    $minKey: 1,
+  }),
+  MaxKey: () => ({
+    $maxKey: 1,
   }),
 }
 
