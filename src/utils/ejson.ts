@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
 import { MongoData } from '@/types'
-import { TAB_SIZE_KEY, TIME_ZONE_KEY } from '@/pages/settings'
+import { TAB_SIZE_KEY, TIMEZONE_OFFSET_KEY } from '@/pages/settings'
 
 dayjs.extend(utc)
 
@@ -26,7 +26,10 @@ function wrapKey(key: string) {
 
 const tabSize = parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10)
 
-const timezone = parseInt(localStorage.getItem(TIME_ZONE_KEY) || '0', 10)
+const timezoneOffset = parseInt(
+  localStorage.getItem(TIMEZONE_OFFSET_KEY) || '0',
+  10,
+)
 
 const extraSpaces = Array.from({ length: tabSize })
   .map(() => ' ')
@@ -56,9 +59,9 @@ export function stringify(
     return `ObjectId("${val.$oid}")`
   }
   if ('$date' in val && '$numberLong' in val.$date) {
-    return timezone
+    return timezoneOffset
       ? `Date("${dayjs(parseInt(val.$date.$numberLong, 10))
-          .utcOffset(timezone)
+          .utcOffset(timezoneOffset)
           .local()
           .format()}")`
       : `ISODate("${new Date(
