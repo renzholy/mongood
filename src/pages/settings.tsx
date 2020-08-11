@@ -1,4 +1,4 @@
-import { TextField, SpinButton } from '@fluentui/react'
+import { TextField, SpinButton, Stack } from '@fluentui/react'
 import React, { useState, useEffect } from 'react'
 
 export const TAB_SIZE_KEY = 'settings.tabSize'
@@ -24,7 +24,7 @@ export default () => {
   }, [tabSize])
 
   return (
-    <div style={{ margin: 20 }}>
+    <Stack tokens={{ padding: 20, childrenGap: 10 }}>
       <SpinButton
         autoCapitalize="off"
         autoCorrect="off"
@@ -43,7 +43,6 @@ export default () => {
         }}
       />
       <TextField
-        styles={{ root: { marginTop: 20 } }}
         autoCapitalize="off"
         autoComplete="off"
         autoCorrect="off"
@@ -60,6 +59,6 @@ export default () => {
           setStaticMapUrlTemplate(newValue)
         }}
       />
-    </div>
+    </Stack>
   )
 }
