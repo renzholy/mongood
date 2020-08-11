@@ -71,9 +71,9 @@ export default () => {
       {error ? (
         <LargeMessage iconName="Error" title="Error" content={error.message} />
       ) : !indexes || !stats ? (
-        <LargeMessage iconName="SearchData" title="Loading" />
+        <LargeMessage iconName="HourGlass" title="Loading" />
       ) : indexes.cursor.firstBatch.length === 0 ? (
-        <LargeMessage iconName="Database" title="No Index" />
+        <LargeMessage iconName="Dictionary" title="No Index" />
       ) : (
         <Stack
           tokens={{ childrenGap: 20 }}

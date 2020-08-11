@@ -253,5 +253,5 @@ export default () => {
       </div>
     )
   }
-  return <LargeMessage iconName="SearchData" title="Loading" />
+  return <LargeMessage iconName="HourGlass" title="Loading" />
 }

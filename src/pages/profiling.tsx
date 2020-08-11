@@ -183,10 +183,10 @@ export default () => {
               <ProfilingCard key={index.toString()} value={item} />
             ))
           ) : (
-            <LargeMessage iconName="Database" title="No Profiling" />
+            <LargeMessage iconName="SpeedHigh" title="No Profiling" />
           )
         ) : (
-          <LargeMessage iconName="SearchData" title="Loading" />
+          <LargeMessage iconName="HourGlass" title="Loading" />
         )}
       </Stack>
     </>

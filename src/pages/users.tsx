@@ -34,7 +34,7 @@ export default () => {
     )
   }
   if (!usersInfo) {
-    return <LargeMessage iconName="SearchData" title="Loading" />
+    return <LargeMessage iconName="HourGlass" title="Loading" />
   }
   if (!usersInfo.users.length) {
     return <LargeMessage iconName="UserOptional" title="No User" />

@@ -150,9 +150,9 @@ export default () => {
       {error ? (
         <LargeMessage iconName="Error" title="Error" content={error.message} />
       ) : !data ? (
-        <LargeMessage iconName="SearchData" title="Loading" />
+        <LargeMessage iconName="HourGlass" title="Loading" />
       ) : data.inprog.length === 0 ? (
-        <LargeMessage iconName="Database" title="No Operation" />
+        <LargeMessage iconName="AnalyticsReport" title="No Operation" />
       ) : (
         <Stack
           tokens={{ childrenGap: 20 }}
