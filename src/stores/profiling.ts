@@ -40,9 +40,5 @@ export default createSlice({
         limit: payload,
       }
     },
-    setCount: (state, { payload }: PayloadAction<number>) => ({
-      ...state,
-      count: payload,
-    }),
   },
 })
