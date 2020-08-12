@@ -6,7 +6,9 @@ import { Text, getTheme, Icon, Stack } from '@fluentui/react'
 import { map } from 'lodash'
 import bytes from 'bytes'
 import type { IndexSpecification, WiredTigerData } from 'mongodb'
+import { useDispatch } from 'react-redux'
 
+import { actions } from '@/stores'
 import { EditorModal } from './EditorModal'
 import { IndexContextualMenu } from './IndexContextualMenu'
 import { IndexFeatures } from './IndexFeatures'
@@ -57,13 +59,12 @@ function IndexInfo(props: { value: IndexSpecification }) {
 
 export function IndexCard(props: {
   value: IndexSpecification
-  onDrop(): void
   size: number
   // eslint-disable-next-line react/no-unused-prop-types
   statDetail: WiredTigerData
 }) {
   const theme = getTheme()
-
+  const dispatch = useDispatch()
   const [isOpen, setIsOpen] = useState(false)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
   const target = useRef<MouseEvent>()
@@ -129,7 +130,7 @@ export function IndexCard(props: {
             }}
             onDrop={() => {
               setIsMenuHidden(true)
-              props.onDrop()
+              dispatch(actions.root.setTrigger())
             }}
           />
           <Text
