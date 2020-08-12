@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   ContextualMenu,
   DialogType,
@@ -12,10 +12,13 @@ import table from 'markdown-table'
 import { useSelector } from 'react-redux'
 
 import { stringify } from '@/utils/ejson'
-import { runCommand } from '@/utils/fetcher'
 import { calcHeaders } from '@/utils/table'
 import { MongoData } from '@/types'
-import { useCommandFind, useCommandCount } from '@/hooks/use-command'
+import {
+  useCommandFind,
+  useCommandCount,
+  useCommand,
+} from '@/hooks/use-command'
 
 const cast: Options['cast'] = {
   boolean: (value) => stringify(value),
@@ -34,41 +37,31 @@ export function DocumentContextualMenu<
   selectedItems: T[]
   onEdit?(): void
 }) {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
-  const [isSucceed, setIsSucceed] = useState<boolean>()
-  const [isDeleting, setIsDeleting] = useState(false)
   const [hidden, setHidden] = useState(true)
   const { revalidate: reFind } = useCommandFind()
   const { revalidate: reCount } = useCommandCount()
-  const handleDelete = useCallback(
-    async (ids: MongoData[]) => {
-      try {
-        setIsDeleting(true)
-        await runCommand(connection, database!, {
-          delete: collection,
-          deletes: ids.map((id) => ({
-            q: { _id: id },
-            limit: 1,
-          })),
-        })
-        setIsSucceed(true)
-        setHidden(true)
-        reFind()
-        reCount()
-      } catch {
-        setIsSucceed(false)
-      } finally {
-        setIsDeleting(false)
-      }
-    },
-    [connection, database, collection, reFind, reCount],
-  )
-  const theme = getTheme()
+  const {
+    invoke: handleDelete,
+    result,
+    loading: isDeleting,
+    error,
+  } = useCommand((ids: MongoData[]) => ({
+    delete: collection,
+    deletes: ids.map((id) => ({
+      q: { _id: id },
+      limit: 1,
+    })),
+  }))
   useEffect(() => {
-    setIsSucceed(undefined)
-  }, [props.target])
+    if (!result) {
+      return
+    }
+    setHidden(true)
+    reFind()
+    reCount()
+  }, [reCount, reFind, result])
+  const theme = getTheme()
 
   return (
     <>
@@ -111,10 +104,7 @@ export function DocumentContextualMenu<
           <DefaultButton
             disabled={isDeleting}
             iconProps={
-              {
-                true: { iconName: 'CheckMark' },
-                false: { iconName: 'Error' },
-              }[String(isSucceed) as 'true' | 'false']
+              result ? { iconName: error ? 'Error' : 'CheckMark' } : undefined
             }
             onClick={() => {
               handleDelete(props.selectedItems.map((item) => item._id))
