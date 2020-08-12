@@ -5,21 +5,21 @@ import {
   IContextualMenuItem,
   IStyle,
 } from '@fluentui/react'
-import useSWR from 'swr'
 import { useSelector, useDispatch } from 'react-redux'
 import useAsyncEffect from 'use-async-effect'
 import { compact } from 'lodash'
 
-import { listConnections, runCommand } from '@/utils/fetcher'
+import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { ServerStats } from '@/types'
+import { useCommandListConnections } from '@/hooks/use-command'
 import { ConnectionEditModal } from './ConnectionEditModal'
 
 export function ConnectionButton(props: { style?: IStyle }) {
   const connection = useSelector((state) => state.root.connection)
   const connections = useSelector((state) => state.root.connections)
   const dispatch = useDispatch()
-  const { data } = useSWR('connections', listConnections)
+  const { data } = useCommandListConnections()
   const serverStatus = useCallback(
     async (_connection: string) =>
       runCommand<ServerStats>(_connection, 'admin', {

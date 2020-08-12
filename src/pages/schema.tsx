@@ -1,10 +1,8 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import useSWR from 'swr'
 import { Dropdown, Label, Stack, Separator, TooltipHost } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
-import { JsonSchema } from '@/types/schema'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { stringify, parse } from '@/utils/ejson'
@@ -12,54 +10,15 @@ import { ActionButton } from '@/components/ActionButton'
 import { LargeMessage } from '@/components/LargeMessage'
 import { ControlledEditorProps } from '@monaco-editor/react'
 import { generateMongoJsonSchema } from '@/utils/schema'
-import { MongoData } from '@/types'
+import { MongoData, ValidationAction, ValidationLevel } from '@/types'
+import { useCommandListCollections } from '@/hooks/use-command'
 import { TAB_SIZE_KEY } from './settings'
-
-enum ValidationAction {
-  WARN = 'warn',
-  ERROR = 'error',
-}
-
-enum ValidationLevel {
-  OFF = 'off',
-  MODERATE = 'moderate',
-  STRICT = 'strict',
-}
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
-  const { data, revalidate } = useSWR(
-    connection && database && collection
-      ? `listCollections/${connection}/${database}/${collection}`
-      : null,
-    () =>
-      runCommand<{
-        cursor: {
-          firstBatch: [
-            {
-              name: string
-              options: {
-                validationAction?: ValidationAction
-                validationLevel?: ValidationLevel
-                validator?: {
-                  $jsonSchema: JsonSchema
-                }
-              }
-            },
-          ]
-        }
-      }>(connection, database!, {
-        listCollections: 1,
-        filter: {
-          name: collection,
-        },
-      }),
-    {
-      revalidateOnFocus: false,
-    },
-  )
+  const { data, revalidate } = useCommandListCollections()
   const isDarkMode = useDarkMode()
   const [
     validationAction,

@@ -3,8 +3,20 @@ import { useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import type { CollStats, IndexSpecification } from 'mongodb'
 
-import { runCommand } from '@/utils/fetcher'
-import { MongoData, Operation } from '@/types'
+import { runCommand, listConnections } from '@/utils/fetcher'
+import {
+  MongoData,
+  Operation,
+  DbStats,
+  ServerStats,
+  ValidationAction,
+  ValidationLevel,
+} from '@/types'
+import { JsonSchema } from '@/types/schema'
+
+export function useCommandListConnections(suspense = false) {
+  return useSWR('connections', listConnections, { suspense })
+}
 
 export function useCommandDatabases(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
@@ -22,6 +34,55 @@ export function useCommandDatabases(suspense = false) {
   )
 }
 
+export function useCommandListCollections(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  return useSWR(
+    connection && database && collection
+      ? `listCollections/${connection}/${database}/${collection}`
+      : null,
+    () =>
+      runCommand<{
+        cursor: {
+          firstBatch: [
+            {
+              name: string
+              options: {
+                validationAction?: ValidationAction
+                validationLevel?: ValidationLevel
+                validator?: {
+                  $jsonSchema: JsonSchema
+                }
+              }
+            },
+          ]
+        }
+      }>(connection, database!, {
+        listCollections: 1,
+        filter: {
+          name: collection,
+        },
+      }),
+    {
+      revalidateOnFocus: false,
+      suspense,
+    },
+  )
+}
+
+export function useCommandServerStatus(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  return useSWR(
+    `serverStatus/${connection}`,
+    () =>
+      runCommand<ServerStats>(connection, 'admin', {
+        serverStatus: 1,
+      }),
+    { refreshInterval: 1000, suspense },
+  )
+}
+
 export function useCommandCollStats(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
@@ -35,6 +96,19 @@ export function useCommandCollStats(suspense = false) {
         collStats: collection,
       }),
     { suspense },
+  )
+}
+
+export function useCOmmandDbStats(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  return useSWR(
+    database ? `dbStats/${connection}/${database}` : null,
+    () =>
+      runCommand<DbStats>(connection, database!, {
+        dbStats: 1,
+      }),
+    { refreshInterval: 1000, suspense },
   )
 }
 
@@ -220,6 +294,22 @@ export function useCommandUsers(suspense = false) {
       }>(connection, database || 'admin', {
         usersInfo: database ? 1 : { forAllDBs: true },
       }),
+    { suspense },
+  )
+}
+
+export function useCommandProfile(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  return useSWR(
+    `profile/${connection}`,
+    () =>
+      runCommand<{ was: number; slowms: number; sampleRate: number }>(
+        connection,
+        'admin',
+        {
+          profile: -1,
+        },
+      ),
     { suspense },
   )
 }

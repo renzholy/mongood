@@ -10,15 +10,15 @@ import {
   DirectionalHint,
 } from '@fluentui/react'
 import React, { useMemo, useCallback, useState } from 'react'
-import useSWR from 'swr'
 import mongodbUri from 'mongodb-uri'
 import { compact, uniq } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 import useAsyncEffect from 'use-async-effect'
 
-import { listConnections, runCommand } from '@/utils/fetcher'
+import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { ServerStats } from '@/types'
+import { useCommandListConnections } from '@/hooks/use-command'
 import { ActionButton } from './ActionButton'
 
 function ConnectionItem(props: { connection: string; disabled?: boolean }) {
@@ -133,7 +133,7 @@ export function ConnectionEditModal(props: {
   isOpen: boolean
   onDismiss(): void
 }) {
-  const { data } = useSWR('connections', listConnections)
+  const { data } = useCommandListConnections()
   const connections = useSelector((state) => state.root.connections)
   const theme = getTheme()
   const [value, setValue] = useState('')

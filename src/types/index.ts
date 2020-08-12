@@ -130,3 +130,14 @@ export type Operation = {
   client?: string
   numYields: number
 }
+
+export enum ValidationAction {
+  WARN = 'warn',
+  ERROR = 'error',
+}
+
+export enum ValidationLevel {
+  OFF = 'off',
+  MODERATE = 'moderate',
+  STRICT = 'strict',
+}

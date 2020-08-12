@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { IndexSpecification, FilterQuery } from 'mongodb'
 import { isEqual } from 'lodash'
 
-import { DisplayMode } from '@/types.d'
+import { DisplayMode } from '@/types'
 
 export default createSlice({
   name: 'docs',

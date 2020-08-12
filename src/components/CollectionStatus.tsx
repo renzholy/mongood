@@ -1,37 +1,16 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import useSWR from 'swr'
 import bytes from 'bytes'
-import type { CollStats } from 'mongodb'
 
-import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
-import { DbStats } from '@/types'
 import { StatsArea } from '@/components/StatsArea'
+import { useCommandCollStats, useCOmmandDbStats } from '@/hooks/use-command'
 
 export function CollectionStatus() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
-  const { data: _collStats } = useSWR(
-    connection && database && collection
-      ? `collStats/${connection}/${database}/${collection}`
-      : null,
-    () =>
-      runCommand<CollStats>(connection, database!, {
-        collStats: collection,
-      }),
-    { refreshInterval: 1000, suspense: true },
-  )
+  const { data: _collStats } = useCommandCollStats(true)
   const collStats = _collStats!
-  const { data: _dbStats } = useSWR(
-    database ? `dbStats/${connection}/${database}` : null,
-    () =>
-      runCommand<DbStats>(connection, database!, {
-        dbStats: 1,
-      }),
-    { refreshInterval: 1000, suspense: true },
-  )
+  const { data: _dbStats } = useCOmmandDbStats(true)
   const dbStats = _dbStats!
 
   return (

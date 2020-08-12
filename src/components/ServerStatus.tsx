@@ -1,25 +1,14 @@
-import { useSelector } from 'react-redux'
-import useSWR from 'swr'
 import React from 'react'
 import prettyMilliseconds from 'pretty-ms'
 import { sortBy } from 'lodash'
 import bytes from 'bytes'
 
-import { runCommand } from '@/utils/fetcher'
-import { ServerStats } from '@/types'
+import { useCommandServerStatus } from '@/hooks/use-command'
 import { Number } from '@/utils/formatter'
 import { StatsArea } from './StatsArea'
 
 export function ServerStatus() {
-  const connection = useSelector((state) => state.root.connection)
-  const { data } = useSWR(
-    `serverStatus/${connection}`,
-    () =>
-      runCommand<ServerStats>(connection, 'admin', {
-        serverStatus: 1,
-      }),
-    { refreshInterval: 1000, suspense: true },
-  )
+  const { data } = useCommandServerStatus(true)
   const serverStatus = data!
 
   return (

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
-import { DisplayMode } from '@/types.d'
+import { DisplayMode } from '@/types'
 import {
   useCommandFind,
   useCommandCount,

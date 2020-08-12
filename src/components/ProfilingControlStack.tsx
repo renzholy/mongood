@@ -1,9 +1,9 @@
 import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
 import React, { useCallback, useState, useEffect } from 'react'
-import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
+import { useCommandProfile } from '@/hooks/use-command'
 import { ProfilingPagination } from './ProfilingPagination'
 import { ActionButton } from './ActionButton'
 
@@ -12,15 +12,7 @@ export function ProfilingControlStack() {
   const database = useSelector((state) => state.root.database)
   const [slowms, setSlowms] = useState(0)
   const [sampleRate, setSampleRate] = useState(0)
-  const { data: profile, revalidate } = useSWR(`profile/${connection}`, () =>
-    runCommand<{ was: number; slowms: number; sampleRate: number }>(
-      connection,
-      'admin',
-      {
-        profile: -1,
-      },
-    ),
-  )
+  const { data: profile, revalidate } = useCommandProfile()
   const handleSetProfile = useCallback(async () => {
     if (!database) {
       return
