@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Stack, IconButton, Separator } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
@@ -9,7 +9,7 @@ import { ActionButton } from '@/components/ActionButton'
 import { IndexesList } from '@/components/IndexesList'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { LoadingSuspense } from '@/components/LoadingSuspense'
-import { actions } from '@/stores'
+import { useCommandListIndexes } from '@/hooks/use-command'
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)
@@ -19,15 +19,15 @@ export default () => {
   const [value, setValue] = useState<object>({
     background: true,
   })
-  const dispatch = useDispatch()
+  const { revalidate } = useCommandListIndexes()
   const handleCreate = useCallback(async () => {
     await runCommand(connection, database!, {
       createIndexes: collection,
       indexes: [value],
     })
     setIsOpen(false)
-    dispatch(actions.root.setTrigger())
-  }, [connection, database, collection, value, dispatch])
+    revalidate()
+  }, [connection, database, collection, value, revalidate])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />

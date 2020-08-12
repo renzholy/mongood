@@ -1,12 +1,12 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import useSWR from 'swr'
 import { pullAll, compact, some, difference, union } from 'lodash'
 import useAsyncEffect from 'use-async-effect'
 
 import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
+import { useCommandDatabases } from '@/hooks/use-command'
 import { ConnectionButton } from './ConnectionButton'
 
 const splitter = '/'
@@ -18,20 +18,8 @@ export function DatabaseNav() {
   const collection = useSelector((state) => state.root.collection)
   const expandedDatabases = useSelector((state) => state.root.expandedDatabases)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
-  const trigger = useSelector((state) => state.root.trigger)
   const [keyword, setKeyword] = useState('')
-  const { data } = useSWR(
-    `listDatabases/${connection}/${trigger}`,
-    () =>
-      runCommand<{
-        databases: {
-          empty: boolean
-          name: string
-          sizeOnDisk: number
-        }[]
-      }>(connection, 'admin', { listDatabases: 1 }),
-    { revalidateOnFocus: false },
-  )
+  const { data } = useCommandDatabases()
   const dispatch = useDispatch()
   const listCollections = useCallback(
     async (_database: string) => {

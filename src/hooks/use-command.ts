@@ -1,9 +1,62 @@
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
+import type { CollStats, IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
 import { MongoData } from '@/types'
+
+export function useCommandDatabases(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  return useSWR(
+    `listDatabases/${connection}`,
+    () =>
+      runCommand<{
+        databases: {
+          empty: boolean
+          name: string
+          sizeOnDisk: number
+        }[]
+      }>(connection, 'admin', { listDatabases: 1 }),
+    { revalidateOnFocus: false, suspense },
+  )
+}
+
+export function useCommandCollStats(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  return useSWR(
+    connection && database && collection
+      ? `collStats/${connection}/${database}/${collection}`
+      : null,
+    () =>
+      runCommand<CollStats>(connection, database!, {
+        collStats: collection,
+      }),
+    { suspense },
+  )
+}
+
+export function useCommandListIndexes(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  return useSWR(
+    connection && database && collection
+      ? `listIndexes/${connection}/${database}/${collection}`
+      : null,
+    () =>
+      runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
+        connection,
+        database!,
+        {
+          listIndexes: collection,
+        },
+      ),
+    { suspense },
+  )
+}
 
 export function useCommandFind(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
