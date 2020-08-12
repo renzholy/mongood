@@ -63,3 +63,54 @@ export function useCommandCount(suspense = false) {
     { suspense },
   )
 }
+
+export function useCommandSystemProfileFind() {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const filter = useSelector((state) => state.docs.filter)
+  const skip = useSelector((state) => state.docs.skip)
+  const limit = useSelector((state) => state.docs.limit)
+  return useSWR(
+    database
+      ? `systemProfile/${connection}/${database}/${JSON.stringify(
+          filter,
+        )}/${skip}/${limit}`
+      : null,
+    () =>
+      runCommand<{
+        cursor: { firstBatch: { [key: string]: MongoData }[] }
+      }>(
+        connection,
+        database!,
+        {
+          find: 'system.profile',
+          sort: {
+            ts: -1,
+          },
+          filter,
+          skip,
+          limit,
+        },
+        {
+          canonical: true,
+        },
+      ),
+  )
+}
+
+export function useCommandSystemProfileCount(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const filter = useSelector((state) => state.docs.filter)
+  return useSWR(
+    database
+      ? `systemProfileCount/${connection}/${database}/${JSON.stringify(filter)}`
+      : null,
+    () =>
+      runCommand<{ n: number }>(connection, database!, {
+        count: 'system.profile',
+        query: filter,
+      }),
+    { suspense },
+  )
+}
