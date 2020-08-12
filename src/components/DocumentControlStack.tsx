@@ -1,13 +1,15 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import useSWR from 'swr'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
-import type { IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { DisplayMode } from '@/types.d'
-import { useCommandFind, useCommandCount } from '@/hooks/use-command'
+import {
+  useCommandFind,
+  useCommandCount,
+  useCommandListIndexes,
+} from '@/hooks/use-command'
 import { IndexButton } from './IndexButton'
 import { DocumentPagination } from './DocumentPagination'
 import { EditorModal } from './EditorModal'
@@ -21,19 +23,7 @@ export function DocumentControlStack() {
   const index = useSelector((state) => state.docs.index)
   const { revalidate: reFind } = useCommandFind()
   const { revalidate: reCount } = useCommandCount()
-  const { data: indexes } = useSWR(
-    connection && database && collection
-      ? `listIndexes/${connection}/${database}/${collection}`
-      : null,
-    () =>
-      runCommand<{ cursor: { firstBatch: IndexSpecification[] } }>(
-        connection,
-        database!,
-        {
-          listIndexes: collection,
-        },
-      ),
-  )
+  const { data: indexes } = useCommandListIndexes()
   const dispatch = useDispatch()
   const [isInsertOpen, setIsInsertOpen] = useState(false)
   const [doc, setDoc] = useState({})
