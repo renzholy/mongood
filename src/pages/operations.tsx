@@ -7,14 +7,12 @@ import {
   Separator,
 } from '@fluentui/react'
 import { map, omit } from 'lodash'
-import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
-import { runCommand } from '@/utils/fetcher'
 import { FilterInput } from '@/components/FilterInput'
 import { OperationCard } from '@/components/OperationCard'
-import { Operation } from '@/types'
 import { LargeMessage } from '@/components/LargeMessage'
+import { useCommandCurrentOp } from '@/hooks/use-command'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -58,7 +56,6 @@ const examples: { [key: string]: object } = {
 }
 
 export default () => {
-  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const [filter, setFilter] = useState<object>({})
@@ -66,25 +63,9 @@ export default () => {
   const ns = database && collection ? `${database}.${collection}` : undefined
   const [refreshInterval, setRefreshInterval] = useState(1000)
   const [isOpen, setIsOpen] = useState(false)
-  const { data, error, revalidate, isValidating } = useSWR(
-    `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
-    () =>
-      runCommand<{ inprog: Operation[] }>(
-        connection,
-        'admin',
-        {
-          currentOp: 1,
-          ...filter,
-          ns,
-        },
-        {
-          canonical: true,
-        },
-      ),
-    {
-      refreshInterval: isOpen ? 0 : refreshInterval,
-      revalidateOnFocus: false,
-    },
+  const { data, error, revalidate, isValidating } = useCommandCurrentOp(
+    filter,
+    isOpen ? 0 : refreshInterval,
   )
   const value = useMemo(() => (ns ? { ...filter, ns } : omit(filter, 'ns')), [
     ns,

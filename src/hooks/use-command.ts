@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash'
 import type { CollStats, IndexSpecification } from 'mongodb'
 
 import { runCommand } from '@/utils/fetcher'
-import { MongoData } from '@/types'
+import { MongoData, Operation } from '@/types'
 
 export function useCommandDatabases(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
@@ -165,5 +165,37 @@ export function useCommandSystemProfileCount(suspense = false) {
         query: filter,
       }),
     { suspense },
+  )
+}
+
+export function useCommandCurrentOp(
+  filter: object,
+  refreshInterval: number,
+  suspense = false,
+) {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  const ns = database && collection ? `${database}.${collection}` : undefined
+  return useSWR(
+    `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
+    () =>
+      runCommand<{ inprog: Operation[] }>(
+        connection,
+        'admin',
+        {
+          currentOp: 1,
+          ...filter,
+          ns,
+        },
+        {
+          canonical: true,
+        },
+      ),
+    {
+      refreshInterval,
+      revalidateOnFocus: false,
+      suspense,
+    },
   )
 }
