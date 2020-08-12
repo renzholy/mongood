@@ -27,7 +27,7 @@ export function DocumentTable() {
   const trigger = useSelector((state) => state.docs.trigger)
   const displayMode = useSelector((state) => state.docs.displayMode)
   const hint = filter.$text || isEmpty(filter) ? undefined : index?.name
-  const { data, error, isValidating } = useSWR(
+  const { data } = useSWR(
     connection && database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
@@ -49,7 +49,7 @@ export function DocumentTable() {
         },
         { canonical: true },
       ),
-    { revalidateOnFocus: false },
+    { revalidateOnFocus: false, suspense: true },
   )
   const dispatch = useDispatch()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
@@ -140,10 +140,8 @@ export function DocumentTable() {
       />
       <Table
         displayMode={displayMode}
-        items={data?.cursor.firstBatch}
+        items={data!.cursor.firstBatch}
         order={order}
-        error={error}
-        isValidating={isValidating}
         onItemInvoked={onItemInvoked}
         onItemContextMenu={onItemContextMenu}
         selection={selection}
