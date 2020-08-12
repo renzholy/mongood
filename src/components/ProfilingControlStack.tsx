@@ -12,17 +12,14 @@ export function ProfilingControlStack() {
   const database = useSelector((state) => state.root.database)
   const [slowms, setSlowms] = useState(0)
   const [sampleRate, setSampleRate] = useState(0)
-  const trigger = useSelector((state) => state.docs.trigger)
-  const { data: profile, revalidate } = useSWR(
-    `profile/${connection}/${trigger}`,
-    () =>
-      runCommand<{ was: number; slowms: number; sampleRate: number }>(
-        connection,
-        'admin',
-        {
-          profile: -1,
-        },
-      ),
+  const { data: profile, revalidate } = useSWR(`profile/${connection}`, () =>
+    runCommand<{ was: number; slowms: number; sampleRate: number }>(
+      connection,
+      'admin',
+      {
+        profile: -1,
+      },
+    ),
   )
   const handleSetProfile = useCallback(async () => {
     if (!database) {
