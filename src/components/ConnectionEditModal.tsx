@@ -144,10 +144,10 @@ export function ConnectionEditModal(props: {
       return
     }
     try {
-      const trimed = value.trim()
-      mongodbUri.parse(trimed)
-      await runCommand(trimed, 'admin', { ping: 1 })
-      dispatch(actions.root.setConnections(uniq([trimed, ...connections])))
+      const _connection = value.trim()
+      mongodbUri.parse(_connection)
+      await runCommand(_connection, 'admin', { ping: 1 })
+      dispatch(actions.root.setConnections(uniq([_connection, ...connections])))
       setValue('')
     } catch (err) {
       setError(err)
