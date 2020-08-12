@@ -19,12 +19,12 @@ export function useCommandListConnections(suspense = false) {
   return useSWR('connections', listConnections, { suspense })
 }
 
-export function useCommand<I, T>(
+export function useCommand<I, O>(
   transform: (input: I) => object,
   overrideDatabase?: string,
 ): {
-  invoke: (input: I) => void
-  result?: T
+  invoke(input: I): void
+  result?: O
   error?: Error
   loading: boolean
 } {
@@ -32,7 +32,7 @@ export function useCommand<I, T>(
   const database = useSelector(
     (state) => overrideDatabase || state.root.database,
   )
-  const [result, setResult] = useState<T>()
+  const [result, setResult] = useState<O>()
   const [error, setError] = useState<Error>()
   const [loading, setLoading] = useState(false)
   const invoke = useCallback(
