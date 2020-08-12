@@ -117,12 +117,12 @@ export function useCommandCount(suspense = false) {
   )
 }
 
-export function useCommandSystemProfileFind() {
+export function useCommandSystemProfileFind(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
-  const filter = useSelector((state) => state.docs.filter)
-  const skip = useSelector((state) => state.docs.skip)
-  const limit = useSelector((state) => state.docs.limit)
+  const filter = useSelector((state) => state.profiling.filter)
+  const skip = useSelector((state) => state.profiling.skip)
+  const limit = useSelector((state) => state.profiling.limit)
   return useSWR(
     database
       ? `systemProfile/${connection}/${database}/${JSON.stringify(
@@ -148,13 +148,14 @@ export function useCommandSystemProfileFind() {
           canonical: true,
         },
       ),
+    { suspense },
   )
 }
 
 export function useCommandSystemProfileCount(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
-  const filter = useSelector((state) => state.docs.filter)
+  const filter = useSelector((state) => state.profiling.filter)
   return useSWR(
     database
       ? `systemProfileCount/${connection}/${database}/${JSON.stringify(filter)}`

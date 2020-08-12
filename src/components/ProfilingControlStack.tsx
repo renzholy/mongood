@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
-import { Pagination } from './Pagination'
+import { ProfilingPagination } from './ProfilingPagination'
 import { ActionButton } from './ActionButton'
 
 export function ProfilingControlStack() {
@@ -87,7 +87,7 @@ export function ProfilingControlStack() {
       <Stack.Item grow={true}>
         <div />
       </Stack.Item>
-      <Pagination />
+      <ProfilingPagination />
     </Stack>
   )
 }

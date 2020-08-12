@@ -10,13 +10,15 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
 import { Number } from '@/utils/formatter'
+import { useCommandSystemProfileCount } from '@/hooks/use-command'
 
-export function Pagination() {
-  const skip = useSelector((state) => state.docs.skip)
-  const limit = useSelector((state) => state.docs.limit)
-  const count = useSelector((state) => state.docs.count)
+export function ProfilingPagination() {
+  const skip = useSelector((state) => state.profiling.skip)
+  const limit = useSelector((state) => state.profiling.limit)
+  const { data } = useCommandSystemProfileCount()
   const dispatch = useDispatch()
   const theme = getTheme()
+  const count = data?.n || 0
 
   return (
     <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
@@ -46,7 +48,7 @@ export function Pagination() {
                   checked: l === limit,
                   canCheck: true,
                   onClick() {
-                    dispatch(actions.docs.setLimit(l))
+                    dispatch(actions.profiling.setLimit(l))
                   },
                 })),
               },
@@ -59,14 +61,14 @@ export function Pagination() {
         iconProps={{ iconName: 'Back' }}
         disabled={skip <= 0}
         onClick={() => {
-          dispatch(actions.docs.prevPage())
+          dispatch(actions.profiling.prevPage())
         }}
       />
       <IconButton
         iconProps={{ iconName: 'Forward' }}
         disabled={skip + limit >= count}
         onClick={() => {
-          dispatch(actions.docs.nextPage())
+          dispatch(actions.profiling.nextPage(count))
         }}
       />
     </Stack>

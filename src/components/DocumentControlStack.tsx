@@ -9,7 +9,7 @@ import { actions } from '@/stores'
 import { DisplayMode } from '@/types.d'
 import { useCommandFind, useCommandCount } from '@/hooks/use-command'
 import { IndexButton } from './IndexButton'
-import { Pagination } from './Pagination'
+import { DocumentPagination } from './DocumentPagination'
 import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
 
@@ -20,7 +20,7 @@ export function DocumentControlStack() {
   const displayMode = useSelector((state) => state.docs.displayMode)
   const index = useSelector((state) => state.docs.index)
   const { revalidate: reFind } = useCommandFind()
-  const { data: count, revalidate: reCount } = useCommandCount()
+  const { revalidate: reCount } = useCommandCount()
   const { data: indexes } = useSWR(
     connection && database && collection
       ? `listIndexes/${connection}/${database}/${collection}`
@@ -46,9 +46,6 @@ export function DocumentControlStack() {
     reFind()
     reCount()
   }, [connection, database, collection, doc, reFind, reCount])
-  useEffect(() => {
-    dispatch(actions.docs.setCount(count?.n || 0))
-  }, [count, dispatch])
   useEffect(() => {
     dispatch(actions.docs.resetPage())
     dispatch(actions.docs.setIndex())
@@ -138,7 +135,7 @@ export function DocumentControlStack() {
             ],
           }}
         />
-        <Pagination />
+        <DocumentPagination />
       </Stack>
     </Stack>
   )
