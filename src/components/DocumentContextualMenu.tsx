@@ -9,13 +9,13 @@ import {
 } from '@fluentui/react'
 import csv, { Options } from 'csv-stringify'
 import table from 'markdown-table'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { stringify } from '@/utils/ejson'
 import { runCommand } from '@/utils/fetcher'
-import { actions } from '@/stores'
 import { calcHeaders } from '@/utils/table'
 import { MongoData } from '@/types'
+import { useCommandFind, useCommandCount } from '@/hooks/use-command'
 
 const cast: Options['cast'] = {
   boolean: (value) => stringify(value),
@@ -37,10 +37,11 @@ export function DocumentContextualMenu<
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
-  const dispatch = useDispatch()
   const [isSucceed, setIsSucceed] = useState<boolean>()
   const [isDeleting, setIsDeleting] = useState(false)
   const [hidden, setHidden] = useState(true)
+  const { revalidate: reFind } = useCommandFind()
+  const { revalidate: reCount } = useCommandCount()
   const handleDelete = useCallback(
     async (ids: MongoData[]) => {
       try {
@@ -54,14 +55,15 @@ export function DocumentContextualMenu<
         })
         setIsSucceed(true)
         setHidden(true)
-        dispatch(actions.docs.setTrigger())
+        reFind()
+        reCount()
       } catch {
         setIsSucceed(false)
       } finally {
         setIsDeleting(false)
       }
     },
-    [connection, database, collection, dispatch],
+    [connection, database, collection, reFind, reCount],
   )
   const theme = getTheme()
   useEffect(() => {

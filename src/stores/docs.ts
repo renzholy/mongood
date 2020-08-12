@@ -13,7 +13,6 @@ export default createSlice({
     skip: 0,
     limit: parseInt(localStorage.getItem('limit') || '25', 10),
     count: 0,
-    trigger: Date.now(),
   } as {
     displayMode: DisplayMode
     index?: IndexSpecification
@@ -22,7 +21,6 @@ export default createSlice({
     skip: number
     limit: number
     count: number
-    trigger: number
   },
   reducers: {
     setDisplayMode: (state, { payload }: PayloadAction<DisplayMode>) => {
@@ -78,10 +76,6 @@ export default createSlice({
     setCount: (state, { payload }: PayloadAction<number>) => ({
       ...state,
       count: payload,
-    }),
-    setTrigger: (state) => ({
-      ...state,
-      trigger: Date.now(),
     }),
   },
 })

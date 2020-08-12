@@ -3,11 +3,11 @@ import useSWR from 'swr'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import type { IndexSpecification } from 'mongodb'
-import { isEmpty } from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { DisplayMode } from '@/types.d'
+import { useCommandFind, useCommandCount } from '@/hooks/use-command'
 import { IndexButton } from './IndexButton'
 import { Pagination } from './Pagination'
 import { EditorModal } from './EditorModal'
@@ -19,8 +19,8 @@ export function DocumentControlStack() {
   const collection = useSelector((state) => state.root.collection)
   const displayMode = useSelector((state) => state.docs.displayMode)
   const index = useSelector((state) => state.docs.index)
-  const trigger = useSelector((state) => state.docs.trigger)
-  const filter = useSelector((state) => state.docs.filter)
+  const { revalidate: reFind } = useCommandFind()
+  const { data: count, revalidate: reCount } = useCommandCount()
   const { data: indexes } = useSWR(
     connection && database && collection
       ? `listIndexes/${connection}/${database}/${collection}`
@@ -43,22 +43,9 @@ export function DocumentControlStack() {
       documents: [doc],
     })
     setIsInsertOpen(false)
-    dispatch(actions.docs.setTrigger())
-  }, [connection, database, collection, doc, dispatch])
-  const hint = isEmpty(filter) ? undefined : index?.name
-  const { data: count } = useSWR(
-    connection && database && collection
-      ? `count/${connection}/${database}/${collection}/${JSON.stringify(
-          filter,
-        )}/${hint}/${trigger}`
-      : null,
-    () =>
-      runCommand<{ n: number }>(connection, database!, {
-        count: collection,
-        query: filter,
-        hint,
-      }),
-  )
+    reFind()
+    reCount()
+  }, [connection, database, collection, doc, reFind, reCount])
   useEffect(() => {
     dispatch(actions.docs.setCount(count?.n || 0))
   }, [count, dispatch])
