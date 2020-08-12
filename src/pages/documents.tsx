@@ -5,6 +5,8 @@ import { DocumentTable } from '@/components/DocumentTable'
 import { DocumentControlStack } from '@/components/DocumentControlStack'
 import { DocumentFilterStack } from '@/components/DocumentFilterStack'
 import { LargeMessage } from '@/components/LargeMessage'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { LoadingSuspense } from '@/components/LoadingSuspense'
 
 export default () => {
   const database = useSelector((state) => state.root.database)
@@ -17,7 +19,11 @@ export default () => {
     <>
       <DocumentControlStack />
       <DocumentFilterStack />
-      <DocumentTable />
+      <ErrorBoundary>
+        <LoadingSuspense>
+          <DocumentTable />
+        </LoadingSuspense>
+      </ErrorBoundary>
     </>
   )
 }

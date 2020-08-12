@@ -7,6 +7,7 @@ import { map } from 'lodash'
 import bytes from 'bytes'
 import type { IndexSpecification, WiredTigerData } from 'mongodb'
 
+import { useCommandListIndexes } from '@/hooks/use-command'
 import { EditorModal } from './EditorModal'
 import { IndexContextualMenu } from './IndexContextualMenu'
 import { IndexFeatures } from './IndexFeatures'
@@ -57,17 +58,16 @@ function IndexInfo(props: { value: IndexSpecification }) {
 
 export function IndexCard(props: {
   value: IndexSpecification
-  onDrop(): void
   size: number
   // eslint-disable-next-line react/no-unused-prop-types
   statDetail: WiredTigerData
 }) {
   const theme = getTheme()
-
   const [isOpen, setIsOpen] = useState(false)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
   const target = useRef<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
+  const { revalidate } = useCommandListIndexes()
 
   return (
     <Card
@@ -129,7 +129,7 @@ export function IndexCard(props: {
             }}
             onDrop={() => {
               setIsMenuHidden(true)
-              props.onDrop()
+              revalidate()
             }}
           />
           <Text

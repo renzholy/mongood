@@ -7,14 +7,13 @@ import {
   Separator,
 } from '@fluentui/react'
 import { map, omit } from 'lodash'
-import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 
-import { runCommand } from '@/utils/fetcher'
 import { FilterInput } from '@/components/FilterInput'
-import { OperationCard } from '@/components/OperationCard'
-import { Operation } from '@/types'
-import { LargeMessage } from '@/components/LargeMessage'
+import { useCommandCurrentOp } from '@/hooks/use-command'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { LoadingSuspense } from '@/components/LoadingSuspense'
+import { OperationsList } from '@/components/OperationsList'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -58,34 +57,13 @@ const examples: { [key: string]: object } = {
 }
 
 export default () => {
-  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const [filter, setFilter] = useState<object>({})
   const [example, setExample] = useState<string>()
   const ns = database && collection ? `${database}.${collection}` : undefined
   const [refreshInterval, setRefreshInterval] = useState(1000)
-  const [isOpen, setIsOpen] = useState(false)
-  const { data, error, revalidate, isValidating } = useSWR(
-    `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
-    () =>
-      runCommand<{ inprog: Operation[] }>(
-        connection,
-        'admin',
-        {
-          currentOp: 1,
-          ...filter,
-          ns,
-        },
-        {
-          canonical: true,
-        },
-      ),
-    {
-      refreshInterval: isOpen ? 0 : refreshInterval,
-      revalidateOnFocus: false,
-    },
-  )
+  const { revalidate, isValidating } = useCommandCurrentOp(filter, 0)
   const value = useMemo(() => (ns ? { ...filter, ns } : omit(filter, 'ns')), [
     ns,
     filter,
@@ -145,33 +123,11 @@ export default () => {
         />
       </Stack>
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
-      {error ? (
-        <LargeMessage iconName="Error" title="Error" content={error.message} />
-      ) : !data ? (
-        <LargeMessage iconName="HourGlass" title="Loading" />
-      ) : data.inprog.length === 0 ? (
-        <LargeMessage iconName="AnalyticsReport" title="No Operation" />
-      ) : (
-        <Stack
-          tokens={{ childrenGap: 20 }}
-          styles={{
-            root: {
-              overflowY: 'scroll',
-              padding: 20,
-              flex: 1,
-              alignItems: 'center',
-            },
-          }}>
-          {data.inprog.map((item, index) => (
-            <OperationCard
-              key={index.toString()}
-              value={item}
-              onView={setIsOpen}
-              onKill={revalidate}
-            />
-          ))}
-        </Stack>
-      )}
+      <ErrorBoundary>
+        <LoadingSuspense>
+          <OperationsList filter={filter} refreshInterval={refreshInterval} />
+        </LoadingSuspense>
+      </ErrorBoundary>
     </>
   )
 }

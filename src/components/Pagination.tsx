@@ -6,27 +6,28 @@ import {
   CommandBarButton,
   ContextualMenuItemType,
 } from '@fluentui/react'
-import { useSelector, useDispatch } from 'react-redux'
 
-import { actions } from '@/stores'
 import { Number } from '@/utils/formatter'
 
-export function Pagination() {
-  const skip = useSelector((state) => state.docs.skip)
-  const limit = useSelector((state) => state.docs.limit)
-  const count = useSelector((state) => state.docs.count)
-  const dispatch = useDispatch()
+export function Pagination(props: {
+  skip: number
+  limit: number
+  count: number
+  onLimit(limit: number): void
+  onPrev(): void
+  onNext(): void
+}) {
   const theme = getTheme()
 
   return (
     <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>
       <CommandBarButton
         text={
-          count
-            ? `${skip + 1} ~ ${Math.min(
-                skip + limit,
-                count,
-              )} of ${Number.format(count)}`
+          props.count
+            ? `${props.skip + 1} ~ ${Math.min(
+                props.skip + props.limit,
+                props.count,
+              )} of ${Number.format(props.count)}`
             : 'No Data'
         }
         style={{
@@ -43,10 +44,10 @@ export function Pagination() {
                 items: [25, 50, 100].map((l, i) => ({
                   key: i.toString(),
                   text: l.toString(),
-                  checked: l === limit,
+                  checked: l === props.limit,
                   canCheck: true,
                   onClick() {
-                    dispatch(actions.docs.setLimit(l))
+                    props.onLimit(l)
                   },
                 })),
               },
@@ -57,17 +58,13 @@ export function Pagination() {
       />
       <IconButton
         iconProps={{ iconName: 'Back' }}
-        disabled={skip <= 0}
-        onClick={() => {
-          dispatch(actions.docs.prevPage())
-        }}
+        disabled={props.skip <= 0}
+        onClick={props.onPrev}
       />
       <IconButton
         iconProps={{ iconName: 'Forward' }}
-        disabled={skip + limit >= count}
-        onClick={() => {
-          dispatch(actions.docs.nextPage())
-        }}
+        disabled={props.skip + props.limit >= props.count}
+        onClick={props.onNext}
       />
     </Stack>
   )

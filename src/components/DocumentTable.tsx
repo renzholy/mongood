@@ -1,13 +1,11 @@
 import React, { useState, useCallback, useMemo, useRef } from 'react'
-import useSWR from 'swr'
-import { useSelector, useDispatch } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { useSelector } from 'react-redux'
 import { Selection } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { stringify } from '@/utils/ejson'
-import { actions } from '@/stores'
 import { MongoData } from '@/types'
+import { useCommandFind } from '@/hooks/use-command'
 import { Table } from './Table'
 import { EditorModal } from './EditorModal'
 import { ActionButton } from './ActionButton'
@@ -16,42 +14,12 @@ import { DocumentContextualMenu } from './DocumentContextualMenu'
 type Data = { [key: string]: MongoData }
 
 export function DocumentTable() {
+  const displayMode = useSelector((state) => state.docs.displayMode)
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const index = useSelector((state) => state.docs.index)
-  const filter = useSelector((state) => state.docs.filter)
-  const sort = useSelector((state) => state.docs.sort)
-  const skip = useSelector((state) => state.docs.skip)
-  const limit = useSelector((state) => state.docs.limit)
-  const trigger = useSelector((state) => state.docs.trigger)
-  const displayMode = useSelector((state) => state.docs.displayMode)
-  const hint = filter.$text || isEmpty(filter) ? undefined : index?.name
-  const { data, error, isValidating } = useSWR(
-    connection && database && collection
-      ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
-          filter,
-        )}/${JSON.stringify(sort)}/${hint}/${trigger}`
-      : null,
-    () =>
-      runCommand<{
-        cursor: { firstBatch: Data[] }
-      }>(
-        connection,
-        database!,
-        {
-          find: collection,
-          filter,
-          sort,
-          hint,
-          skip,
-          limit,
-        },
-        { canonical: true },
-      ),
-    { revalidateOnFocus: false },
-  )
-  const dispatch = useDispatch()
+  const { data, revalidate } = useCommandFind(true)
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isMenuHidden, setIsMenuHidden] = useState(true)
   const [invokedItem, setInvokedItem] = useState<Data>()
@@ -62,9 +30,9 @@ export function DocumentTable() {
       query: { _id: (invokedItem as { _id: unknown })._id },
       update: editedItem,
     })
-    dispatch(actions.docs.setTrigger())
+    revalidate()
     setIsUpdateOpen(false)
-  }, [connection, database, collection, invokedItem, editedItem, dispatch])
+  }, [connection, database, collection, invokedItem, editedItem, revalidate])
   const target = useRef<MouseEvent>()
   const selectedItems = useRef<Data[]>([])
   const selection = useMemo(
@@ -140,10 +108,8 @@ export function DocumentTable() {
       />
       <Table
         displayMode={displayMode}
-        items={data?.cursor.firstBatch}
+        items={data!.cursor.firstBatch}
         order={order}
-        error={error}
-        isValidating={isValidating}
         onItemInvoked={onItemInvoked}
         onItemContextMenu={onItemContextMenu}
         selection={selection}

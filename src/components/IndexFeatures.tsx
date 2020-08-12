@@ -1,4 +1,4 @@
-import { IndexSpecification } from 'mongodb'
+import type { IndexSpecification } from 'mongodb'
 import React, { useMemo, useCallback } from 'react'
 import { compact, size } from 'lodash'
 import {

@@ -7,7 +7,6 @@ export default createSlice({
     connections: JSON.parse(localStorage.getItem('connections') || '[]'),
     expandedDatabases: [],
     collectionsMap: {},
-    trigger: Date.now(),
   } as {
     connection?: string
     connections: string[]
@@ -15,7 +14,6 @@ export default createSlice({
     collection?: string
     expandedDatabases: string[]
     collectionsMap: { [database: string]: string[] }
-    trigger: number
   },
   reducers: {
     setConnection: (state, { payload }: PayloadAction<string | undefined>) => {
@@ -61,10 +59,6 @@ export default createSlice({
     resetCollectionsMap: (state) => ({
       ...state,
       collectionsMap: {},
-    }),
-    setTrigger: (state) => ({
-      ...state,
-      trigger: Date.now(),
     }),
   },
 })

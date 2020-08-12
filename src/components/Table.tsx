@@ -10,7 +10,6 @@ import {
   ScrollablePane,
   DetailsHeader,
   IDetailsHeaderProps,
-  ProgressIndicator,
   getTheme,
   IColumn,
   MarqueeSelection,
@@ -27,18 +26,15 @@ import { ColorizedData } from './ColorizedData'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
   displayMode?: DisplayMode
-  items?: T[]
+  items: T[]
   order?: string[]
   onItemInvoked?(item: T): void
   onItemContextMenu?(ev?: MouseEvent, item?: T): void
   selection?: Selection
-  error?: Error
-  isValidating: boolean
   index2dsphere?: string
 }) {
   const theme = getTheme()
   const [columns, setColumns] = useState<IColumn[]>([])
-  const { items, error, isValidating } = props
   useEffect(() => {
     if (!props.items || props.items.length === 0) {
       setColumns([])
@@ -57,26 +53,19 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   const onRenderDetailsHeader = useCallback(
     (detailsHeaderProps?: IDetailsHeaderProps) => (
       <Sticky>
-        <ProgressIndicator
-          progressHidden={!isValidating}
-          barHeight={1}
-          styles={{ itemProgress: { padding: 0 } }}
-        />
         <DetailsHeader
           {...(detailsHeaderProps as IDetailsHeaderProps)}
           styles={{
             root: {
               paddingTop: 0,
-              borderTop: isValidating
-                ? 0
-                : `1px solid ${theme.palette.neutralLight}`,
+              borderTop: `1px solid ${theme.palette.neutralLight}`,
               paddingBottom: -1,
             },
           }}
         />
       </Sticky>
     ),
-    [isValidating, theme],
+    [theme],
   )
   const onRenderTableItemColumn = useCallback(
     (item?: T, _index?: number, column?: IColumn) => (
@@ -105,19 +94,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     return item._id ? JSON.stringify(item._id) : JSON.stringify(item) + index
   }, [])
 
-  if (error) {
-    return (
-      <LargeMessage
-        style={{
-          borderTop: `1px solid ${theme.palette.red}`,
-        }}
-        iconName="Error"
-        title="Error"
-        content={error.message}
-      />
-    )
-  }
-  if (items?.length === 0) {
+  if (props.items.length === 0) {
     return (
       <LargeMessage
         style={{
@@ -147,7 +124,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
               useReducedRowRenderer={true}
               constrainMode={ConstrainMode.unconstrained}
               layoutMode={DetailsListLayoutMode.justified}
-              items={items || []}
+              items={props.items}
               onRenderItemColumn={onRenderTableItemColumn}
               onRenderDetailsHeader={onRenderDetailsHeader}
               onItemInvoked={props.onItemInvoked}
@@ -178,7 +155,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
               useReducedRowRenderer={true}
               constrainMode={ConstrainMode.unconstrained}
               layoutMode={DetailsListLayoutMode.justified}
-              items={items || []}
+              items={props.items}
               onRenderItemColumn={onRenderDocumentItemColumn}
               onRenderDetailsHeader={onRenderDetailsHeader}
               onItemInvoked={props.onItemInvoked}
