@@ -2,13 +2,13 @@ import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
-import { useCommandCount } from '@/hooks/use-command'
+import { useCommandSystemProfileCount } from '@/hooks/use-command'
 import { Pagination } from './Pagination'
 
 export function ProfilingPagination() {
   const skip = useSelector((state) => state.profiling.skip)
   const limit = useSelector((state) => state.profiling.limit)
-  const { data } = useCommandCount()
+  const { data } = useCommandSystemProfileCount()
   const dispatch = useDispatch()
   const count = data?.n || 0
   const handleLimit = useCallback(
