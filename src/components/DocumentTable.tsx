@@ -47,6 +47,7 @@ export function DocumentTable() {
   const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
   const onItemInvoked = useCallback((item: Data) => {
     setInvokedItem(item)
+    setEditedItem(item)
     setIsUpdateOpen(true)
   }, [])
   const onItemContextMenu = useCallback(
