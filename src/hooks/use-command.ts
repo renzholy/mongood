@@ -13,9 +13,53 @@ import {
   ValidationLevel,
 } from '@/types'
 import { JsonSchema } from '@/types/schema'
+import { useCallback, useState } from 'react'
 
 export function useCommandListConnections(suspense = false) {
   return useSWR('connections', listConnections, { suspense })
+}
+
+export function useCommand<I, T>(
+  transform: (input: I) => object,
+  overrideDatabase?: string,
+): {
+  invoke: (input: I) => void
+  result?: T
+  error?: Error
+  loading: boolean
+} {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector(
+    (state) => overrideDatabase || state.root.database,
+  )
+  const [result, setResult] = useState<T>()
+  const [error, setError] = useState<Error>()
+  const [loading, setLoading] = useState(false)
+  const invoke = useCallback(
+    async (input: I) => {
+      try {
+        setLoading(true)
+        setResult(await runCommand(connection, database!, transform(input)))
+        if (error) {
+          setError(undefined)
+        }
+      } catch (err) {
+        setError(err)
+        if (result) {
+          setResult(undefined)
+        }
+      } finally {
+        setLoading(false)
+      }
+    },
+    [connection, database, transform, error, result],
+  )
+  return {
+    invoke,
+    result,
+    error,
+    loading,
+  }
 }
 
 export function useCommandDatabases(suspense = false) {
