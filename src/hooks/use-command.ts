@@ -200,3 +200,26 @@ export function useCommandCurrentOp(
     },
   )
 }
+
+export function useCommandUsers(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  return useSWR(
+    `usersInfo/${connection}/${database}`,
+    () =>
+      runCommand<{
+        users: {
+          _id: string
+          db: string
+          user: string
+          roles: {
+            db: string
+            role: string
+          }[]
+        }[]
+      }>(connection, database || 'admin', {
+        usersInfo: database ? 1 : { forAllDBs: true },
+      }),
+    { suspense },
+  )
+}
