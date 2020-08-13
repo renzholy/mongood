@@ -23,7 +23,7 @@ export function useCommand<I, O>(
   transform: (input: I) => object,
   overrideDatabase?: string,
 ): {
-  invoke(input: I): void
+  invoke(input?: I): Promise<void>
   result?: O
   error?: Error
   loading: boolean
@@ -40,19 +40,15 @@ export function useCommand<I, O>(
       try {
         setLoading(true)
         setResult(await runCommand(connection, database!, transform(input)))
-        if (error) {
-          setError(undefined)
-        }
+        setError(undefined)
       } catch (err) {
         setError(err)
-        if (result) {
-          setResult(undefined)
-        }
+        setResult(undefined)
       } finally {
         setLoading(false)
       }
     },
-    [connection, database, transform, error, result],
+    [connection, database, transform],
   )
   return {
     invoke,
@@ -287,14 +283,15 @@ export function useCommandSystemProfileCount(suspense = false) {
   )
 }
 
-export function useCommandCurrentOp(
-  filter: object,
-  refreshInterval: number,
-  suspense = false,
-) {
+export function useCommandCurrentOp(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
+  const filter = useSelector((state) => state.operations.filter)
+  const refreshInterval = useSelector(
+    (state) => state.operations.refreshInterval,
+  )
+  const isOpen = useSelector((state) => state.operations.isOpen)
   const ns = database && collection ? `${database}.${collection}` : undefined
   return useSWR(
     `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
@@ -312,7 +309,7 @@ export function useCommandCurrentOp(
         },
       ),
     {
-      refreshInterval,
+      refreshInterval: isOpen ? 0 : refreshInterval,
       revalidateOnFocus: false,
       suspense,
     },

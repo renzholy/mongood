@@ -1,20 +1,12 @@
 import { Stack } from '@fluentui/react'
-import React, { useState } from 'react'
+import React from 'react'
 
 import { useCommandCurrentOp } from '@/hooks/use-command'
 import { OperationCard } from './OperationCard'
 import { LargeMessage } from './LargeMessage'
 
-export function OperationsList(props: {
-  filter: object
-  refreshInterval: number
-}) {
-  const [isOpen, setIsOpen] = useState(false)
-  const { data, revalidate } = useCommandCurrentOp(
-    props.filter,
-    isOpen ? 0 : props.refreshInterval,
-    true,
-  )
+export function OperationsList() {
+  const { data } = useCommandCurrentOp(true)
 
   if (data?.inprog.length === 0) {
     return <LargeMessage iconName="AnalyticsReport" title="No Operation" />
@@ -31,12 +23,7 @@ export function OperationsList(props: {
         },
       }}>
       {data!.inprog.map((item, index) => (
-        <OperationCard
-          key={index.toString()}
-          value={item}
-          onView={setIsOpen}
-          onKill={revalidate}
-        />
+        <OperationCard key={index.toString()} value={item} />
       ))}
     </Stack>
   )

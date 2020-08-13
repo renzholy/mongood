@@ -8,36 +8,26 @@ import {
   Dialog,
   DialogType,
   DialogFooter,
-  DefaultButton,
 } from '@fluentui/react'
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { omit, compact } from 'lodash'
-import { useSelector } from 'react-redux'
 import { EJSON } from 'bson'
+import { useDispatch } from 'react-redux'
 
-import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
 import { Operation } from '@/types'
+import { useCommand, useCommandCurrentOp } from '@/hooks/use-command'
+import { actions } from '@/stores'
 import { EditorModal } from './EditorModal'
-import { ActionButton } from './ActionButton'
+import { CommandButton } from './CommandButton'
 import { CommandAndLocks } from './CommandAndLocks'
 
-export function OperationCard(props: {
-  value: Operation
-  onView(isOpen: boolean): void
-  onKill(): void
-}) {
-  const connection = useSelector((state) => state.root.connection)
+export function OperationCard(props: { value: Operation }) {
   const theme = getTheme()
   const [isOpen, setIsOpen] = useState(false)
   const target = useRef<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
-  const [isSucceed, setIsSucceed] = useState<boolean>()
-  const [isKilling, setIsKilling] = useState(false)
   const [hidden, setHidden] = useState(true)
-  useEffect(() => {
-    setIsSucceed(undefined)
-  }, [target])
   const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
     () =>
       EJSON.parse(
@@ -45,27 +35,25 @@ export function OperationCard(props: {
       ) as Omit<Operation, 'command' | 'originatingCommand'>,
     [props.value],
   )
-  const handleKill = useCallback(async () => {
-    try {
-      setIsKilling(true)
-      await runCommand(connection, 'admin', {
-        killOp: 1,
-        op: value.opid,
-      })
-      setIsSucceed(true)
-      setHidden(true)
-      props.onKill()
-    } catch {
-      setIsSucceed(false)
-    } finally {
-      setIsKilling(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connection, value.opid, props.onKill])
+  const { revalidate } = useCommandCurrentOp(true)
+  const dispatch = useDispatch()
+  const kill = useCommand(
+    () => ({
+      killOp: 1,
+      op: value.opid,
+    }),
+    'admin',
+  )
   useEffect(() => {
-    props.onView(isOpen || !isMenuHidden)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, isMenuHidden, props.onView])
+    if (kill.result) {
+      setIsOpen(false)
+      setHidden(true)
+      revalidate()
+    }
+  }, [kill.result, revalidate])
+  useEffect(() => {
+    dispatch(actions.operations.setIsOpen(isOpen || !isMenuHidden))
+  }, [isOpen, isMenuHidden, dispatch])
 
   return (
     <Card
@@ -98,7 +86,7 @@ export function OperationCard(props: {
           onDismiss={() => {
             setIsOpen(false)
           }}
-          footer={<ActionButton text="kill" onClick={handleKill} />}
+          footer={<CommandButton text="kill" command={kill} />}
         />
         <ContextualMenu
           target={target.current}
@@ -153,19 +141,7 @@ export function OperationCard(props: {
             },
           }}>
           <DialogFooter>
-            <DefaultButton
-              disabled={isKilling}
-              iconProps={
-                {
-                  true: { iconName: 'CheckMark' },
-                  false: { iconName: 'Error' },
-                }[String(isSucceed) as 'true' | 'false']
-              }
-              onClick={() => {
-                handleKill()
-              }}
-              text="Kill"
-            />
+            <CommandButton text="Kill" command={kill} />
           </DialogFooter>
         </Dialog>
         <Text
