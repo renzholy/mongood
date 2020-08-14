@@ -4,12 +4,11 @@ import { Card } from '@uifabric/react-cards'
 import {
   Text,
   getTheme,
-  ContextualMenu,
   Dialog,
   DialogType,
   DialogFooter,
 } from '@fluentui/react'
-import React, { useState, useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { omit, compact } from 'lodash'
 import { EJSON } from 'bson'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,12 +21,13 @@ import { EditorModal } from './EditorModal'
 import { CommandButton } from './CommandButton'
 import { CommandAndLocks } from './CommandAndLocks'
 
-export function OperationCard(props: { value: Operation }) {
+export function OperationCard(props: {
+  value: Operation
+  onContextMenu(ev: MouseEvent): void
+}) {
   const theme = getTheme()
   const isOpen = useSelector((state) => state.operations.isOpen)
   const hidden = useSelector((state) => state.operations.hidden)
-  const target = useRef<MouseEvent>()
-  const [isMenuHidden, setIsMenuHidden] = useState(true)
   const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
     () =>
       EJSON.parse(
@@ -55,8 +55,7 @@ export function OperationCard(props: { value: Operation }) {
   return (
     <Card
       onContextMenu={(ev) => {
-        target.current = ev.nativeEvent
-        setIsMenuHidden(false)
+        props.onContextMenu(ev.nativeEvent)
         ev.preventDefault()
       }}
       onDoubleClick={() => {
@@ -84,35 +83,6 @@ export function OperationCard(props: { value: Operation }) {
             dispatch(actions.operations.setIsOpen(false))
           }}
           footer={<CommandButton text="kill" command={kill} />}
-        />
-        <ContextualMenu
-          target={target.current}
-          hidden={isMenuHidden}
-          onDismiss={() => {
-            setIsMenuHidden(true)
-          }}
-          items={[
-            {
-              key: '0',
-              text: 'View',
-              iconProps: { iconName: 'View' },
-              onClick() {
-                setIsMenuHidden(true)
-                dispatch(actions.operations.setIsOpen(true))
-              },
-            },
-            {
-              key: '1',
-              text: 'Kill',
-              iconProps: {
-                iconName: 'StatusCircleBlock',
-                styles: { root: { color: theme.palette.red } },
-              },
-              onClick() {
-                dispatch(actions.operations.setHidden(false))
-              },
-            },
-          ]}
         />
         <Dialog
           hidden={hidden}
