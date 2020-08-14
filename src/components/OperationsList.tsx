@@ -26,9 +26,9 @@ export function OperationsList() {
             alignItems: 'center',
           },
         }}>
-        {data!.inprog.map((item, index) => (
+        {data!.inprog.map((item) => (
           <OperationCard
-            key={index.toString()}
+            key={item.opid}
             value={item}
             onContextMenu={setTarget}
           />
