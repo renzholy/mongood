@@ -14,19 +14,18 @@ import { EJSON } from 'bson'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Number } from '@/utils/formatter'
-import { Operation } from '@/types'
+import { Operation, MongoData } from '@/types'
 import { useCommand, useCommandCurrentOp } from '@/hooks/use-command'
 import { actions } from '@/stores'
-import { EditorModal } from './EditorModal'
 import { CommandButton } from './CommandButton'
 import { CommandAndLocks } from './CommandAndLocks'
 
 export function OperationCard(props: {
-  value: Operation
+  value: { [key: string]: MongoData }
   onContextMenu(ev: MouseEvent): void
+  onView(): void
 }) {
   const theme = getTheme()
-  const isOpen = useSelector((state) => state.operations.isOpen)
   const hidden = useSelector((state) => state.operations.hidden)
   const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
     () =>
@@ -46,7 +45,6 @@ export function OperationCard(props: {
   )
   useEffect(() => {
     if (kill.result) {
-      dispatch(actions.operations.setIsOpen(false))
       dispatch(actions.operations.setHidden(true))
       revalidate()
     }
@@ -59,7 +57,7 @@ export function OperationCard(props: {
         ev.preventDefault()
       }}
       onDoubleClick={() => {
-        dispatch(actions.operations.setIsOpen(true))
+        props.onView()
       }}
       styles={{
         root: {
@@ -74,16 +72,6 @@ export function OperationCard(props: {
         minHeight: 'unset',
       }}>
       <Card.Item>
-        <EditorModal
-          title="View Operation"
-          readOnly={true}
-          value={props.value}
-          isOpen={isOpen}
-          onDismiss={() => {
-            dispatch(actions.operations.setIsOpen(false))
-          }}
-          footer={<CommandButton text="kill" command={kill} />}
-        />
         <Dialog
           hidden={hidden}
           dialogContentProps={{

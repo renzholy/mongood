@@ -6,7 +6,6 @@ import type { CollStats, IndexSpecification } from 'mongodb'
 import { runCommand, listConnections } from '@/utils/fetcher'
 import {
   MongoData,
-  Operation,
   DbStats,
   ServerStats,
   ValidationAction,
@@ -20,7 +19,7 @@ export function useCommandListConnections(suspense = false) {
 }
 
 export function useCommand<I, O>(
-  transform: (input: I) => object,
+  transform: (input: I) => object | null,
   overrideDatabase?: string,
 ): {
   invoke(input?: I): Promise<void>
@@ -39,7 +38,10 @@ export function useCommand<I, O>(
     async (input: I) => {
       try {
         setLoading(true)
-        setResult(await runCommand(connection, database!, transform(input)))
+        const command = transform(input)
+        if (command) {
+          setResult(await runCommand(connection, database!, command))
+        }
         setError(undefined)
       } catch (err) {
         setError(err)
@@ -297,7 +299,7 @@ export function useCommandCurrentOp(suspense = false) {
   return useSWR(
     `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
     () =>
-      runCommand<{ inprog: Operation[] }>(
+      runCommand<{ inprog: { [key: string]: MongoData }[] }>(
         connection,
         'admin',
         {

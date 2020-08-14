@@ -6,6 +6,7 @@ import { actions } from '@/stores'
 
 export function OperationContextualMenu(props: {
   target: MouseEvent | undefined
+  onView(): void
 }) {
   const dispatch = useDispatch()
   const theme = getTheme()
@@ -29,7 +30,7 @@ export function OperationContextualMenu(props: {
           iconProps: { iconName: 'View' },
           onClick() {
             setIsMenuHidden(true)
-            dispatch(actions.operations.setIsOpen(true))
+            props.onView()
           },
         },
         {
