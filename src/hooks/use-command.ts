@@ -292,6 +292,7 @@ export function useCommandCurrentOp(suspense = false) {
     (state) => state.operations.refreshInterval,
   )
   const isOpen = useSelector((state) => state.operations.isOpen)
+  const hidden = useSelector((state) => state.operations.hidden)
   const ns = database && collection ? `${database}.${collection}` : undefined
   return useSWR(
     `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
@@ -309,7 +310,7 @@ export function useCommandCurrentOp(suspense = false) {
         },
       ),
     {
-      refreshInterval: isOpen ? 0 : refreshInterval,
+      refreshInterval: !hidden || isOpen ? 0 : refreshInterval,
       revalidateOnFocus: false,
       suspense,
     },

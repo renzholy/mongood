@@ -12,7 +12,7 @@ import {
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { omit, compact } from 'lodash'
 import { EJSON } from 'bson'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Number } from '@/utils/formatter'
 import { Operation } from '@/types'
@@ -24,10 +24,10 @@ import { CommandAndLocks } from './CommandAndLocks'
 
 export function OperationCard(props: { value: Operation }) {
   const theme = getTheme()
-  const [isOpen, setIsOpen] = useState(false)
+  const isOpen = useSelector((state) => state.operations.isOpen)
+  const hidden = useSelector((state) => state.operations.hidden)
   const target = useRef<MouseEvent>()
   const [isMenuHidden, setIsMenuHidden] = useState(true)
-  const [hidden, setHidden] = useState(true)
   const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
     () =>
       EJSON.parse(
@@ -46,14 +46,11 @@ export function OperationCard(props: { value: Operation }) {
   )
   useEffect(() => {
     if (kill.result) {
-      setIsOpen(false)
-      setHidden(true)
+      dispatch(actions.operations.setIsOpen(false))
+      dispatch(actions.operations.setHidden(true))
       revalidate()
     }
-  }, [kill.result, revalidate])
-  useEffect(() => {
-    dispatch(actions.operations.setIsOpen(isOpen || !isMenuHidden))
-  }, [isOpen, isMenuHidden, dispatch])
+  }, [kill.result, revalidate, dispatch])
 
   return (
     <Card
@@ -63,7 +60,7 @@ export function OperationCard(props: { value: Operation }) {
         ev.preventDefault()
       }}
       onDoubleClick={() => {
-        setIsOpen(true)
+        dispatch(actions.operations.setIsOpen(true))
       }}
       styles={{
         root: {
@@ -84,7 +81,7 @@ export function OperationCard(props: { value: Operation }) {
           value={props.value}
           isOpen={isOpen}
           onDismiss={() => {
-            setIsOpen(false)
+            dispatch(actions.operations.setIsOpen(false))
           }}
           footer={<CommandButton text="kill" command={kill} />}
         />
@@ -101,7 +98,7 @@ export function OperationCard(props: { value: Operation }) {
               iconProps: { iconName: 'View' },
               onClick() {
                 setIsMenuHidden(true)
-                setIsOpen(true)
+                dispatch(actions.operations.setIsOpen(true))
               },
             },
             {
@@ -112,7 +109,7 @@ export function OperationCard(props: { value: Operation }) {
                 styles: { root: { color: theme.palette.red } },
               },
               onClick() {
-                setHidden(false)
+                dispatch(actions.operations.setHidden(false))
               },
             },
           ]}
@@ -125,7 +122,7 @@ export function OperationCard(props: { value: Operation }) {
             subText: value.opid.toString(),
             showCloseButton: true,
             onDismiss() {
-              setHidden(true)
+              dispatch(actions.operations.setHidden(true))
             },
           }}
           modalProps={{
@@ -137,7 +134,7 @@ export function OperationCard(props: { value: Operation }) {
               },
             },
             onDismiss() {
-              setHidden(true)
+              dispatch(actions.operations.setHidden(true))
             },
           }}>
           <DialogFooter>

@@ -8,10 +8,12 @@ export default createSlice({
     filter: {},
     refreshInterval: 1000,
     isOpen: false,
+    hidden: true,
   } as {
     filter: FilterQuery<unknown>
     refreshInterval: number
     isOpen: boolean
+    hidden: boolean
   },
   reducers: {
     setFilter: (state, { payload }: PayloadAction<FilterQuery<unknown>>) =>
@@ -28,6 +30,10 @@ export default createSlice({
     setIsOpen: (state, { payload }: PayloadAction<boolean>) => ({
       ...state,
       isOpen: payload,
+    }),
+    setHidden: (state, { payload }: PayloadAction<boolean>) => ({
+      ...state,
+      hidden: payload,
     }),
   },
 })
