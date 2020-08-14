@@ -54,9 +54,11 @@ export function OperationCard(props: {
     <Card
       onContextMenu={(ev) => {
         props.onContextMenu(ev.nativeEvent)
+        dispatch(actions.operations.setInvokedOperation(props.value))
         ev.preventDefault()
       }}
       onDoubleClick={() => {
+        dispatch(actions.operations.setInvokedOperation(props.value))
         props.onView()
       }}
       styles={{

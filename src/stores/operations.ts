@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { FilterQuery } from 'mongodb'
 import { isEqual } from 'lodash'
 
+import { MongoData } from '@/types'
+
 export default createSlice({
   name: 'operations',
   initialState: {
@@ -14,6 +16,7 @@ export default createSlice({
     refreshInterval: number
     isOpen: boolean
     hidden: boolean
+    invokedOperation?: { [key: string]: MongoData }
   },
   reducers: {
     setFilter: (state, { payload }: PayloadAction<FilterQuery<unknown>>) =>
@@ -34,6 +37,13 @@ export default createSlice({
     setHidden: (state, { payload }: PayloadAction<boolean>) => ({
       ...state,
       hidden: payload,
+    }),
+    setInvokedOperation: (
+      state,
+      { payload }: PayloadAction<{ [key: string]: MongoData }>,
+    ) => ({
+      ...state,
+      invokedOperation: payload,
     }),
   },
 })
