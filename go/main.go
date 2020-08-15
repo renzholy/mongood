@@ -17,9 +17,10 @@ import (
 )
 
 var (
-	ctx     context.Context
-	clients sync.Map
-	mux     = http.NewServeMux()
+	ctx           context.Context
+	clients       sync.Map
+	creationMutex sync.Mutex
+	mux           = http.NewServeMux()
 )
 
 func runCommand(w http.ResponseWriter, r *http.Request) {
@@ -56,10 +57,20 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 }
 
 func create(uri string) (*mongo.Client, error) {
-	cached, ok := clients.Load(uri)
-	if ok && cached != nil {
+	if cached, ok := clients.Load(uri); ok && cached != nil {
 		return cached.(*mongo.Client), nil
 	}
+
+	// Use mutex to make sure there is only one active mongodb client instance for one uri.
+	// While with mutex, clients for different mongodb servers must be created one by one.
+	creationMutex.Lock()
+	defer creationMutex.Unlock()
+
+	// check again, if it is already created, just return.
+	if cached, ok := clients.Load(uri); ok && cached != nil {
+		return cached.(*mongo.Client), nil
+	}
+
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		return nil, err
