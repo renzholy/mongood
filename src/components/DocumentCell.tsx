@@ -40,7 +40,7 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
   )
 }
 
-export const TableCell = React.memo(
+export const DocumentCell = React.memo(
   function TableCell(props: {
     value: MongoData
     subStringLength?: number

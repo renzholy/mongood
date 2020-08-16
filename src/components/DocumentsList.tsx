@@ -7,14 +7,14 @@ import { stringify } from '@/utils/ejson'
 import { MongoData } from '@/types'
 import { useCommandFind } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
-import { Table } from './Table'
+import { DocumentsListInner } from './DocumentsListInner'
 import { EditorModal } from './EditorModal'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 import { PromiseButton } from './PromiseButton'
 
 type Data = { [key: string]: MongoData }
 
-export function DocumentTable() {
+export function DocumentsList() {
   const displayMode = useSelector((state) => state.docs.displayMode)
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
@@ -117,7 +117,7 @@ export function DocumentTable() {
             : undefined
         }
       />
-      <Table
+      <DocumentsListInner
         displayMode={displayMode}
         items={data!.cursor.firstBatch}
         order={order}

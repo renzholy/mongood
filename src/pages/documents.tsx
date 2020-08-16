@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { DocumentTable } from '@/components/DocumentTable'
+import { DocumentsList } from '@/components/DocumentsList'
 import { DocumentControlStack } from '@/components/DocumentControlStack'
 import { DocumentFilterStack } from '@/components/DocumentFilterStack'
 import { LargeMessage } from '@/components/LargeMessage'
@@ -21,7 +21,7 @@ export default () => {
       <DocumentFilterStack />
       <ErrorBoundary>
         <LoadingSuspense>
-          <DocumentTable />
+          <DocumentsList />
         </LoadingSuspense>
       </ErrorBoundary>
     </>
