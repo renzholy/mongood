@@ -1,5 +1,3 @@
-/* eslint-disable react/no-danger */
-
 import { Card } from '@uifabric/react-cards'
 import { Text, getTheme } from '@fluentui/react'
 import React, { useMemo } from 'react'

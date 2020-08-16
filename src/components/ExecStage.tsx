@@ -1,5 +1,3 @@
-/* eslint-disable react/no-danger */
-
 import React, { useMemo, useCallback } from 'react'
 import {
   getTheme,

@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 /* eslint-disable react/no-danger */
 
 import React, { useCallback, useMemo } from 'react'
