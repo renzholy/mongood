@@ -20,11 +20,13 @@ import { get } from 'lodash'
 
 import { DisplayMode, MongoData } from '@/types'
 import { calcHeaders } from '@/utils/table'
-import { TableCell } from './TableCell'
+import { DocumentCell } from './DocumentCell'
 import { LargeMessage } from './LargeMessage'
 import { ColorizedData } from './ColorizedData'
 
-export function Table<T extends { [key: string]: MongoData }>(props: {
+export function DocumentsListInner<
+  T extends { [key: string]: MongoData }
+>(props: {
   displayMode?: DisplayMode
   items: T[]
   order?: string[]
@@ -69,7 +71,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   )
   const onRenderTableItemColumn = useCallback(
     (item?: T, _index?: number, column?: IColumn) => (
-      <TableCell
+      <DocumentCell
         value={item?.[column?.key as keyof typeof item]}
         subStringLength={
           // eslint-disable-next-line no-bitwise

@@ -1,15 +1,16 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { Stack, IconButton, Separator } from '@fluentui/react'
 
-import { runCommand } from '@/utils/fetcher'
 import { LargeMessage } from '@/components/LargeMessage'
 import { EditorModal } from '@/components/EditorModal'
-import { ActionButton } from '@/components/ActionButton'
 import { IndexesList } from '@/components/IndexesList'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { LoadingSuspense } from '@/components/LoadingSuspense'
 import { useCommandListIndexes } from '@/hooks/use-command'
+import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from '@/utils/fetcher'
+import { PromiseButton } from '@/components/PromiseButton'
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)
@@ -20,14 +21,23 @@ export default () => {
     background: true,
   })
   const { revalidate } = useCommandListIndexes()
-  const handleCreate = useCallback(async () => {
-    await runCommand(connection, database!, {
-      createIndexes: collection,
-      indexes: [value],
-    })
-    setIsOpen(false)
-    revalidate()
-  }, [connection, database, collection, value, revalidate])
+  const handleCreate = useCallback(
+    async () =>
+      database && collection
+        ? runCommand(connection, database, {
+            createIndexes: collection,
+            indexes: [value],
+          })
+        : undefined,
+    [collection, connection, database, value],
+  )
+  const promiseCreate = usePromise(handleCreate)
+  useEffect(() => {
+    if (promiseCreate.resolved) {
+      setIsOpen(false)
+      revalidate()
+    }
+  }, [promiseCreate.resolved, revalidate])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
@@ -61,7 +71,7 @@ export default () => {
           setIsOpen(false)
         }}
         footer={
-          <ActionButton text="Create" primary={true} onClick={handleCreate} />
+          <PromiseButton text="Create" primary={true} promise={promiseCreate} />
         }
       />
     </>

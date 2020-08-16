@@ -1,22 +1,22 @@
-/* eslint-disable react/no-danger */
-
-import React, { useState, useMemo, useRef } from 'react'
+import React, { useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
-import { Text, getTheme, ContextualMenu } from '@fluentui/react'
+import { Text, getTheme } from '@fluentui/react'
 import { omit, compact } from 'lodash'
 import { EJSON } from 'bson'
+import { useDispatch } from 'react-redux'
 
 import { SystemProfileDoc, MongoData } from '@/types'
 import { Number } from '@/utils/formatter'
+import { actions } from '@/stores'
 import { ExecStage } from './ExecStage'
-import { EditorModal } from './EditorModal'
 import { CommandAndLocks } from './CommandAndLocks'
 
-export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
+export function ProfilingCard(props: {
+  value: { [key: string]: MongoData }
+  onContectMenu(target: MouseEvent): void
+}) {
   const theme = getTheme()
-  const [isOpen, setIsOpen] = useState(false)
-  const target = useRef<MouseEvent>()
-  const [isMenuHidden, setIsMenuHidden] = useState(true)
+  const dispatch = useDispatch()
   const value = useMemo<
     Omit<SystemProfileDoc, 'command' | 'originatingCommand' | 'execStats'>
   >(
@@ -35,12 +35,15 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
   return (
     <Card
       onContextMenu={(ev) => {
-        target.current = ev.nativeEvent
-        setIsMenuHidden(false)
+        props.onContectMenu(ev.nativeEvent)
+        dispatch(actions.profiling.setInvokedProfiling(props.value))
+        dispatch(actions.profiling.setIsMenuHidden(false))
         ev.preventDefault()
+        ev.stopPropagation()
       }}
       onDoubleClick={() => {
-        setIsOpen(true)
+        dispatch(actions.profiling.setInvokedProfiling(props.value))
+        dispatch(actions.profiling.setIsEditorOpen(true))
       }}
       styles={{
         root: {
@@ -68,33 +71,6 @@ export function ProfilingCard(props: { value: { [key: string]: MongoData } }) {
             display: 'flex',
             alignItems: 'center',
           }}>
-          <EditorModal
-            title="View Profile"
-            readOnly={true}
-            value={props.value}
-            isOpen={isOpen}
-            onDismiss={() => {
-              setIsOpen(false)
-            }}
-          />
-          <ContextualMenu
-            target={target.current}
-            hidden={isMenuHidden}
-            onDismiss={() => {
-              setIsMenuHidden(true)
-            }}
-            items={[
-              {
-                key: '0',
-                text: 'View',
-                iconProps: { iconName: 'View' },
-                onClick() {
-                  setIsMenuHidden(true)
-                  setIsOpen(true)
-                },
-              },
-            ]}
-          />
           <Text
             variant="xLarge"
             styles={{ root: { color: theme.palette.neutralPrimary } }}>

@@ -5,20 +5,20 @@ import { isEqual } from 'lodash'
 import { MongoData } from '@/types'
 
 export default createSlice({
-  name: 'profiling',
+  name: 'operations',
   initialState: {
     filter: {},
-    skip: 0,
-    limit: parseInt(localStorage.getItem('limit') || '25', 10),
+    refreshInterval: 1000,
     isEditorOpen: false,
+    isDialogHidden: true,
     isMenuHidden: true,
   } as {
     filter: FilterQuery<unknown>
-    skip: number
-    limit: number
+    refreshInterval: number
     isEditorOpen: boolean
+    isDialogHidden: boolean
     isMenuHidden: boolean
-    invokedProfiling?: { [key: string]: MongoData }
+    invokedOperation?: { [key: string]: MongoData }
   },
   reducers: {
     setFilter: (state, { payload }: PayloadAction<FilterQuery<unknown>>) =>
@@ -28,39 +28,28 @@ export default createSlice({
             ...state,
             filter: payload,
           },
-    resetPage: (state) => ({
+    setRefreshInterval: (state, { payload }: PayloadAction<number>) => ({
       ...state,
-      skip: 0,
+      refreshInterval: payload,
     }),
-    prevPage: (state) => ({
-      ...state,
-      skip: Math.max(state.skip - state.limit, 0),
-    }),
-    nextPage: (state, { payload }: PayloadAction<number>) => ({
-      ...state,
-      skip: Math.min(state.skip + state.limit, payload),
-    }),
-    setLimit: (state, { payload }: PayloadAction<number>) => {
-      localStorage.setItem('limit', payload.toString())
-      return {
-        ...state,
-        limit: payload,
-      }
-    },
     setIsEditorOpen: (state, { payload }: PayloadAction<boolean>) => ({
       ...state,
       isEditorOpen: payload,
+    }),
+    setIsDialogHidden: (state, { payload }: PayloadAction<boolean>) => ({
+      ...state,
+      isDialogHidden: payload,
     }),
     setIsMenuHidden: (state, { payload }: PayloadAction<boolean>) => ({
       ...state,
       isMenuHidden: payload,
     }),
-    setInvokedProfiling: (
+    setInvokedOperation: (
       state,
       { payload }: PayloadAction<{ [key: string]: MongoData }>,
     ) => ({
       ...state,
-      invokedProfiling: payload,
+      invokedOperation: payload,
     }),
   },
 })

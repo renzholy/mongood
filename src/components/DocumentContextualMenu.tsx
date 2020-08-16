@@ -1,21 +1,22 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   ContextualMenu,
   DialogType,
   getTheme,
   Dialog,
   DialogFooter,
-  DefaultButton,
 } from '@fluentui/react'
 import csv, { Options } from 'csv-stringify'
 import table from 'markdown-table'
 import { useSelector } from 'react-redux'
 
 import { stringify } from '@/utils/ejson'
-import { runCommand } from '@/utils/fetcher'
 import { calcHeaders } from '@/utils/table'
 import { MongoData } from '@/types'
 import { useCommandFind, useCommandCount } from '@/hooks/use-command'
+import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from '@/utils/fetcher'
+import { PromiseButton } from './PromiseButton'
 
 const cast: Options['cast'] = {
   boolean: (value) => stringify(value),
@@ -37,38 +38,31 @@ export function DocumentContextualMenu<
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
-  const [isSucceed, setIsSucceed] = useState<boolean>()
-  const [isDeleting, setIsDeleting] = useState(false)
   const [hidden, setHidden] = useState(true)
   const { revalidate: reFind } = useCommandFind()
   const { revalidate: reCount } = useCommandCount()
   const handleDelete = useCallback(
-    async (ids: MongoData[]) => {
-      try {
-        setIsDeleting(true)
-        await runCommand(connection, database!, {
-          delete: collection,
-          deletes: ids.map((id) => ({
-            q: { _id: id },
-            limit: 1,
-          })),
-        })
-        setIsSucceed(true)
-        setHidden(true)
-        reFind()
-        reCount()
-      } catch {
-        setIsSucceed(false)
-      } finally {
-        setIsDeleting(false)
-      }
-    },
-    [connection, database, collection, reFind, reCount],
+    async () =>
+      database && collection
+        ? runCommand(connection, database, {
+            delete: collection,
+            deletes: props.selectedItems.map((item) => ({
+              q: { _id: item._id },
+              limit: 1,
+            })),
+          })
+        : undefined,
+    [collection, connection, database, props.selectedItems],
   )
-  const theme = getTheme()
+  const promiseDelete = usePromise(handleDelete)
   useEffect(() => {
-    setIsSucceed(undefined)
-  }, [props.target])
+    if (promiseDelete.resolved) {
+      setHidden(true)
+      reFind()
+      reCount()
+    }
+  }, [reCount, reFind, promiseDelete.resolved])
+  const theme = getTheme()
 
   return (
     <>
@@ -108,19 +102,7 @@ export function DocumentContextualMenu<
           },
         }}>
         <DialogFooter>
-          <DefaultButton
-            disabled={isDeleting}
-            iconProps={
-              {
-                true: { iconName: 'CheckMark' },
-                false: { iconName: 'Error' },
-              }[String(isSucceed) as 'true' | 'false']
-            }
-            onClick={() => {
-              handleDelete(props.selectedItems.map((item) => item._id))
-            }}
-            text="Delete"
-          />
+          <PromiseButton text="Delete" promise={promiseDelete} />
         </DialogFooter>
       </Dialog>
       <ContextualMenu

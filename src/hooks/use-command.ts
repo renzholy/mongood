@@ -6,7 +6,6 @@ import type { CollStats, IndexSpecification } from 'mongodb'
 import { runCommand, listConnections } from '@/utils/fetcher'
 import {
   MongoData,
-  Operation,
   DbStats,
   ServerStats,
   ValidationAction,
@@ -243,19 +242,22 @@ export function useCommandSystemProfileCount(suspense = false) {
   )
 }
 
-export function useCommandCurrentOp(
-  filter: object,
-  refreshInterval: number,
-  suspense = false,
-) {
+export function useCommandCurrentOp(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
+  const filter = useSelector((state) => state.operations.filter)
+  const refreshInterval = useSelector(
+    (state) => state.operations.refreshInterval,
+  )
+  const isEditorOpen = useSelector((state) => state.operations.isEditorOpen)
+  const isDialogHidden = useSelector((state) => state.operations.isDialogHidden)
+  const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
   const ns = database && collection ? `${database}.${collection}` : undefined
   return useSWR(
     `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
     () =>
-      runCommand<{ inprog: Operation[] }>(
+      runCommand<{ inprog: { [key: string]: MongoData }[] }>(
         connection,
         'admin',
         {
@@ -268,7 +270,8 @@ export function useCommandCurrentOp(
         },
       ),
     {
-      refreshInterval,
+      refreshInterval:
+        !isMenuHidden || !isDialogHidden || isEditorOpen ? 0 : refreshInterval,
       revalidateOnFocus: false,
       suspense,
     },

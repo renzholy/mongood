@@ -1,15 +1,14 @@
 /* eslint-disable react/jsx-indent */
 
-import React, { useState, useRef } from 'react'
+import React from 'react'
 import { Card } from '@uifabric/react-cards'
 import { Text, getTheme, Icon, Stack } from '@fluentui/react'
 import { map } from 'lodash'
 import bytes from 'bytes'
-import type { IndexSpecification, WiredTigerData } from 'mongodb'
+import type { IndexSpecification } from 'mongodb'
+import { useDispatch } from 'react-redux'
 
-import { useCommandListIndexes } from '@/hooks/use-command'
-import { EditorModal } from './EditorModal'
-import { IndexContextualMenu } from './IndexContextualMenu'
+import { actions } from '@/stores'
 import { IndexFeatures } from './IndexFeatures'
 
 function IndexInfo(props: { value: IndexSpecification }) {
@@ -59,25 +58,22 @@ function IndexInfo(props: { value: IndexSpecification }) {
 export function IndexCard(props: {
   value: IndexSpecification
   size: number
-  // eslint-disable-next-line react/no-unused-prop-types
-  statDetail: WiredTigerData
+  onContextMenu(target: MouseEvent): void
 }) {
   const theme = getTheme()
-  const [isOpen, setIsOpen] = useState(false)
-  const [isDetailOpen, setIsDetailOpen] = useState(false)
-  const target = useRef<MouseEvent>()
-  const [isMenuHidden, setIsMenuHidden] = useState(true)
-  const { revalidate } = useCommandListIndexes()
+  const dispatch = useDispatch()
 
   return (
     <Card
       onContextMenu={(ev) => {
-        target.current = ev.nativeEvent
-        setIsMenuHidden(false)
+        props.onContextMenu(ev.nativeEvent)
+        dispatch(actions.indexes.setInvokedIndex(props.value))
         ev.preventDefault()
+        ev.stopPropagation()
       }}
       onDoubleClick={() => {
-        setIsOpen(true)
+        dispatch(actions.indexes.setInvokedIndex(props.value))
+        dispatch(actions.indexes.setIsViewOpen(true))
       }}
       horizontal={true}
       styles={{
@@ -94,44 +90,6 @@ export function IndexCard(props: {
       }}>
       <Card.Section styles={{ root: { flex: 1 } }}>
         <Card.Item>
-          <EditorModal
-            title="View Index"
-            readOnly={true}
-            value={props.value}
-            isOpen={isOpen}
-            onDismiss={() => {
-              setIsOpen(false)
-            }}
-          />
-          <EditorModal
-            title="View Index Detail"
-            readOnly={true}
-            value={props.statDetail}
-            isOpen={isDetailOpen}
-            onDismiss={() => {
-              setIsDetailOpen(false)
-            }}
-          />
-          <IndexContextualMenu
-            value={props.value}
-            target={target.current}
-            hidden={isMenuHidden}
-            onDismiss={() => {
-              setIsMenuHidden(true)
-            }}
-            onView={() => {
-              setIsMenuHidden(true)
-              setIsOpen(true)
-            }}
-            onViewDetail={() => {
-              setIsMenuHidden(true)
-              setIsDetailOpen(true)
-            }}
-            onDrop={() => {
-              setIsMenuHidden(true)
-              revalidate()
-            }}
-          />
           <Text
             variant="xLarge"
             styles={{

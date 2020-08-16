@@ -7,13 +7,14 @@ import {
   Separator,
 } from '@fluentui/react'
 import { map, omit } from 'lodash'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { FilterInput } from '@/components/FilterInput'
 import { useCommandCurrentOp } from '@/hooks/use-command'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { LoadingSuspense } from '@/components/LoadingSuspense'
 import { OperationsList } from '@/components/OperationsList'
+import { actions } from '@/stores'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -59,11 +60,14 @@ const examples: { [key: string]: object } = {
 export default () => {
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
-  const [filter, setFilter] = useState<object>({})
+  const filter = useSelector((state) => state.operations.filter)
+  const refreshInterval = useSelector(
+    (state) => state.operations.refreshInterval,
+  )
   const [example, setExample] = useState<string>()
+  const dispatch = useDispatch()
   const ns = database && collection ? `${database}.${collection}` : undefined
-  const [refreshInterval, setRefreshInterval] = useState(1000)
-  const { revalidate, isValidating } = useCommandCurrentOp(filter, 0)
+  const { revalidate, isValidating } = useCommandCurrentOp()
   const value = useMemo(() => (ns ? { ...filter, ns } : omit(filter, 'ns')), [
     ns,
     filter,
@@ -83,7 +87,11 @@ export default () => {
             primary={example === k}
             onClick={() => {
               setExample(example === k ? undefined : k)
-              setFilter(example === k || !k ? {} : examples[k])
+              dispatch(
+                actions.operations.setFilter(
+                  example === k || !k ? {} : examples[k],
+                ),
+              )
             }}
           />
         ))}
@@ -101,7 +109,7 @@ export default () => {
           }}
           checked={refreshInterval !== 0}
           onChange={(_ev, v) => {
-            setRefreshInterval(v ? 1000 : 0)
+            dispatch(actions.operations.setRefreshInterval(v ? 1000 : 0))
           }}
         />
         <IconButton
@@ -118,14 +126,14 @@ export default () => {
           value={value}
           onChange={(_value) => {
             setExample(undefined)
-            setFilter(_value as {})
+            dispatch(actions.operations.setFilter(_value as {}))
           }}
         />
       </Stack>
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <ErrorBoundary>
         <LoadingSuspense>
-          <OperationsList filter={filter} refreshInterval={refreshInterval} />
+          <OperationsList />
         </LoadingSuspense>
       </ErrorBoundary>
     </>

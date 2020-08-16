@@ -1,43 +1,20 @@
-/* eslint-disable react/no-danger */
-
 import { Card } from '@uifabric/react-cards'
-import {
-  Text,
-  getTheme,
-  ContextualMenu,
-  Dialog,
-  DialogType,
-  DialogFooter,
-  DefaultButton,
-} from '@fluentui/react'
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { Text, getTheme } from '@fluentui/react'
+import React, { useMemo } from 'react'
 import { omit, compact } from 'lodash'
-import { useSelector } from 'react-redux'
 import { EJSON } from 'bson'
+import { useDispatch } from 'react-redux'
 
-import { runCommand } from '@/utils/fetcher'
 import { Number } from '@/utils/formatter'
-import { Operation } from '@/types'
-import { EditorModal } from './EditorModal'
-import { ActionButton } from './ActionButton'
+import { Operation, MongoData } from '@/types'
+import { actions } from '@/stores'
 import { CommandAndLocks } from './CommandAndLocks'
 
 export function OperationCard(props: {
-  value: Operation
-  onView(isOpen: boolean): void
-  onKill(): void
+  value: { [key: string]: MongoData }
+  onContextMenu(ev: MouseEvent): void
 }) {
-  const connection = useSelector((state) => state.root.connection)
   const theme = getTheme()
-  const [isOpen, setIsOpen] = useState(false)
-  const target = useRef<MouseEvent>()
-  const [isMenuHidden, setIsMenuHidden] = useState(true)
-  const [isSucceed, setIsSucceed] = useState<boolean>()
-  const [isKilling, setIsKilling] = useState(false)
-  const [hidden, setHidden] = useState(true)
-  useEffect(() => {
-    setIsSucceed(undefined)
-  }, [target])
   const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
     () =>
       EJSON.parse(
@@ -45,37 +22,19 @@ export function OperationCard(props: {
       ) as Omit<Operation, 'command' | 'originatingCommand'>,
     [props.value],
   )
-  const handleKill = useCallback(async () => {
-    try {
-      setIsKilling(true)
-      await runCommand(connection, 'admin', {
-        killOp: 1,
-        op: value.opid,
-      })
-      setIsSucceed(true)
-      setHidden(true)
-      props.onKill()
-    } catch {
-      setIsSucceed(false)
-    } finally {
-      setIsKilling(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connection, value.opid, props.onKill])
-  useEffect(() => {
-    props.onView(isOpen || !isMenuHidden)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, isMenuHidden, props.onView])
+  const dispatch = useDispatch()
 
   return (
     <Card
       onContextMenu={(ev) => {
-        target.current = ev.nativeEvent
-        setIsMenuHidden(false)
+        props.onContextMenu(ev.nativeEvent)
+        dispatch(actions.operations.setInvokedOperation(props.value))
         ev.preventDefault()
+        ev.stopPropagation()
       }}
       onDoubleClick={() => {
-        setIsOpen(true)
+        dispatch(actions.operations.setInvokedOperation(props.value))
+        dispatch(actions.operations.setIsEditorOpen(true))
       }}
       styles={{
         root: {
@@ -90,84 +49,6 @@ export function OperationCard(props: {
         minHeight: 'unset',
       }}>
       <Card.Item>
-        <EditorModal
-          title="View Operation"
-          readOnly={true}
-          value={props.value}
-          isOpen={isOpen}
-          onDismiss={() => {
-            setIsOpen(false)
-          }}
-          footer={<ActionButton text="kill" onClick={handleKill} />}
-        />
-        <ContextualMenu
-          target={target.current}
-          hidden={isMenuHidden}
-          onDismiss={() => {
-            setIsMenuHidden(true)
-          }}
-          items={[
-            {
-              key: '0',
-              text: 'View',
-              iconProps: { iconName: 'View' },
-              onClick() {
-                setIsMenuHidden(true)
-                setIsOpen(true)
-              },
-            },
-            {
-              key: '1',
-              text: 'Kill',
-              iconProps: {
-                iconName: 'StatusCircleBlock',
-                styles: { root: { color: theme.palette.red } },
-              },
-              onClick() {
-                setHidden(false)
-              },
-            },
-          ]}
-        />
-        <Dialog
-          hidden={hidden}
-          dialogContentProps={{
-            type: DialogType.normal,
-            title: 'Kill Operation',
-            subText: value.opid.toString(),
-            showCloseButton: true,
-            onDismiss() {
-              setHidden(true)
-            },
-          }}
-          modalProps={{
-            styles: {
-              main: {
-                minHeight: 0,
-                borderTop: `4px solid ${theme.palette.red}`,
-                backgroundColor: theme.palette.neutralLighterAlt,
-              },
-            },
-            onDismiss() {
-              setHidden(true)
-            },
-          }}>
-          <DialogFooter>
-            <DefaultButton
-              disabled={isKilling}
-              iconProps={
-                {
-                  true: { iconName: 'CheckMark' },
-                  false: { iconName: 'Error' },
-                }[String(isSucceed) as 'true' | 'false']
-              }
-              onClick={() => {
-                handleKill()
-              }}
-              text="Kill"
-            />
-          </DialogFooter>
-        </Dialog>
         <Text
           variant="xLarge"
           styles={{ root: { color: theme.palette.neutralPrimary } }}>
@@ -185,6 +66,7 @@ export function OperationCard(props: {
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {compact([
+            `#${value.opid}`,
             value.microsecs_running
               ? `${Number.format(
                   value.microsecs_running > 1000

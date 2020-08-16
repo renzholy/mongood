@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 /* eslint-disable react/no-danger */
 
 import React, { useCallback, useMemo } from 'react'
@@ -40,7 +39,7 @@ function PlainCard(props: { value: MongoData; index2dsphere?: MongoData }) {
   )
 }
 
-export const TableCell = React.memo(
+export const DocumentCell = React.memo(
   function TableCell(props: {
     value: MongoData
     subStringLength?: number
@@ -58,7 +57,7 @@ export const TableCell = React.memo(
       )
     }, [props.value, props.index2dsphere])
 
-    return (
+    return str.length > 36 || props.index2dsphere ? (
       <HoverCard
         type={HoverCardType.plain}
         plainCardProps={{
@@ -78,6 +77,11 @@ export const TableCell = React.memo(
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </HoverCard>
+    ) : (
+      <span
+        style={{ verticalAlign: 'middle' }}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     )
   },
   (prevProps, nextProps) =>

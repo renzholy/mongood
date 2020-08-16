@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable max-classes-per-file */
 /**
  * @see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/mongodb/index.d.ts
