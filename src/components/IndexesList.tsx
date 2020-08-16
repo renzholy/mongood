@@ -79,7 +79,7 @@ export function IndexesList() {
         </DialogFooter>
       </Dialog>
       <EditorModal
-        title="View Index"
+        title={`View Index: ${invokedIndex?.name}`}
         readOnly={true}
         value={invokedIndex}
         isOpen={isViewOpen}
@@ -88,7 +88,7 @@ export function IndexesList() {
         }}
       />
       <EditorModal
-        title="View Index Detail"
+        title={`View Index Detail: ${invokedIndex?.name}`}
         readOnly={true}
         value={stats?.indexDetails[invokedIndex?.name!]}
         isOpen={isDetailOpen}

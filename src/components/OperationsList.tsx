@@ -53,7 +53,7 @@ export function OperationsList() {
     <>
       <OperationContextualMenu target={target} />
       <EditorModal
-        title={`View Operation #${
+        title={`View Operation: #${
           invokedOperation ? stringify(invokedOperation.opid) : ''
         }`}
         readOnly={true}
