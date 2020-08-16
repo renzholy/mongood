@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   ContextualMenu,
   DialogType,
   getTheme,
   Dialog,
   DialogFooter,
-  DefaultButton,
 } from '@fluentui/react'
 import csv, { Options } from 'csv-stringify'
 import table from 'markdown-table'
@@ -14,11 +13,10 @@ import { useSelector } from 'react-redux'
 import { stringify } from '@/utils/ejson'
 import { calcHeaders } from '@/utils/table'
 import { MongoData } from '@/types'
-import {
-  useCommandFind,
-  useCommandCount,
-  useCommand,
-} from '@/hooks/use-command'
+import { useCommandFind, useCommandCount } from '@/hooks/use-command'
+import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from '@/utils/fetcher'
+import { PromiseButton } from './PromiseButton'
 
 const cast: Options['cast'] = {
   boolean: (value) => stringify(value),
@@ -37,30 +35,33 @@ export function DocumentContextualMenu<
   selectedItems: T[]
   onEdit?(): void
 }) {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const [hidden, setHidden] = useState(true)
   const { revalidate: reFind } = useCommandFind()
   const { revalidate: reCount } = useCommandCount()
-  const {
-    invoke: handleDelete,
-    result,
-    loading: isDeleting,
-    error,
-  } = useCommand(() => ({
-    delete: collection,
-    deletes: props.selectedItems.map((item) => ({
-      q: { _id: item._id },
-      limit: 1,
-    })),
-  }))
+  const handleDelete = useCallback(
+    async () =>
+      database && collection
+        ? runCommand(connection, database, {
+            delete: collection,
+            deletes: props.selectedItems.map((item) => ({
+              q: { _id: item._id },
+              limit: 1,
+            })),
+          })
+        : undefined,
+    [collection, connection, database, props.selectedItems],
+  )
+  const promiseDelete = usePromise(handleDelete)
   useEffect(() => {
-    if (!result) {
-      return
+    if (promiseDelete.resolved) {
+      setHidden(true)
+      reFind()
+      reCount()
     }
-    setHidden(true)
-    reFind()
-    reCount()
-  }, [reCount, reFind, result])
+  }, [reCount, reFind, promiseDelete.resolved])
   const theme = getTheme()
 
   return (
@@ -101,14 +102,7 @@ export function DocumentContextualMenu<
           },
         }}>
         <DialogFooter>
-          <DefaultButton
-            disabled={isDeleting}
-            iconProps={
-              result ? { iconName: error ? 'Error' : 'CheckMark' } : undefined
-            }
-            onClick={handleDelete}
-            text="Delete"
-          />
+          <PromiseButton text="Delete" promise={promiseDelete} />
         </DialogFooter>
       </Dialog>
       <ContextualMenu

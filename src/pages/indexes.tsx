@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { Stack, IconButton, Separator } from '@fluentui/react'
 
@@ -7,10 +7,13 @@ import { EditorModal } from '@/components/EditorModal'
 import { IndexesList } from '@/components/IndexesList'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { LoadingSuspense } from '@/components/LoadingSuspense'
-import { useCommandListIndexes, useCommand } from '@/hooks/use-command'
-import { CommandButton } from '@/components/CommandButton'
+import { useCommandListIndexes } from '@/hooks/use-command'
+import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from '@/utils/fetcher'
+import { PromiseButton } from '@/components/PromiseButton'
 
 export default () => {
+  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const [isOpen, setIsOpen] = useState(false)
@@ -18,16 +21,23 @@ export default () => {
     background: true,
   })
   const { revalidate } = useCommandListIndexes()
-  const commandCreate = useCommand(() => ({
-    createIndexes: collection,
-    indexes: [value],
-  }))
+  const handleCreate = useCallback(
+    async () =>
+      database && collection
+        ? runCommand(connection, database, {
+            createIndexes: collection,
+            indexes: [value],
+          })
+        : undefined,
+    [collection, connection, database, value],
+  )
+  const promiseCreate = usePromise(handleCreate)
   useEffect(() => {
-    if (commandCreate.result) {
+    if (promiseCreate.resolved) {
       setIsOpen(false)
       revalidate()
     }
-  }, [commandCreate.result, revalidate])
+  }, [promiseCreate.resolved, revalidate])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
@@ -61,7 +71,7 @@ export default () => {
           setIsOpen(false)
         }}
         footer={
-          <CommandButton text="Create" primary={true} command={commandCreate} />
+          <PromiseButton text="Create" primary={true} promise={promiseCreate} />
         }
       />
     </>

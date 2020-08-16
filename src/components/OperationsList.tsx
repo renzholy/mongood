@@ -6,17 +6,19 @@ import {
   getTheme,
   DefaultButton,
 } from '@fluentui/react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { useCommandCurrentOp, useCommand } from '@/hooks/use-command'
+import { useCommandCurrentOp } from '@/hooks/use-command'
 import { actions } from '@/stores'
 import { stringify } from '@/utils/ejson'
+import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from '@/utils/fetcher'
 import { OperationCard } from './OperationCard'
 import { LargeMessage } from './LargeMessage'
 import { OperationContextualMenu } from './OperationContextualMenu'
 import { EditorModal } from './EditorModal'
-import { CommandButton } from './CommandButton'
+import { PromiseButton } from './PromiseButton'
 
 export function OperationsList() {
   const theme = getTheme()
@@ -25,26 +27,28 @@ export function OperationsList() {
   const invokedOperation = useSelector(
     (state) => state.operations.invokedOperation,
   )
+  const connection = useSelector((state) => state.root.connection)
   const isEditorOpen = useSelector((state) => state.operations.isEditorOpen)
   const isDialogHidden = useSelector((state) => state.operations.isDialogHidden)
   const dispatch = useDispatch()
-  const commandKill = useCommand(
-    () =>
+  const handleKill = useCallback(
+    async () =>
       invokedOperation
-        ? {
+        ? runCommand(connection, 'admin', {
             killOp: 1,
             op: invokedOperation.opid,
-          }
+          })
         : null,
-    'admin',
+    [connection, invokedOperation],
   )
+  const promiseKill = usePromise(handleKill)
   useEffect(() => {
-    if (commandKill.result) {
+    if (promiseKill.resolved) {
       dispatch(actions.operations.setIsEditorOpen(false))
       dispatch(actions.operations.setIsDialogHidden(true))
       revalidate()
     }
-  }, [commandKill.result, dispatch, revalidate])
+  }, [promiseKill.resolved, dispatch, revalidate])
 
   if (data?.inprog.length === 0) {
     return <LargeMessage iconName="AnalyticsReport" title="No Operation" />
@@ -95,7 +99,7 @@ export function OperationsList() {
           },
         }}>
         <DialogFooter>
-          <CommandButton text="Kill" command={commandKill} />
+          <PromiseButton text="Kill" promise={promiseKill} />
         </DialogFooter>
       </Dialog>
       <Stack

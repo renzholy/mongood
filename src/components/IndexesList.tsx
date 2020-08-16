@@ -5,24 +5,24 @@ import {
   DialogType,
   getTheme,
 } from '@fluentui/react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import {
-  useCommandCollStats,
-  useCommandListIndexes,
-  useCommand,
-} from '@/hooks/use-command'
+import { useCommandCollStats, useCommandListIndexes } from '@/hooks/use-command'
 import { actions } from '@/stores'
+import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from '@/utils/fetcher'
 import { IndexCard } from './IndexCard'
 import { LargeMessage } from './LargeMessage'
 import { EditorModal } from './EditorModal'
 import { IndexContextualMenu } from './IndexContextualMenu'
-import { CommandButton } from './CommandButton'
+import { PromiseButton } from './PromiseButton'
 
 export function IndexesList() {
   const { data: stats } = useCommandCollStats(true)
   const { data: indexes, revalidate } = useCommandListIndexes(true)
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const invokedIndex = useSelector((state) => state.indexes.invokedIndex)
   const isViewOpen = useSelector((state) => state.indexes.isViewOpen)
@@ -31,20 +31,23 @@ export function IndexesList() {
   const dispatch = useDispatch()
   const theme = getTheme()
   const [target, setTarget] = useState<MouseEvent>()
-  const commandDrop = useCommand(() =>
-    invokedIndex && collection
-      ? {
-          dropIndexes: collection,
-          index: invokedIndex.name,
-        }
-      : null,
+  const handleDrop = useCallback(
+    async () =>
+      invokedIndex && database && collection
+        ? runCommand(connection, database, {
+            dropIndexes: collection,
+            index: invokedIndex.name,
+          })
+        : undefined,
+    [collection, connection, database, invokedIndex],
   )
+  const promiseDrop = usePromise(handleDrop)
   useEffect(() => {
-    if (commandDrop.result) {
+    if (promiseDrop.resolved) {
       dispatch(actions.indexes.setIsDialogHidden(true))
       revalidate()
     }
-  }, [commandDrop.result, dispatch, revalidate])
+  }, [promiseDrop.resolved, dispatch, revalidate])
 
   if (indexes?.cursor.firstBatch.length === 0) {
     return <LargeMessage iconName="Dictionary" title="No Index" />
@@ -75,7 +78,7 @@ export function IndexesList() {
           },
         }}>
         <DialogFooter>
-          <CommandButton text="Drop" command={commandDrop} />
+          <PromiseButton text="Drop" promise={promiseDrop} />
         </DialogFooter>
       </Dialog>
       <EditorModal

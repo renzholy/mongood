@@ -1,30 +1,36 @@
 import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useCommandProfile, useCommand } from '@/hooks/use-command'
+import { useCommandProfile } from '@/hooks/use-command'
+import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from '@/utils/fetcher'
 import { ProfilingPagination } from './ProfilingPagination'
-import { CommandButton } from './CommandButton'
+import { PromiseButton } from './PromiseButton'
 
 export function ProfilingControlStack() {
+  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const [slowms, setSlowms] = useState(0)
   const [sampleRate, setSampleRate] = useState(0)
   const { data: profile, revalidate } = useCommandProfile()
-  const commandSetProfile = useCommand(() =>
-    database
-      ? {
-          profile: 1,
-          slowms,
-          sampleRate: { $numberDouble: sampleRate.toString() },
-        }
-      : null,
+  const handleSetProfile = useCallback(
+    async () =>
+      database
+        ? runCommand(connection, database, {
+            profile: 1,
+            slowms,
+            sampleRate: { $numberDouble: sampleRate.toString() },
+          })
+        : undefined,
+    [connection, database, sampleRate, slowms],
   )
+  const promiseSetProfile = usePromise(handleSetProfile)
   useEffect(() => {
-    if (commandSetProfile.result) {
+    if (promiseSetProfile.resolved) {
       revalidate()
     }
-  }, [commandSetProfile.result, revalidate])
+  }, [promiseSetProfile.resolved, revalidate])
   useEffect(() => {
     if (!profile) {
       return
@@ -75,7 +81,7 @@ export function ProfilingControlStack() {
       />
       {profile?.slowms === slowms &&
       profile?.sampleRate === sampleRate ? null : (
-        <CommandButton icon="CheckMark" command={commandSetProfile} />
+        <PromiseButton icon="CheckMark" promise={promiseSetProfile} />
       )}
       <Stack.Item grow={true}>
         <div />
