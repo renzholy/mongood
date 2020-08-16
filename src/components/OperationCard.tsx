@@ -36,7 +36,7 @@ export function OperationCard(props: {
       }}
       onDoubleClick={() => {
         dispatch(actions.operations.setInvokedOperation(props.value))
-        dispatch(actions.operations.setIsOpen(true))
+        dispatch(actions.operations.setIsEditorOpen(true))
       }}
       styles={{
         root: {

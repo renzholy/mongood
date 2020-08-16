@@ -25,10 +25,10 @@ export function OperationsList() {
   const invokedOperation = useSelector(
     (state) => state.operations.invokedOperation,
   )
-  const isOpen = useSelector((state) => state.operations.isOpen)
-  const hidden = useSelector((state) => state.operations.hidden)
+  const isEditorOpen = useSelector((state) => state.operations.isEditorOpen)
+  const isDialogHidden = useSelector((state) => state.operations.isDialogHidden)
   const dispatch = useDispatch()
-  const kill = useCommand(
+  const commandKill = useCommand(
     () =>
       invokedOperation
         ? {
@@ -39,12 +39,12 @@ export function OperationsList() {
     'admin',
   )
   useEffect(() => {
-    if (kill.result) {
-      dispatch(actions.operations.setIsOpen(false))
-      dispatch(actions.operations.setHidden(true))
+    if (commandKill.result) {
+      dispatch(actions.operations.setIsEditorOpen(false))
+      dispatch(actions.operations.setIsDialogHidden(true))
       revalidate()
     }
-  }, [kill.result, dispatch, revalidate])
+  }, [commandKill.result, dispatch, revalidate])
 
   if (data?.inprog.length === 0) {
     return <LargeMessage iconName="AnalyticsReport" title="No Operation" />
@@ -58,28 +58,28 @@ export function OperationsList() {
         }`}
         readOnly={true}
         value={invokedOperation}
-        isOpen={isOpen}
+        isOpen={isEditorOpen}
         onDismiss={() => {
-          dispatch(actions.operations.setIsOpen(false))
+          dispatch(actions.operations.setIsEditorOpen(false))
         }}
         footer={
           <DefaultButton
             text="Kill"
             onClick={() => {
-              dispatch(actions.operations.setHidden(false))
+              dispatch(actions.operations.setIsDialogHidden(false))
             }}
           />
         }
       />
       <Dialog
-        hidden={hidden}
+        hidden={isDialogHidden}
         dialogContentProps={{
           type: DialogType.normal,
           title: 'Kill Operation',
           subText: `#${stringify(invokedOperation?.opid)}`,
           showCloseButton: true,
           onDismiss() {
-            dispatch(actions.operations.setHidden(true))
+            dispatch(actions.operations.setIsDialogHidden(true))
           },
         }}
         modalProps={{
@@ -91,11 +91,11 @@ export function OperationsList() {
             },
           },
           onDismiss() {
-            dispatch(actions.operations.setHidden(true))
+            dispatch(actions.operations.setIsDialogHidden(true))
           },
         }}>
         <DialogFooter>
-          <CommandButton text="Kill" command={kill} />
+          <CommandButton text="Kill" command={commandKill} />
         </DialogFooter>
       </Dialog>
       <Stack

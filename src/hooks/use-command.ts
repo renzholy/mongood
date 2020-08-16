@@ -293,8 +293,8 @@ export function useCommandCurrentOp(suspense = false) {
   const refreshInterval = useSelector(
     (state) => state.operations.refreshInterval,
   )
-  const isOpen = useSelector((state) => state.operations.isOpen)
-  const hidden = useSelector((state) => state.operations.hidden)
+  const isEditorOpen = useSelector((state) => state.operations.isEditorOpen)
+  const isDialogHidden = useSelector((state) => state.operations.isDialogHidden)
   const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
   const ns = database && collection ? `${database}.${collection}` : undefined
   return useSWR(
@@ -313,7 +313,8 @@ export function useCommandCurrentOp(suspense = false) {
         },
       ),
     {
-      refreshInterval: !isMenuHidden || !hidden || isOpen ? 0 : refreshInterval,
+      refreshInterval:
+        !isMenuHidden || !isDialogHidden || isEditorOpen ? 0 : refreshInterval,
       revalidateOnFocus: false,
       suspense,
     },

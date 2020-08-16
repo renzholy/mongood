@@ -9,14 +9,14 @@ export default createSlice({
   initialState: {
     filter: {},
     refreshInterval: 1000,
-    isOpen: false,
-    hidden: true,
+    isEditorOpen: false,
+    isDialogHidden: true,
     isMenuHidden: true,
   } as {
     filter: FilterQuery<unknown>
     refreshInterval: number
-    isOpen: boolean
-    hidden: boolean
+    isEditorOpen: boolean
+    isDialogHidden: boolean
     isMenuHidden: boolean
     invokedOperation?: { [key: string]: MongoData }
   },
@@ -32,13 +32,13 @@ export default createSlice({
       ...state,
       refreshInterval: payload,
     }),
-    setIsOpen: (state, { payload }: PayloadAction<boolean>) => ({
+    setIsEditorOpen: (state, { payload }: PayloadAction<boolean>) => ({
       ...state,
-      isOpen: payload,
+      isEditorOpen: payload,
     }),
-    setHidden: (state, { payload }: PayloadAction<boolean>) => ({
+    setIsDialogHidden: (state, { payload }: PayloadAction<boolean>) => ({
       ...state,
-      hidden: payload,
+      isDialogHidden: payload,
     }),
     setIsMenuHidden: (state, { payload }: PayloadAction<boolean>) => ({
       ...state,

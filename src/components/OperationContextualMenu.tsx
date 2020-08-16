@@ -29,7 +29,7 @@ export function OperationContextualMenu(props: {
           iconProps: { iconName: 'View' },
           onClick() {
             dispatch(actions.operations.setIsMenuHidden(true))
-            dispatch(actions.operations.setIsOpen(true))
+            dispatch(actions.operations.setIsEditorOpen(true))
           },
         },
         {
@@ -40,7 +40,7 @@ export function OperationContextualMenu(props: {
             styles: { root: { color: theme.palette.red } },
           },
           onClick() {
-            dispatch(actions.operations.setHidden(false))
+            dispatch(actions.operations.setIsDialogHidden(false))
           },
         },
       ]}
