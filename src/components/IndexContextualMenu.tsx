@@ -1,128 +1,57 @@
-import React, { useCallback, useState, useEffect } from 'react'
-import {
-  ContextualMenu,
-  DialogType,
-  getTheme,
-  Dialog,
-  DialogFooter,
-  DefaultButton,
-} from '@fluentui/react'
-import { useSelector } from 'react-redux'
-import type { IndexSpecification } from 'mongodb'
+import React, { useEffect, useState } from 'react'
+import { ContextualMenu, getTheme, DirectionalHint } from '@fluentui/react'
+import { useDispatch } from 'react-redux'
 
-import { runCommand } from '@/utils/fetcher'
+import { actions } from '@/stores'
 
-export function IndexContextualMenu(props: {
-  hidden: boolean
-  onDismiss(): void
-  target?: MouseEvent
-  value: IndexSpecification
-  onView: () => void
-  onViewDetail: () => void
-  onDrop: () => void
-}) {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
-  const [isSucceed, setIsSucceed] = useState<boolean>()
-  const [isDroping, setIsDroping] = useState(false)
-  const [hidden, setHidden] = useState(true)
+export function IndexContextualMenu(props: { target?: MouseEvent }) {
   const theme = getTheme()
+  const dispatch = useDispatch()
+  const [isMenuHidden, setIsMenuHidden] = useState(true)
   useEffect(() => {
-    setIsSucceed(undefined)
+    setIsMenuHidden(!props.target)
   }, [props.target])
-  const handleDrop = useCallback(async () => {
-    if (!database || !collection) {
-      return
-    }
-    try {
-      setIsDroping(true)
-      await runCommand(connection, database, {
-        dropIndexes: collection,
-        index: props.value.name,
-      })
-      setIsSucceed(true)
-      setHidden(true)
-      props.onDrop()
-    } catch {
-      setIsSucceed(false)
-    } finally {
-      setIsDroping(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connection, database, collection, props.value.name, props.onDrop])
 
   return (
-    <>
-      <Dialog
-        hidden={hidden}
-        dialogContentProps={{
-          type: DialogType.normal,
-          title: 'Drop Index',
-          subText: props.value.name,
-          showCloseButton: true,
-          onDismiss() {
-            setHidden(true)
+    <ContextualMenu
+      target={props.target}
+      directionalHint={DirectionalHint.rightTopEdge}
+      hidden={isMenuHidden}
+      onDismiss={() => {
+        setIsMenuHidden(true)
+      }}
+      items={[
+        {
+          key: '0',
+          text: 'View',
+          iconProps: { iconName: 'View' },
+          onClick() {
+            setIsMenuHidden(true)
+            dispatch(actions.indexes.setIsViewOpen(true))
           },
-        }}
-        modalProps={{
-          styles: {
-            main: {
-              minHeight: 0,
-              borderTop: `4px solid ${theme.palette.red}`,
-              backgroundColor: theme.palette.neutralLighterAlt,
-            },
+        },
+        {
+          key: '1',
+          text: 'View Detail',
+          iconProps: { iconName: 'EntryView' },
+          onClick() {
+            setIsMenuHidden(true)
+            dispatch(actions.indexes.setIsDetailOpen(true))
           },
-          onDismiss() {
-            setHidden(true)
+        },
+        {
+          key: '2',
+          text: 'Drop',
+          iconProps: {
+            iconName: 'Delete',
+            styles: { root: { color: theme.palette.red } },
           },
-        }}>
-        <DialogFooter>
-          <DefaultButton
-            disabled={isDroping}
-            iconProps={
-              {
-                true: { iconName: 'CheckMark' },
-                false: { iconName: 'Error' },
-              }[String(isSucceed) as 'true' | 'false']
-            }
-            onClick={() => {
-              handleDrop()
-            }}
-            text="Drop"
-          />
-        </DialogFooter>
-      </Dialog>
-      <ContextualMenu
-        target={props.target}
-        hidden={props.hidden}
-        onDismiss={props.onDismiss}
-        items={[
-          {
-            key: '0',
-            text: 'View',
-            iconProps: { iconName: 'View' },
-            onClick: props.onView,
+          onClick() {
+            setIsMenuHidden(true)
+            dispatch(actions.indexes.setIsDialogHidden(false))
           },
-          {
-            key: '1',
-            text: 'View Detail',
-            iconProps: { iconName: 'EntryView' },
-            onClick: props.onViewDetail,
-          },
-          {
-            key: '2',
-            text: 'Drop',
-            iconProps: {
-              iconName: 'Delete',
-              styles: { root: { color: theme.palette.red } },
-            },
-            onClick() {
-              setHidden(false)
-            },
-          },
-        ]}
-      />
-    </>
+        },
+      ]}
+    />
   )
 }

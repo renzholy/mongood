@@ -1,18 +1,16 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Stack, IconButton, Separator } from '@fluentui/react'
 
-import { runCommand } from '@/utils/fetcher'
 import { LargeMessage } from '@/components/LargeMessage'
 import { EditorModal } from '@/components/EditorModal'
-import { ActionButton } from '@/components/ActionButton'
 import { IndexesList } from '@/components/IndexesList'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { LoadingSuspense } from '@/components/LoadingSuspense'
-import { useCommandListIndexes } from '@/hooks/use-command'
+import { useCommandListIndexes, useCommand } from '@/hooks/use-command'
+import { CommandButton } from '@/components/CommandButton'
 
 export default () => {
-  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const [isOpen, setIsOpen] = useState(false)
@@ -20,14 +18,16 @@ export default () => {
     background: true,
   })
   const { revalidate } = useCommandListIndexes()
-  const handleCreate = useCallback(async () => {
-    await runCommand(connection, database!, {
-      createIndexes: collection,
-      indexes: [value],
-    })
-    setIsOpen(false)
-    revalidate()
-  }, [connection, database, collection, value, revalidate])
+  const commandCreate = useCommand(() => ({
+    createIndexes: collection,
+    indexes: [value],
+  }))
+  useEffect(() => {
+    if (commandCreate.result) {
+      setIsOpen(false)
+      revalidate()
+    }
+  }, [commandCreate.result, revalidate])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
@@ -61,7 +61,7 @@ export default () => {
           setIsOpen(false)
         }}
         footer={
-          <ActionButton text="Create" primary={true} onClick={handleCreate} />
+          <CommandButton text="Create" primary={true} command={commandCreate} />
         }
       />
     </>
