@@ -8,6 +8,7 @@ import {
   DialogFooter,
   IconButton,
 } from '@fluentui/react'
+import { useAsyncEffect } from 'use-async-effect'
 
 import { useCommand } from '@/hooks/use-command'
 
@@ -21,21 +22,34 @@ export function CommandButton(props: {
 }) {
   const theme = getTheme()
   const [hidden, setHidden] = useState(true)
-  const { error, loading, invoke } = props.command
+  const { error, loading, invoke, clear } = props.command
   useEffect(() => {
     if (error) {
       setHidden(false)
     }
   }, [error])
+  useAsyncEffect(
+    (isMounted) => {
+      if (hidden) {
+        setTimeout(() => {
+          if (isMounted()) {
+            clear()
+          }
+        }, 500)
+      }
+    },
+    [hidden, clear],
+  )
 
   return (
-    <div>
+    <>
       <Dialog
         hidden={hidden}
         dialogContentProps={{
           type: DialogType.normal,
           title: 'Error',
           subText: error?.message,
+          showCloseButton: true,
           onDismiss() {
             setHidden(true)
           },
@@ -57,7 +71,7 @@ export function CommandButton(props: {
             onClick={() => {
               setHidden(true)
             }}
-            text="Ok"
+            text="OK"
           />
         </DialogFooter>
       </Dialog>
@@ -79,6 +93,6 @@ export function CommandButton(props: {
           styles={{ root: props.style }}
         />
       )}
-    </div>
+    </>
   )
 }

@@ -46,10 +46,10 @@ export function DocumentContextualMenu<
     result,
     loading: isDeleting,
     error,
-  } = useCommand((ids: MongoData[]) => ({
+  } = useCommand(() => ({
     delete: collection,
-    deletes: ids.map((id) => ({
-      q: { _id: id },
+    deletes: props.selectedItems.map((item) => ({
+      q: { _id: item._id },
       limit: 1,
     })),
   }))
@@ -106,9 +106,7 @@ export function DocumentContextualMenu<
             iconProps={
               result ? { iconName: error ? 'Error' : 'CheckMark' } : undefined
             }
-            onClick={() => {
-              handleDelete(props.selectedItems.map((item) => item._id))
-            }}
+            onClick={handleDelete}
             text="Delete"
           />
         </DialogFooter>
