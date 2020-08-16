@@ -1,29 +1,30 @@
 import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { runCommand } from '@/utils/fetcher'
-import { useCommandProfile } from '@/hooks/use-command'
+import { useCommandProfile, useCommand } from '@/hooks/use-command'
 import { ProfilingPagination } from './ProfilingPagination'
-import { ActionButton } from './ActionButton'
+import { CommandButton } from './CommandButton'
 
 export function ProfilingControlStack() {
-  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const [slowms, setSlowms] = useState(0)
   const [sampleRate, setSampleRate] = useState(0)
   const { data: profile, revalidate } = useCommandProfile()
-  const handleSetProfile = useCallback(async () => {
-    if (!database) {
-      return
+  const commandSetProfile = useCommand(() =>
+    database
+      ? {
+          profile: 1,
+          slowms,
+          sampleRate: { $numberDouble: sampleRate.toString() },
+        }
+      : null,
+  )
+  useEffect(() => {
+    if (commandSetProfile.result) {
+      revalidate()
     }
-    await runCommand(connection, database, {
-      profile: 1,
-      slowms,
-      sampleRate: { $numberDouble: sampleRate.toString() },
-    })
-    revalidate()
-  }, [connection, database, revalidate, slowms, sampleRate])
+  }, [commandSetProfile.result, revalidate])
   useEffect(() => {
     if (!profile) {
       return
@@ -74,7 +75,7 @@ export function ProfilingControlStack() {
       />
       {profile?.slowms === slowms &&
       profile?.sampleRate === sampleRate ? null : (
-        <ActionButton icon="CheckMark" onClick={handleSetProfile} />
+        <CommandButton icon="CheckMark" command={commandSetProfile} />
       )}
       <Stack.Item grow={true}>
         <div />

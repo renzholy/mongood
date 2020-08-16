@@ -2,16 +2,23 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { FilterQuery } from 'mongodb'
 import { isEqual } from 'lodash'
 
+import { MongoData } from '@/types'
+
 export default createSlice({
   name: 'profiling',
   initialState: {
     filter: {},
     skip: 0,
     limit: parseInt(localStorage.getItem('limit') || '25', 10),
+    isEditorOpen: false,
+    isMenuHidden: true,
   } as {
     filter: FilterQuery<unknown>
     skip: number
     limit: number
+    isEditorOpen: boolean
+    isMenuHidden: boolean
+    invokedProfiling?: { [key: string]: MongoData }
   },
   reducers: {
     setFilter: (state, { payload }: PayloadAction<FilterQuery<unknown>>) =>
@@ -40,5 +47,20 @@ export default createSlice({
         limit: payload,
       }
     },
+    setIsEditorOpen: (state, { payload }: PayloadAction<boolean>) => ({
+      ...state,
+      isEditorOpen: payload,
+    }),
+    setIsMenuHidden: (state, { payload }: PayloadAction<boolean>) => ({
+      ...state,
+      isMenuHidden: payload,
+    }),
+    setInvokedProfiling: (
+      state,
+      { payload }: PayloadAction<{ [key: string]: MongoData }>,
+    ) => ({
+      ...state,
+      invokedProfiling: payload,
+    }),
   },
 })
