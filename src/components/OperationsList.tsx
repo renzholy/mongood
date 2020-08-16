@@ -71,35 +71,33 @@ export function OperationsList() {
           />
         }
       />
-      {invokedOperation ? (
-        <Dialog
-          hidden={hidden}
-          dialogContentProps={{
-            type: DialogType.normal,
-            title: 'Kill Operation',
-            subText: `#${stringify(invokedOperation.opid)}`,
-            showCloseButton: true,
-            onDismiss() {
-              dispatch(actions.operations.setHidden(true))
+      <Dialog
+        hidden={hidden}
+        dialogContentProps={{
+          type: DialogType.normal,
+          title: 'Kill Operation',
+          subText: `#${stringify(invokedOperation?.opid)}`,
+          showCloseButton: true,
+          onDismiss() {
+            dispatch(actions.operations.setHidden(true))
+          },
+        }}
+        modalProps={{
+          styles: {
+            main: {
+              minHeight: 0,
+              borderTop: `4px solid ${theme.palette.red}`,
+              backgroundColor: theme.palette.neutralLighterAlt,
             },
-          }}
-          modalProps={{
-            styles: {
-              main: {
-                minHeight: 0,
-                borderTop: `4px solid ${theme.palette.red}`,
-                backgroundColor: theme.palette.neutralLighterAlt,
-              },
-            },
-            onDismiss() {
-              dispatch(actions.operations.setHidden(true))
-            },
-          }}>
-          <DialogFooter>
-            <CommandButton text="Kill" command={kill} />
-          </DialogFooter>
-        </Dialog>
-      ) : null}
+          },
+          onDismiss() {
+            dispatch(actions.operations.setHidden(true))
+          },
+        }}>
+        <DialogFooter>
+          <CommandButton text="Kill" command={kill} />
+        </DialogFooter>
+      </Dialog>
       <Stack
         tokens={{ childrenGap: 20 }}
         styles={{
