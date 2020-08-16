@@ -9,7 +9,7 @@ import {
   IContextualMenuProps,
   DirectionalHint,
 } from '@fluentui/react'
-import React, { useMemo, useCallback, useState } from 'react'
+import React, { useMemo, useCallback, useState, useEffect } from 'react'
 import mongodbUri from 'mongodb-uri'
 import { compact, uniq } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
@@ -19,7 +19,8 @@ import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { ServerStats } from '@/types'
 import { useCommandListConnections } from '@/hooks/use-command'
-import { ActionButton } from './ActionButton'
+import { usePromise } from '@/hooks/use-promise'
+import { PromiseButton } from './PromiseButton'
 
 function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const uri = useMemo(() => {
@@ -137,22 +138,24 @@ export function ConnectionEditModal(props: {
   const connections = useSelector((state) => state.root.connections)
   const theme = getTheme()
   const [value, setValue] = useState('')
-  const [error, setError] = useState<Error>()
   const dispatch = useDispatch()
   const handleAddConnection = useCallback(async () => {
     if (!value) {
-      return
+      return undefined
     }
-    try {
-      const _connection = value.trim()
-      mongodbUri.parse(_connection)
-      await runCommand(_connection, 'admin', { ping: 1 })
+    const _connection = value.trim()
+    mongodbUri.parse(_connection)
+    await runCommand(_connection, 'admin', { ping: 1 })
+    return _connection
+  }, [value])
+  const promiseAddConnection = usePromise(handleAddConnection)
+  useEffect(() => {
+    const _connection = promiseAddConnection.resolved
+    if (_connection) {
       dispatch(actions.root.setConnections(uniq([_connection, ...connections])))
       setValue('')
-    } catch (err) {
-      setError(err)
     }
-  }, [value, connections, dispatch])
+  }, [connections, dispatch, promiseAddConnection.resolved])
 
   return (
     <Modal
@@ -195,15 +198,15 @@ export function ConnectionEditModal(props: {
           placeholder="mongodb://username:password@host1:port1,host2:port2,host3:port3/admin?replicaSet=rs0"
           value={value}
           onChange={(_ev, newValue) => {
-            setError(undefined)
             setValue(newValue || '')
           }}
-          errorMessage={error?.message}
+          errorMessage={promiseAddConnection.rejected?.message}
         />
-        <ActionButton
+        <PromiseButton
           disabled={!value}
           icon="CheckMark"
-          onClick={handleAddConnection}
+          silent={true}
+          promise={promiseAddConnection}
         />
       </Stack>
       {connections.length ? (

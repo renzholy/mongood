@@ -10,10 +10,11 @@ import {
   useCommandCount,
   useCommandListIndexes,
 } from '@/hooks/use-command'
+import { usePromise } from '@/hooks/use-promise'
 import { IndexButton } from './IndexButton'
 import { DocumentPagination } from './DocumentPagination'
 import { EditorModal } from './EditorModal'
-import { ActionButton } from './ActionButton'
+import { PromiseButton } from './PromiseButton'
 
 export function DocumentControlStack() {
   const connection = useSelector((state) => state.root.connection)
@@ -27,15 +28,24 @@ export function DocumentControlStack() {
   const dispatch = useDispatch()
   const [isInsertOpen, setIsInsertOpen] = useState(false)
   const [doc, setDoc] = useState({})
-  const handleInsert = useCallback(async () => {
-    await runCommand(connection, database!, {
-      insert: collection,
-      documents: [doc],
-    })
-    setIsInsertOpen(false)
-    reFind()
-    reCount()
-  }, [connection, database, collection, doc, reFind, reCount])
+  const handleInsert = useCallback(
+    async () =>
+      database && collection
+        ? runCommand(connection, database, {
+            insert: collection,
+            documents: [doc],
+          })
+        : undefined,
+    [connection, database, collection, doc],
+  )
+  const promiseInsert = usePromise(handleInsert)
+  useEffect(() => {
+    if (promiseInsert.resolved) {
+      setIsInsertOpen(false)
+      reFind()
+      reCount()
+    }
+  }, [promiseInsert.resolved, reCount, reFind])
   useEffect(() => {
     dispatch(actions.docs.resetPage())
     dispatch(actions.docs.setIndex())
@@ -77,7 +87,11 @@ export function DocumentControlStack() {
             setIsInsertOpen(false)
           }}
           footer={
-            <ActionButton text="Insert" primary={true} onClick={handleInsert} />
+            <PromiseButton
+              text="Insert"
+              primary={true}
+              promise={promiseInsert}
+            />
           }
         />
       </Stack.Item>

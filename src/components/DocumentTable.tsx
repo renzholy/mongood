@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react'
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Selection } from '@fluentui/react'
 
@@ -6,10 +6,11 @@ import { runCommand } from '@/utils/fetcher'
 import { stringify } from '@/utils/ejson'
 import { MongoData } from '@/types'
 import { useCommandFind } from '@/hooks/use-command'
+import { usePromise } from '@/hooks/use-promise'
 import { Table } from './Table'
 import { EditorModal } from './EditorModal'
-import { ActionButton } from './ActionButton'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
+import { PromiseButton } from './PromiseButton'
 
 type Data = { [key: string]: MongoData }
 
@@ -24,15 +25,24 @@ export function DocumentTable() {
   const [isMenuHidden, setIsMenuHidden] = useState(true)
   const [invokedItem, setInvokedItem] = useState<Data>()
   const [editedItem, setEditedItem] = useState<Data>()
-  const handleUpdate = useCallback(async () => {
-    await runCommand(connection, database!, {
-      findAndModify: collection,
-      query: { _id: (invokedItem as { _id: unknown })._id },
-      update: editedItem,
-    })
-    revalidate()
-    setIsUpdateOpen(false)
-  }, [connection, database, collection, invokedItem, editedItem, revalidate])
+  const handleUpdate = useCallback(
+    async () =>
+      database && collection
+        ? runCommand(connection, database, {
+            findAndModify: collection,
+            query: { _id: (invokedItem as { _id: unknown })._id },
+            update: editedItem,
+          })
+        : undefined,
+    [connection, database, collection, invokedItem, editedItem],
+  )
+  const promiseUpdate = usePromise(handleUpdate)
+  useEffect(() => {
+    if (promiseUpdate.resolved) {
+      revalidate()
+      setIsUpdateOpen(false)
+    }
+  }, [promiseUpdate.resolved, revalidate])
   const target = useRef<MouseEvent>()
   const selectedItems = useRef<Data[]>([])
   const selection = useMemo(
@@ -83,10 +93,10 @@ export function DocumentTable() {
           setIsUpdateOpen(false)
         }}
         footer={
-          <ActionButton
+          <PromiseButton
             text="Update"
             primary={true}
-            onClick={handleUpdate}
+            promise={promiseUpdate}
             style={{ flexShrink: 0 }}
           />
         }

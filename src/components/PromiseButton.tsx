@@ -17,6 +17,7 @@ export function PromiseButton(props: {
   disabled?: boolean
   primary?: boolean
   promise: ReturnType<typeof usePromise>
+  silent?: boolean
   style?: IStyle
 }) {
   const theme = getTheme()
@@ -30,38 +31,40 @@ export function PromiseButton(props: {
 
   return (
     <>
-      <Dialog
-        hidden={hidden}
-        dialogContentProps={{
-          type: DialogType.normal,
-          title: 'Error',
-          subText: rejected?.message,
-          showCloseButton: true,
-          onDismiss() {
-            setHidden(true)
-          },
-        }}
-        modalProps={{
-          styles: {
-            main: {
-              minHeight: 0,
-              borderTop: `4px solid ${theme.palette.red}`,
-              backgroundColor: theme.palette.neutralLighterAlt,
-            },
-          },
-          onDismiss() {
-            setHidden(true)
-          },
-        }}>
-        <DialogFooter>
-          <DefaultButton
-            onClick={() => {
+      {props.silent ? null : (
+        <Dialog
+          hidden={hidden}
+          dialogContentProps={{
+            type: DialogType.normal,
+            title: 'Error',
+            subText: rejected?.message,
+            showCloseButton: true,
+            onDismiss() {
               setHidden(true)
-            }}
-            text="OK"
-          />
-        </DialogFooter>
-      </Dialog>
+            },
+          }}
+          modalProps={{
+            styles: {
+              main: {
+                minHeight: 0,
+                borderTop: `4px solid ${theme.palette.red}`,
+                backgroundColor: theme.palette.neutralLighterAlt,
+              },
+            },
+            onDismiss() {
+              setHidden(true)
+            },
+          }}>
+          <DialogFooter>
+            <DefaultButton
+              onClick={() => {
+                setHidden(true)
+              }}
+              text="OK"
+            />
+          </DialogFooter>
+        </Dialog>
+      )}
       {props.text ? (
         <DefaultButton
           text={props.text}

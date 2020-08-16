@@ -6,12 +6,13 @@ import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { stringify, parse } from '@/utils/ejson'
-import { ActionButton } from '@/components/ActionButton'
 import { LargeMessage } from '@/components/LargeMessage'
 import { ControlledEditorProps } from '@monaco-editor/react'
 import { generateMongoJsonSchema } from '@/utils/schema'
 import { MongoData, ValidationAction, ValidationLevel } from '@/types'
 import { useCommandListCollections } from '@/hooks/use-command'
+import { PromiseButton } from '@/components/PromiseButton'
+import { usePromise } from '@/hooks/use-promise'
 import { TAB_SIZE_KEY } from './settings'
 
 export default () => {
@@ -29,25 +30,33 @@ export default () => {
     setValidationLevel,
   ] = useState<ValidationLevel | null>(null)
   const [value, setValue] = useState('')
-  const handleSave = useCallback(async () => {
-    await runCommand(connection, database!, {
-      collMod: collection,
+  const handleSave = useCallback(
+    async () =>
+      database && collection
+        ? runCommand(connection, database, {
+            collMod: collection,
+            validationAction,
+            validationLevel,
+            validator: {
+              $jsonSchema: parse(value.replace(/^return/, '')),
+            },
+          })
+        : undefined,
+    [
+      connection,
+      database,
+      collection,
+      value,
       validationAction,
       validationLevel,
-      validator: {
-        $jsonSchema: parse(value.replace(/^return/, '')),
-      },
-    })
-    revalidate()
-  }, [
-    connection,
-    database,
-    collection,
-    value,
-    validationAction,
-    validationLevel,
-    revalidate,
-  ])
+    ],
+  )
+  const promiseSave = usePromise(handleSave)
+  useEffect(() => {
+    if (promiseSave.resolved) {
+      revalidate()
+    }
+  }, [promiseSave.resolved, revalidate])
   useEffect(() => {
     if (!data?.cursor.firstBatch[0]) {
       return
@@ -71,22 +80,31 @@ export default () => {
     [],
   )
   const handleGenerate = useCallback(async () => {
+    if (!database || !collection) {
+      return undefined
+    }
     const {
       cursor: { firstBatch },
     } = await runCommand<{
       cursor: {
         firstBatch: MongoData[]
       }
-    }>(connection, database!, { find: collection }, { canonical: true })
-    const str = stringify(generateMongoJsonSchema(firstBatch), true)
-    setValue(str ? `return ${str}` : 'return {}')
-    if (!validationAction) {
-      setValidationAction(ValidationAction.WARN)
+    }>(connection, database, { find: collection }, { canonical: true })
+    return stringify(generateMongoJsonSchema(firstBatch), true)
+  }, [collection, connection, database])
+  const promiseGenerate = usePromise(handleGenerate)
+  useEffect(() => {
+    const str = promiseGenerate.resolved
+    if (str !== undefined) {
+      setValue(str ? `return ${str}` : 'return {}')
+      if (!validationAction) {
+        setValidationAction(ValidationAction.WARN)
+      }
+      if (!validationLevel) {
+        setValidationLevel(ValidationLevel.OFF)
+      }
     }
-    if (!validationLevel) {
-      setValidationLevel(ValidationLevel.OFF)
-    }
-  }, [collection, connection, database, validationAction, validationLevel])
+  }, [promiseGenerate.resolved, validationAction, validationLevel])
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
@@ -139,12 +157,12 @@ export default () => {
           <div />
         </Stack.Item>
         <TooltipHost content="Auto generate schema">
-          <ActionButton icon="AutoEnhanceOn" onClick={handleGenerate} />
+          <PromiseButton icon="AutoEnhanceOn" promise={promiseGenerate} />
         </TooltipHost>
-        <ActionButton
+        <PromiseButton
           icon="Save"
           disabled={!validationAction || !validationLevel || !value}
-          onClick={handleSave}
+          promise={promiseSave}
         />
       </Stack>
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
