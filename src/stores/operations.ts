@@ -11,11 +11,13 @@ export default createSlice({
     refreshInterval: 1000,
     isOpen: false,
     hidden: true,
+    isMenuHidden: true,
   } as {
     filter: FilterQuery<unknown>
     refreshInterval: number
     isOpen: boolean
     hidden: boolean
+    isMenuHidden: boolean
     invokedOperation?: { [key: string]: MongoData }
   },
   reducers: {
@@ -37,6 +39,10 @@ export default createSlice({
     setHidden: (state, { payload }: PayloadAction<boolean>) => ({
       ...state,
       hidden: payload,
+    }),
+    setIsMenuHidden: (state, { payload }: PayloadAction<boolean>) => ({
+      ...state,
+      isMenuHidden: payload,
     }),
     setInvokedOperation: (
       state,

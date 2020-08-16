@@ -15,7 +15,6 @@ import { CommandAndLocks } from './CommandAndLocks'
 export function OperationCard(props: {
   value: { [key: string]: MongoData }
   onContextMenu(ev: MouseEvent): void
-  onView(): void
 }) {
   const theme = getTheme()
   const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
@@ -37,7 +36,7 @@ export function OperationCard(props: {
       }}
       onDoubleClick={() => {
         dispatch(actions.operations.setInvokedOperation(props.value))
-        props.onView()
+        dispatch(actions.operations.setIsOpen(true))
       }}
       styles={{
         root: {
@@ -69,6 +68,7 @@ export function OperationCard(props: {
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {compact([
+            `#${value.opid}`,
             value.microsecs_running
               ? `${Number.format(
                   value.microsecs_running > 1000

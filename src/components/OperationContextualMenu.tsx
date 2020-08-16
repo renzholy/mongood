@@ -1,19 +1,18 @@
 import { ContextualMenu, DirectionalHint, getTheme } from '@fluentui/react'
-import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { actions } from '@/stores'
 
 export function OperationContextualMenu(props: {
   target: MouseEvent | undefined
-  onView(): void
 }) {
   const dispatch = useDispatch()
   const theme = getTheme()
-  const [isMenuHidden, setIsMenuHidden] = useState(true)
+  const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
   useEffect(() => {
-    setIsMenuHidden(!props.target)
-  }, [props.target])
+    dispatch(actions.operations.setIsMenuHidden(!props.target))
+  }, [dispatch, props.target])
 
   return (
     <ContextualMenu
@@ -21,7 +20,7 @@ export function OperationContextualMenu(props: {
       directionalHint={DirectionalHint.rightTopEdge}
       hidden={isMenuHidden}
       onDismiss={() => {
-        setIsMenuHidden(true)
+        dispatch(actions.operations.setIsMenuHidden(true))
       }}
       items={[
         {
@@ -29,8 +28,8 @@ export function OperationContextualMenu(props: {
           text: 'View',
           iconProps: { iconName: 'View' },
           onClick() {
-            setIsMenuHidden(true)
-            props.onView()
+            dispatch(actions.operations.setIsMenuHidden(true))
+            dispatch(actions.operations.setIsOpen(true))
           },
         },
         {
