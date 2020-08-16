@@ -58,7 +58,7 @@ export const TableCell = React.memo(
       )
     }, [props.value, props.index2dsphere])
 
-    return (
+    return str.length > 36 || props.index2dsphere ? (
       <HoverCard
         type={HoverCardType.plain}
         plainCardProps={{
@@ -78,6 +78,11 @@ export const TableCell = React.memo(
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </HoverCard>
+    ) : (
+      <span
+        style={{ verticalAlign: 'middle' }}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     )
   },
   (prevProps, nextProps) =>
