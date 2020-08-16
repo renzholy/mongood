@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   DefaultButton,
   Dialog,
@@ -22,6 +22,11 @@ export function CommandButton(props: {
   const theme = getTheme()
   const [hidden, setHidden] = useState(true)
   const { error, loading, invoke } = props.command
+  useEffect(() => {
+    if (error) {
+      setHidden(false)
+    }
+  }, [error])
 
   return (
     <div>
