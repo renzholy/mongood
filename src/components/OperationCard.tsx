@@ -1,23 +1,15 @@
 /* eslint-disable react/no-danger */
 
 import { Card } from '@uifabric/react-cards'
-import {
-  Text,
-  getTheme,
-  Dialog,
-  DialogType,
-  DialogFooter,
-} from '@fluentui/react'
-import React, { useEffect, useMemo } from 'react'
+import { Text, getTheme } from '@fluentui/react'
+import React, { useMemo } from 'react'
 import { omit, compact } from 'lodash'
 import { EJSON } from 'bson'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { Number } from '@/utils/formatter'
 import { Operation, MongoData } from '@/types'
-import { useCommand, useCommandCurrentOp } from '@/hooks/use-command'
 import { actions } from '@/stores'
-import { CommandButton } from './CommandButton'
 import { CommandAndLocks } from './CommandAndLocks'
 
 export function OperationCard(props: {
@@ -26,7 +18,6 @@ export function OperationCard(props: {
   onView(): void
 }) {
   const theme = getTheme()
-  const hidden = useSelector((state) => state.operations.hidden)
   const value = useMemo<Omit<Operation, 'command' | 'originatingCommand'>>(
     () =>
       EJSON.parse(
@@ -34,21 +25,7 @@ export function OperationCard(props: {
       ) as Omit<Operation, 'command' | 'originatingCommand'>,
     [props.value],
   )
-  const { revalidate } = useCommandCurrentOp(true)
   const dispatch = useDispatch()
-  const kill = useCommand(
-    () => ({
-      killOp: 1,
-      op: value.opid,
-    }),
-    'admin',
-  )
-  useEffect(() => {
-    if (kill.result) {
-      dispatch(actions.operations.setHidden(true))
-      revalidate()
-    }
-  }, [kill.result, revalidate, dispatch])
 
   return (
     <Card
@@ -56,6 +33,7 @@ export function OperationCard(props: {
         props.onContextMenu(ev.nativeEvent)
         dispatch(actions.operations.setInvokedOperation(props.value))
         ev.preventDefault()
+        ev.stopPropagation()
       }}
       onDoubleClick={() => {
         dispatch(actions.operations.setInvokedOperation(props.value))
@@ -74,33 +52,6 @@ export function OperationCard(props: {
         minHeight: 'unset',
       }}>
       <Card.Item>
-        <Dialog
-          hidden={hidden}
-          dialogContentProps={{
-            type: DialogType.normal,
-            title: 'Kill Operation',
-            subText: value.opid.toString(),
-            showCloseButton: true,
-            onDismiss() {
-              dispatch(actions.operations.setHidden(true))
-            },
-          }}
-          modalProps={{
-            styles: {
-              main: {
-                minHeight: 0,
-                borderTop: `4px solid ${theme.palette.red}`,
-                backgroundColor: theme.palette.neutralLighterAlt,
-              },
-            },
-            onDismiss() {
-              dispatch(actions.operations.setHidden(true))
-            },
-          }}>
-          <DialogFooter>
-            <CommandButton text="Kill" command={kill} />
-          </DialogFooter>
-        </Dialog>
         <Text
           variant="xLarge"
           styles={{ root: { color: theme.palette.neutralPrimary } }}>

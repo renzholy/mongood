@@ -1,5 +1,11 @@
-import { Stack } from '@fluentui/react'
-import React, { useRef, useCallback } from 'react'
+import {
+  Stack,
+  Dialog,
+  DialogType,
+  DialogFooter,
+  getTheme,
+} from '@fluentui/react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { useCommandCurrentOp, useCommand } from '@/hooks/use-command'
@@ -12,12 +18,13 @@ import { EditorModal } from './EditorModal'
 import { CommandButton } from './CommandButton'
 
 export function OperationsList() {
-  const { data } = useCommandCurrentOp(true)
-  const target = useRef<MouseEvent>()
+  const { data, revalidate } = useCommandCurrentOp(true)
+  const [target, setTarget] = useState<MouseEvent>()
   const invokedOperation = useSelector(
     (state) => state.operations.invokedOperation,
   )
   const isOpen = useSelector((state) => state.operations.isOpen)
+  const hidden = useSelector((state) => state.operations.hidden)
   const dispatch = useDispatch()
   const kill = useCommand(
     () =>
@@ -29,12 +36,17 @@ export function OperationsList() {
         : null,
     'admin',
   )
-  const handleContextMenu = useCallback((_target: MouseEvent) => {
-    target.current = _target
-  }, [])
   const handleView = useCallback(() => {
     dispatch(actions.operations.setIsOpen(true))
   }, [dispatch])
+  useEffect(() => {
+    if (kill.result) {
+      dispatch(actions.operations.setIsOpen(false))
+      dispatch(actions.operations.setHidden(true))
+      revalidate()
+    }
+  }, [kill.result, dispatch, revalidate])
+  const theme = getTheme()
 
   if (data?.inprog.length === 0) {
     return <LargeMessage iconName="AnalyticsReport" title="No Operation" />
@@ -42,7 +54,7 @@ export function OperationsList() {
   return (
     <>
       <OperationContextualMenu
-        target={target.current}
+        target={target}
         onView={() => {
           dispatch(actions.operations.setIsOpen(true))
         }}
@@ -57,6 +69,35 @@ export function OperationsList() {
         }}
         footer={<CommandButton text="kill" command={kill} />}
       />
+      {invokedOperation ? (
+        <Dialog
+          hidden={hidden}
+          dialogContentProps={{
+            type: DialogType.normal,
+            title: 'Kill Operation',
+            subText: stringify(invokedOperation.opid),
+            showCloseButton: true,
+            onDismiss() {
+              dispatch(actions.operations.setHidden(true))
+            },
+          }}
+          modalProps={{
+            styles: {
+              main: {
+                minHeight: 0,
+                borderTop: `4px solid ${theme.palette.red}`,
+                backgroundColor: theme.palette.neutralLighterAlt,
+              },
+            },
+            onDismiss() {
+              dispatch(actions.operations.setHidden(true))
+            },
+          }}>
+          <DialogFooter>
+            <CommandButton text="Kill" command={kill} />
+          </DialogFooter>
+        </Dialog>
+      ) : null}
       <Stack
         tokens={{ childrenGap: 20 }}
         styles={{
@@ -71,7 +112,7 @@ export function OperationsList() {
           <OperationCard
             key={stringify(item.opid)}
             value={item}
-            onContextMenu={handleContextMenu}
+            onContextMenu={setTarget}
             onView={handleView}
           />
         ))}
