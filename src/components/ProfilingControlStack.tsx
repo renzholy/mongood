@@ -73,45 +73,47 @@ export function ProfilingControlStack() {
     }
     return []
   }, [parsed, replicaConfig])
+  const generateConnectionWithDirectHost = useCallback(
+    (h: string) => {
+      if (!parsed) {
+        return undefined
+      }
+      const [_host, _port] = h.split(':')
+      return mongodbUri.format({
+        ...parsed,
+        hosts: [{ host: _host, port: parseInt(_port, 10) }],
+        options: {
+          ...parsed?.options,
+          connect: 'direct',
+        },
+      })
+    },
+    [parsed],
+  )
   const items = useMemo<IContextualMenuItem[]>(() => {
     if (!parsed) {
       return []
     }
-    return [
-      {
-        key: 'default',
-        checked: !host,
-        canCheck: true,
-        onClick() {
-          setHost(undefined)
-          dispatch(actions.profiling.setConnection(undefined))
-        },
-        text: 'Default',
+    return hosts.map((h) => ({
+      key: h,
+      text: h,
+      checked: h === host,
+      canCheck: true,
+      onClick() {
+        setHost(h)
       },
-      ...hosts.map((h) => ({
-        key: h,
-        text: h,
-        checked: h === host,
-        canCheck: true,
-        onClick() {
-          setHost(h)
-          const [_host, _port] = h.split(':')
-          dispatch(
-            actions.profiling.setConnection(
-              mongodbUri.format({
-                ...parsed,
-                hosts: [{ host: _host, port: parseInt(_port, 10) }],
-                options: {
-                  ...parsed?.options,
-                  connect: 'direct',
-                },
-              }),
-            ),
-          )
-        },
-      })),
-    ]
-  }, [dispatch, host, hosts, parsed])
+    }))
+  }, [host, hosts, parsed])
+  useEffect(() => {
+    setHost(hosts[0])
+  }, [hosts])
+  useEffect(() => {
+    dispatch(
+      actions.profiling.setConnection(
+        host ? generateConnectionWithDirectHost(host) : undefined,
+      ),
+    )
+  }, [host, dispatch, generateConnectionWithDirectHost])
 
   return (
     <Stack
@@ -142,7 +144,7 @@ export function ProfilingControlStack() {
               },
             }}
             menuIconProps={{ hidden: true }}>
-            {host || 'Default'}
+            {host}
           </DefaultButton>
         </>
       ) : null}
