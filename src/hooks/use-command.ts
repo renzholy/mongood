@@ -346,10 +346,10 @@ export function useCommandUsers(suspense = false) {
   )
 }
 
-export function useCommandReplicaConfig(suspense = false) {
+export function useCommandReplSetGetConfig(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
   return useSWR(
-    `replicaConfig/${connection}`,
+    `replSetGetConfig/${connection}`,
     () =>
       runCommand<{
         config: {

@@ -11,7 +11,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import mongodbUri from 'mongodb-uri'
 
 import { actions } from '@/stores'
-import { useCommandProfile, useCommandReplicaConfig } from '@/hooks/use-command'
+import {
+  useCommandProfile,
+  useCommandReplSetGetConfig,
+} from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { ProfilingPagination } from './ProfilingPagination'
@@ -60,7 +63,7 @@ export function ProfilingControlStack() {
       return undefined
     }
   }, [connection])
-  const { data: replicaConfig } = useCommandReplicaConfig()
+  const { data: replicaConfig } = useCommandReplSetGetConfig()
   const hosts = useMemo<string[]>(() => {
     if (replicaConfig) {
       return replicaConfig.config.members.map((m) => m.host)
@@ -74,8 +77,18 @@ export function ProfilingControlStack() {
     if (!parsed) {
       return []
     }
-    return hosts.map((h) => {
-      return {
+    return [
+      {
+        key: 'default',
+        checked: !host,
+        canCheck: true,
+        onClick() {
+          setHost(undefined)
+          dispatch(actions.profiling.setConnection(undefined))
+        },
+        text: 'Default',
+      },
+      ...hosts.map((h) => ({
         key: h,
         text: h,
         checked: h === host,
@@ -96,8 +109,8 @@ export function ProfilingControlStack() {
             ),
           )
         },
-      }
-    })
+      })),
+    ]
   }, [dispatch, host, hosts, parsed])
 
   return (
@@ -110,19 +123,7 @@ export function ProfilingControlStack() {
       <Label>Host:</Label>
       <DefaultButton
         menuProps={{
-          items: [
-            {
-              key: 'default',
-              checked: !host,
-              canCheck: true,
-              onClick() {
-                setHost(undefined)
-                dispatch(actions.profiling.setConnection(undefined))
-              },
-              text: 'Default',
-            },
-            ...items,
-          ],
+          items,
         }}
         styles={{
           root: { width: 200 },
