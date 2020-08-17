@@ -5,14 +5,34 @@ import bytes from 'bytes'
 import { formatNumber } from '@/utils/formatter'
 import { StatsArea } from '@/components/StatsArea'
 import { useCommandCollStats, useCOmmandDbStats } from '@/hooks/use-command'
+import { LargeMessage } from './LargeMessage'
 
 export function CollectionStatus() {
   const collection = useSelector((state) => state.root.collection)
-  const { data: _collStats } = useCommandCollStats(true)
-  const collStats = _collStats!
-  const { data: _dbStats } = useCOmmandDbStats(true)
-  const dbStats = _dbStats!
+  const { data: collStats, error: collStatsError } = useCommandCollStats()
+  const { data: dbStats, error: dbStatsError } = useCOmmandDbStats()
 
+  if (collStatsError) {
+    return (
+      <LargeMessage
+        iconName="Error"
+        title="Error"
+        content={collStatsError.message}
+      />
+    )
+  }
+  if (dbStatsError) {
+    return (
+      <LargeMessage
+        iconName="Error"
+        title="Error"
+        content={dbStatsError.message}
+      />
+    )
+  }
+  if (!collStats || !dbStats) {
+    return <LargeMessage iconName="HourGlass" title="Loading" />
+  }
   return (
     <div
       style={{

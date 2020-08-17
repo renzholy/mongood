@@ -5,8 +5,6 @@ import { Stack, IconButton, Separator } from '@fluentui/react'
 import { LargeMessage } from '@/components/LargeMessage'
 import { EditorModal } from '@/components/EditorModal'
 import { IndexesList } from '@/components/IndexesList'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { LoadingSuspense } from '@/components/LoadingSuspense'
 import { useCommandListIndexes } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
@@ -57,11 +55,7 @@ export default () => {
         </IconButton>
       </Stack>
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
-      <ErrorBoundary>
-        <LoadingSuspense>
-          <IndexesList />
-        </LoadingSuspense>
-      </ErrorBoundary>
+      <IndexesList />
       <EditorModal
         title="Create Index"
         value={value}

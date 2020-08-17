@@ -11,6 +11,7 @@ import { DocumentsListInner } from './DocumentsListInner'
 import { EditorModal } from './EditorModal'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 import { PromiseButton } from './PromiseButton'
+import { LargeMessage } from './LargeMessage'
 
 type Data = { [key: string]: MongoData }
 
@@ -20,7 +21,7 @@ export function DocumentsList() {
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
   const index = useSelector((state) => state.docs.index)
-  const { data, revalidate } = useCommandFind(true)
+  const { data, error, revalidate } = useCommandFind()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isMenuHidden, setIsMenuHidden] = useState(true)
   const [invokedItem, setInvokedItem] = useState<Data>()
@@ -82,6 +83,14 @@ export function DocumentsList() {
     [index],
   )
 
+  if (error) {
+    return (
+      <LargeMessage iconName="Error" title="Error" content={error.message} />
+    )
+  }
+  if (!data) {
+    return <LargeMessage iconName="HourGlass" title="Loading" />
+  }
   return (
     <>
       <EditorModal<Data>
@@ -119,7 +128,7 @@ export function DocumentsList() {
       />
       <DocumentsListInner
         displayMode={displayMode}
-        items={data!.cursor.firstBatch}
+        items={data.cursor.firstBatch}
         order={order}
         onItemInvoked={onItemInvoked}
         onItemContextMenu={onItemContextMenu}
