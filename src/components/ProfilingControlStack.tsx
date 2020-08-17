@@ -120,28 +120,32 @@ export function ProfilingControlStack() {
       styles={{
         root: { height: 52, alignItems: 'center' },
       }}>
-      <Label>Host:</Label>
-      <DefaultButton
-        menuProps={{
-          items,
-        }}
-        styles={{
-          root: { width: 200 },
-          label: {
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: 'block',
-            textAlign: 'start',
-            whiteSpace: 'nowrap',
-          },
-          textContainer: {
-            flex: 1,
-            width: 0,
-          },
-        }}
-        menuIconProps={{ hidden: true }}>
-        {host || 'Default'}
-      </DefaultButton>
+      {hosts.length > 1 ? (
+        <>
+          <Label>Host:</Label>
+          <DefaultButton
+            menuProps={{
+              items,
+            }}
+            styles={{
+              root: { width: 200 },
+              label: {
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: 'block',
+                textAlign: 'start',
+                whiteSpace: 'nowrap',
+              },
+              textContainer: {
+                flex: 1,
+                width: 0,
+              },
+            }}
+            menuIconProps={{ hidden: true }}>
+            {host || 'Default'}
+          </DefaultButton>
+        </>
+      ) : null}
       <SpinButton
         label="Slow ms:"
         styles={{
