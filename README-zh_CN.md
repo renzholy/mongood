@@ -1,6 +1,6 @@
 # Mongood
 
-<img src="./go/assets/logo.png" width="100" height="100" align="left" />
+<img src="./go/assets/logo.png" width="100" height="100" align="right" />
 
 一个遵循 [Fluent Design](https://www.microsoft.com/design/fluent/) 的 [MongoDB](https://www.mongodb.com/) GUI
 
@@ -38,28 +38,28 @@
 
 <table>
   <tr>
-    <td align="center"><img src="./screenshot/stats.png" /> 数据库状态信息</td>
-    <td align="center"><img src="./screenshot/index.png" /> 按索引进行查询和排序</td>
+    <td align="center"><img src="./screenshot/stats.png" />数据库状态信息</td>
+    <td align="center"><img src="./screenshot/index.png" />按索引进行查询和排序</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/geo.png" /> 地理位置地图预览</td>
-    <td align="center"><img src="./screenshot/document.png" /> 以文档模式展示数据</td>
+    <td align="center"><img src="./screenshot/geo.png" />地理位置地图预览</td>
+    <td align="center"><img src="./screenshot/document.png" />以文档模式展示数据</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/editor.png" /> 使用 Monaco Editor 编辑</td>
-    <td align="center"><img src="./screenshot/multi-select.png" /> 拖拽多选</td>
+    <td align="center"><img src="./screenshot/editor.png" />使用 Monaco Editor 编辑</td>
+    <td align="center"><img src="./screenshot/multi-select.png" />拖拽多选</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/export.png" /> 多选文档导出/删除</td>
-    <td align="center"><img src="./screenshot/indexes.png" /> 管理索引</td>
+    <td align="center"><img src="./screenshot/export.png" />多选文档导出/删除</td>
+    <td align="center"><img src="./screenshot/indexes.png" />管理索引</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/profiling.png" /> 分析查询的每个步骤</td>
-    <td align="center"><img src="./screenshot/schema.png" /> 编辑 JSON Schema</td>
+    <td align="center"><img src="./screenshot/profiling.png" />分析查询的每个步骤</td>
+    <td align="center"><img src="./screenshot/schema.png" />编辑 JSON Schema</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/notebook.png" /> Notebook (Beta)</td>
-    <td align="center"><img src="./screenshot/dark.png" /> 黑暗模式</td>
+    <td align="center"><img src="./screenshot/notebook.png" />Notebook (Beta)</td>
+    <td align="center"><img src="./screenshot/dark.png" />黑暗模式</td>
   </tr>
 </table>
 

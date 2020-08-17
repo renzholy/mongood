@@ -1,6 +1,6 @@
 # Mongood
 
-<img src="./go/assets/logo.png" width="100" height="100" align="left" />
+<img src="./go/assets/logo.png" width="100" height="100" align="right" />
 
 A [MongoDB](https://www.mongodb.com/) GUI with [Fluent Design](https://www.microsoft.com/design/fluent/)
 
@@ -38,28 +38,28 @@ English | [简体中文](./README-zh_CN.md)
 
 <table>
   <tr>
-    <td align="center"><img src="./screenshot/stats.png"> Database status</td>
-    <td align="center"><img src="./screenshot/index.png"> Find & sort with index</td>
+    <td align="center"><img src="./screenshot/stats.png">Database status</td>
+    <td align="center"><img src="./screenshot/index.png">Find & sort with index</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/geo.png" /> Geo preview</td>
-    <td align="center"><img src="./screenshot/document.png" /> Document mode</td>
+    <td align="center"><img src="./screenshot/geo.png" />Geo preview</td>
+    <td align="center"><img src="./screenshot/document.png" />Document mode</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/editor.png" /> Edit with Monaco Editor</td>
-    <td align="center"><img src="./screenshot/multi-select.png" /> Dragable multi-selection</td>
+    <td align="center"><img src="./screenshot/editor.png" />Edit with Monaco Editor</td>
+    <td align="center"><img src="./screenshot/multi-select.png" />Dragable multi-selection</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/export.png" /> Documents export</td>
-    <td align="center"><img src="./screenshot/indexes.png" /> Indexes managment</td>
+    <td align="center"><img src="./screenshot/export.png" />Documents export</td>
+    <td align="center"><img src="./screenshot/indexes.png" />Indexes managment</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/profiling.png" /> Analyse profiling</td>
-    <td align="center"><img src="./screenshot/schema.png" /> Edit JSON Schema</td>
+    <td align="center"><img src="./screenshot/profiling.png" />Analyse profiling</td>
+    <td align="center"><img src="./screenshot/schema.png" />Edit JSON Schema</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/notebook.png" /> Notebook (Beta)</td>
-    <td align="center"><img src="./screenshot/dark.png" /> Dark mode</td>
+    <td align="center"><img src="./screenshot/notebook.png" />Notebook (Beta)</td>
+    <td align="center"><img src="./screenshot/dark.png" />Dark mode</td>
   </tr>
 </table>
 
