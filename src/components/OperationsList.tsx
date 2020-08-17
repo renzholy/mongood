@@ -57,7 +57,7 @@ export function OperationsList() {
     <>
       <OperationContextualMenu target={target} />
       <EditorModal
-        title={`View Operation: #${
+        title={`View Operation: ${
           invokedOperation ? stringify(invokedOperation.opid) : ''
         }`}
         readOnly={true}
@@ -80,7 +80,7 @@ export function OperationsList() {
         dialogContentProps={{
           type: DialogType.normal,
           title: 'Kill Operation',
-          subText: `#${stringify(invokedOperation?.opid)}`,
+          subText: stringify(invokedOperation?.opid),
           showCloseButton: true,
           onDismiss() {
             dispatch(actions.operations.setIsDialogHidden(true))

@@ -66,7 +66,7 @@ export function OperationCard(props: {
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {compact([
-            `#${value.opid}`,
+            value.opid,
             value.microsecs_running
               ? `${Number.format(
                   value.microsecs_running > 1000
