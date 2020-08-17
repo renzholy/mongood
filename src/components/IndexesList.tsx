@@ -5,10 +5,15 @@ import {
   DialogType,
   getTheme,
 } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { keyBy } from 'lodash'
 
-import { useCommandCollStats, useCommandListIndexes } from '@/hooks/use-command'
+import {
+  useCommandCollStats,
+  useCommandListIndexes,
+  useCommandIndexStats,
+} from '@/hooks/use-command'
 import { actions } from '@/stores'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
@@ -19,7 +24,8 @@ import { IndexContextualMenu } from './IndexContextualMenu'
 import { PromiseButton } from './PromiseButton'
 
 export function IndexesList() {
-  const { data: stats } = useCommandCollStats(true)
+  const { data } = useCommandIndexStats(true)
+  const { data: collStats } = useCommandCollStats(true)
   const { data: indexes, revalidate } = useCommandListIndexes(true)
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
@@ -48,6 +54,9 @@ export function IndexesList() {
       revalidate()
     }
   }, [promiseDrop.resolved, dispatch, revalidate])
+  const indexStats = useMemo(() => keyBy(data?.cursor.firstBatch, 'name'), [
+    data,
+  ])
 
   if (indexes?.cursor.firstBatch.length === 0) {
     return <LargeMessage iconName="Dictionary" title="No Index" />
@@ -93,7 +102,7 @@ export function IndexesList() {
       <EditorModal
         title={`View Index Detail: ${invokedIndex?.name}`}
         readOnly={true}
-        value={stats?.indexDetails[invokedIndex?.name!]}
+        value={collStats?.indexDetails[invokedIndex?.name!]}
         isOpen={isDetailOpen}
         onDismiss={() => {
           dispatch(actions.indexes.setIsDetailOpen(false))
@@ -114,7 +123,8 @@ export function IndexesList() {
           <IndexCard
             key={item.name}
             value={item}
-            size={stats!.indexSizes[item.name!]}
+            size={collStats!.indexSizes[item.name!]}
+            stats={indexStats[item.name!]}
             onContextMenu={setTarget}
           />
         ))}
