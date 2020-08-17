@@ -74,7 +74,7 @@
     "prettier": "2.0.5",
     "raw-loader": "4.0.1",
     "typescript": "3.9.7",
-    "umi": "3.2.14"
+    "umi": "3.2.16"
   },
   "husky": {
     "hooks": {
