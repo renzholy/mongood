@@ -69,7 +69,7 @@
     "eslint-plugin-react-hooks": "4.0.8",
     "husky": "4.2.5",
     "lint-staged": "10.2.11",
-    "lodash": "4.17.19",
+    "lodash": "4.17.20",
     "monaco-editor": "0.20.0",
     "prettier": "2.0.5",
     "raw-loader": "4.0.1",
