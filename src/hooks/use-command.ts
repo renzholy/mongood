@@ -213,8 +213,28 @@ export function useCommandCount(suspense = false) {
   )
 }
 
+export function useCommandProfile(suspense = false) {
+  const connection = useSelector(
+    (state) => state.profiling.connection || state.root.connection,
+  )
+  return useSWR(
+    `profile/${connection}`,
+    () =>
+      runCommand<{ was: number; slowms: number; sampleRate: number }>(
+        connection,
+        'admin',
+        {
+          profile: -1,
+        },
+      ),
+    { suspense },
+  )
+}
+
 export function useCommandSystemProfileFind(suspense = false) {
-  const connection = useSelector((state) => state.root.connection)
+  const connection = useSelector(
+    (state) => state.profiling.connection || state.root.connection,
+  )
   const database = useSelector((state) => state.root.database)
   const filter = useSelector((state) => state.profiling.filter)
   const skip = useSelector((state) => state.profiling.skip)
@@ -249,7 +269,9 @@ export function useCommandSystemProfileFind(suspense = false) {
 }
 
 export function useCommandSystemProfileCount(suspense = false) {
-  const connection = useSelector((state) => state.root.connection)
+  const connection = useSelector(
+    (state) => state.profiling.connection || state.root.connection,
+  )
   const database = useSelector((state) => state.root.database)
   const filter = useSelector((state) => state.profiling.filter)
   return useSWR(
@@ -324,18 +346,21 @@ export function useCommandUsers(suspense = false) {
   )
 }
 
-export function useCommandProfile(suspense = false) {
+export function useCommandReplSetGetConfig(suspense = false) {
   const connection = useSelector((state) => state.root.connection)
   return useSWR(
-    `profile/${connection}`,
+    `replSetGetConfig/${connection}`,
     () =>
-      runCommand<{ was: number; slowms: number; sampleRate: number }>(
-        connection,
-        'admin',
-        {
-          profile: -1,
-        },
-      ),
-    { suspense },
+      runCommand<{
+        config: {
+          members: {
+            _id: number
+            host: string
+          }[]
+        }
+      }>(connection, 'admin', {
+        replSetGetConfig: 1,
+      }),
+    { suspense, shouldRetryOnError: false },
   )
 }

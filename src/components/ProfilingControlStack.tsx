@@ -1,8 +1,20 @@
-import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import {
+  Stack,
+  SpinButton,
+  Label,
+  Slider,
+  IContextualMenuItem,
+  DefaultButton,
+} from '@fluentui/react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import mongodbUri from 'mongodb-uri'
 
-import { useCommandProfile } from '@/hooks/use-command'
+import { actions } from '@/stores'
+import {
+  useCommandProfile,
+  useCommandReplSetGetConfig,
+} from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { ProfilingPagination } from './ProfilingPagination'
@@ -10,6 +22,7 @@ import { PromiseButton } from './PromiseButton'
 
 export function ProfilingControlStack() {
   const connection = useSelector((state) => state.root.connection)
+  const profilingConnection = useSelector((state) => state.profiling.connection)
   const database = useSelector((state) => state.root.database)
   const [slowms, setSlowms] = useState(0)
   const [sampleRate, setSampleRate] = useState(0)
@@ -17,13 +30,13 @@ export function ProfilingControlStack() {
   const handleSetProfile = useCallback(
     async () =>
       database
-        ? runCommand(connection, database, {
+        ? runCommand(profilingConnection || connection, database, {
             profile: 1,
             slowms,
             sampleRate: { $numberDouble: sampleRate.toString() },
           })
         : undefined,
-    [connection, database, sampleRate, slowms],
+    [profilingConnection, connection, database, sampleRate, slowms],
   )
   const promiseSetProfile = usePromise(handleSetProfile)
   useEffect(() => {
@@ -38,6 +51,69 @@ export function ProfilingControlStack() {
     setSlowms(profile.slowms)
     setSampleRate(profile.sampleRate)
   }, [profile])
+  const [host, setHost] = useState<string>()
+  const dispatch = useDispatch()
+  const parsed = useMemo(() => {
+    if (!connection) {
+      return undefined
+    }
+    try {
+      return mongodbUri.parse(connection)
+    } catch {
+      return undefined
+    }
+  }, [connection])
+  const { data: replicaConfig } = useCommandReplSetGetConfig()
+  const hosts = useMemo<string[]>(() => {
+    if (replicaConfig) {
+      return replicaConfig.config.members.map((m) => m.host)
+    }
+    if (parsed) {
+      return parsed.hosts.map((h) => `${h.host}:${h.port || 27017}`)
+    }
+    return []
+  }, [parsed, replicaConfig])
+  const generateConnectionWithDirectHost = useCallback(
+    (h: string) => {
+      if (!parsed) {
+        return undefined
+      }
+      const [_host, _port] = h.split(':')
+      return mongodbUri.format({
+        ...parsed,
+        hosts: [{ host: _host, port: parseInt(_port, 10) }],
+        options: {
+          ...parsed?.options,
+          connect: 'direct',
+        },
+      })
+    },
+    [parsed],
+  )
+  const items = useMemo<IContextualMenuItem[]>(() => {
+    if (!parsed) {
+      return []
+    }
+    return hosts.map((h) => ({
+      key: h,
+      text: h,
+      checked: h === host,
+      canCheck: true,
+      onClick() {
+        setHost(h)
+      },
+    }))
+  }, [host, hosts, parsed])
+  useEffect(() => {
+    setHost(hosts[0])
+  }, [hosts])
+  useEffect(() => {
+    dispatch(
+      actions.profiling.setConnection(
+        host ? generateConnectionWithDirectHost(host) : undefined,
+      ),
+    )
+  }, [host, dispatch, generateConnectionWithDirectHost])
 
   return (
     <Stack
@@ -46,6 +122,32 @@ export function ProfilingControlStack() {
       styles={{
         root: { height: 52, alignItems: 'center' },
       }}>
+      {hosts.length > 1 ? (
+        <>
+          <Label>Host:</Label>
+          <DefaultButton
+            menuProps={{
+              items,
+            }}
+            styles={{
+              root: { width: 200 },
+              label: {
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: 'block',
+                textAlign: 'start',
+                whiteSpace: 'nowrap',
+              },
+              textContainer: {
+                flex: 1,
+                width: 0,
+              },
+            }}
+            menuIconProps={{ hidden: true }}>
+            {host}
+          </DefaultButton>
+        </>
+      ) : null}
       <SpinButton
         label="Slow ms:"
         styles={{
