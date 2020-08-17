@@ -14,11 +14,11 @@ import {
 } from '@/types'
 import { JsonSchema } from '@/types/schema'
 
-export function useCommandListConnections(suspense = false) {
-  return useSWR('connections', listConnections, { suspense })
+export function useCommandListConnections() {
+  return useSWR('connections', listConnections)
 }
 
-export function useCommandDatabases(suspense = false) {
+export function useCommandDatabases() {
   const connection = useSelector((state) => state.root.connection)
   return useSWR(
     `listDatabases/${connection}`,
@@ -30,11 +30,11 @@ export function useCommandDatabases(suspense = false) {
           sizeOnDisk: number
         }[]
       }>(connection, 'admin', { listDatabases: 1 }),
-    { revalidateOnFocus: false, suspense },
+    { revalidateOnFocus: false },
   )
 }
 
-export function useCommandListCollections(suspense = false) {
+export function useCommandListCollections() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -66,12 +66,11 @@ export function useCommandListCollections(suspense = false) {
       }),
     {
       revalidateOnFocus: false,
-      suspense,
     },
   )
 }
 
-export function useCommandServerStatus(suspense = false) {
+export function useCommandServerStatus() {
   const connection = useSelector((state) => state.root.connection)
   return useSWR(
     `serverStatus/${connection}`,
@@ -79,11 +78,11 @@ export function useCommandServerStatus(suspense = false) {
       runCommand<ServerStats>(connection, 'admin', {
         serverStatus: 1,
       }),
-    { refreshInterval: 1000, suspense },
+    { refreshInterval: 1000 },
   )
 }
 
-export function useCommandCollStats(suspense = false) {
+export function useCommandCollStats() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -95,11 +94,10 @@ export function useCommandCollStats(suspense = false) {
       runCommand<CollStats>(connection, database!, {
         collStats: collection,
       }),
-    { suspense },
   )
 }
 
-export function useCOmmandDbStats(suspense = false) {
+export function useCOmmandDbStats() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   return useSWR(
@@ -108,11 +106,11 @@ export function useCOmmandDbStats(suspense = false) {
       runCommand<DbStats>(connection, database!, {
         dbStats: 1,
       }),
-    { refreshInterval: 1000, suspense },
+    { refreshInterval: 1000 },
   )
 }
 
-export function useCommandListIndexes(suspense = false) {
+export function useCommandListIndexes() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -128,11 +126,10 @@ export function useCommandListIndexes(suspense = false) {
           listIndexes: collection,
         },
       ),
-    { suspense },
   )
 }
 
-export function useCommandIndexStats(suspense = false) {
+export function useCommandIndexStats() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -150,11 +147,10 @@ export function useCommandIndexStats(suspense = false) {
         pipeline: [{ $indexStats: {} }],
         cursor: {},
       }),
-    { suspense },
   )
 }
 
-export function useCommandFind(suspense = false) {
+export function useCommandFind() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -186,11 +182,11 @@ export function useCommandFind(suspense = false) {
         },
         { canonical: true },
       ),
-    { revalidateOnFocus: false, suspense },
+    { revalidateOnFocus: false },
   )
 }
 
-export function useCommandCount(suspense = false) {
+export function useCommandCount() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -209,29 +205,25 @@ export function useCommandCount(suspense = false) {
         query: filter,
         hint,
       }),
-    { suspense },
   )
 }
 
-export function useCommandProfile(suspense = false) {
+export function useCommandProfile() {
   const connection = useSelector(
     (state) => state.profiling.connection || state.root.connection,
   )
-  return useSWR(
-    `profile/${connection}`,
-    () =>
-      runCommand<{ was: number; slowms: number; sampleRate: number }>(
-        connection,
-        'admin',
-        {
-          profile: -1,
-        },
-      ),
-    { suspense },
+  return useSWR(`profile/${connection}`, () =>
+    runCommand<{ was: number; slowms: number; sampleRate: number }>(
+      connection,
+      'admin',
+      {
+        profile: -1,
+      },
+    ),
   )
 }
 
-export function useCommandSystemProfileFind(suspense = false) {
+export function useCommandSystemProfileFind() {
   const connection = useSelector(
     (state) => state.profiling.connection || state.root.connection,
   )
@@ -264,11 +256,10 @@ export function useCommandSystemProfileFind(suspense = false) {
           canonical: true,
         },
       ),
-    { suspense },
   )
 }
 
-export function useCommandSystemProfileCount(suspense = false) {
+export function useCommandSystemProfileCount() {
   const connection = useSelector(
     (state) => state.profiling.connection || state.root.connection,
   )
@@ -283,11 +274,10 @@ export function useCommandSystemProfileCount(suspense = false) {
         count: 'system.profile',
         query: filter,
       }),
-    { suspense },
   )
 }
 
-export function useCommandCurrentOp(suspense = false) {
+export function useCommandCurrentOp() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -318,35 +308,31 @@ export function useCommandCurrentOp(suspense = false) {
       refreshInterval:
         !isMenuHidden || !isDialogHidden || isEditorOpen ? 0 : refreshInterval,
       revalidateOnFocus: false,
-      suspense,
     },
   )
 }
 
-export function useCommandUsers(suspense = false) {
+export function useCommandUsers() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
-  return useSWR(
-    `usersInfo/${connection}/${database}`,
-    () =>
-      runCommand<{
-        users: {
-          _id: string
+  return useSWR(`usersInfo/${connection}/${database}`, () =>
+    runCommand<{
+      users: {
+        _id: string
+        db: string
+        user: string
+        roles: {
           db: string
-          user: string
-          roles: {
-            db: string
-            role: string
-          }[]
+          role: string
         }[]
-      }>(connection, database || 'admin', {
-        usersInfo: database ? 1 : { forAllDBs: true },
-      }),
-    { suspense },
+      }[]
+    }>(connection, database || 'admin', {
+      usersInfo: database ? 1 : { forAllDBs: true },
+    }),
   )
 }
 
-export function useCommandReplSetGetConfig(suspense = false) {
+export function useCommandReplSetGetConfig() {
   const connection = useSelector((state) => state.root.connection)
   return useSWR(
     `replSetGetConfig/${connection}`,
@@ -361,6 +347,6 @@ export function useCommandReplSetGetConfig(suspense = false) {
       }>(connection, 'admin', {
         replSetGetConfig: 1,
       }),
-    { suspense, shouldRetryOnError: false },
+    { shouldRetryOnError: false },
   )
 }

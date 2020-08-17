@@ -6,11 +6,19 @@ import bytes from 'bytes'
 import { useCommandServerStatus } from '@/hooks/use-command'
 import { formatNumber } from '@/utils/formatter'
 import { StatsArea } from './StatsArea'
+import { LargeMessage } from './LargeMessage'
 
 export function ServerStatus() {
-  const { data } = useCommandServerStatus(true)
-  const serverStatus = data!
+  const { data: serverStatus, error } = useCommandServerStatus()
 
+  if (error) {
+    return (
+      <LargeMessage iconName="Error" title="Error" content={error.message} />
+    )
+  }
+  if (!serverStatus) {
+    return <LargeMessage iconName="HourGlass" title="Loading" />
+  }
   return (
     <div
       style={{

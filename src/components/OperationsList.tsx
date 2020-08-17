@@ -22,7 +22,7 @@ import { PromiseButton } from './PromiseButton'
 
 export function OperationsList() {
   const theme = getTheme()
-  const { data, revalidate } = useCommandCurrentOp(true)
+  const { data, error, revalidate } = useCommandCurrentOp()
   const [target, setTarget] = useState<MouseEvent>()
   const invokedOperation = useSelector(
     (state) => state.operations.invokedOperation,
@@ -50,7 +50,15 @@ export function OperationsList() {
     }
   }, [promiseKill.resolved, dispatch, revalidate])
 
-  if (data?.inprog.length === 0) {
+  if (error) {
+    return (
+      <LargeMessage iconName="Error" title="Error" content={error.message} />
+    )
+  }
+  if (!data) {
+    return <LargeMessage iconName="HourGlass" title="Loading" />
+  }
+  if (data.inprog.length === 0) {
     return <LargeMessage iconName="AnalyticsReport" title="No Operation" />
   }
   return (
@@ -112,7 +120,7 @@ export function OperationsList() {
             alignItems: 'center',
           },
         }}>
-        {data!.inprog.map((item) => (
+        {data.inprog.map((item) => (
           <OperationCard
             key={stringify(item.opid)}
             value={item}

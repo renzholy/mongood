@@ -11,8 +11,6 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { FilterInput } from '@/components/FilterInput'
 import { useCommandCurrentOp } from '@/hooks/use-command'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { LoadingSuspense } from '@/components/LoadingSuspense'
 import { OperationsList } from '@/components/OperationsList'
 import { actions } from '@/stores'
 
@@ -131,11 +129,7 @@ export default () => {
         />
       </Stack>
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
-      <ErrorBoundary>
-        <LoadingSuspense>
-          <OperationsList />
-        </LoadingSuspense>
-      </ErrorBoundary>
+      <OperationsList />
     </>
   )
 }

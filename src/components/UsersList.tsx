@@ -6,10 +6,17 @@ import { LargeMessage } from './LargeMessage'
 import { UserCard } from './UserCard'
 
 export function UsersList() {
-  const { data } = useCommandUsers(true)
-  const usersInfo = data!
+  const { data, error } = useCommandUsers()
 
-  if (!usersInfo.users.length) {
+  if (error) {
+    return (
+      <LargeMessage iconName="Error" title="Error" content={error.message} />
+    )
+  }
+  if (!data) {
+    return <LargeMessage iconName="HourGlass" title="Loading" />
+  }
+  if (data.users.length === 0) {
     return <LargeMessage iconName="UserOptional" title="No User" />
   }
   return (
@@ -23,7 +30,7 @@ export function UsersList() {
           alignItems: 'center',
         },
       }}>
-      {usersInfo.users.map((user) => (
+      {data.users.map((user) => (
         <UserCard key={user._id} value={user} />
       ))}
     </Stack>

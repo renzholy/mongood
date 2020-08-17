@@ -24,9 +24,13 @@ import { IndexContextualMenu } from './IndexContextualMenu'
 import { PromiseButton } from './PromiseButton'
 
 export function IndexesList() {
-  const { data } = useCommandIndexStats(true)
-  const { data: collStats } = useCommandCollStats(true)
-  const { data: indexes, revalidate } = useCommandListIndexes(true)
+  const { data, error } = useCommandIndexStats()
+  const { data: collStats, error: collStatsError } = useCommandCollStats()
+  const {
+    data: indexes,
+    error: indexesError,
+    revalidate,
+  } = useCommandListIndexes()
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -58,7 +62,33 @@ export function IndexesList() {
     data,
   ])
 
-  if (indexes?.cursor.firstBatch.length === 0) {
+  if (error) {
+    return (
+      <LargeMessage iconName="Error" title="Error" content={error.message} />
+    )
+  }
+  if (collStatsError) {
+    return (
+      <LargeMessage
+        iconName="Error"
+        title="Error"
+        content={collStatsError.message}
+      />
+    )
+  }
+  if (indexesError) {
+    return (
+      <LargeMessage
+        iconName="Error"
+        title="Error"
+        content={indexesError.message}
+      />
+    )
+  }
+  if (!data || !indexes || !collStats) {
+    return <LargeMessage iconName="HourGlass" title="Loading" />
+  }
+  if (indexes.cursor.firstBatch.length === 0) {
     return <LargeMessage iconName="Dictionary" title="No Index" />
   }
   return (
@@ -119,7 +149,7 @@ export function IndexesList() {
             alignItems: 'center',
           },
         }}>
-        {indexes!.cursor.firstBatch.map((item) => (
+        {indexes.cursor.firstBatch.map((item) => (
           <IndexCard
             key={item.name}
             value={item}

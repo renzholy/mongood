@@ -5,8 +5,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@/stores'
 import { LargeMessage } from '@/components/LargeMessage'
 import { ProfilingControlStack } from '@/components/ProfilingControlStack'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { LoadingSuspense } from '@/components/LoadingSuspense'
 import { ProfilingList } from '@/components/ProfilingList'
 
 export default () => {
@@ -35,11 +33,7 @@ export default () => {
     <>
       <ProfilingControlStack />
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
-      <ErrorBoundary>
-        <LoadingSuspense>
-          <ProfilingList />
-        </LoadingSuspense>
-      </ErrorBoundary>
+      <ProfilingList />
     </>
   )
 }

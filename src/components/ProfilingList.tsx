@@ -9,7 +9,7 @@ import { LargeMessage } from './LargeMessage'
 import { EditorModal } from './EditorModal'
 
 export function ProfilingList() {
-  const { data } = useCommandSystemProfileFind(true)
+  const { data, error } = useCommandSystemProfileFind()
   const invokedProfiling = useSelector(
     (state) => state.profiling.invokedProfiling,
   )
@@ -18,7 +18,15 @@ export function ProfilingList() {
   const dispatch = useDispatch()
   const [target, setTarget] = useState<MouseEvent>()
 
-  if (data?.cursor.firstBatch.length === 0) {
+  if (error) {
+    return (
+      <LargeMessage iconName="Error" title="Error" content={error.message} />
+    )
+  }
+  if (!data) {
+    return <LargeMessage iconName="HourGlass" title="Loading" />
+  }
+  if (data.cursor.firstBatch.length === 0) {
     return <LargeMessage iconName="SpeedHigh" title="No Profiling" />
   }
   return (
@@ -61,7 +69,7 @@ export function ProfilingList() {
             alignItems: 'center',
           },
         }}>
-        {data!.cursor.firstBatch.map((item, index) => (
+        {data.cursor.firstBatch.map((item, index) => (
           <ProfilingCard
             key={index.toString()}
             value={item}
