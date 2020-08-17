@@ -90,30 +90,32 @@ export function ProfilingControlStack() {
     },
     [parsed],
   )
-  const items = useMemo<IContextualMenuItem[]>(() => {
-    if (!parsed) {
-      return []
-    }
-    return hosts.map((h) => ({
-      key: h,
-      text: h,
-      checked: h === host,
-      canCheck: true,
-      onClick() {
-        setHost(h)
-      },
-    }))
-  }, [host, hosts, parsed])
+  const items = useMemo<IContextualMenuItem[]>(
+    () =>
+      hosts.map((h) => ({
+        key: h,
+        text: h,
+        checked: h === host,
+        canCheck: true,
+        onClick() {
+          setHost(h)
+          dispatch(
+            actions.profiling.setConnection(
+              generateConnectionWithDirectHost(h),
+            ),
+          )
+        },
+      })),
+    [dispatch, generateConnectionWithDirectHost, host, hosts],
+  )
   useEffect(() => {
     setHost(hosts[0])
-  }, [hosts])
-  useEffect(() => {
     dispatch(
       actions.profiling.setConnection(
-        host ? generateConnectionWithDirectHost(host) : undefined,
+        hosts[0] ? generateConnectionWithDirectHost(hosts[0]) : undefined,
       ),
     )
-  }, [host, dispatch, generateConnectionWithDirectHost])
+  }, [dispatch, generateConnectionWithDirectHost, hosts])
 
   return (
     <Stack
