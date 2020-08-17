@@ -6,7 +6,7 @@ import { EJSON } from 'bson'
 import { useDispatch } from 'react-redux'
 
 import { SystemProfileDoc, MongoData } from '@/types'
-import { Number } from '@/utils/formatter'
+import { formatDate, formatNumber } from '@/utils/formatter'
 import { actions } from '@/stores'
 import { ExecStage } from './ExecStage'
 import { CommandAndLocks } from './CommandAndLocks'
@@ -86,7 +86,7 @@ export function ProfilingCard(props: {
         <Text
           variant="medium"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {value.ts.toLocaleString([], { hour12: false })}
+          {formatDate(value.ts)}
         </Text>
       </Card.Item>
       <Card.Item>
@@ -94,16 +94,16 @@ export function ProfilingCard(props: {
           variant="mediumPlus"
           styles={{ root: { color: theme.palette.neutralSecondary } }}>
           {compact([
-            `${Number.format(value.millis)} ms`,
+            `${formatNumber(value.millis)} ms`,
             value.keysExamined === undefined
               ? undefined
-              : `${Number.format(value.keysExamined)} keys examined`,
+              : `${formatNumber(value.keysExamined)} keys examined`,
             value.docsExamined === undefined
               ? undefined
-              : `${Number.format(value.docsExamined)} docs examined`,
+              : `${formatNumber(value.docsExamined)} docs examined`,
             value.nreturned === undefined
               ? undefined
-              : `${Number.format(value.nreturned)} returned`,
+              : `${formatNumber(value.nreturned)} returned`,
           ]).join(', ')}
         </Text>
       </Card.Item>

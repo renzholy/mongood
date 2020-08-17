@@ -7,7 +7,7 @@ import {
   ContextualMenuItemType,
 } from '@fluentui/react'
 
-import { Number } from '@/utils/formatter'
+import { formatNumber } from '@/utils/formatter'
 
 export function Pagination(props: {
   skip: number
@@ -27,7 +27,7 @@ export function Pagination(props: {
             ? `${props.skip + 1} ~ ${Math.min(
                 props.skip + props.limit,
                 props.count,
-              )} of ${Number.format(props.count)}`
+              )} of ${formatNumber(props.count)}`
             : 'No Data'
         }
         style={{

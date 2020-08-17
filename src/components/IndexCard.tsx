@@ -7,11 +7,10 @@ import { map } from 'lodash'
 import bytes from 'bytes'
 import type { IndexSpecification } from 'mongodb'
 import { useDispatch } from 'react-redux'
-import dayjs from 'dayjs'
 
 import { actions } from '@/stores'
 import { IndexStats } from '@/types'
-import { Number } from '@/utils/formatter'
+import { formatDate, formatNumber } from '@/utils/formatter'
 import { IndexFeatures } from './IndexFeatures'
 
 function IndexInfo(props: { value: IndexSpecification }) {
@@ -124,8 +123,8 @@ export function IndexCard(props: {
                   wordBreak: 'break-word',
                 },
               }}>
-              Usage:&nbsp;{Number.format(props.stats.accesses.ops)}/s,&nbsp;
-              since&nbsp;{dayjs(props.stats.accesses.since).local().format()}
+              Usage:&nbsp;{formatNumber(props.stats.accesses.ops)}/s,&nbsp;
+              since&nbsp;{formatDate(props.stats.accesses.since)}
             </Text>
           </Card.Item>
         ) : null}

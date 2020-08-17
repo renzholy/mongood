@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import bytes from 'bytes'
 
-import { Number } from '@/utils/formatter'
+import { formatNumber } from '@/utils/formatter'
 import { StatsArea } from '@/components/StatsArea'
 import { useCommandCollStats, useCOmmandDbStats } from '@/hooks/use-command'
 
@@ -28,11 +28,11 @@ export function CollectionStatus() {
             'Storage Size': bytes(dbStats.storageSize, {
               unitSeparator: ' ',
             }),
-            Count: Number.format(dbStats.objects),
+            Count: formatNumber(dbStats.objects),
             'Average Object Size': bytes(dbStats.avgObjSize || 0, {
               unitSeparator: ' ',
             }),
-            'Collections + Views': Number.format(
+            'Collections + Views': formatNumber(
               dbStats.collections + dbStats.views,
             ),
           }}
@@ -48,7 +48,7 @@ export function CollectionStatus() {
             'Storage Size': bytes(collStats.storageSize, {
               unitSeparator: ' ',
             }),
-            Count: Number.format(collStats.count),
+            Count: formatNumber(collStats.count),
             'Average Object Size': bytes(collStats.avgObjSize || 0, {
               unitSeparator: ' ',
             }),
