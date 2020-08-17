@@ -345,3 +345,22 @@ export function useCommandUsers(suspense = false) {
     { suspense },
   )
 }
+
+export function useCommandReplicaConfig(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  return useSWR(
+    `replicaConfig/${connection}`,
+    () =>
+      runCommand<{
+        config: {
+          members: {
+            _id: number
+            host: string
+          }[]
+        }
+      }>(connection, 'admin', {
+        replSetGetConfig: 1,
+      }),
+    { suspense, shouldRetryOnError: false },
+  )
+}

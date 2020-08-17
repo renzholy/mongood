@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import mongodbUri from 'mongodb-uri'
 
 import { actions } from '@/stores'
-import { useCommandProfile } from '@/hooks/use-command'
+import { useCommandProfile, useCommandReplicaConfig } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { ProfilingPagination } from './ProfilingPagination'
@@ -50,40 +50,55 @@ export function ProfilingControlStack() {
   }, [profile])
   const [host, setHost] = useState<string>()
   const dispatch = useDispatch()
-  const hosts = useMemo<IContextualMenuItem[]>(() => {
+  const parsed = useMemo(() => {
     if (!connection) {
-      return []
+      return undefined
     }
     try {
-      const parsed = mongodbUri.parse(connection)
-      return parsed.hosts.map((h) => {
-        const key = `${h.host}:${h.port || '27017'}`
-        return {
-          key,
-          text: key,
-          checked: key === host,
-          canCheck: true,
-          onClick() {
-            setHost(key)
-            dispatch(
-              actions.profiling.setConnection(
-                mongodbUri.format({
-                  ...parsed,
-                  hosts: [h],
-                  options: {
-                    ...parsed.options,
-                    connect: 'direct',
-                  },
-                }),
-              ),
-            )
-          },
-        }
-      })
+      return mongodbUri.parse(connection)
     } catch {
+      return undefined
+    }
+  }, [connection])
+  const { data: replicaConfig } = useCommandReplicaConfig()
+  const hosts = useMemo<string[]>(() => {
+    if (replicaConfig) {
+      return replicaConfig.config.members.map((m) => m.host)
+    }
+    if (parsed) {
+      return parsed.hosts.map((h) => `${h.host}:${h.port || 27017}`)
+    }
+    return []
+  }, [parsed, replicaConfig])
+  const items = useMemo<IContextualMenuItem[]>(() => {
+    if (!parsed) {
       return []
     }
-  }, [connection, host, dispatch])
+    return hosts.map((h) => {
+      return {
+        key: h,
+        text: h,
+        checked: h === host,
+        canCheck: true,
+        onClick() {
+          setHost(h)
+          const [_host, _port] = h.split(':')
+          dispatch(
+            actions.profiling.setConnection(
+              mongodbUri.format({
+                ...parsed,
+                hosts: [{ host: _host, port: parseInt(_port, 10) }],
+                options: {
+                  ...parsed?.options,
+                  connect: 'direct',
+                },
+              }),
+            ),
+          )
+        },
+      }
+    })
+  }, [dispatch, host, hosts, parsed])
 
   return (
     <Stack
@@ -106,11 +121,11 @@ export function ProfilingControlStack() {
               },
               text: 'Default',
             },
-            ...hosts,
+            ...items,
           ],
         }}
         styles={{
-          root: { width: 210 },
+          root: { width: 200 },
           label: {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
