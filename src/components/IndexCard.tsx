@@ -9,6 +9,8 @@ import type { IndexSpecification } from 'mongodb'
 import { useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
+import { IndexStats } from '@/types'
+import { formatDate, formatNumber } from '@/utils/formatter'
 import { IndexFeatures } from './IndexFeatures'
 
 function IndexInfo(props: { value: IndexSpecification }) {
@@ -58,6 +60,7 @@ function IndexInfo(props: { value: IndexSpecification }) {
 export function IndexCard(props: {
   value: IndexSpecification
   size: number
+  stats?: IndexStats
   onContextMenu(target: MouseEvent): void
 }) {
   const theme = getTheme()
@@ -98,8 +101,9 @@ export function IndexCard(props: {
                 wordBreak: 'break-word',
               },
             }}>
-            {props.value.name}&nbsp;
+            {props.value.name}
           </Text>
+          &nbsp;
           <Text
             styles={{
               root: {
@@ -110,6 +114,20 @@ export function IndexCard(props: {
             ({bytes(props.size, { unitSeparator: ' ' })})
           </Text>
         </Card.Item>
+        {props.stats ? (
+          <Card.Item>
+            <Text
+              styles={{
+                root: {
+                  color: theme.palette.neutralSecondary,
+                  wordBreak: 'break-word',
+                },
+              }}>
+              Usage:&nbsp;{formatNumber(props.stats.accesses.ops)}/s,&nbsp;
+              since&nbsp;{formatDate(props.stats.accesses.since)}
+            </Text>
+          </Card.Item>
+        ) : null}
         <Card.Item>
           <IndexInfo value={props.value} />
         </Card.Item>

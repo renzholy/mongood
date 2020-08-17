@@ -10,6 +10,7 @@ import {
   ServerStats,
   ValidationAction,
   ValidationLevel,
+  IndexStats,
 } from '@/types'
 import { JsonSchema } from '@/types/schema'
 
@@ -127,6 +128,28 @@ export function useCommandListIndexes(suspense = false) {
           listIndexes: collection,
         },
       ),
+    { suspense },
+  )
+}
+
+export function useCommandIndexStats(suspense = false) {
+  const connection = useSelector((state) => state.root.connection)
+  const database = useSelector((state) => state.root.database)
+  const collection = useSelector((state) => state.root.collection)
+  return useSWR(
+    connection && database && collection
+      ? `indexStats/${connection}/${database}/${collection}`
+      : null,
+    () =>
+      runCommand<{
+        cursor: {
+          firstBatch: IndexStats[]
+        }
+      }>(connection, database!, {
+        aggregate: collection,
+        pipeline: [{ $indexStats: {} }],
+        cursor: {},
+      }),
     { suspense },
   )
 }

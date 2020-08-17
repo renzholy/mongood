@@ -5,7 +5,7 @@ import { omit, compact } from 'lodash'
 import { EJSON } from 'bson'
 import { useDispatch } from 'react-redux'
 
-import { Number } from '@/utils/formatter'
+import { formatNumber } from '@/utils/formatter'
 import { Operation, MongoData } from '@/types'
 import { actions } from '@/stores'
 import { CommandAndLocks } from './CommandAndLocks'
@@ -68,14 +68,14 @@ export function OperationCard(props: {
           {compact([
             value.opid,
             value.microsecs_running
-              ? `${Number.format(
+              ? `${formatNumber(
                   value.microsecs_running > 1000
                     ? Math.round(value.microsecs_running / 1000)
                     : value.microsecs_running / 1000,
                 )} ms`
               : undefined,
             value.numYields
-              ? `${Number.format(value.numYields)} yields`
+              ? `${formatNumber(value.numYields)} yields`
               : undefined,
             value.planSummary,
             value.desc?.startsWith('conn') ? undefined : value.desc,

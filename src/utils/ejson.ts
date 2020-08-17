@@ -3,13 +3,10 @@
  */
 
 import saferEval from 'safer-eval'
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
 
 import { MongoData } from '@/types'
 import { TAB_SIZE_KEY, TIMEZONE_OFFSET_KEY } from '@/pages/settings'
-
-dayjs.extend(utc)
+import { formatDate } from './formatter'
 
 function wrapKey(key: string) {
   const strKey = key.toString()
@@ -60,10 +57,7 @@ export function stringify(
   }
   if ('$date' in val && '$numberLong' in val.$date) {
     return timezoneOffset
-      ? `Date("${dayjs(parseInt(val.$date.$numberLong, 10))
-          .utcOffset(timezoneOffset)
-          .local()
-          .format()}")`
+      ? `Date("${formatDate(parseInt(val.$date.$numberLong, 10))}")`
       : `ISODate("${new Date(
           parseInt(val.$date.$numberLong, 10),
         ).toISOString()}")`

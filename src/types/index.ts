@@ -74,6 +74,16 @@ export enum DisplayMode {
   DOCUMENT = 'DOCUMENT',
 }
 
+export type IndexStats = {
+  name: string
+  key: object
+  host: string
+  accesses: {
+    ops: number
+    since: Date
+  }
+}
+
 export type ExecStats = {
   stage: string
   inputStage?: ExecStats

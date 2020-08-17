@@ -11,7 +11,7 @@ import bytes from 'bytes'
 import { EJSON } from 'bson'
 
 import { ExecStats, MongoData } from '@/types'
-import { Number } from '@/utils/formatter'
+import { formatNumber } from '@/utils/formatter'
 import { ColorizedData } from './ColorizedData'
 
 export function ExecStage(props: { value: { [key: string]: MongoData } }) {
@@ -76,7 +76,7 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
             },
           }}
           secondaryText={compact([
-            `${Number.format(
+            `${formatNumber(
               value.executionTimeMillisEstimate -
                 (value.inputStage?.executionTimeMillisEstimate ||
                   Math.max(
@@ -87,19 +87,19 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
             )} ms`,
             value.keysExamined === undefined
               ? undefined
-              : `${Number.format(value.keysExamined)} keys examined`,
+              : `${formatNumber(value.keysExamined)} keys examined`,
             value.docsExamined === undefined
               ? undefined
-              : `${Number.format(value.docsExamined)} docs examined`,
+              : `${formatNumber(value.docsExamined)} docs examined`,
             value.nMatched === undefined
               ? undefined
-              : `${Number.format(value.nMatched)} matched`,
+              : `${formatNumber(value.nMatched)} matched`,
             value.memUsage === undefined
               ? undefined
               : `${bytes(value.memUsage, {
                   unitSeparator: ' ',
                 }).toLocaleLowerCase()} mem used`,
-            `${Number.format(value.nReturned)} returned`,
+            `${formatNumber(value.nReturned)} returned`,
           ]).join('\n')}>
           {value.stage}
         </CompoundButton>

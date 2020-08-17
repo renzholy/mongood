@@ -4,7 +4,7 @@ import { sortBy } from 'lodash'
 import bytes from 'bytes'
 
 import { useCommandServerStatus } from '@/hooks/use-command'
-import { Number } from '@/utils/formatter'
+import { formatNumber } from '@/utils/formatter'
 import { StatsArea } from './StatsArea'
 
 export function ServerStatus() {
@@ -47,9 +47,9 @@ export function ServerStatus() {
         <StatsArea
           title="Connections"
           data={{
-            Available: Number.format(serverStatus.connections.available),
-            Current: Number.format(serverStatus.connections.current),
-            'Total Created': Number.format(
+            Available: formatNumber(serverStatus.connections.available),
+            Current: formatNumber(serverStatus.connections.current),
+            'Total Created': formatNumber(
               serverStatus.connections.totalCreated,
             ),
           }}
@@ -63,30 +63,30 @@ export function ServerStatus() {
             Out: bytes(serverStatus.network.bytesOut, {
               unitSeparator: ' ',
             }),
-            Requests: Number.format(serverStatus.network.numRequests),
+            Requests: formatNumber(serverStatus.network.numRequests),
           }}
         />
         <StatsArea
           title="Operation Counters"
           data={{
-            Insert: Number.format(serverStatus.opcounters.insert),
-            Query: Number.format(serverStatus.opcounters.query),
-            Update: Number.format(serverStatus.opcounters.update),
-            Delete: Number.format(serverStatus.opcounters.delete),
-            'Get More': Number.format(serverStatus.opcounters.getmore),
-            Command: Number.format(serverStatus.opcounters.command),
+            Insert: formatNumber(serverStatus.opcounters.insert),
+            Query: formatNumber(serverStatus.opcounters.query),
+            Update: formatNumber(serverStatus.opcounters.update),
+            Delete: formatNumber(serverStatus.opcounters.delete),
+            'Get More': formatNumber(serverStatus.opcounters.getmore),
+            Command: formatNumber(serverStatus.opcounters.command),
           }}
         />
         {serverStatus.opcountersRepl && serverStatus.repl ? (
           <StatsArea
             title="Replica Operation Counters"
             data={{
-              Insert: Number.format(serverStatus.opcountersRepl.insert),
-              Query: Number.format(serverStatus.opcountersRepl.query),
-              Update: Number.format(serverStatus.opcountersRepl.update),
-              Delete: Number.format(serverStatus.opcountersRepl.delete),
-              'Get More': Number.format(serverStatus.opcountersRepl.getmore),
-              Command: Number.format(serverStatus.opcountersRepl.command),
+              Insert: formatNumber(serverStatus.opcountersRepl.insert),
+              Query: formatNumber(serverStatus.opcountersRepl.query),
+              Update: formatNumber(serverStatus.opcountersRepl.update),
+              Delete: formatNumber(serverStatus.opcountersRepl.delete),
+              'Get More': formatNumber(serverStatus.opcountersRepl.getmore),
+              Command: formatNumber(serverStatus.opcountersRepl.command),
             }}
           />
         ) : null}
