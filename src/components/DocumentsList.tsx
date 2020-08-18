@@ -123,12 +123,15 @@ export function DocumentsList() {
   return (
     <>
       <EditorModal<Data>
-        title={title}
-        value={invokedItem}
+        title={title ? `View Document: ${title}` : 'View Document'}
+        value={editedItem}
         onChange={setEditedItem}
         isOpen={isUpdateOpen}
         onDismiss={() => {
           setIsUpdateOpen(false)
+        }}
+        onDismissed={() => {
+          setEditedItem(invokedItem)
         }}
         footer={
           <PromiseButton

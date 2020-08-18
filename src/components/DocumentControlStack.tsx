@@ -86,6 +86,9 @@ export function DocumentControlStack() {
           onDismiss={() => {
             setIsInsertOpen(false)
           }}
+          onDismissed={() => {
+            setDoc({})
+          }}
           footer={
             <PromiseButton
               text="Insert"

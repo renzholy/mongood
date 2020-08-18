@@ -16,6 +16,7 @@ export function EditorModal<T extends MongoData>(props: {
   onChange?(value: T): void
   isOpen: boolean
   onDismiss(): void
+  onDismissed?(): void
   footer?: React.ReactNode
 }) {
   const theme = getTheme()
@@ -65,7 +66,8 @@ export function EditorModal<T extends MongoData>(props: {
           },
         }}
         isOpen={props.isOpen}
-        onDismiss={props.onDismiss}>
+        onDismiss={props.onDismiss}
+        onDismissed={props.onDismissed}>
         <div
           style={{
             display: 'flex',

@@ -64,6 +64,11 @@ export default () => {
         onDismiss={() => {
           setIsOpen(false)
         }}
+        onDismissed={() => {
+          setValue({
+            background: true,
+          })
+        }}
         footer={
           <PromiseButton text="Create" primary={true} promise={promiseCreate} />
         }
