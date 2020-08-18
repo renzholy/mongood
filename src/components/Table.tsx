@@ -16,13 +16,10 @@ import {
   Selection,
   ColumnActionsMode,
 } from '@fluentui/react'
-import { get } from 'lodash'
 
 import { DisplayMode, MongoData } from '@/types'
 import { calcHeaders } from '@/utils/table'
-import { DocumentCell } from './DocumentCell'
 import { LargeMessage } from './LargeMessage'
-import { ColorizedData } from './ColorizedData'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
   displayMode: DisplayMode
@@ -30,8 +27,12 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   order?: string[]
   onItemInvoked?(item: T): void
   onItemContextMenu?(ev?: MouseEvent, item?: T): void
+  onRenderItemColumn(
+    item?: { [key: string]: MongoData },
+    _index?: number,
+    column?: IColumn,
+  ): React.ReactNode
   selection?: Selection
-  index2dsphere?: string
 }) {
   const theme = getTheme()
   const columns = useMemo<IColumn[]>(() => {
@@ -72,28 +73,6 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     ),
     [theme],
   )
-  const handleRenderItemColumn = useCallback(
-    (item?: { [key: string]: MongoData }, _index?: number, column?: IColumn) =>
-      props.displayMode === DisplayMode.DOCUMENT ? (
-        <ColorizedData value={item} />
-      ) : (
-        <DocumentCell
-          value={item?.[column?.key as keyof typeof item]}
-          subStringLength={
-            // eslint-disable-next-line no-bitwise
-            column?.currentWidth ? undefined : column?.minWidth! >> 2
-          }
-          index2dsphere={
-            props.index2dsphere &&
-            column?.key &&
-            props.index2dsphere.startsWith(column?.key)
-              ? get(item, props.index2dsphere)
-              : undefined
-          }
-        />
-      ),
-    [props.index2dsphere, props.displayMode],
-  )
 
   const handleGetKey = useCallback((item: T, index?: number) => {
     return item._id ? JSON.stringify(item._id) : JSON.stringify(item) + index
@@ -129,7 +108,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             constrainMode={ConstrainMode.unconstrained}
             layoutMode={DetailsListLayoutMode.justified}
             items={props.items}
-            onRenderItemColumn={handleRenderItemColumn}
+            onRenderItemColumn={props.onRenderItemColumn}
             onRenderDetailsHeader={handleRenderDetailsHeader}
             onItemInvoked={props.onItemInvoked}
             onItemContextMenu={(item, _index, ev) => {
