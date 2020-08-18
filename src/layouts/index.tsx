@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { initializeIcons, loadTheme, ITheme } from '@fluentui/react'
 import { Provider } from 'react-redux'
-import { ControlledEditor } from '@monaco-editor/react'
 
 import { DatabaseNav } from '@/components/DatabaseNav'
 import { store } from '@/stores/index'
 import { TopPivot } from '@/components/TopPivot'
 import { useDarkMode } from '@/hooks/use-dark-mode'
+import { ControlledEditor } from '@/utils/editor'
 
 initializeIcons()
 
@@ -74,7 +74,7 @@ export default (props: RouteComponentProps & { children: React.ReactNode }) => {
     <Provider store={store}>
       <div style={{ display: 'none' }}>
         {/* init colorize */}
-        <ControlledEditor />
+        <ControlledEditor language="javascript" />
       </div>
       <div
         style={{
