@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import {
   DetailsList,
   SelectionMode,
@@ -25,7 +25,7 @@ import { LargeMessage } from './LargeMessage'
 import { ColorizedData } from './ColorizedData'
 
 export function Table<T extends { [key: string]: MongoData }>(props: {
-  displayMode?: DisplayMode
+  displayMode: DisplayMode
   items: T[]
   order?: string[]
   onItemInvoked?(item: T): void
@@ -34,23 +34,28 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   index2dsphere?: string
 }) {
   const theme = getTheme()
-  const [columns, setColumns] = useState<IColumn[]>([])
-  useEffect(() => {
+  const columns = useMemo<IColumn[]>(() => {
     if (!props.items || props.items.length === 0) {
-      setColumns([])
-      return
+      return []
     }
-    setColumns(
-      calcHeaders(props.items, props.order).map(({ key, minWidth }) => ({
-        key,
-        name: key,
-        minWidth,
-        columnActionsMode: ColumnActionsMode.disabled,
-        isResizable: true,
-      })),
-    )
-  }, [props.items, props.order])
-  const onRenderDetailsHeader = useCallback(
+    return props.displayMode === DisplayMode.TABLE
+      ? calcHeaders(props.items, props.order).map(({ key, minWidth }) => ({
+          key,
+          name: key,
+          minWidth,
+          columnActionsMode: ColumnActionsMode.disabled,
+          isResizable: true,
+        }))
+      : [
+          {
+            key: '',
+            name: 'Documents',
+            minWidth: 0,
+            isMultiline: true,
+          },
+        ]
+  }, [props.displayMode, props.items, props.order])
+  const handleRenderDetailsHeader = useCallback(
     (detailsHeaderProps?: IDetailsHeaderProps) => (
       <Sticky>
         <DetailsHeader
@@ -67,29 +72,29 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     ),
     [theme],
   )
-  const onRenderTableItemColumn = useCallback(
-    (item?: T, _index?: number, column?: IColumn) => (
-      <DocumentCell
-        value={item?.[column?.key as keyof typeof item]}
-        subStringLength={
-          // eslint-disable-next-line no-bitwise
-          column?.currentWidth ? undefined : column?.minWidth! >> 2
-        }
-        index2dsphere={
-          props.index2dsphere &&
-          column?.key &&
-          props.index2dsphere.startsWith(column?.key)
-            ? get(item, props.index2dsphere)
-            : undefined
-        }
-      />
-    ),
-    [props.index2dsphere],
+  const handleRenderItemColumn = useCallback(
+    (item?: { [key: string]: MongoData }, _index?: number, column?: IColumn) =>
+      props.displayMode === DisplayMode.DOCUMENT ? (
+        <ColorizedData value={item} />
+      ) : (
+        <DocumentCell
+          value={item?.[column?.key as keyof typeof item]}
+          subStringLength={
+            // eslint-disable-next-line no-bitwise
+            column?.currentWidth ? undefined : column?.minWidth! >> 2
+          }
+          index2dsphere={
+            props.index2dsphere &&
+            column?.key &&
+            props.index2dsphere.startsWith(column?.key)
+              ? get(item, props.index2dsphere)
+              : undefined
+          }
+        />
+      ),
+    [props.index2dsphere, props.displayMode],
   )
-  const onRenderDocumentItemColumn = useCallback(
-    (item) => <ColorizedData value={item} />,
-    [],
-  )
+
   const handleGetKey = useCallback((item: T, index?: number) => {
     return item._id ? JSON.stringify(item._id) : JSON.stringify(item) + index
   }, [])
@@ -115,61 +120,28 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
         <MarqueeSelection
           selection={props.selection!}
           isEnabled={!!props.selection}>
-          {!props.displayMode || props.displayMode === DisplayMode.TABLE ? (
-            <DetailsList
-              columns={columns}
-              getKey={handleGetKey}
-              usePageCache={true}
-              onShouldVirtualize={() => false}
-              useReducedRowRenderer={true}
-              constrainMode={ConstrainMode.unconstrained}
-              layoutMode={DetailsListLayoutMode.justified}
-              items={props.items}
-              onRenderItemColumn={onRenderTableItemColumn}
-              onRenderDetailsHeader={onRenderDetailsHeader}
-              onItemInvoked={props.onItemInvoked}
-              onItemContextMenu={(item, _index, ev) => {
-                props.onItemContextMenu?.(ev as MouseEvent, item)
-              }}
-              selectionMode={
-                props.selection ? SelectionMode.multiple : SelectionMode.none
-              }
-              selection={props.selection}
-              enterModalSelectionOnTouch={true}
-              selectionPreservedOnEmptyClick={true}
-            />
-          ) : null}
-          {props.displayMode === DisplayMode.DOCUMENT ? (
-            <DetailsList
-              columns={[
-                {
-                  key: '',
-                  name: 'Documents',
-                  minWidth: 0,
-                  isMultiline: true,
-                },
-              ]}
-              getKey={handleGetKey}
-              usePageCache={true}
-              onShouldVirtualize={() => false}
-              useReducedRowRenderer={true}
-              constrainMode={ConstrainMode.unconstrained}
-              layoutMode={DetailsListLayoutMode.justified}
-              items={props.items}
-              onRenderItemColumn={onRenderDocumentItemColumn}
-              onRenderDetailsHeader={onRenderDetailsHeader}
-              onItemInvoked={props.onItemInvoked}
-              onItemContextMenu={(item, _index, ev) => {
-                props.onItemContextMenu?.(ev as MouseEvent, item)
-              }}
-              selectionMode={
-                props.selection ? SelectionMode.multiple : SelectionMode.none
-              }
-              selection={props.selection}
-              enterModalSelectionOnTouch={true}
-              selectionPreservedOnEmptyClick={true}
-            />
-          ) : null}
+          <DetailsList
+            columns={columns}
+            getKey={handleGetKey}
+            usePageCache={true}
+            onShouldVirtualize={() => false}
+            useReducedRowRenderer={true}
+            constrainMode={ConstrainMode.unconstrained}
+            layoutMode={DetailsListLayoutMode.justified}
+            items={props.items}
+            onRenderItemColumn={handleRenderItemColumn}
+            onRenderDetailsHeader={handleRenderDetailsHeader}
+            onItemInvoked={props.onItemInvoked}
+            onItemContextMenu={(item, _index, ev) => {
+              props.onItemContextMenu?.(ev as MouseEvent, item)
+            }}
+            selectionMode={
+              props.selection ? SelectionMode.multiple : SelectionMode.none
+            }
+            selection={props.selection}
+            enterModalSelectionOnTouch={true}
+            selectionPreservedOnEmptyClick={true}
+          />
         </MarqueeSelection>
       </ScrollablePane>
     </div>
