@@ -48,16 +48,7 @@ export function DocumentsList() {
     }
   }, [promiseUpdate.resolved, revalidate])
   const target = useRef<MouseEvent>()
-  const selectedItems = useRef<Data[]>([])
-  const selection = useMemo(
-    () =>
-      new Selection({
-        onSelectionChanged() {
-          selectedItems.current = selection.getSelection() as Data[]
-        },
-      }),
-    [],
-  )
+  const selection = useMemo(() => new Selection<Data>(), [])
   const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
   const onItemInvoked = useCallback((item: Data) => {
     setInvokedItem(item)
@@ -66,8 +57,8 @@ export function DocumentsList() {
   }, [])
   const onItemContextMenu = useCallback(
     (ev: MouseEvent) => {
-      if (selectedItems.current.length === 1) {
-        const [item] = selectedItems.current
+      if (selection.getSelectedCount() === 1) {
+        const [item] = selection.getSelection()
         setInvokedItem(item)
       } else {
         setInvokedItem(undefined)
@@ -75,7 +66,7 @@ export function DocumentsList() {
       target.current = ev
       setIsMenuHidden(false)
     },
-    [selectedItems],
+    [selection],
   )
   const order = useMemo(
     () => [
@@ -117,6 +108,9 @@ export function DocumentsList() {
       ),
     [index2dsphere, displayMode],
   )
+  useEffect(() => {
+    selection.setAllSelected(false)
+  }, [selection, data])
 
   if (error) {
     return (
@@ -151,7 +145,7 @@ export function DocumentsList() {
           setIsMenuHidden(true)
         }}
         target={target.current}
-        selectedItems={selectedItems.current}
+        selectedItems={selection.getSelection()}
         onEdit={
           invokedItem
             ? () => {
