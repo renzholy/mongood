@@ -34,7 +34,7 @@ export function ProfilingControlStack() {
   const [level, setLevel] = useState<ProfilingLevel>()
   const [slowms, setSlowms] = useState(0)
   const [sampleRate, setSampleRate] = useState(0)
-  const { data: profile, revalidate, isValidating } = useCommandProfile()
+  const { data: profile, error, revalidate, isValidating } = useCommandProfile()
   const handleSetProfile = useCallback(
     async () =>
       database && level !== undefined
@@ -141,7 +141,7 @@ export function ProfilingControlStack() {
       styles={{
         root: { height: 52, alignItems: 'center' },
       }}>
-      {hosts.length > 1 ? (
+      {hosts.length > 1 && !error ? (
         <>
           <Label>Host:</Label>
           <DefaultButton
@@ -167,19 +167,23 @@ export function ProfilingControlStack() {
           </DefaultButton>
         </>
       ) : null}
-      <Label>Level:</Label>
-      <Dropdown
-        selectedKey={level}
-        onChange={(_ev, option) => {
-          setLevel(option?.key as ProfilingLevel)
-        }}
-        styles={{ root: { width: 80 } }}
-        options={[
-          { key: ProfilingLevel.OFF, text: 'Off' },
-          { key: ProfilingLevel.SLOW, text: 'Slow' },
-          { key: ProfilingLevel.ALL, text: 'All' },
-        ]}
-      />
+      {error ? null : (
+        <>
+          <Label>Level:</Label>
+          <Dropdown
+            selectedKey={level}
+            onChange={(_ev, option) => {
+              setLevel(option?.key as ProfilingLevel)
+            }}
+            styles={{ root: { width: 80 } }}
+            options={[
+              { key: ProfilingLevel.OFF, text: 'Off' },
+              { key: ProfilingLevel.SLOW, text: 'Slow' },
+              { key: ProfilingLevel.ALL, text: 'All' },
+            ]}
+          />
+        </>
+      )}
       {level === ProfilingLevel.SLOW ? (
         <>
           <SpinButton
@@ -220,7 +224,9 @@ export function ProfilingControlStack() {
         profile?.slowms === slowms &&
         profile?.sampleRate === sampleRate) ||
       isValidating ? null : (
-        <PromiseButton icon="CheckMark" promise={promiseSetProfile} />
+        <div>
+          <PromiseButton icon="CheckMark" promise={promiseSetProfile} />
+        </div>
       )}
       <Stack.Item grow={true}>
         <div />
