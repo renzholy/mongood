@@ -24,9 +24,7 @@ import { DocumentCell } from './DocumentCell'
 import { LargeMessage } from './LargeMessage'
 import { ColorizedData } from './ColorizedData'
 
-export function DocumentsListInner<
-  T extends { [key: string]: MongoData }
->(props: {
+export function Table<T extends { [key: string]: MongoData }>(props: {
   displayMode?: DisplayMode
   items: T[]
   order?: string[]

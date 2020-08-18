@@ -7,7 +7,7 @@ import { stringify } from '@/utils/ejson'
 import { MongoData } from '@/types'
 import { useCommandFind } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
-import { DocumentsListInner } from './DocumentsListInner'
+import { Table } from './Table'
 import { EditorModal } from './EditorModal'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 import { PromiseButton } from './PromiseButton'
@@ -126,7 +126,7 @@ export function DocumentsList() {
             : undefined
         }
       />
-      <DocumentsListInner
+      <Table
         displayMode={displayMode}
         items={data.cursor.firstBatch}
         order={order}
