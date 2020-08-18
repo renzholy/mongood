@@ -223,10 +223,11 @@ export function useCommandProfile() {
   const connection = useSelector(
     (state) => state.profiling.connection || state.root.connection,
   )
+  const database = useSelector((state) => state.root.database)
   return useSWR<{ was: number; slowms: number; sampleRate: number }, Error>(
-    `profile/${connection}`,
+    database ? `profile/${connection}/${database}` : null,
     () =>
-      runCommand(connection, 'admin', {
+      runCommand(connection, database!, {
         profile: -1,
       }),
     {},
