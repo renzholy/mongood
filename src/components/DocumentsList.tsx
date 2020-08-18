@@ -1,17 +1,20 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Selection } from '@fluentui/react'
+import { Selection, IColumn } from '@fluentui/react'
+import { get } from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
 import { stringify } from '@/utils/ejson'
-import { MongoData } from '@/types'
+import { MongoData, DisplayMode } from '@/types'
 import { useCommandFind } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
-import { DocumentsListInner } from './DocumentsListInner'
+import { Table } from './Table'
 import { EditorModal } from './EditorModal'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 import { PromiseButton } from './PromiseButton'
 import { LargeMessage } from './LargeMessage'
+import { ColorizedData } from './ColorizedData'
+import { DocumentCell } from './DocumentCell'
 
 type Data = { [key: string]: MongoData }
 
@@ -82,6 +85,38 @@ export function DocumentsList() {
     ],
     [index],
   )
+  const index2dsphere = useMemo(
+    () =>
+      index?.['2dsphereIndexVersion']
+        ? Object.entries(index.key).find(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            ([_key, value]) => value === '2dsphere',
+          )?.[0]
+        : undefined,
+    [index],
+  )
+  const handleRenderItemColumn = useCallback(
+    (item?: { [key: string]: MongoData }, _index?: number, column?: IColumn) =>
+      displayMode === DisplayMode.DOCUMENT ? (
+        <ColorizedData value={item} />
+      ) : (
+        <DocumentCell
+          value={item?.[column?.key as keyof typeof item]}
+          subStringLength={
+            // eslint-disable-next-line no-bitwise
+            column?.currentWidth ? undefined : column?.minWidth! >> 2
+          }
+          index2dsphere={
+            index2dsphere &&
+            column?.key &&
+            index2dsphere.startsWith(column?.key)
+              ? get(item, index2dsphere)
+              : undefined
+          }
+        />
+      ),
+    [index2dsphere, displayMode],
+  )
 
   if (error) {
     return (
@@ -126,21 +161,14 @@ export function DocumentsList() {
             : undefined
         }
       />
-      <DocumentsListInner
+      <Table
         displayMode={displayMode}
         items={data.cursor.firstBatch}
         order={order}
         onItemInvoked={onItemInvoked}
         onItemContextMenu={onItemContextMenu}
         selection={selection}
-        index2dsphere={
-          index?.['2dsphereIndexVersion']
-            ? Object.entries(index.key).find(
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                ([_key, value]) => value === '2dsphere',
-              )?.[0]
-            : undefined
-        }
+        onRenderItemColumn={handleRenderItemColumn}
       />
     </>
   )
