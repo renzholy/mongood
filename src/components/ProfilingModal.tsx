@@ -1,12 +1,21 @@
 /* eslint-disable react/self-closing-comp */
 
-import { Modal, IconButton, getTheme, Text, omit } from '@fluentui/react'
-import React, { useMemo } from 'react'
-import { EJSON } from 'bson'
+import {
+  Modal,
+  IconButton,
+  getTheme,
+  Text,
+  Stack,
+  DefaultButton,
+} from '@fluentui/react'
+import React, { useState } from 'react'
+import { omit } from 'lodash'
 
-import { MongoData, SystemProfileDoc } from '@/types'
+import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
 import { ExecStage } from './ExecStage'
+
+const tabs = ['execStats', 'command', 'locks']
 
 export function ProfilingModal(props: {
   title: string
@@ -15,20 +24,7 @@ export function ProfilingModal(props: {
   onDismiss(): void
 }) {
   const theme = getTheme()
-  const value = useMemo<
-    Omit<SystemProfileDoc, 'command' | 'originatingCommand' | 'execStats'>
-  >(
-    () =>
-      EJSON.parse(
-        JSON.stringify(
-          omit(props.value, ['command', 'originatingCommand', 'execStats']),
-        ),
-      ) as Omit<
-        SystemProfileDoc,
-        'command' | 'originatingCommand' | 'execStats'
-      >,
-    [props.value],
-  )
+  const [tab, setTab] = useState<string | undefined>(tabs[0])
 
   return (
     <>
@@ -47,7 +43,10 @@ export function ProfilingModal(props: {
           },
         }}
         isOpen={props.isOpen}
-        onDismiss={props.onDismiss}>
+        onDismiss={props.onDismiss}
+        onDismissed={() => {
+          setTab(tabs[0])
+        }}>
         <div
           style={{
             display: 'flex',
@@ -75,9 +74,30 @@ export function ProfilingModal(props: {
             onClick={props.onDismiss}
           />
         </div>
-        <div style={{ flex: 1, padding: 20, overflow: 'scroll' }}>
-          <ColorizedData value={props.value} style={{ marginBottom: 20 }} />
-          {props.value.execStats ? (
+        <Stack
+          horizontal={true}
+          tokens={{ childrenGap: 10 }}
+          styles={{ root: { marginLeft: 20, marginRight: 20 } }}>
+          {tabs.map((t) => (
+            <DefaultButton
+              key={t}
+              text={t}
+              primary={tab === t}
+              onClick={() => {
+                setTab(t)
+              }}
+            />
+          ))}
+          <DefaultButton
+            text="other"
+            primary={tab === undefined}
+            onClick={() => {
+              setTab(undefined)
+            }}
+          />
+        </Stack>
+        <div style={{ flex: 1, margin: 20, overflow: 'scroll' }}>
+          {tab === 'execStats' ? (
             <div
               style={{
                 display: 'flex',
@@ -89,19 +109,14 @@ export function ProfilingModal(props: {
                 value={props.value.execStats as { [key: string]: MongoData }}
               />
             </div>
-          ) : null}
-          {value.errMsg ? (
-            <Text
-              styles={{
-                root: {
-                  color: theme.palette.neutralSecondary,
-                  whiteSpace: 'pre-wrap',
-                  wordBreak: 'break-all',
-                },
-              }}>
-              {value.errMsg}
-            </Text>
-          ) : null}
+          ) : (
+            <ColorizedData
+              value={
+                tab === undefined ? omit(props.value, tabs) : props.value[tab]
+              }
+              style={{ marginBottom: 20 }}
+            />
+          )}
         </div>
       </Modal>
     </>
