@@ -24,7 +24,7 @@ import { IndexContextualMenu } from './IndexContextualMenu'
 import { PromiseButton } from './PromiseButton'
 
 export function IndexesList() {
-  const { data, error } = useCommandIndexStats()
+  const { data } = useCommandIndexStats()
   const { data: collStats, error: collStatsError } = useCommandCollStats()
   const {
     data: indexes,
@@ -62,11 +62,6 @@ export function IndexesList() {
     data,
   ])
 
-  if (error) {
-    return (
-      <LargeMessage iconName="Error" title="Error" content={error.message} />
-    )
-  }
   if (collStatsError) {
     return (
       <LargeMessage
@@ -85,7 +80,7 @@ export function IndexesList() {
       />
     )
   }
-  if (!data || !indexes || !collStats) {
+  if (!indexes || !collStats) {
     return <LargeMessage iconName="HourGlass" title="Loading" />
   }
   if (indexes.cursor.firstBatch.length === 0) {
