@@ -19,7 +19,7 @@ export function calcHeaders<T extends { [key: string]: MongoData }>(
           keys[key] = {
             order: index >= 0 ? (order.length - index) << 10 : 0,
             minWidth: Math.max(
-              100,
+              80,
               Math.min(240, stringify(item[key]).length << 3),
             ),
           }
