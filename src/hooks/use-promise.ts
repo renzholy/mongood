@@ -21,6 +21,11 @@ export function usePromise<I extends unknown[], O>(
     },
     [handler],
   )
+  const reset = useCallback(() => {
+    setResolved(undefined)
+    setRejected(undefined)
+    setPending(false)
+  }, [])
   useEffect(() => {
     setResolved(undefined)
     setRejected(undefined)
@@ -31,5 +36,6 @@ export function usePromise<I extends unknown[], O>(
     rejected,
     pending,
     call,
+    reset,
   }
 }

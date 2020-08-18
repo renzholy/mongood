@@ -25,6 +25,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
   displayMode: DisplayMode
   items: T[]
   order?: string[]
+  onlyOrder?: boolean
   onItemInvoked?(item: T): void
   onItemContextMenu?(ev?: MouseEvent, item?: T): void
   onRenderItemColumn(
@@ -40,13 +41,15 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
       return []
     }
     return props.displayMode === DisplayMode.TABLE
-      ? calcHeaders(props.items, props.order).map(({ key, minWidth }) => ({
-          key,
-          name: key,
-          minWidth,
-          columnActionsMode: ColumnActionsMode.disabled,
-          isResizable: true,
-        }))
+      ? calcHeaders(props.items, props.order, props.onlyOrder).map(
+          ({ key, minWidth }) => ({
+            key,
+            name: key,
+            minWidth,
+            columnActionsMode: ColumnActionsMode.disabled,
+            isResizable: true,
+          }),
+        )
       : [
           {
             key: '',
@@ -55,7 +58,7 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
             isMultiline: true,
           },
         ]
-  }, [props.displayMode, props.items, props.order])
+  }, [props.displayMode, props.items, props.order, props.onlyOrder])
   const handleRenderDetailsHeader = useCallback(
     (detailsHeaderProps?: IDetailsHeaderProps) => (
       <Sticky>
