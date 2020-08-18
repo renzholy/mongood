@@ -22,7 +22,7 @@ export function PromiseButton(props: {
 }) {
   const theme = getTheme()
   const [hidden, setHidden] = useState(true)
-  const { rejected, pending, call } = props.promise
+  const { rejected, pending, call, reset } = props.promise
   useEffect(() => {
     if (rejected) {
       setHidden(false)
@@ -39,9 +39,6 @@ export function PromiseButton(props: {
             title: 'Error',
             subText: rejected?.message,
             showCloseButton: true,
-            onDismiss() {
-              setHidden(true)
-            },
           }}
           modalProps={{
             styles: {
@@ -53,6 +50,9 @@ export function PromiseButton(props: {
             },
             onDismiss() {
               setHidden(true)
+            },
+            onDismissed() {
+              reset()
             },
           }}>
           <DialogFooter>
