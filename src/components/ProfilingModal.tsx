@@ -24,7 +24,7 @@ export function ProfilingModal(props: {
   onDismiss(): void
 }) {
   const theme = getTheme()
-  const [tab, setTab] = useState<string | undefined>(tabs[0])
+  const [tab, setTab] = useState<string>()
 
   return (
     <>
@@ -43,10 +43,7 @@ export function ProfilingModal(props: {
           },
         }}
         isOpen={props.isOpen}
-        onDismiss={props.onDismiss}
-        onDismissed={() => {
-          setTab(tabs[0])
-        }}>
+        onDismiss={props.onDismiss}>
         <div
           style={{
             display: 'flex',
