@@ -97,7 +97,7 @@ export function ProfilingModal(props: {
           />
         </Stack>
         <div style={{ flex: 1, margin: 20, overflow: 'scroll' }}>
-          {tab === 'execStats' ? (
+          {tab === 'execStats' && props.value.execStats ? (
             <div
               style={{
                 display: 'flex',
