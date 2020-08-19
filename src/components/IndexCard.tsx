@@ -114,9 +114,14 @@ export function IndexCard(props: {
             ({bytes(props.size, { unitSeparator: ' ' })})
           </Text>
         </Card.Item>
+        <Card.Item>
+          <IndexInfo value={props.value} />
+        </Card.Item>
+        <IndexFeatures value={props.value} />
         {props.stats ? (
           <Card.Item>
             <Text
+              block={true}
               styles={{
                 root: {
                   color: theme.palette.neutralSecondary,
@@ -128,10 +133,6 @@ export function IndexCard(props: {
             </Text>
           </Card.Item>
         ) : null}
-        <Card.Item>
-          <IndexInfo value={props.value} />
-        </Card.Item>
-        <IndexFeatures value={props.value} />
       </Card.Section>
     </Card>
   )
