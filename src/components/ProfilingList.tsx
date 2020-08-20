@@ -90,7 +90,7 @@ export function ProfilingList() {
           value={invokedProfiling}
           isOpen={isEditorOpen}
           onRenderTab={(tab) =>
-            tab === 'execStats' ? (
+            tab === 'execStats' && invokedProfiling.execStats ? (
               <div
                 style={{
                   display: 'flex',
