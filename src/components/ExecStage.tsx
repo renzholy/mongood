@@ -14,10 +14,13 @@ import { ExecStats, MongoData } from '@/types'
 import { formatNumber } from '@/utils/formatter'
 import { ColorizedData } from './ColorizedData'
 
-export function ExecStage(props: { value: { [key: string]: MongoData } }) {
+export function ExecStage(props: { value?: { [key: string]: MongoData } }) {
   const theme = getTheme()
-  const value = useMemo<ExecStats>(
-    () => EJSON.parse(JSON.stringify(props.value)) as ExecStats,
+  const value = useMemo<ExecStats | undefined>(
+    () =>
+      props.value
+        ? (EJSON.parse(JSON.stringify(props.value)) as ExecStats)
+        : undefined,
     [props.value],
   )
   const onRenderPlainCard = useCallback(() => {
@@ -46,6 +49,9 @@ export function ExecStage(props: { value: { [key: string]: MongoData } }) {
     [theme],
   )
 
+  if (!value || !props.value) {
+    return null
+  }
   return (
     <>
       <HoverCard
