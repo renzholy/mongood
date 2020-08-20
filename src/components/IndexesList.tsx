@@ -68,21 +68,21 @@ export function IndexesList() {
   const columns = useMemo<IColumn[]>(
     () => [
       {
+        key: 'name',
+        name: 'name',
+        minWidth: 120,
+        isResizable: true,
+      },
+      {
         key: 'features',
         name: 'features',
-        minWidth: 0,
+        minWidth: 240,
         isResizable: true,
       },
       {
         key: 'keys',
         name: 'keys',
-        minWidth: 200,
-        isResizable: true,
-      },
-      {
-        key: 'name',
-        name: 'name',
-        minWidth: 100,
+        minWidth: 240,
         isResizable: true,
       },
       {
@@ -106,15 +106,6 @@ export function IndexesList() {
     ],
     [],
   )
-  // const items = useMemo<Index[] | undefined>(
-  //   () =>
-  //     indexes?.cursor.firstBatch.map((item) => ({
-  //       ...item,
-  //       size: collStats?.indexSizes[item.name!],
-  //       ...indexStats[item.name!].accesses,
-  //     })),
-  //   [indexes, collStats, indexStats],
-  // )
   const handleRenderItemColumn = useCallback(
     (item?: Index, _index?: number, column?: IColumn) => {
       if (!item || !column) {

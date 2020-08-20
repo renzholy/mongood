@@ -2,11 +2,9 @@
 
 import React from 'react'
 import type { IndexSpecification } from 'mongodb'
-import { IColumn } from '@fluentui/react'
+import { IColumn, getTheme } from '@fluentui/react'
 import bytes from 'bytes'
 
-import { stringify } from '@/utils/ejson'
-import { useColorize } from '@/hooks/use-colorize'
 import { formatNumber, formatDate } from '@/utils/formatter'
 import { IndexFeatures } from './IndexFeatures'
 import { IndexInfo } from './IndexInfo'
@@ -17,11 +15,15 @@ export function IndexCell(props: {
   size?: number
   accesses?: { ops: number; since: Date }
 }) {
-  const name = useColorize(stringify(props.item.name))
+  const theme = getTheme()
 
   switch (props.column.key) {
     case 'name': {
-      return <span dangerouslySetInnerHTML={{ __html: name }} />
+      return (
+        <span style={{ color: theme.palette.neutralPrimary }}>
+          {props.item.name}
+        </span>
+      )
     }
     case 'size': {
       return props.size !== undefined ? <>{bytes(props.size)}</> : null

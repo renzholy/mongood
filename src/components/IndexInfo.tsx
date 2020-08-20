@@ -9,7 +9,7 @@ export function IndexInfo(props: { value: IndexSpecification }) {
   const theme = getTheme()
 
   return (
-    <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
+    <Stack horizontal={true} tokens={{ childrenGap: 10 }} wrap={true}>
       {'textIndexVersion' in props.value
         ? map(props.value.weights, (v, k) => (
             <Text
