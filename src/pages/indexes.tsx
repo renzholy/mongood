@@ -18,7 +18,7 @@ export default () => {
   const [value, setValue] = useState<object>({
     background: true,
   })
-  const { revalidate } = useCommandListIndexes()
+  const { revalidate, isValidating } = useCommandListIndexes()
   const handleCreate = useCallback(
     async () =>
       database && collection
@@ -42,7 +42,7 @@ export default () => {
   }
   return (
     <>
-      <Stack horizontal={true} tokens={{ childrenGap: 10, padding: 10 }}>
+      <Stack horizontal={true} tokens={{ padding: 10 }}>
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
@@ -53,6 +53,11 @@ export default () => {
           }}>
           Create
         </IconButton>
+        <IconButton
+          iconProps={{ iconName: 'Refresh' }}
+          disabled={isValidating}
+          onClick={revalidate}
+        />
       </Stack>
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <IndexesList />
