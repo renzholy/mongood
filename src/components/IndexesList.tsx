@@ -69,30 +69,12 @@ export function IndexesList() {
   const columns = useMemo<IColumn[]>(
     () =>
       mapToColumn([
-        {
-          key: 'name',
-          minWidth: 120,
-        },
-        {
-          key: 'features',
-          minWidth: 240,
-        },
-        {
-          key: 'keys',
-          minWidth: 240,
-        },
-        {
-          key: 'size',
-          minWidth: 0,
-        },
-        {
-          key: 'ops',
-          minWidth: 0,
-        },
-        {
-          key: 'since',
-          minWidth: 160,
-        },
+        ['name', 120],
+        ['features', 240],
+        ['keys', 240],
+        ['size', 0],
+        ['ops', 0],
+        ['since', 160],
       ]),
     [],
   )

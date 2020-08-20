@@ -84,36 +84,13 @@ export function OperationsList() {
   const columns = useMemo<IColumn[]>(() => {
     return mapToColumn(
       compact([
-        collection
-          ? undefined
-          : {
-              key: 'ns',
-              minWidth: 100,
-            },
-        {
-          key: 'opid',
-          minWidth: 100,
-        },
-        {
-          key: 'op',
-          minWidth: 100,
-        },
-        {
-          key: 'ms',
-          minWidth: 100,
-        },
-        {
-          key: 'planSummary',
-          minWidth: 100,
-        },
-        {
-          key: 'client',
-          minWidth: 100,
-        },
-        {
-          key: 'clientMetadata',
-          minWidth: 200,
-        },
+        collection ? undefined : ['ns', 100],
+        ['opid', 100],
+        ['op', 100],
+        ['ms', 100],
+        ['planSummary', 100],
+        ['client', 100],
+        ['clientMetadata', 200],
       ]),
     )
   }, [collection])
