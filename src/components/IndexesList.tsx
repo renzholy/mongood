@@ -18,6 +18,7 @@ import {
 import { actions } from '@/stores'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
+import { mapToColumn } from '@/utils/table'
 import { LargeMessage } from './LargeMessage'
 import { EditorModal } from './EditorModal'
 import { IndexContextualMenu } from './IndexContextualMenu'
@@ -66,44 +67,33 @@ export function IndexesList() {
     data,
   ])
   const columns = useMemo<IColumn[]>(
-    () => [
-      {
-        key: 'name',
-        name: 'name',
-        minWidth: 120,
-        isResizable: true,
-      },
-      {
-        key: 'features',
-        name: 'features',
-        minWidth: 240,
-        isResizable: true,
-      },
-      {
-        key: 'keys',
-        name: 'keys',
-        minWidth: 240,
-        isResizable: true,
-      },
-      {
-        key: 'size',
-        name: 'size',
-        minWidth: 0,
-        isResizable: true,
-      },
-      {
-        key: 'ops',
-        name: 'ops',
-        minWidth: 0,
-        isResizable: true,
-      },
-      {
-        key: 'since',
-        name: 'since',
-        minWidth: 160,
-        isResizable: true,
-      },
-    ],
+    () =>
+      mapToColumn([
+        {
+          key: 'name',
+          minWidth: 120,
+        },
+        {
+          key: 'features',
+          minWidth: 240,
+        },
+        {
+          key: 'keys',
+          minWidth: 240,
+        },
+        {
+          key: 'size',
+          minWidth: 0,
+        },
+        {
+          key: 'ops',
+          minWidth: 0,
+        },
+        {
+          key: 'since',
+          minWidth: 160,
+        },
+      ]),
     [],
   )
   const handleRenderItemColumn = useCallback(

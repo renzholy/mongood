@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Selection, IColumn, ColumnActionsMode } from '@fluentui/react'
+import { Selection, IColumn } from '@fluentui/react'
 import { get } from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
@@ -8,7 +8,7 @@ import { stringify } from '@/utils/ejson'
 import { MongoData, DisplayMode } from '@/types'
 import { useCommandFind } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
-import { calcHeaders } from '@/utils/table'
+import { calcHeaders, mapToColumn } from '@/utils/table'
 import { Table } from './Table'
 import { EditorModal } from './EditorModal'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
@@ -117,13 +117,7 @@ export function DocumentsList() {
       return []
     }
     return displayMode === DisplayMode.TABLE
-      ? calcHeaders(data.cursor.firstBatch, order).map(({ key, minWidth }) => ({
-          key,
-          name: key,
-          minWidth,
-          columnActionsMode: ColumnActionsMode.disabled,
-          isResizable: true,
-        }))
+      ? mapToColumn(calcHeaders(data.cursor.firstBatch, order))
       : [
           {
             key: '',

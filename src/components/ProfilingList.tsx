@@ -1,16 +1,11 @@
-import {
-  ContextualMenu,
-  DirectionalHint,
-  IColumn,
-  ColumnActionsMode,
-} from '@fluentui/react'
+import { ContextualMenu, DirectionalHint, IColumn } from '@fluentui/react'
 import React, { useState, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { useCommandSystemProfileFind } from '@/hooks/use-command'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
-import { calcHeaders } from '@/utils/table'
+import { calcHeaders, mapToColumn } from '@/utils/table'
 import { LargeMessage } from './LargeMessage'
 import { Table } from './Table'
 import { TableCell } from './TableCell'
@@ -71,15 +66,7 @@ export function ProfilingList() {
     if (!data || data.cursor.firstBatch.length === 0) {
       return []
     }
-    return calcHeaders(data.cursor.firstBatch, order, true).map(
-      ({ key, minWidth }) => ({
-        key,
-        name: key,
-        minWidth,
-        columnActionsMode: ColumnActionsMode.disabled,
-        isResizable: true,
-      }),
-    )
+    return mapToColumn(calcHeaders(data.cursor.firstBatch, order, true))
   }, [data, order])
 
   if (error) {

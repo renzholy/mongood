@@ -5,10 +5,10 @@ import {
   getTheme,
   DefaultButton,
   IColumn,
-  ColumnActionsMode,
 } from '@fluentui/react'
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { compact } from 'lodash'
 
 import { useCommandCurrentOp } from '@/hooks/use-command'
 import { actions } from '@/stores'
@@ -16,7 +16,7 @@ import { stringify } from '@/utils/ejson'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { MongoData } from '@/types'
-import { calcHeaders } from '@/utils/table'
+import { mapToColumn } from '@/utils/table'
 import { LargeMessage } from './LargeMessage'
 import { OperationContextualMenu } from './OperationContextualMenu'
 import { MongoDataModal } from './MongoDataModal'
@@ -25,15 +25,6 @@ import { Table } from './Table'
 import { TableCell } from './TableCell'
 
 type Operation = { opid: { $numberInt: string }; [key: string]: MongoData }
-
-const keys = [
-  'opid',
-  'op',
-  'planSummary',
-  'microsecs_running',
-  'client',
-  'clientMetadata',
-]
 
 export function OperationsList() {
   const theme = getTheme()
@@ -67,28 +58,65 @@ export function OperationsList() {
   }, [promiseKill.resolved, dispatch, revalidate])
   const handleRenderItemColumn = useCallback(
     (item?: Operation, _index?: number, column?: IColumn) => {
-      return <TableCell value={item?.[column?.key!]} />
+      const v = item?.[column?.key!]
+      return (
+        <TableCell
+          value={
+            column?.key === 'ms'
+              ? Math.ceil(
+                  parseInt(
+                    (item?.microsecs_running as
+                      | { $numberLong: string }
+                      | undefined)?.$numberLong || '0',
+                    10,
+                  ) / 1000,
+                )
+              : v
+          }
+        />
+      )
     },
     [],
   )
   const handleGetKey = useCallback((item: Operation) => {
     return item.opid.$numberInt
   }, [])
-  const order = useMemo(() => (collection ? keys : ['ns', ...keys]), [
-    collection,
-  ])
   const columns = useMemo<IColumn[]>(() => {
-    if (!data || data.inprog.length === 0) {
-      return []
-    }
-    return calcHeaders(data.inprog, order, true).map(({ key, minWidth }) => ({
-      key,
-      name: key,
-      minWidth,
-      columnActionsMode: ColumnActionsMode.disabled,
-      isResizable: true,
-    }))
-  }, [data, order])
+    return mapToColumn(
+      compact([
+        collection
+          ? undefined
+          : {
+              key: 'ns',
+              minWidth: 100,
+            },
+        {
+          key: 'opid',
+          minWidth: 100,
+        },
+        {
+          key: 'op',
+          minWidth: 100,
+        },
+        {
+          key: 'ms',
+          minWidth: 100,
+        },
+        {
+          key: 'planSummary',
+          minWidth: 100,
+        },
+        {
+          key: 'client',
+          minWidth: 100,
+        },
+        {
+          key: 'clientMetadata',
+          minWidth: 200,
+        },
+      ]),
+    )
+  }, [collection])
 
   if (error) {
     return (
