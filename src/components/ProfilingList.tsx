@@ -14,7 +14,7 @@ import { calcHeaders } from '@/utils/table'
 import { LargeMessage } from './LargeMessage'
 import { Table } from './Table'
 import { TableCell } from './TableCell'
-import { ProfilingModal } from './ProfilingModal'
+import { MongoDataModal } from './MongoDataModal'
 
 type Profiling = { [key: string]: MongoData }
 
@@ -96,7 +96,8 @@ export function ProfilingList() {
   return (
     <>
       {invokedProfiling ? (
-        <ProfilingModal
+        <MongoDataModal
+          tabs={['execStats', 'command', 'locks']}
           title="View Profile"
           value={invokedProfiling}
           isOpen={isEditorOpen}

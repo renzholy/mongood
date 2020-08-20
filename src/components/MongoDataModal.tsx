@@ -15,9 +15,8 @@ import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
 import { ExecStage } from './ExecStage'
 
-const tabs = ['command', 'lockStats', 'cursor']
-
-export function OperationModal(props: {
+export function MongoDataModal(props: {
+  tabs: string[]
   title: string
   value: { [key: string]: MongoData }
   isOpen: boolean
@@ -76,7 +75,7 @@ export function OperationModal(props: {
           horizontal={true}
           tokens={{ childrenGap: 10 }}
           styles={{ root: { marginLeft: 20, marginRight: 20 } }}>
-          {tabs.map((t) => (
+          {props.tabs.map((t) => (
             <DefaultButton
               key={t}
               text={t}
@@ -110,7 +109,9 @@ export function OperationModal(props: {
           ) : (
             <ColorizedData
               value={
-                tab === undefined ? omit(props.value, tabs) : props.value[tab]
+                tab === undefined
+                  ? omit(props.value, props.tabs)
+                  : props.value[tab]
               }
               style={{ marginBottom: 20 }}
             />

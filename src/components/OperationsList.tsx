@@ -19,7 +19,7 @@ import { MongoData } from '@/types'
 import { calcHeaders } from '@/utils/table'
 import { LargeMessage } from './LargeMessage'
 import { OperationContextualMenu } from './OperationContextualMenu'
-import { OperationModal } from './OperationModal'
+import { MongoDataModal } from './MongoDataModal'
 import { PromiseButton } from './PromiseButton'
 import { Table } from './Table'
 import { TableCell } from './TableCell'
@@ -105,7 +105,8 @@ export function OperationsList() {
     <>
       <OperationContextualMenu target={target} />
       {invokedOperation ? (
-        <OperationModal
+        <MongoDataModal
+          tabs={['command', 'lockStats', 'cursor']}
           title={`View Operation: ${
             invokedOperation ? stringify(invokedOperation.opid) : ''
           }`}
