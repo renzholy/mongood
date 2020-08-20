@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import {
   DetailsList,
   SelectionMode,
@@ -14,51 +14,24 @@ import {
   IColumn,
   MarqueeSelection,
   Selection,
-  ColumnActionsMode,
 } from '@fluentui/react'
 
-import { DisplayMode, MongoData } from '@/types'
-import { calcHeaders } from '@/utils/table'
 import { LargeMessage } from './LargeMessage'
 
-export function Table<T extends { [key: string]: MongoData }>(props: {
-  displayMode: DisplayMode
+export function Table<T>(props: {
   items: T[]
-  order?: string[]
-  onlyOrder?: boolean
+  columns: IColumn[]
   onItemInvoked?(item: T): void
   onItemContextMenu?(ev?: MouseEvent, item?: T): void
   onRenderItemColumn(
-    item?: { [key: string]: MongoData },
+    item?: T,
     _index?: number,
     column?: IColumn,
   ): React.ReactNode
+  getKey?(item: T, index?: number): string
   selection?: Selection
 }) {
   const theme = getTheme()
-  const columns = useMemo<IColumn[]>(() => {
-    if (!props.items || props.items.length === 0) {
-      return []
-    }
-    return props.displayMode === DisplayMode.TABLE
-      ? calcHeaders(props.items, props.order, props.onlyOrder).map(
-          ({ key, minWidth }) => ({
-            key,
-            name: key,
-            minWidth,
-            columnActionsMode: ColumnActionsMode.disabled,
-            isResizable: true,
-          }),
-        )
-      : [
-          {
-            key: '',
-            name: 'Documents',
-            minWidth: 0,
-            isMultiline: true,
-          },
-        ]
-  }, [props.displayMode, props.items, props.order, props.onlyOrder])
   const handleRenderDetailsHeader = useCallback(
     (detailsHeaderProps?: IDetailsHeaderProps) => (
       <Sticky>
@@ -76,10 +49,6 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
     ),
     [theme],
   )
-
-  const handleGetKey = useCallback((item: T, index?: number) => {
-    return item._id ? JSON.stringify(item._id) : JSON.stringify(item) + index
-  }, [])
 
   if (props.items.length === 0) {
     return (
@@ -103,8 +72,8 @@ export function Table<T extends { [key: string]: MongoData }>(props: {
           selection={props.selection!}
           isEnabled={!!props.selection}>
           <DetailsList
-            columns={columns}
-            getKey={handleGetKey}
+            columns={props.columns}
+            getKey={props.getKey}
             usePageCache={true}
             onShouldVirtualize={() => false}
             useReducedRowRenderer={true}
