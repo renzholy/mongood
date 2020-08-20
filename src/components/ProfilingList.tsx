@@ -21,6 +21,7 @@ const keys = [
   'keysExamined',
   'docsExamined',
   'numYield',
+  'nreturned',
   'planSummary',
 ]
 
