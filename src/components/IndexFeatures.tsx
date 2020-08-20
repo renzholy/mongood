@@ -8,7 +8,6 @@ import {
   Stack,
   Text,
 } from '@fluentui/react'
-import { Card } from '@uifabric/react-cards'
 
 import { ColorizedData } from './ColorizedData'
 
@@ -60,21 +59,18 @@ export function IndexFeatures(props: { value: IndexSpecification }) {
   const features = useMemo<{ text: string; data: object }[]>(
     () =>
       compact([
-        props.value.background
-          ? { text: 'BACKGROUND', data: { background: props.value.background } }
-          : null,
         size(props.value.key) > 1 && !('textIndexVersion' in props.value)
-          ? { text: 'COMPOUND', data: props.value.key }
+          ? { text: 'compound', data: props.value.key }
           : null,
         props.value.unique
-          ? { text: 'UNIQUE', data: { unique: props.value.unique } }
+          ? { text: 'unique', data: { unique: props.value.unique } }
           : null,
         props.value.sparse
-          ? { text: 'SPARSE', data: { sparse: props.value.sparse } }
+          ? { text: 'sparse', data: { sparse: props.value.sparse } }
           : null,
         props.value.partialFilterExpression
           ? {
-              text: 'PARTIAL',
+              text: 'partial',
               data: {
                 partialFilterExpression: props.value.partialFilterExpression,
               },
@@ -82,7 +78,7 @@ export function IndexFeatures(props: { value: IndexSpecification }) {
           : null,
         'expireAfterSeconds' in props.value
           ? {
-              text: 'TTL',
+              text: 'ttl',
               data: {
                 expireAfterSeconds: props.value.expireAfterSeconds,
               },
@@ -90,7 +86,7 @@ export function IndexFeatures(props: { value: IndexSpecification }) {
           : null,
         '2dsphereIndexVersion' in props.value
           ? {
-              text: '2DSPHERE',
+              text: '2dsphere',
               data: {
                 '2dsphereIndexVersion': props.value['2dsphereIndexVersion'],
               },
@@ -98,7 +94,7 @@ export function IndexFeatures(props: { value: IndexSpecification }) {
           : null,
         'textIndexVersion' in props.value
           ? {
-              text: 'TEXT',
+              text: 'text',
               data: {
                 textIndexVersion: props.value.textIndexVersion,
                 default_language: props.value.default_language,
@@ -107,16 +103,17 @@ export function IndexFeatures(props: { value: IndexSpecification }) {
               },
             }
           : null,
+        props.value.background
+          ? { text: 'background', data: { background: props.value.background } }
+          : null,
       ]),
     [props.value],
   )
   return features.length ? (
-    <Card.Item>
-      <Stack horizontal={true} tokens={{ childrenGap: 10 }}>
-        {features.map((feature) => (
-          <IndexFeature key={feature.text} value={feature} />
-        ))}
-      </Stack>
-    </Card.Item>
+    <Stack horizontal={true} tokens={{ childrenGap: 10 }} wrap={true}>
+      {features.map((feature) => (
+        <IndexFeature key={feature.text} value={feature} />
+      ))}
+    </Stack>
   ) : null
 }

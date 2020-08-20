@@ -218,9 +218,9 @@ export function DocumentContextualMenu<
                     const headers = calcHeaders(props.selectedItems)
                     window.navigator.clipboard.writeText(
                       table([
-                        headers.map(({ key }) => key),
+                        headers.map(([key]) => key),
                         ...props.selectedItems.map((item) =>
-                          headers.map(({ key }) => stringify(item[key])),
+                          headers.map(([key]) => stringify(item[key])),
                         ),
                       ]),
                     )

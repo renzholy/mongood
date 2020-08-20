@@ -15,16 +15,16 @@ import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
 import { ExecStage } from './ExecStage'
 
-const tabs = ['execStats', 'command', 'locks']
-
-export function ProfilingModal(props: {
+export function MongoDataModal(props: {
+  tabs: string[]
   title: string
   value: { [key: string]: MongoData }
   isOpen: boolean
   onDismiss(): void
+  footer?: React.ReactNode
 }) {
   const theme = getTheme()
-  const [tab, setTab] = useState<string | undefined>(tabs[0])
+  const [tab, setTab] = useState<string>()
 
   return (
     <>
@@ -43,10 +43,7 @@ export function ProfilingModal(props: {
           },
         }}
         isOpen={props.isOpen}
-        onDismiss={props.onDismiss}
-        onDismissed={() => {
-          setTab(tabs[0])
-        }}>
+        onDismiss={props.onDismiss}>
         <div
           style={{
             display: 'flex',
@@ -78,7 +75,7 @@ export function ProfilingModal(props: {
           horizontal={true}
           tokens={{ childrenGap: 10 }}
           styles={{ root: { marginLeft: 20, marginRight: 20 } }}>
-          {tabs.map((t) => (
+          {props.tabs.map((t) => (
             <DefaultButton
               key={t}
               text={t}
@@ -112,12 +109,26 @@ export function ProfilingModal(props: {
           ) : (
             <ColorizedData
               value={
-                tab === undefined ? omit(props.value, tabs) : props.value[tab]
+                tab === undefined
+                  ? omit(props.value, props.tabs)
+                  : props.value[tab]
               }
               style={{ marginBottom: 20 }}
             />
           )}
         </div>
+        {props.footer ? (
+          <div
+            style={{
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'row-reverse',
+              padding: 10,
+            }}>
+            {props.footer}
+          </div>
+        ) : null}
       </Modal>
     </>
   )

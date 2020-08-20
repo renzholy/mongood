@@ -1,13 +1,14 @@
 import {
-  Stack,
   Dialog,
   DialogFooter,
   DialogType,
   getTheme,
+  IColumn,
 } from '@fluentui/react'
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { keyBy } from 'lodash'
+import type { IndexSpecification } from 'mongodb'
 
 import {
   useCommandCollStats,
@@ -17,11 +18,15 @@ import {
 import { actions } from '@/stores'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
-import { IndexCard } from './IndexCard'
+import { mapToColumn } from '@/utils/table'
 import { LargeMessage } from './LargeMessage'
 import { EditorModal } from './EditorModal'
 import { IndexContextualMenu } from './IndexContextualMenu'
 import { PromiseButton } from './PromiseButton'
+import { Table } from './Table'
+import { IndexCell } from './IndexCell'
+
+type Index = IndexSpecification & { size?: number; ops: number; since: Date }
 
 export function IndexesList() {
   const { data } = useCommandIndexStats()
@@ -61,6 +66,55 @@ export function IndexesList() {
   const indexStats = useMemo(() => keyBy(data?.cursor.firstBatch, 'name'), [
     data,
   ])
+  const columns = useMemo<IColumn[]>(
+    () =>
+      mapToColumn([
+        ['name', 120],
+        ['features', 240],
+        ['keys', 240],
+        ['size', 0],
+        ['ops', 0],
+        ['since', 160],
+      ]),
+    [],
+  )
+  const handleRenderItemColumn = useCallback(
+    (item?: Index, _index?: number, column?: IColumn) => {
+      if (!item || !column) {
+        return null
+      }
+      return (
+        <IndexCell
+          item={item}
+          column={column}
+          size={collStats?.indexSizes[item.name!]}
+          accesses={indexStats[item.name!]?.accesses}
+        />
+      )
+    },
+    [collStats, indexStats],
+  )
+  const handleGetKey = useCallback((item: Index) => {
+    return item.name || ''
+  }, [])
+  const handleItemInvoked = useCallback(
+    (item?: Index) => {
+      if (item) {
+        dispatch(actions.indexes.setInvokedIndex(item))
+      }
+      dispatch(actions.indexes.setIsViewOpen(true))
+    },
+    [dispatch],
+  )
+  const handleItemContextMenu = useCallback(
+    (ev: MouseEvent, item?: Index) => {
+      setTarget(ev)
+      if (item) {
+        dispatch(actions.indexes.setInvokedIndex(item))
+      }
+    },
+    [dispatch],
+  )
 
   if (collStatsError) {
     return (
@@ -134,26 +188,14 @@ export function IndexesList() {
         }}
       />
       <IndexContextualMenu target={target} />
-      <Stack
-        tokens={{ childrenGap: 20 }}
-        styles={{
-          root: {
-            overflowY: 'scroll',
-            padding: 20,
-            flex: 1,
-            alignItems: 'center',
-          },
-        }}>
-        {indexes.cursor.firstBatch.map((item) => (
-          <IndexCard
-            key={item.name}
-            value={item}
-            size={collStats!.indexSizes[item.name!]}
-            stats={indexStats[item.name!]}
-            onContextMenu={setTarget}
-          />
-        ))}
-      </Stack>
+      <Table
+        items={indexes.cursor.firstBatch}
+        columns={columns}
+        getKey={handleGetKey}
+        onItemInvoked={handleItemInvoked}
+        onItemContextMenu={handleItemContextMenu}
+        onRenderItemColumn={handleRenderItemColumn}
+      />
     </>
   )
 }

@@ -1,16 +1,19 @@
 import { ContextualMenu, DirectionalHint, IColumn } from '@fluentui/react'
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { useCommandSystemProfileFind } from '@/hooks/use-command'
 import { actions } from '@/stores'
-import { DisplayMode, MongoData } from '@/types'
+import { MongoData } from '@/types'
+import { calcHeaders, mapToColumn } from '@/utils/table'
 import { LargeMessage } from './LargeMessage'
 import { Table } from './Table'
 import { TableCell } from './TableCell'
-import { ProfilingModal } from './ProfilingModal'
+import { MongoDataModal } from './MongoDataModal'
 
-const order = [
+type Profiling = { [key: string]: MongoData }
+
+const keys = [
   'op',
   'millis',
   'ts',
@@ -31,7 +34,7 @@ export function ProfilingList() {
   const dispatch = useDispatch()
   const [target, setTarget] = useState<MouseEvent>()
   const handleItemContextMenu = useCallback(
-    (ev: MouseEvent, item?: { [key: string]: MongoData }) => {
+    (ev: MouseEvent, item?: Profiling) => {
       setTarget(ev)
       if (item) {
         dispatch(actions.profiling.setInvokedProfiling(item))
@@ -50,15 +53,21 @@ export function ProfilingList() {
     [dispatch],
   )
   const handleRenderItemColumn = useCallback(
-    (
-      item?: { [key: string]: MongoData },
-      _index?: number,
-      column?: IColumn,
-    ) => {
+    (item?: Profiling, _index?: number, column?: IColumn) => {
       return <TableCell value={item?.[column?.key!]} />
     },
     [],
   )
+  const order = useMemo(
+    () => (collection === 'system.profile' ? ['ns', ...keys] : keys),
+    [collection],
+  )
+  const columns = useMemo<IColumn[]>(() => {
+    if (!data || data.cursor.firstBatch.length === 0) {
+      return []
+    }
+    return mapToColumn(calcHeaders(data.cursor.firstBatch, order, true))
+  }, [data, order])
 
   if (error) {
     return (
@@ -74,7 +83,8 @@ export function ProfilingList() {
   return (
     <>
       {invokedProfiling ? (
-        <ProfilingModal
+        <MongoDataModal
+          tabs={['execStats', 'command', 'locks']}
           title="View Profile"
           value={invokedProfiling}
           isOpen={isEditorOpen}
@@ -103,10 +113,8 @@ export function ProfilingList() {
         ]}
       />
       <Table
-        displayMode={DisplayMode.TABLE}
         items={data.cursor.firstBatch}
-        order={collection === 'system.profile' ? ['ns', ...order] : order}
-        onlyOrder={true}
+        columns={columns}
         onItemContextMenu={handleItemContextMenu}
         onItemInvoked={handleItemInvoked}
         onRenderItemColumn={handleRenderItemColumn}

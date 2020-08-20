@@ -8,6 +8,7 @@ import { stringify } from '@/utils/ejson'
 import { MongoData, DisplayMode } from '@/types'
 import { useCommandFind } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
+import { calcHeaders, mapToColumn } from '@/utils/table'
 import { Table } from './Table'
 import { EditorModal } from './EditorModal'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
@@ -16,7 +17,7 @@ import { LargeMessage } from './LargeMessage'
 import { ColorizedData } from './ColorizedData'
 import { DocumentCell } from './DocumentCell'
 
-type Data = { [key: string]: MongoData }
+type Document = { [key: string]: MongoData }
 
 export function DocumentsList() {
   const displayMode = useSelector((state) => state.docs.displayMode)
@@ -27,8 +28,8 @@ export function DocumentsList() {
   const { data, error, revalidate } = useCommandFind()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isMenuHidden, setIsMenuHidden] = useState(true)
-  const [invokedItem, setInvokedItem] = useState<Data>()
-  const [editedItem, setEditedItem] = useState<Data>()
+  const [invokedItem, setInvokedItem] = useState<Document>()
+  const [editedItem, setEditedItem] = useState<Document>()
   const handleUpdate = useCallback(
     async () =>
       database && collection
@@ -48,9 +49,9 @@ export function DocumentsList() {
     }
   }, [promiseUpdate.resolved, revalidate])
   const target = useRef<MouseEvent>()
-  const selection = useMemo(() => new Selection<Data>(), [])
+  const selection = useMemo(() => new Selection<Document>(), [])
   const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
-  const onItemInvoked = useCallback((item: Data) => {
+  const onItemInvoked = useCallback((item: Document) => {
     setInvokedItem(item)
     setEditedItem(item)
     setIsUpdateOpen(true)
@@ -87,7 +88,7 @@ export function DocumentsList() {
     [index],
   )
   const handleRenderItemColumn = useCallback(
-    (item?: { [key: string]: MongoData }, _index?: number, column?: IColumn) =>
+    (item?: Document, _index?: number, column?: IColumn) =>
       displayMode === DisplayMode.DOCUMENT ? (
         <ColorizedData value={item} />
       ) : (
@@ -111,6 +112,24 @@ export function DocumentsList() {
   useEffect(() => {
     selection.setAllSelected(false)
   }, [selection, data])
+  const columns = useMemo<IColumn[]>(() => {
+    if (!data || data.cursor.firstBatch.length === 0) {
+      return []
+    }
+    return displayMode === DisplayMode.TABLE
+      ? mapToColumn(calcHeaders(data.cursor.firstBatch, order))
+      : [
+          {
+            key: '',
+            name: 'Documents',
+            minWidth: 0,
+            isMultiline: true,
+          },
+        ]
+  }, [displayMode, data, order])
+  const handleGetKey = useCallback((item: Document, i?: number) => {
+    return item._id ? JSON.stringify(item._id) : JSON.stringify(item) + i
+  }, [])
 
   if (error) {
     return (
@@ -122,7 +141,7 @@ export function DocumentsList() {
   }
   return (
     <>
-      <EditorModal<Data>
+      <EditorModal<Document>
         title={title ? `View Document: ${title}` : 'View Document'}
         value={editedItem}
         onChange={setEditedItem}
@@ -159,9 +178,9 @@ export function DocumentsList() {
         }
       />
       <Table
-        displayMode={displayMode}
         items={data.cursor.firstBatch}
-        order={order}
+        columns={columns}
+        getKey={handleGetKey}
         onItemInvoked={onItemInvoked}
         onItemContextMenu={onItemContextMenu}
         selection={selection}

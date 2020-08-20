@@ -1,6 +1,7 @@
 /* eslint-disable no-bitwise */
 
 import { sortBy } from 'lodash'
+import { IColumn, ColumnActionsMode } from '@fluentui/react'
 
 import { MongoData } from '@/types'
 import { stringify } from './ejson'
@@ -9,7 +10,7 @@ export function calcHeaders<T extends { [key: string]: MongoData }>(
   items: T[],
   order: string[] = [],
   onlyOrder: boolean = false,
-): { key: string; minWidth: number }[] {
+): [string, number][] {
   const keys: { [key: string]: { order: number; minWidth: number } } = {}
   items.forEach((item) => {
     Object.keys(item).forEach((key) => {
@@ -32,5 +33,15 @@ export function calcHeaders<T extends { [key: string]: MongoData }>(
   })
   return sortBy(Object.entries(keys), (k) => k[1].order)
     .reverse()
-    .map(([k, { minWidth }]) => ({ key: k, minWidth }))
+    .map(([k, { minWidth }]) => [k, minWidth])
+}
+
+export function mapToColumn(headers: [string, number][]): IColumn[] {
+  return headers.map(([key, minWidth]) => ({
+    key,
+    name: key,
+    minWidth,
+    columnActionsMode: ColumnActionsMode.disabled,
+    isResizable: true,
+  }))
 }

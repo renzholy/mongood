@@ -16,6 +16,8 @@ export function Pagination(props: {
   onLimit(limit: number): void
   onPrev(): void
   onNext(): void
+  isValidating: boolean
+  revalidate(): void
 }) {
   const theme = getTheme()
 
@@ -65,6 +67,11 @@ export function Pagination(props: {
         iconProps={{ iconName: 'Forward' }}
         disabled={props.skip + props.limit >= props.count}
         onClick={props.onNext}
+      />
+      <IconButton
+        iconProps={{ iconName: 'Refresh' }}
+        disabled={props.isValidating}
+        onClick={props.revalidate}
       />
     </Stack>
   )
