@@ -1,12 +1,13 @@
 import {
-  Stack,
   Dialog,
   DialogType,
   DialogFooter,
   getTheme,
   DefaultButton,
+  IColumn,
+  ColumnActionsMode,
 } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { useCommandCurrentOp } from '@/hooks/use-command'
@@ -14,15 +15,30 @@ import { actions } from '@/stores'
 import { stringify } from '@/utils/ejson'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
-import { OperationCard } from './OperationCard'
+import { MongoData } from '@/types'
+import { calcHeaders } from '@/utils/table'
 import { LargeMessage } from './LargeMessage'
 import { OperationContextualMenu } from './OperationContextualMenu'
-import { EditorModal } from './EditorModal'
+import { OperationModal } from './OperationModal'
 import { PromiseButton } from './PromiseButton'
+import { Table } from './Table'
+import { TableCell } from './TableCell'
+
+type Operation = { opid: { $numberInt: string }; [key: string]: MongoData }
+
+const keys = [
+  'opid',
+  'op',
+  'planSummary',
+  'microsecs_running',
+  'client',
+  'clientMetadata',
+]
 
 export function OperationsList() {
   const theme = getTheme()
   const { data, error, revalidate } = useCommandCurrentOp()
+  const collection = useSelector((state) => state.root.collection)
   const [target, setTarget] = useState<MouseEvent>()
   const invokedOperation = useSelector(
     (state) => state.operations.invokedOperation,
@@ -49,6 +65,30 @@ export function OperationsList() {
       revalidate()
     }
   }, [promiseKill.resolved, dispatch, revalidate])
+  const handleRenderItemColumn = useCallback(
+    (item?: Operation, _index?: number, column?: IColumn) => {
+      return <TableCell value={item?.[column?.key!]} />
+    },
+    [],
+  )
+  const handleGetKey = useCallback((item: Operation) => {
+    return item.opid.$numberInt
+  }, [])
+  const order = useMemo(() => (collection ? keys : ['ns', ...keys]), [
+    collection,
+  ])
+  const columns = useMemo<IColumn[]>(() => {
+    if (!data || data.inprog.length === 0) {
+      return []
+    }
+    return calcHeaders(data.inprog, order, true).map(({ key, minWidth }) => ({
+      key,
+      name: key,
+      minWidth,
+      columnActionsMode: ColumnActionsMode.disabled,
+      isResizable: true,
+    }))
+  }, [data, order])
 
   if (error) {
     return (
@@ -64,25 +104,26 @@ export function OperationsList() {
   return (
     <>
       <OperationContextualMenu target={target} />
-      <EditorModal
-        title={`View Operation: ${
-          invokedOperation ? stringify(invokedOperation.opid) : ''
-        }`}
-        readOnly={true}
-        value={invokedOperation}
-        isOpen={isEditorOpen}
-        onDismiss={() => {
-          dispatch(actions.operations.setIsEditorOpen(false))
-        }}
-        footer={
-          <DefaultButton
-            text="Kill"
-            onClick={() => {
-              dispatch(actions.operations.setIsDialogHidden(false))
-            }}
-          />
-        }
-      />
+      {invokedOperation ? (
+        <OperationModal
+          title={`View Operation: ${
+            invokedOperation ? stringify(invokedOperation.opid) : ''
+          }`}
+          value={invokedOperation}
+          isOpen={isEditorOpen}
+          onDismiss={() => {
+            dispatch(actions.operations.setIsEditorOpen(false))
+          }}
+          footer={
+            <DefaultButton
+              text="Kill"
+              onClick={() => {
+                dispatch(actions.operations.setIsDialogHidden(false))
+              }}
+            />
+          }
+        />
+      ) : null}
       <Dialog
         hidden={isDialogHidden}
         dialogContentProps={{
@@ -110,24 +151,24 @@ export function OperationsList() {
           <PromiseButton text="Kill" promise={promiseKill} />
         </DialogFooter>
       </Dialog>
-      <Stack
-        tokens={{ childrenGap: 20 }}
-        styles={{
-          root: {
-            overflowY: 'scroll',
-            padding: 20,
-            flex: 1,
-            alignItems: 'center',
-          },
-        }}>
-        {data.inprog.map((item) => (
-          <OperationCard
-            key={stringify(item.opid)}
-            value={item}
-            onContextMenu={setTarget}
-          />
-        ))}
-      </Stack>
+      <Table
+        items={data.inprog}
+        getKey={handleGetKey}
+        columns={columns}
+        onRenderItemColumn={handleRenderItemColumn}
+        onItemInvoked={(item) => {
+          if (item) {
+            dispatch(actions.operations.setInvokedOperation(item))
+          }
+          dispatch(actions.operations.setIsEditorOpen(true))
+        }}
+        onItemContextMenu={(ev, item) => {
+          setTarget(ev)
+          if (item) {
+            dispatch(actions.operations.setInvokedOperation(item))
+          }
+        }}
+      />
     </>
   )
 }
