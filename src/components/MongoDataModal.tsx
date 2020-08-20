@@ -13,12 +13,12 @@ import { omit } from 'lodash'
 
 import { MongoData } from '@/types'
 import { ColorizedData } from './ColorizedData'
-import { ExecStage } from './ExecStage'
 
 export function MongoDataModal(props: {
   tabs: string[]
   title: string
   value: { [key: string]: MongoData }
+  onRenderTab?(tab: string): React.ReactNode
   isOpen: boolean
   onDismiss(): void
   footer?: React.ReactNode
@@ -94,19 +94,7 @@ export function MongoDataModal(props: {
           />
         </Stack>
         <div style={{ flex: 1, margin: 20, overflow: 'scroll' }}>
-          {tab === 'execStats' && props.value.execStats ? (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row-reverse',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-              }}>
-              <ExecStage
-                value={props.value.execStats as { [key: string]: MongoData }}
-              />
-            </div>
-          ) : (
+          {(tab && props.onRenderTab?.(tab)) || (
             <ColorizedData
               value={
                 tab === undefined

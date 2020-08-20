@@ -10,6 +10,7 @@ import { LargeMessage } from './LargeMessage'
 import { Table } from './Table'
 import { TableCell } from './TableCell'
 import { MongoDataModal } from './MongoDataModal'
+import { ExecStage } from './ExecStage'
 
 type Profiling = { [key: string]: MongoData }
 
@@ -88,6 +89,23 @@ export function ProfilingList() {
           title="View Profile"
           value={invokedProfiling}
           isOpen={isEditorOpen}
+          onRenderTab={(tab) =>
+            tab === 'execStats' ? (
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row-reverse',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                }}>
+                <ExecStage
+                  value={
+                    invokedProfiling.execStats as { [key: string]: MongoData }
+                  }
+                />
+              </div>
+            ) : null
+          }
           onDismiss={() => {
             dispatch(actions.profiling.setIsEditorOpen(false))
           }}
