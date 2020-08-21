@@ -4,7 +4,7 @@ import React, { useCallback } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 
 import { MongoData } from '@/types'
-import { ColorizedData } from './ColorizedData'
+import { MongoDataColorized } from './MongoDataColorized'
 
 function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {
   const theme = getTheme()
@@ -19,7 +19,7 @@ function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {
         backgroundColor: theme.palette.neutralLighterAlt,
       }}>
       {props.header}
-      <ColorizedData value={props.value} />
+      <MongoDataColorized value={props.value} />
     </div>
   )
 }

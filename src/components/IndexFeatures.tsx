@@ -9,7 +9,7 @@ import {
   Text,
 } from '@fluentui/react'
 
-import { ColorizedData } from './ColorizedData'
+import { MongoDataColorized } from './MongoDataColorized'
 
 function IndexFeature(props: { value: { text: string; data?: object } }) {
   const theme = getTheme()
@@ -24,7 +24,7 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
           overflowY: 'scroll',
           backgroundColor: theme.palette.neutralLighter,
         }}>
-        <ColorizedData value={props.value.data} />
+        <MongoDataColorized value={props.value.data} />
       </div>
     )
   }, [props.value.data, theme.palette.neutralLighter])

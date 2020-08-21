@@ -12,7 +12,7 @@ import { EJSON } from 'bson'
 
 import { ExecStats, MongoData } from '@/types'
 import { formatNumber } from '@/utils/formatter'
-import { ColorizedData } from './ColorizedData'
+import { MongoDataColorized } from './MongoDataColorized'
 
 export function ExecStage(props: { value?: { [key: string]: MongoData } }) {
   const theme = getTheme()
@@ -33,7 +33,7 @@ export function ExecStage(props: { value?: { [key: string]: MongoData } }) {
           overflowY: 'scroll',
           backgroundColor: theme.palette.neutralLighter,
         }}>
-        <ColorizedData
+        <MongoDataColorized
           value={omit(props.value, ['inputStage', 'inputStages'])}
         />
       </div>

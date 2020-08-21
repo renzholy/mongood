@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { omit } from 'lodash'
 
 import { MongoData } from '@/types'
-import { ColorizedData } from './ColorizedData'
+import { MongoDataColorized } from './MongoDataColorized'
 import { DefaultModal } from './DefaultModal'
 
 export function MongoDataModal(props: {
@@ -47,7 +47,7 @@ export function MongoDataModal(props: {
       </Stack>
       <div style={{ flex: 1, margin: 20, overflow: 'scroll' }}>
         {(tab && props.onRenderTab?.(tab)) || (
-          <ColorizedData
+          <MongoDataColorized
             value={
               tab === undefined
                 ? omit(props.value, props.tabs)
