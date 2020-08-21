@@ -56,5 +56,6 @@ export const MongoDataHoverCard = React.memo(
   },
   (prevProps, nextProps) =>
     prevProps.value === nextProps.value &&
+    prevProps.children === nextProps.children &&
     prevProps.header === nextProps.header,
 )
