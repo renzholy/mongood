@@ -31,7 +31,6 @@ export const MongoDataHoverCard = React.memo(
     header?: React.ReactNode
   }) {
     const theme = getTheme()
-
     const onRenderPlainCard = useCallback(() => {
       return <PlainCard value={props.value} header={props.header} />
     }, [props.value, props.header])
