@@ -6,12 +6,9 @@ import {
   IStyle,
 } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
-import useAsyncEffect from 'use-async-effect'
 import { compact } from 'lodash'
 
-import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
-import { ServerStats } from '@/types'
 import { useConnections } from '@/hooks/use-connections'
 import { ConnectionEditModal } from './ConnectionEditModal'
 
@@ -19,60 +16,11 @@ export function ConnectionButton(props: { style?: IStyle }) {
   const connection = useSelector((state) => state.root.connection)
   const dispatch = useDispatch()
   const { selfAdded, builtIn } = useConnections()
-  const serverStatus = useCallback(
-    async (_connection: string) =>
-      runCommand<ServerStats>(_connection, 'admin', {
-        serverStatus: 1,
-      }),
-    [],
-  )
-  const [selfConnections, setSelfConnections] = useState<
-    { c: string; host: string; replSetName?: string }[]
-  >([])
-  useAsyncEffect(
-    async (isMounted) => {
-      const _connections = await Promise.all(
-        selfAdded.map(async (c) => {
-          try {
-            const { host, repl } = await serverStatus(c)
-            return { c, host, replSetName: repl?.setName }
-          } catch {
-            return { c, host: c }
-          }
-        }),
-      )
-      if (isMounted()) {
-        setSelfConnections(compact(_connections))
-      }
-    },
-    [selfAdded, serverStatus],
-  )
-  const [builtInConnections, setBuiltInConnections] = useState<
-    { c: string; host: string; replSetName?: string }[]
-  >([])
-  useAsyncEffect(
-    async (isMounted) => {
-      const _connections = await Promise.all(
-        (builtIn || []).map(async (c) => {
-          try {
-            const { host, repl } = await serverStatus(c)
-            return { c, host, replSetName: repl?.setName }
-          } catch {
-            return { c, host: c }
-          }
-        }),
-      )
-      if (isMounted()) {
-        setBuiltInConnections(compact(_connections))
-      }
-    },
-    [builtIn, serverStatus],
-  )
   const [isOpen, setIsOpen] = useState(false)
   useEffect(() => {
     if ((builtIn?.length || selfAdded.length) && !connection) {
       dispatch(
-        actions.root.setConnection([...selfAdded, ...(builtIn || [])][0]),
+        actions.root.setConnection([...selfAdded, ...(builtIn || [])][0]?.uri),
       )
     }
   }, [connection, selfAdded, builtIn, dispatch])
@@ -82,14 +30,14 @@ export function ConnectionButton(props: { style?: IStyle }) {
     }
   }, [connection, selfAdded, builtIn])
   const connectionToItem = useCallback(
-    ({ c, host, replSetName }) => ({
-      key: c,
-      text: host,
-      secondaryText: replSetName,
+    ({ uri, text, secondaryText }) => ({
+      key: uri,
+      text,
+      secondaryText,
       canCheck: true,
-      checked: connection === c,
+      checked: connection === uri,
       onClick() {
-        dispatch(actions.root.setConnection(c))
+        dispatch(actions.root.setConnection(uri))
       },
     }),
     [connection, dispatch],
@@ -105,13 +53,13 @@ export function ConnectionButton(props: { style?: IStyle }) {
           },
         },
         { key: 'divider1', itemType: ContextualMenuItemType.Divider },
-        ...selfConnections.map(connectionToItem),
-        selfConnections.length
+        ...selfAdded.map(connectionToItem),
+        selfAdded.length
           ? { key: 'divider0', itemType: ContextualMenuItemType.Divider }
           : undefined,
-        ...builtInConnections.map(connectionToItem),
+        ...(builtIn?.map(connectionToItem) || []),
       ]),
-    [builtInConnections, connectionToItem, selfConnections],
+    [builtIn, connectionToItem, selfAdded],
   )
 
   return (
@@ -124,9 +72,9 @@ export function ConnectionButton(props: { style?: IStyle }) {
       />
       <CommandButton
         text={
-          [...builtInConnections, ...selfConnections].find(
-            ({ c }) => c === connection,
-          )?.host || 'Connection'
+          [...(builtIn || []), ...selfAdded].find(
+            ({ uri }) => uri === connection,
+          )?.text || 'Connection'
         }
         styles={{
           root: props.style,
