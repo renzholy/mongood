@@ -104,7 +104,23 @@ export function OperationsList() {
     return <LargeMessage iconName="HourGlass" title="Loading" />
   }
   if (data.inprog.length === 0) {
-    return <LargeMessage iconName="AnalyticsReport" title="No Operation" />
+    return (
+      <LargeMessage
+        iconName="AnalyticsReport"
+        title="No Operation"
+        button={
+          collection ? (
+            <DefaultButton
+              text="View all operations"
+              onClick={() => {
+                dispatch(actions.root.setDatabase(undefined))
+                dispatch(actions.root.setCollection(undefined))
+              }}
+            />
+          ) : null
+        }
+      />
+    )
   }
   return (
     <>
