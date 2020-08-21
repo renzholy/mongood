@@ -51,7 +51,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const theme = getTheme()
   const dispatch = useDispatch()
   const connection = useSelector((state) => state.root.connection)
-  const { selfAdded, setSelfAddedConnections } = useConnections()
+  const { selfAdded, updateSelfAdded } = useConnections()
   const menuProps = useMemo<IContextualMenuProps | undefined>(
     () =>
       props.disabled
@@ -67,7 +67,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
                   styles: { root: { color: theme.palette.red } },
                 },
                 onClick() {
-                  setSelfAddedConnections(
+                  updateSelfAdded(
                     selfAdded.filter((c) => c.uri !== props.connection),
                   )
                   if (connection === props.connection) {
@@ -84,7 +84,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
       props.connection,
       props.disabled,
       theme.palette.red,
-      setSelfAddedConnections,
+      updateSelfAdded,
     ],
   )
   const [serverStatus, setServerStatus] = useState<ServerStats>()
@@ -133,7 +133,7 @@ export function ConnectionEditModal(props: {
   isOpen: boolean
   onDismiss(): void
 }) {
-  const { selfAdded, builtIn, setSelfAddedConnections } = useConnections()
+  const { selfAdded, builtIn, updateSelfAdded } = useConnections()
   const theme = getTheme()
   const [value, setValue] = useState('')
   const dispatch = useDispatch()
@@ -150,17 +150,17 @@ export function ConnectionEditModal(props: {
   useEffect(() => {
     const _connection = promiseAddConnection.resolved
     if (_connection) {
-      setSelfAddedConnections(
-        uniqBy([{ uri: _connection, text: _connection }, ...selfAdded], 'uri'),
+      dispatch(
+        updateSelfAdded(
+          uniqBy(
+            [{ uri: _connection, text: _connection }, ...selfAdded],
+            'uri',
+          ),
+        ),
       )
       setValue('')
     }
-  }, [
-    selfAdded,
-    dispatch,
-    promiseAddConnection.resolved,
-    setSelfAddedConnections,
-  ])
+  }, [selfAdded, dispatch, promiseAddConnection.resolved, updateSelfAdded])
 
   return (
     <Modal
