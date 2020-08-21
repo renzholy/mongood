@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogType,
-  DialogFooter,
-  getTheme,
-  DefaultButton,
-  IColumn,
-} from '@fluentui/react'
+import { DefaultButton, IColumn } from '@fluentui/react'
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { compact } from 'lodash'
@@ -23,11 +16,11 @@ import { MongoDataModal } from './MongoDataModal'
 import { PromiseButton } from './PromiseButton'
 import { Table } from './Table'
 import { TableCell } from './TableCell'
+import { DefaultDialog } from './DefaultDialog'
 
 type Operation = { opid: { $numberInt: string }; [key: string]: MongoData }
 
 export function OperationsList() {
-  const theme = getTheme()
   const { data, error, revalidate } = useCommandCurrentOp()
   const collection = useSelector((state) => state.root.collection)
   const [target, setTarget] = useState<MouseEvent>()
@@ -146,33 +139,15 @@ export function OperationsList() {
           }
         />
       ) : null}
-      <Dialog
+      <DefaultDialog
         hidden={isDialogHidden}
-        dialogContentProps={{
-          type: DialogType.normal,
-          title: 'Kill Operation',
-          subText: stringify(invokedOperation?.opid),
-          showCloseButton: true,
-          onDismiss() {
-            dispatch(actions.operations.setIsDialogHidden(true))
-          },
+        title="Kill Operation"
+        subText={stringify(invokedOperation?.opid)}
+        onDismiss={() => {
+          dispatch(actions.operations.setIsDialogHidden(true))
         }}
-        modalProps={{
-          styles: {
-            main: {
-              minHeight: 0,
-              borderTop: `4px solid ${theme.palette.red}`,
-              backgroundColor: theme.palette.neutralLighterAlt,
-            },
-          },
-          onDismiss() {
-            dispatch(actions.operations.setIsDialogHidden(true))
-          },
-        }}>
-        <DialogFooter>
-          <PromiseButton text="Kill" promise={promiseKill} />
-        </DialogFooter>
-      </Dialog>
+        footer={<PromiseButton text="Kill" promise={promiseKill} />}
+      />
       <Table
         items={data.inprog}
         getKey={handleGetKey}

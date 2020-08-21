@@ -20,7 +20,7 @@ import { evalCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
-import { ColorizedData } from './ColorizedData'
+import { MongoDataColorized } from './MongoDataColorized'
 
 export function NotebookItem(props: {
   index?: number
@@ -211,7 +211,7 @@ export function NotebookItem(props: {
           {error}
         </pre>
       ) : result !== undefined ? (
-        <ColorizedData
+        <MongoDataColorized
           value={result}
           style={{
             margin: 20,

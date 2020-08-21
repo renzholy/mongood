@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import {
-  ContextualMenu,
-  DialogType,
-  getTheme,
-  Dialog,
-  DialogFooter,
-} from '@fluentui/react'
+import { ContextualMenu, getTheme } from '@fluentui/react'
 import csv, { Options } from 'csv-stringify'
 import table from 'markdown-table'
 import { useSelector } from 'react-redux'
@@ -17,6 +11,7 @@ import { useCommandFind, useCommandCount } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { PromiseButton } from './PromiseButton'
+import { DefaultDialog } from './DefaultDialog'
 
 const cast: Options['cast'] = {
   boolean: (value) => stringify(value),
@@ -66,45 +61,21 @@ export function DocumentContextualMenu<
 
   return (
     <>
-      <Dialog
+      <DefaultDialog
         hidden={hidden}
-        dialogContentProps={{
-          type: DialogType.normal,
-          title:
-            props.selectedItems.length === 1
-              ? 'Delete Document'
-              : `Delete ${props.selectedItems.length} Documents`,
-          subText: props.selectedItems
-            .map((item) => stringify(item._id))
-            .join('\n'),
-          showCloseButton: true,
-          isMultiline: true,
-          styles: {
-            innerContent: {
-              maxHeight: 410,
-              overflow: 'scroll',
-            },
-          },
-          onDismiss() {
-            setHidden(true)
-          },
+        onDismiss={() => {
+          setHidden(true)
         }}
-        modalProps={{
-          styles: {
-            main: {
-              minHeight: 0,
-              borderTop: `4px solid ${theme.palette.red}`,
-              backgroundColor: theme.palette.neutralLighterAlt,
-            },
-          },
-          onDismiss() {
-            setHidden(true)
-          },
-        }}>
-        <DialogFooter>
-          <PromiseButton text="Delete" promise={promiseDelete} />
-        </DialogFooter>
-      </Dialog>
+        title={
+          props.selectedItems.length === 1
+            ? 'Delete Document'
+            : `Delete ${props.selectedItems.length} Documents`
+        }
+        subText={props.selectedItems
+          .map((item) => stringify(item._id))
+          .join('\n')}
+        footer={<PromiseButton text="Delete" promise={promiseDelete} />}
+      />
       <ContextualMenu
         target={props.target}
         hidden={props.hidden}

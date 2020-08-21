@@ -14,7 +14,7 @@ import { EditorModal } from './EditorModal'
 import { DocumentContextualMenu } from './DocumentContextualMenu'
 import { PromiseButton } from './PromiseButton'
 import { LargeMessage } from './LargeMessage'
-import { ColorizedData } from './ColorizedData'
+import { MongoDataColorized } from './MongoDataColorized'
 import { DocumentCell } from './DocumentCell'
 
 type Document = { [key: string]: MongoData }
@@ -90,7 +90,7 @@ export function DocumentsList() {
   const handleRenderItemColumn = useCallback(
     (item?: Document, _index?: number, column?: IColumn) =>
       displayMode === DisplayMode.DOCUMENT ? (
-        <ColorizedData value={item} />
+        <MongoDataColorized value={item} />
       ) : (
         <DocumentCell
           value={item?.[column?.key as keyof typeof item]}

@@ -2,7 +2,7 @@ import React from 'react'
 import { omit } from 'lodash'
 
 import { MongoData } from '@/types'
-import { ColorizedData } from './ColorizedData'
+import { MongoDataColorized } from './MongoDataColorized'
 
 export function CommandAndLocks(props: {
   command: MongoData
@@ -10,7 +10,7 @@ export function CommandAndLocks(props: {
 }) {
   return (
     <>
-      <ColorizedData
+      <MongoDataColorized
         style={{ marginRight: 10 }}
         value={omit(props.command as object, [
           'lsid',
@@ -25,7 +25,7 @@ export function CommandAndLocks(props: {
           'awaitData',
         ])}
       />
-      <ColorizedData value={props.locks} />
+      <MongoDataColorized value={props.locks} />
     </>
   )
 }
