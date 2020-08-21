@@ -74,9 +74,7 @@ export function Table<T>(props: {
           <DetailsList
             columns={props.columns}
             getKey={props.getKey}
-            usePageCache={true}
             onShouldVirtualize={() => false}
-            useReducedRowRenderer={true}
             constrainMode={ConstrainMode.unconstrained}
             layoutMode={DetailsListLayoutMode.justified}
             items={props.items}
