@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import type { CollStats, IndexSpecification } from 'mongodb'
 
-import { runCommand, listConnections } from '@/utils/fetcher'
+import { runCommand } from '@/utils/fetcher'
 import {
   MongoData,
   DbStats,
@@ -13,10 +13,6 @@ import {
   IndexStats,
 } from '@/types'
 import { JsonSchema } from '@/types/schema'
-
-export function useCommandListConnections() {
-  return useSWR<string[], Error>('connections', listConnections)
-}
 
 export function useCommandDatabases() {
   const connection = useSelector((state) => state.root.connection)

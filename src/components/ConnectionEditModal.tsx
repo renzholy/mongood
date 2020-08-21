@@ -18,7 +18,10 @@ import useAsyncEffect from 'use-async-effect'
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { ServerStats } from '@/types'
-import { useCommandListConnections } from '@/hooks/use-command'
+import {
+  useConnections,
+  setSelfAddedConnections,
+} from '@/hooks/use-connections'
 import { usePromise } from '@/hooks/use-promise'
 import { PromiseButton } from './PromiseButton'
 
@@ -51,7 +54,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const theme = getTheme()
   const dispatch = useDispatch()
   const connection = useSelector((state) => state.root.connection)
-  const connections = useSelector((state) => state.root.connections)
+  const { selfAdded } = useConnections()
   const menuProps = useMemo<IContextualMenuProps | undefined>(
     () =>
       props.disabled
@@ -68,8 +71,8 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
                 },
                 onClick() {
                   dispatch(
-                    actions.root.setConnections(
-                      connections.filter((c) => c !== props.connection),
+                    setSelfAddedConnections(
+                      selfAdded.filter((c) => c !== props.connection),
                     ),
                   )
                   if (connection === props.connection) {
@@ -81,7 +84,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
           },
     [
       connection,
-      connections,
+      selfAdded,
       dispatch,
       props.connection,
       props.disabled,
@@ -134,8 +137,7 @@ export function ConnectionEditModal(props: {
   isOpen: boolean
   onDismiss(): void
 }) {
-  const { data } = useCommandListConnections()
-  const connections = useSelector((state) => state.root.connections)
+  const { selfAdded, builtIn } = useConnections()
   const theme = getTheme()
   const [value, setValue] = useState('')
   const dispatch = useDispatch()
@@ -152,10 +154,10 @@ export function ConnectionEditModal(props: {
   useEffect(() => {
     const _connection = promiseAddConnection.resolved
     if (_connection) {
-      dispatch(actions.root.setConnections(uniq([_connection, ...connections])))
+      setSelfAddedConnections(uniq([_connection, ...selfAdded]))
       setValue('')
     }
-  }, [connections, dispatch, promiseAddConnection.resolved])
+  }, [selfAdded, dispatch, promiseAddConnection.resolved])
 
   return (
     <Modal
@@ -209,7 +211,7 @@ export function ConnectionEditModal(props: {
           promise={promiseAddConnection}
         />
       </Stack>
-      {connections.length ? (
+      {selfAdded.length ? (
         <>
           <Text
             variant="xLarge"
@@ -223,13 +225,13 @@ export function ConnectionEditModal(props: {
             Self-added Connections
           </Text>
           <Stack tokens={{ childrenGap: 10 }}>
-            {connections.map((connection) => (
+            {selfAdded.map((connection) => (
               <ConnectionItem key={connection} connection={connection} />
             ))}
           </Stack>
         </>
       ) : null}
-      {data?.length ? (
+      {builtIn?.length ? (
         <>
           <Text
             variant="xLarge"
@@ -251,7 +253,7 @@ export function ConnectionEditModal(props: {
             </Text>
           </Text>
           <Stack tokens={{ childrenGap: 10 }}>
-            {data.map((connection) => (
+            {builtIn.map((connection) => (
               <ConnectionItem
                 key={connection}
                 connection={connection}

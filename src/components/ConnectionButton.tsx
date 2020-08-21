@@ -12,14 +12,13 @@ import { compact } from 'lodash'
 import { runCommand } from '@/utils/fetcher'
 import { actions } from '@/stores'
 import { ServerStats } from '@/types'
-import { useCommandListConnections } from '@/hooks/use-command'
+import { useConnections } from '@/hooks/use-connections'
 import { ConnectionEditModal } from './ConnectionEditModal'
 
 export function ConnectionButton(props: { style?: IStyle }) {
   const connection = useSelector((state) => state.root.connection)
-  const connections = useSelector((state) => state.root.connections)
   const dispatch = useDispatch()
-  const { data } = useCommandListConnections()
+  const { selfAdded, builtIn } = useConnections()
   const serverStatus = useCallback(
     async (_connection: string) =>
       runCommand<ServerStats>(_connection, 'admin', {
@@ -33,7 +32,7 @@ export function ConnectionButton(props: { style?: IStyle }) {
   useAsyncEffect(
     async (isMounted) => {
       const _connections = await Promise.all(
-        connections.map(async (c) => {
+        selfAdded.map(async (c) => {
           try {
             const { host, repl } = await serverStatus(c)
             return { c, host, replSetName: repl?.setName }
@@ -46,7 +45,7 @@ export function ConnectionButton(props: { style?: IStyle }) {
         setSelfConnections(compact(_connections))
       }
     },
-    [connections, serverStatus],
+    [selfAdded, serverStatus],
   )
   const [builtInConnections, setBuiltInConnections] = useState<
     { c: string; host: string; replSetName?: string }[]
@@ -54,7 +53,7 @@ export function ConnectionButton(props: { style?: IStyle }) {
   useAsyncEffect(
     async (isMounted) => {
       const _connections = await Promise.all(
-        (data || []).map(async (c) => {
+        (builtIn || []).map(async (c) => {
           try {
             const { host, repl } = await serverStatus(c)
             return { c, host, replSetName: repl?.setName }
@@ -67,19 +66,21 @@ export function ConnectionButton(props: { style?: IStyle }) {
         setBuiltInConnections(compact(_connections))
       }
     },
-    [data, serverStatus],
+    [builtIn, serverStatus],
   )
   const [isOpen, setIsOpen] = useState(false)
   useEffect(() => {
-    if ((data?.length || connections.length) && !connection) {
-      dispatch(actions.root.setConnection([...connections, ...(data || [])][0]))
+    if ((builtIn?.length || selfAdded.length) && !connection) {
+      dispatch(
+        actions.root.setConnection([...selfAdded, ...(builtIn || [])][0]),
+      )
     }
-  }, [connection, connections, data, dispatch])
+  }, [connection, selfAdded, builtIn, dispatch])
   useEffect(() => {
-    if (connections.length === 0 && data?.length === 0) {
+    if (selfAdded.length === 0 && builtIn?.length === 0) {
       setIsOpen(true)
     }
-  }, [connection, connections, data])
+  }, [connection, selfAdded, builtIn])
   const connectionToItem = useCallback(
     ({ c, host, replSetName }) => ({
       key: c,
