@@ -223,7 +223,8 @@ export function ProfilingControlStack() {
       {(profile?.was === level &&
         profile?.slowms === slowms &&
         profile?.sampleRate === sampleRate) ||
-      isValidating ? null : (
+      isValidating ||
+      error ? null : (
         <div>
           <PromiseButton icon="CheckMark" promise={promiseSetProfile} />
         </div>
