@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import {
-  DefaultButton,
-  Dialog,
-  IStyle,
-  DialogType,
-  getTheme,
-  DialogFooter,
-  IconButton,
-} from '@fluentui/react'
+import { DefaultButton, IStyle, IconButton } from '@fluentui/react'
 
 import { usePromise } from '@/hooks/use-promise'
+import { DefaultDialog } from './DefaultDialog'
 
 export function PromiseButton(props: {
   icon?: string
@@ -20,7 +13,6 @@ export function PromiseButton(props: {
   silent?: boolean
   style?: IStyle
 }) {
-  const theme = getTheme()
   const [hidden, setHidden] = useState(true)
   const { rejected, pending, call, reset } = props.promise
   useEffect(() => {
@@ -32,38 +24,25 @@ export function PromiseButton(props: {
   return (
     <>
       {props.silent ? null : (
-        <Dialog
+        <DefaultDialog
           hidden={hidden}
-          dialogContentProps={{
-            type: DialogType.normal,
-            title: 'Error',
-            subText: rejected?.message,
-            showCloseButton: true,
+          title="Error"
+          subText={rejected?.message}
+          onDismiss={() => {
+            setHidden(true)
           }}
-          modalProps={{
-            styles: {
-              main: {
-                minHeight: 0,
-                borderTop: `4px solid ${theme.palette.red}`,
-                backgroundColor: theme.palette.neutralLighterAlt,
-              },
-            },
-            onDismiss() {
-              setHidden(true)
-            },
-            onDismissed() {
-              reset()
-            },
-          }}>
-          <DialogFooter>
+          onDismissed={() => {
+            reset()
+          }}
+          footer={
             <DefaultButton
               onClick={() => {
                 setHidden(true)
               }}
               text="OK"
             />
-          </DialogFooter>
-        </Dialog>
+          }
+        />
       )}
       {props.text ? (
         <DefaultButton

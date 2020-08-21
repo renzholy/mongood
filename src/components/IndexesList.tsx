@@ -1,10 +1,4 @@
-import {
-  Dialog,
-  DialogFooter,
-  DialogType,
-  getTheme,
-  IColumn,
-} from '@fluentui/react'
+import { IColumn } from '@fluentui/react'
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { keyBy } from 'lodash'
@@ -25,6 +19,7 @@ import { IndexContextualMenu } from './IndexContextualMenu'
 import { PromiseButton } from './PromiseButton'
 import { Table } from './Table'
 import { IndexCell } from './IndexCell'
+import { DefaultDialog } from './DefaultDialog'
 
 type Index = IndexSpecification & { size?: number; ops: number; since: Date }
 
@@ -44,7 +39,6 @@ export function IndexesList() {
   const isDetailOpen = useSelector((state) => state.indexes.isDetailOpen)
   const isDialogHidden = useSelector((state) => state.indexes.isDialogHidden)
   const dispatch = useDispatch()
-  const theme = getTheme()
   const [target, setTarget] = useState<MouseEvent>()
   const handleDrop = useCallback(
     async () =>
@@ -142,33 +136,15 @@ export function IndexesList() {
   }
   return (
     <>
-      <Dialog
+      <DefaultDialog
         hidden={isDialogHidden}
-        dialogContentProps={{
-          type: DialogType.normal,
-          title: 'Drop Index',
-          subText: invokedIndex?.name,
-          showCloseButton: true,
-          onDismiss() {
-            dispatch(actions.indexes.setIsDialogHidden(true))
-          },
+        title="Drop Index"
+        subText={invokedIndex?.name}
+        onDismiss={() => {
+          dispatch(actions.indexes.setIsDialogHidden(true))
         }}
-        modalProps={{
-          styles: {
-            main: {
-              minHeight: 0,
-              borderTop: `4px solid ${theme.palette.red}`,
-              backgroundColor: theme.palette.neutralLighterAlt,
-            },
-          },
-          onDismiss() {
-            dispatch(actions.indexes.setIsDialogHidden(true))
-          },
-        }}>
-        <DialogFooter>
-          <PromiseButton text="Drop" promise={promiseDrop} />
-        </DialogFooter>
-      </Dialog>
+        footer={<PromiseButton text="Drop" promise={promiseDrop} />}
+      />
       <EditorModal
         title={`View Index: ${invokedIndex?.name}`}
         readOnly={true}
