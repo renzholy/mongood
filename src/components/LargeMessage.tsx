@@ -6,6 +6,7 @@ export const LargeMessage = React.memo(function LargeMessage(props: {
   iconName: string
   title: string
   content?: string
+  button?: React.ReactNode
   style?: CSSProperties
 }) {
   const theme = getTheme()
@@ -21,7 +22,13 @@ export const LargeMessage = React.memo(function LargeMessage(props: {
         justifyContent: 'center',
         ...props.style,
       }}>
-      <div style={{ maxWidth: 600 }}>
+      <div
+        style={{
+          maxWidth: 600,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Icon
             iconName={props.iconName}
@@ -46,17 +53,20 @@ export const LargeMessage = React.memo(function LargeMessage(props: {
             {props.title}
           </Text>
         </div>
-        <Text
-          variant="large"
-          styles={{
-            root: {
-              color: theme.palette.neutralSecondary,
-              marginLeft: 20,
-              wordBreak: 'break-all',
-            },
-          }}>
-          {props.content}
-        </Text>
+        {props.content ? (
+          <Text
+            variant="large"
+            styles={{
+              root: {
+                color: theme.palette.neutralSecondary,
+                marginLeft: 20,
+                wordBreak: 'break-all',
+              },
+            }}>
+            {props.content}
+          </Text>
+        ) : null}
+        {props.button}
       </div>
     </div>
   )
