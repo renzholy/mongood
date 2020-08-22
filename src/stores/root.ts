@@ -1,21 +1,30 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+const KEY = 'connections'
+
 export default createSlice({
   name: 'root',
   initialState: {
-    connection: localStorage.getItem('connection'),
-    connections: JSON.parse(localStorage.getItem('connections') || '[]'),
+    selfAddedConnections: JSON.parse(localStorage.getItem(KEY) || '[]'),
+    connection: localStorage.getItem('connection') || undefined,
     expandedDatabases: [],
     collectionsMap: {},
   } as {
+    selfAddedConnections: string[]
     connection?: string
-    connections: string[]
     database?: string
     collection?: string
     expandedDatabases: string[]
     collectionsMap: { [database: string]: string[] }
   },
   reducers: {
+    setSelfAddedConnections: (state, { payload }: PayloadAction<string[]>) => {
+      localStorage.setItem(KEY, JSON.stringify(payload))
+      return {
+        ...state,
+        selfAddedConnections: payload,
+      }
+    },
     setConnection: (state, { payload }: PayloadAction<string | undefined>) => {
       if (payload) {
         localStorage.setItem('connection', payload)
@@ -25,13 +34,6 @@ export default createSlice({
       return {
         ...state,
         connection: payload,
-      }
-    },
-    setConnections: (state, { payload }: PayloadAction<string[]>) => {
-      localStorage.setItem('connections', JSON.stringify(payload))
-      return {
-        ...state,
-        connections: payload,
       }
     },
     setDatabase: (state, { payload }: PayloadAction<string | undefined>) => ({
