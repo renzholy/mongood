@@ -8,5 +8,5 @@ require (
 	github.com/shibukawa/configdir v0.0.0-20170330084843-e180dbdc8da0
 	github.com/zserge/lorca v0.1.9
 	go.mongodb.org/mongo-driver v1.4.0
-	golang.org/x/net v0.0.0-20200707034311-ab3426394381
+	golang.org/x/net v0.0.0-20200822124328-c89045814202
 )

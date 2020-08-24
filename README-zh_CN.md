@@ -11,8 +11,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f7b2974cfea2417a8bd489a9bdbea4a7)](https://app.codacy.com/manual/RenzHoly/Mongood?utm_source=github.com&utm_medium=referral&utm_content=RenzHoly/Mongood&utm_campaign=Badge_Grade_Dashboard)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4b5f9ef66205961e4ddd/maintainability)](https://codeclimate.com/github/RenzHoly/Mongood/maintainability)
 
-<a href="https://www.producthunt.com/posts/mongood?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-mongood" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=230555&theme=light" alt="Mongood - A MongoDB GUI with Fluent Design | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
-
 [English](./README.md) | 简体中文
 
 ## 下载 ⚡️
