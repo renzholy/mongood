@@ -7,7 +7,6 @@ import useAsyncEffect from 'use-async-effect'
 import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
 import { useCommandDatabases } from '@/hooks/use-command'
-import { useHistorySearch } from '@/hooks/use-history-search'
 import { ConnectionButton } from './ConnectionButton'
 
 const splitter = '/'
@@ -146,7 +145,6 @@ export function DatabaseNav() {
     dispatch(actions.root.setExpandedDatabases([]))
     dispatch(actions.root.resetCollectionsMap())
   }, [connection, dispatch])
-  useHistorySearch()
 
   return (
     <div
