@@ -32,7 +32,6 @@ export function TopPivot() {
         <PivotItem headerText="Operations" itemKey="/operations" />
         <PivotItem headerText="Profiling" itemKey="/profiling" />
         <PivotItem headerText="Schema" itemKey="/schema" />
-        <PivotItem headerText="Users" itemKey="/users" />
         <PivotItem headerText="Notebook (Beta)" itemKey="/notebook" />
       </Pivot>
       <IconButton
