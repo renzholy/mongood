@@ -147,6 +147,7 @@ export function DocumentsList() {
             name: 'Documents',
             minWidth: 0,
             isMultiline: true,
+            columnActionsMode: ColumnActionsMode.disabled,
           },
         ]
   }, [displayMode, data, order])
