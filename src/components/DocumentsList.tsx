@@ -123,7 +123,18 @@ export function DocumentsList() {
     return displayMode === DisplayMode.TABLE
       ? mapToColumn(calcHeaders(data.cursor.firstBatch, order)).map((c) => ({
           ...c,
-          columnActionsMode: ColumnActionsMode.clickable,
+          columnActionsMode:
+            c.key === '_id'
+              ? ColumnActionsMode.disabled
+              : ColumnActionsMode.clickable,
+          onColumnContextMenu(_column, ev) {
+            if (_column?.key === '_id') {
+              return
+            }
+            columnTarget.current = ev?.nativeEvent
+            setColumn(_column)
+            setIsColumnMenuHidden(false)
+          },
           onColumnClick(ev, _column) {
             columnTarget.current = ev.nativeEvent
             setColumn(_column)
