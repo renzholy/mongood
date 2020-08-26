@@ -1,6 +1,6 @@
 {
   "name": "@renzholy/mongood",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A MongoDB GUI",
   "main": "index.js",
   "private": "true",
@@ -17,7 +17,7 @@
     "url": "git+https://github.com/RenzHoly/Mongood.git"
   },
   "author": "RenzHoly <renzholy@gmail.com>",
-  "license": "MPL-2.0",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/RenzHoly/Mongood/issues"
   },
