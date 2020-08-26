@@ -24,7 +24,10 @@ export function TopPivot() {
             : history.location.pathname
         }
         onLinkClick={(link) => {
-          history.push(link?.props.itemKey || '/')
+          history.push({
+            pathname: link?.props.itemKey || '/',
+            search: history.location.search,
+          })
         }}>
         <PivotItem headerText="Stats" itemKey="/stats" />
         <PivotItem headerText="Documents" itemKey="/documents" />
