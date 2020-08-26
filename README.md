@@ -23,7 +23,7 @@ English | [简体中文](./README-zh_CN.md)
 - [x] Server or client mode (without Electron, but need Chrome)
 - [x] Edit documents using [Monaco Editor](https://microsoft.github.io/monaco-editor/index.html) with intellisense
 - [x] Designed with [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui)
-- [x] [Mongo Shell](https://docs.mongodb.com/manual/core/shell-types/) compatiable data type, eg: `ObjectId()` `ISODate()` `Timestamp()`
+- [x] [Mongo Shell](https://docs.mongodb.com/manual/core/shell-types/) compatible data type, eg: `ObjectId()` `ISODate()` `Timestamp()`
 - [x] Find documents with index hint, avoiding slow operation
 - [x] Fancy profiling exec stats
 - [x] Geo preview for 2dsphere index
