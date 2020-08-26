@@ -159,6 +159,7 @@ export function useCommandFind() {
   const collection = useSelector((state) => state.root.collection)
   const index = useSelector((state) => state.docs.index)
   const filter = useSelector((state) => state.docs.filter)
+  const projection = useSelector((state) => state.docs.projection)
   const sort = useSelector((state) => state.docs.sort)
   const skip = useSelector((state) => state.docs.skip)
   const limit = useSelector((state) => state.docs.limit)
@@ -172,7 +173,7 @@ export function useCommandFind() {
     connection && database && collection
       ? `find/${connection}/${database}/${collection}/${skip}/${limit}/${JSON.stringify(
           filter,
-        )}/${JSON.stringify(sort)}/${hint}`
+        )}/${JSON.stringify(projection)}/${JSON.stringify(sort)}/${hint}`
       : null,
     () =>
       runCommand(
@@ -181,6 +182,7 @@ export function useCommandFind() {
         {
           find: collection,
           filter,
+          projection,
           sort,
           hint,
           skip,

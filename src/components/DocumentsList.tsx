@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Selection, IColumn } from '@fluentui/react'
+import { Selection, IColumn, ColumnActionsMode } from '@fluentui/react'
 import { get } from 'lodash'
 
 import { runCommand } from '@/utils/fetcher'
@@ -11,7 +11,8 @@ import { usePromise } from '@/hooks/use-promise'
 import { calcHeaders, mapToColumn } from '@/utils/table'
 import { Table } from './Table'
 import { EditorModal } from './EditorModal'
-import { DocumentContextualMenu } from './DocumentContextualMenu'
+import { DocumentRowContextualMenu } from './DocumentRowContextualMenu'
+import { DocumentColumnContextualMenu } from './DocumentColumnContextualMenu'
 import { PromiseButton } from './PromiseButton'
 import { LargeMessage } from './LargeMessage'
 import { MongoDataColorized } from './MongoDataColorized'
@@ -27,9 +28,11 @@ export function DocumentsList() {
   const index = useSelector((state) => state.docs.index)
   const { data, error, revalidate } = useCommandFind()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
-  const [isMenuHidden, setIsMenuHidden] = useState(true)
+  const [isRowMenuHidden, setIsRowMenuHidden] = useState(true)
+  const [isColumnMenuHidden, setIsColumnMenuHidden] = useState(true)
   const [invokedItem, setInvokedItem] = useState<Document>()
   const [editedItem, setEditedItem] = useState<Document>()
+  const [column, setColumn] = useState<IColumn>()
   const handleUpdate = useCallback(
     async () =>
       database && collection
@@ -48,7 +51,8 @@ export function DocumentsList() {
       setIsUpdateOpen(false)
     }
   }, [promiseUpdate.resolved, revalidate])
-  const target = useRef<MouseEvent>()
+  const rowTarget = useRef<MouseEvent>()
+  const columnTarget = useRef<MouseEvent>()
   const selection = useMemo(() => new Selection<Document>(), [])
   const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
   const onItemInvoked = useCallback((item: Document) => {
@@ -64,8 +68,8 @@ export function DocumentsList() {
       } else {
         setInvokedItem(undefined)
       }
-      target.current = ev
-      setIsMenuHidden(false)
+      rowTarget.current = ev
+      setIsRowMenuHidden(false)
     },
     [selection],
   )
@@ -88,20 +92,20 @@ export function DocumentsList() {
     [index],
   )
   const handleRenderItemColumn = useCallback(
-    (item?: Document, _index?: number, column?: IColumn) =>
+    (item?: Document, _index?: number, _column?: IColumn) =>
       displayMode === DisplayMode.DOCUMENT ? (
         <MongoDataColorized value={item} />
       ) : (
         <DocumentCell
-          value={item?.[column?.key as keyof typeof item]}
+          value={item?.[_column?.key as keyof typeof item]}
           subStringLength={
             // eslint-disable-next-line no-bitwise
-            column?.currentWidth ? undefined : column?.minWidth! >> 2
+            _column?.currentWidth ? undefined : _column?.minWidth! >> 2
           }
           index2dsphere={
             index2dsphere &&
-            column?.key &&
-            index2dsphere.startsWith(column?.key)
+            _column?.key &&
+            index2dsphere.startsWith(_column?.key)
               ? get(item, index2dsphere)
               : undefined
           }
@@ -117,7 +121,15 @@ export function DocumentsList() {
       return []
     }
     return displayMode === DisplayMode.TABLE
-      ? mapToColumn(calcHeaders(data.cursor.firstBatch, order))
+      ? mapToColumn(calcHeaders(data.cursor.firstBatch, order)).map((c) => ({
+          ...c,
+          columnActionsMode: ColumnActionsMode.clickable,
+          onColumnClick(ev, _column) {
+            columnTarget.current = ev.nativeEvent
+            setColumn(_column)
+            setIsColumnMenuHidden(false)
+          },
+        }))
       : [
           {
             key: '',
@@ -161,21 +173,29 @@ export function DocumentsList() {
           />
         }
       />
-      <DocumentContextualMenu
-        hidden={isMenuHidden}
+      <DocumentRowContextualMenu
+        hidden={isRowMenuHidden}
         onDismiss={() => {
-          setIsMenuHidden(true)
+          setIsRowMenuHidden(true)
         }}
-        target={target.current}
+        target={rowTarget.current}
         selectedItems={selection.getSelection()}
         onEdit={
           invokedItem
             ? () => {
-                setIsMenuHidden(true)
+                setIsRowMenuHidden(true)
                 setIsUpdateOpen(true)
               }
             : undefined
         }
+      />
+      <DocumentColumnContextualMenu
+        value={column}
+        hidden={isColumnMenuHidden}
+        onDismiss={() => {
+          setIsColumnMenuHidden(true)
+        }}
+        target={columnTarget.current}
       />
       <Table
         items={data.cursor.firstBatch}

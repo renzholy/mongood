@@ -21,7 +21,7 @@ const cast: Options['cast'] = {
   string: (value) => stringify(value),
 }
 
-export function DocumentContextualMenu<
+export function DocumentRowContextualMenu<
   T extends { [key: string]: MongoData }
 >(props: {
   hidden: boolean

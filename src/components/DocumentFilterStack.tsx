@@ -20,6 +20,7 @@ export function DocumentFilterStack() {
   const collection = useSelector((state) => state.root.collection)
   const index = useSelector((state) => state.docs.index)
   const filter = useSelector((state) => state.docs.filter)
+  const projection = useSelector((state) => state.docs.projection)
   const sort = useSelector((state) => state.docs.sort)
   useEffect(() => {
     dispatch(actions.docs.setFilter(index?.partialFilterExpression || {}))
@@ -28,6 +29,8 @@ export function DocumentFilterStack() {
   useEffect(() => {
     dispatch(actions.docs.setIndex(undefined))
     dispatch(actions.docs.setFilter({}))
+    dispatch(actions.docs.setSort({}))
+    dispatch(actions.docs.setProjection({}))
   }, [connection, database, collection, dispatch])
 
   if (!database || !collection) {
@@ -41,7 +44,7 @@ export function DocumentFilterStack() {
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height } }}>
         <FilterInput
-          prefix="query:"
+          prefix="filter:"
           value={filter}
           onChange={(value) => {
             dispatch(actions.docs.setFilter((value as {}) || {}))
@@ -52,6 +55,13 @@ export function DocumentFilterStack() {
           value={sort}
           onChange={(value) => {
             dispatch(actions.docs.setSort((value as {}) || {}))
+          }}
+        />
+        <FilterInput
+          prefix="projection:"
+          value={projection}
+          onChange={(value) => {
+            dispatch(actions.docs.setProjection((value as {}) || {}))
           }}
         />
       </Stack>
