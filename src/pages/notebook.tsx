@@ -7,6 +7,7 @@ import {
   IDetailsRowProps,
   getTheme,
 } from '@fluentui/react'
+import useAsyncEffect from 'use-async-effect'
 
 import { changeLib } from '@/utils/editor'
 import { NotebookItem } from '@/components/NotebookItem'
@@ -16,12 +17,15 @@ export default () => {
   const connection = useSelector((state) => state.root.connection)
   const notebooks = useSelector((state) => state.notebook.notebooks)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
-  useEffect(() => {
-    const disposable = changeLib(collectionsMap)
-    return () => {
+  useAsyncEffect(
+    () => {
+      return changeLib(collectionsMap)
+    },
+    (disposable) => {
       disposable?.dispose()
-    }
-  }, [collectionsMap])
+    },
+    [collectionsMap],
+  )
   const theme = getTheme()
   const handleRenderRow = useCallback<IRenderFunction<IDetailsRowProps>>(
     (_props, defaultRender) =>

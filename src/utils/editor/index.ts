@@ -2,37 +2,40 @@ import { monaco, ControlledEditor, Monaco } from '@monaco-editor/react'
 import type { IDisposable } from 'monaco-editor'
 
 import { TAB_SIZE_KEY } from '@/pages/settings'
+import { Deferred } from '../deferred'
 
-let _monaco: Monaco | undefined
+const _monaco = new Deferred<Monaco>()
 
-monaco.init().then((_m) => {
-  if (_monaco) {
-    return
-  }
-  _monaco = _m
-  _monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-    diagnosticCodesToIgnore: [1108, 1308],
+monaco
+  .init()
+  .then((_m) => {
+    _m.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      diagnosticCodesToIgnore: [1108, 1308],
+    })
+    _m.languages.typescript.typescriptDefaults.setCompilerOptions({
+      noLib: true,
+      noResolve: true,
+      allowNonTsExtensions: true,
+    })
+    _m.languages.typescript.typescriptDefaults.addExtraLib(
+      // eslint-disable-next-line global-require
+      require('./libs/ejson.d.ts').default,
+      'ejson.d.ts',
+    )
+    _m.languages.typescript.typescriptDefaults.addExtraLib(
+      // eslint-disable-next-line global-require
+      require('./libs/collection.d.ts').default,
+      'collection.d.ts',
+    )
+    _monaco.resolve(_m)
   })
-  _monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-    noLib: true,
-    noResolve: true,
-    allowNonTsExtensions: true,
+  .catch((err) => {
+    _monaco.reject(err)
   })
-  _monaco.languages.typescript.typescriptDefaults.addExtraLib(
-    // eslint-disable-next-line global-require
-    require('./libs/ejson.d.ts').default,
-    'ejson.d.ts',
-  )
-  _monaco.languages.typescript.typescriptDefaults.addExtraLib(
-    // eslint-disable-next-line global-require
-    require('./libs/collection.d.ts').default,
-    'collection.d.ts',
-  )
-})
 
-export function changeLib(collectionsMap: {
+export async function changeLib(collectionsMap: {
   [database: string]: string[]
-}): IDisposable | undefined {
+}): Promise<IDisposable> {
   const lib = `
 const db: {
   [key: string]: Database & { [key: string]: Collection }
@@ -46,16 +49,18 @@ const db: {
     .join('\n  ')}
 }
   `
-  return _monaco?.languages.typescript.typescriptDefaults.addExtraLib(lib)
+  return (
+    await _monaco.promise
+  ).languages.typescript.typescriptDefaults.addExtraLib(lib)
 }
 
 export async function colorize(
   text: string,
   isDarkMode: boolean,
 ): Promise<string> {
-  _monaco?.editor.setTheme(isDarkMode ? 'vs-dark' : 'vs')
+  ;(await _monaco.promise).editor.setTheme(isDarkMode ? 'vs-dark' : 'vs')
   return (
-    _monaco?.editor.colorize(text, 'javascript', {
+    (await _monaco.promise).editor.colorize(text, 'javascript', {
       tabSize: parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10),
     }) || ''
   )
