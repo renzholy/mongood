@@ -4,7 +4,7 @@
 
 一个遵循 [Fluent Design](https://www.microsoft.com/design/fluent/) 的 [MongoDB](https://www.mongodb.com/) GUI
 
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+[![License: AGPL 3.0](https://img.shields.io/badge/License-AGPL%203.0-brightgreen.svg)](https://opensource.org/licenses/AGPL-3.0)
 [![Docker Build](https://img.shields.io/docker/cloud/build/renzholy/mongood)](https://hub.docker.com/r/renzholy/mongood)
 ![Docker Pulls](https://img.shields.io/docker/pulls/renzholy/mongood)
 ![GitHub Actions](https://github.com/renzholy/mongood/workflows/Release/badge.svg?branch=v0.1.0)
