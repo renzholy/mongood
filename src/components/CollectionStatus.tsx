@@ -4,13 +4,13 @@ import bytes from 'bytes'
 
 import { formatNumber } from '@/utils/formatter'
 import { StatsArea } from '@/components/StatsArea'
-import { useCommandCollStats, useCOmmandDbStats } from '@/hooks/use-command'
+import { useCommandCollStats, useCommandDbStats } from '@/hooks/use-command'
 import { LargeMessage } from './LargeMessage'
 
 export function CollectionStatus() {
   const collection = useSelector((state) => state.root.collection)
   const { data: collStats, error: collStatsError } = useCommandCollStats()
-  const { data: dbStats, error: dbStatsError } = useCOmmandDbStats()
+  const { data: dbStats, error: dbStatsError } = useCommandDbStats()
 
   if (collStatsError) {
     return (

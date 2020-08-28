@@ -99,7 +99,7 @@ export function useCommandCollStats() {
   )
 }
 
-export function useCOmmandDbStats() {
+export function useCommandDbStats() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   return useSWR<DbStats, Error>(

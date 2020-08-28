@@ -5,7 +5,11 @@ import { Stack, IconButton, Separator } from '@fluentui/react'
 import { LargeMessage } from '@/components/LargeMessage'
 import { EditorModal } from '@/components/EditorModal'
 import { IndexesList } from '@/components/IndexesList'
-import { useCommandListIndexes } from '@/hooks/use-command'
+import {
+  useCommandListIndexes,
+  useCommandIndexStats,
+  useCommandCollStats,
+} from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { PromiseButton } from '@/components/PromiseButton'
@@ -18,7 +22,18 @@ export default () => {
   const [value, setValue] = useState<object>({
     background: true,
   })
-  const { revalidate, isValidating } = useCommandListIndexes()
+  const {
+    revalidate: revalidateIndex,
+    isValidating: isValidatingIndex,
+  } = useCommandListIndexes()
+  const {
+    revalidate: revalidateIndexStats,
+    isValidating: isValidatingIndexStats,
+  } = useCommandIndexStats()
+  const {
+    revalidate: revalidateCollStats,
+    isValidating: isValidatingCollStats,
+  } = useCommandCollStats()
   const handleCreate = useCallback(
     async () =>
       database && collection
@@ -30,12 +45,19 @@ export default () => {
     [collection, connection, database, value],
   )
   const promiseCreate = usePromise(handleCreate)
+  const revalidate = useCallback(() => {
+    revalidateIndex()
+    revalidateIndexStats()
+    revalidateCollStats()
+  }, [revalidateIndex, revalidateIndexStats, revalidateCollStats])
   useEffect(() => {
     if (promiseCreate.resolved) {
       setIsOpen(false)
       revalidate()
     }
   }, [promiseCreate.resolved, revalidate])
+  const isValidating =
+    isValidatingIndex || isValidatingIndexStats || isValidatingCollStats
 
   if (!database || !collection) {
     return <LargeMessage iconName="Back" title="Select Collection" />
