@@ -1,4 +1,4 @@
-module github.com/renzholy/mongood
+module github.com/RenzHoly/Mongood
 
 go 1.14
 
