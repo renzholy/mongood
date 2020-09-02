@@ -48,7 +48,7 @@
     "@types/bson": "4.0.2",
     "@types/bytes": "3.1.0",
     "@types/deepmerge": "2.2.0",
-    "@types/lodash": "4.14.160",
+    "@types/lodash": "4.14.161",
     "@types/markdown-table": "2.0.0",
     "@types/mongodb": "3.5.26",
     "@types/mongodb-uri": "0.9.0",
