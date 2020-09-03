@@ -18,7 +18,7 @@ import { Table } from './Table'
 import { TableCell } from './TableCell'
 import { DefaultDialog } from './DefaultDialog'
 
-type Operation = { opid: { $numberInt: string }; [key: string]: MongoData }
+type Operation = { opid?: { $numberInt: string }; [key: string]: MongoData }
 
 export function OperationsList() {
   const { data, error, revalidate } = useCommandCurrentOp()
@@ -71,8 +71,8 @@ export function OperationsList() {
     },
     [],
   )
-  const handleGetKey = useCallback((item: Operation) => {
-    return item.opid.$numberInt
+  const handleGetKey = useCallback((item: Operation, index?: number) => {
+    return item.opid?.$numberInt || stringify(item) + index
   }, [])
   const columns = useMemo<IColumn[]>(() => {
     return mapToColumn(
