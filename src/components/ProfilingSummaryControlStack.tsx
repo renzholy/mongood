@@ -1,4 +1,4 @@
-import { Stack, SpinButton, IconButton } from '@fluentui/react'
+import { Stack, SpinButton, IconButton, Label, Slider } from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -16,20 +16,20 @@ export function ProfilingSummaryControlStack(props: {
   const host = useSelector((state) => state.profiling.host)
   const profilingConnection = host
     ? generateConnectionWithDirectHost(host, connection)
-    : undefined
+    : connection
   const [slowms, setSlowms] = useState(0)
   const [sampleRate, setSampleRate] = useState(0)
   const { data: profile, error, revalidate, isValidating } = useCommandProfile()
   const handleSetProfile = useCallback(
     async () =>
-      runCommand(profilingConnection || connection, 'admin', {
+      runCommand(profilingConnection, 'admin', {
         profile: profile?.was,
         slowms,
         sampleRate: {
           $numberDouble: sampleRate.toString(),
         },
       }),
-    [profilingConnection, connection, profile?.was, slowms, sampleRate],
+    [profilingConnection, profile, slowms, sampleRate],
   )
   const promiseSetProfile = usePromise(handleSetProfile)
   useEffect(() => {
@@ -48,7 +48,7 @@ export function ProfilingSummaryControlStack(props: {
   return (
     <Stack
       horizontal={true}
-      tokens={{ childrenGap: 10, padding: 10 }}
+      tokens={{ padding: 10 }}
       styles={{
         root: { height: 52, alignItems: 'center' },
       }}>
@@ -56,7 +56,7 @@ export function ProfilingSummaryControlStack(props: {
         label="Slow ms:"
         styles={{
           spinButtonWrapper: { width: 80 },
-          root: { width: 'fit-content' },
+          root: { width: 'fit-content', marginRight: 20 },
         }}
         value={slowms.toString()}
         onValidate={(value) => {
@@ -69,21 +69,19 @@ export function ProfilingSummaryControlStack(props: {
           setSlowms(Math.max(parseInt(value, 10) - 10, 0))
         }}
       />
-      <SpinButton
-        label="Sample rate:"
+      <Label>Sample rate:</Label>
+      <Slider
         styles={{
-          spinButtonWrapper: { width: 80 },
-          root: { width: 'fit-content' },
+          slideBox: { width: 80 },
         }}
-        value={`${(sampleRate * 100).toString()}%`}
-        onValidate={(value) => {
-          setSampleRate(Math.max(parseInt(value, 10) / 100, 0))
-        }}
-        onIncrement={(value) => {
-          setSampleRate(Math.max(parseInt(value, 10) / 100 + 0.01, 0))
-        }}
-        onDecrement={(value) => {
-          setSampleRate(Math.max(parseInt(value, 10) / 100 - 0.01, 0))
+        min={0}
+        max={1}
+        step={0.01}
+        valueFormat={(value) => `${Math.round(value * 100)}%`}
+        value={sampleRate}
+        onChange={setSampleRate}
+        onChanged={(_ev, value) => {
+          setSampleRate(value)
         }}
       />
       {(profile?.slowms === slowms && profile?.sampleRate === sampleRate) ||

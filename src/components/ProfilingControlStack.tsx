@@ -27,18 +27,18 @@ export function ProfilingControlStack() {
   const host = useSelector((state) => state.profiling.host)
   const profilingConnection = host
     ? generateConnectionWithDirectHost(host, connection)
-    : undefined
+    : connection
   const database = useSelector((state) => state.root.database)
   const [level, setLevel] = useState<ProfilingLevel>()
   const { data: profile, error, revalidate, isValidating } = useCommandProfile()
   const handleSetProfile = useCallback(
     async () =>
       database && level !== undefined
-        ? runCommand(profilingConnection || connection, database, {
+        ? runCommand(profilingConnection, database, {
             profile: level,
           })
         : undefined,
-    [profilingConnection, connection, database, level],
+    [profilingConnection, database, level],
   )
   const promiseSetProfile = usePromise(handleSetProfile)
   useEffect(() => {
@@ -91,7 +91,7 @@ export function ProfilingControlStack() {
               items,
             }}
             styles={{
-              root: { width: 160 },
+              root: { width: 160, marginRight: 10 },
               label: {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
