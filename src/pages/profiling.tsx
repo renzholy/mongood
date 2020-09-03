@@ -3,9 +3,9 @@ import { Separator } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
-import { LargeMessage } from '@/components/LargeMessage'
 import { ProfilingControlStack } from '@/components/ProfilingControlStack'
 import { ProfilingList } from '@/components/ProfilingList'
+import { ProfilingSummary } from '@/components/ProfilingSummary'
 
 export default () => {
   const database = useSelector((state) => state.root.database)
@@ -27,7 +27,7 @@ export default () => {
   }, [database, collection, dispatch])
 
   if (!database || !collection) {
-    return <LargeMessage iconName="Back" title="Select Collection" />
+    return <ProfilingSummary />
   }
   return (
     <>

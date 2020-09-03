@@ -67,7 +67,6 @@ export function ProfilingControlStack() {
   }, [profile])
   const [host, setHost] = useState<string>()
   const dispatch = useDispatch()
-
   const { data: replicaConfig } = useCommandIsMaster()
   const hosts = useMemo<string[]>(() => replicaConfig?.hosts || [], [
     replicaConfig,
