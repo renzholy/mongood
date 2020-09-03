@@ -89,7 +89,7 @@ export function ProfilingSummary() {
         </span>
       )
     },
-    [dispatch],
+    [dispatch, theme.palette.themePrimary],
   )
 
   if (!data) {
