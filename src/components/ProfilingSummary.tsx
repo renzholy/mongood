@@ -3,7 +3,7 @@
 
 import { useSWRInfinite } from 'swr'
 import React, { useCallback, useMemo } from 'react'
-import { IColumn } from '@fluentui/react'
+import { IColumn, getTheme } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
@@ -59,10 +59,11 @@ export function ProfilingSummary() {
     initialSize: databases?.databases.length,
   })
   const columns = useMemo<IColumn[]>(() => {
-    const cs = (hosts?.hosts.map((h) => [h, 200]) || []) as [string, number][]
+    const cs = (hosts?.hosts.map((h) => [h, 160]) || []) as [string, number][]
     return mapToColumn([['database', 200], ...cs])
   }, [hosts])
   const dispatch = useDispatch()
+  const theme = getTheme()
   const handleRenderItemColumn = useCallback(
     (item?: Data, _index?: number, column?: IColumn) => {
       if (!item || !column?.key) {
@@ -73,7 +74,7 @@ export function ProfilingSummary() {
       }
       return (
         <span
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', color: theme.palette.themePrimary }}
           onClick={() => {
             dispatch(
               actions.root.setExpandedDatabases(
