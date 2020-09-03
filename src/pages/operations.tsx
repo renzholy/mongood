@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import {
   Stack,
   DefaultButton,
@@ -57,14 +57,28 @@ const examples: { [key: string]: object } = {
 
 export default () => {
   const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
   const filter = useSelector((state) => state.operations.filter)
   const refreshInterval = useSelector(
     (state) => state.operations.refreshInterval,
   )
   const [example, setExample] = useState<string>()
   const dispatch = useDispatch()
-  const ns = database && collection ? `${database}.${collection}` : undefined
+  const ns = useMemo(() => {
+    if (database) {
+      return {
+        $regex: {
+          $regularExpression: {
+            pattern: `${database}.*`,
+            options: '',
+          },
+        },
+      }
+    }
+    return undefined
+  }, [database])
+  useEffect(() => {
+    dispatch(actions.operations.setNs(ns))
+  }, [ns, dispatch])
   const { revalidate, isValidating } = useCommandCurrentOp()
   const value = useMemo(() => (ns ? { ...filter, ns } : omit(filter, 'ns')), [
     ns,

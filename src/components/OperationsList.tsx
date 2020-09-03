@@ -1,5 +1,5 @@
 import { DefaultButton, IColumn } from '@fluentui/react'
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { compact } from 'lodash'
 
@@ -19,6 +19,18 @@ import { TableCell } from './TableCell'
 import { DefaultDialog } from './DefaultDialog'
 
 type Operation = { opid?: { $numberInt: string }; [key: string]: MongoData }
+
+const columns = mapToColumn(
+  compact([
+    ['ns', 100],
+    ['opid', 100],
+    ['op', 100],
+    ['ms', 100],
+    ['planSummary', 100],
+    ['client', 100],
+    ['clientMetadata', 200],
+  ]),
+)
 
 export function OperationsList() {
   const { data, error, revalidate } = useCommandCurrentOp()
@@ -74,19 +86,6 @@ export function OperationsList() {
   const handleGetKey = useCallback((item: Operation, index?: number) => {
     return item.opid?.$numberInt || stringify(item) + index
   }, [])
-  const columns = useMemo<IColumn[]>(() => {
-    return mapToColumn(
-      compact([
-        collection ? undefined : ['ns', 100],
-        ['opid', 100],
-        ['op', 100],
-        ['ms', 100],
-        ['planSummary', 100],
-        ['client', 100],
-        ['clientMetadata', 200],
-      ]),
-    )
-  }, [collection])
 
   if (error) {
     return (

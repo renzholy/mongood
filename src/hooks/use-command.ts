@@ -293,8 +293,6 @@ export function useCommandSystemProfileCount() {
 
 export function useCommandCurrentOp() {
   const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
   const filter = useSelector((state) => state.operations.filter)
   const refreshInterval = useSelector(
     (state) => state.operations.refreshInterval,
@@ -302,9 +300,9 @@ export function useCommandCurrentOp() {
   const isEditorOpen = useSelector((state) => state.operations.isEditorOpen)
   const isDialogHidden = useSelector((state) => state.operations.isDialogHidden)
   const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
-  const ns = database && collection ? `${database}.${collection}` : undefined
+
   return useSWR<{ inprog: { [key: string]: MongoData }[] }, Error>(
-    `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
+    `currentOp/${connection}/${JSON.stringify(filter)}`,
     () =>
       runCommand(
         connection,
@@ -312,7 +310,6 @@ export function useCommandCurrentOp() {
         {
           currentOp: 1,
           ...filter,
-          ns,
         },
         {
           canonical: true,
