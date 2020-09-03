@@ -1,12 +1,17 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+
 import { useSWRInfinite } from 'swr'
 import React, { useCallback, useMemo } from 'react'
 import { IColumn } from '@fluentui/react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
 import { useCommandDatabases, useCommandIsMaster } from '@/hooks/use-command'
 import { mapToColumn } from '@/utils/table'
 import { generateConnectionWithDirectHost } from '@/utils'
+import { formatNumber } from '@/utils/formatter'
+import { actions } from '@/stores'
 import { Table } from './Table'
 import { LargeMessage } from './LargeMessage'
 import { TableCell } from './TableCell'
@@ -55,11 +60,30 @@ export function ProfilingSummary() {
     const cs = (hosts?.hosts.map((h) => [h, 200]) || []) as [string, number][]
     return mapToColumn([['database', 200], ...cs])
   }, [hosts])
+  const dispatch = useDispatch()
   const handleRenderItemColumn = useCallback(
     (item?: any, _index?: number, column?: IColumn) => {
-      return <TableCell value={item?.[column?.key!]} />
+      if (column?.key === 'database') {
+        return <TableCell value={item?.[column?.key!]} />
+      }
+      return (
+        <span
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            dispatch(
+              actions.root.setExpandedDatabases(
+                item?.database ? [item?.database] : [],
+              ),
+            )
+            dispatch(actions.root.setDatabase(item?.database))
+            dispatch(actions.root.setCollection('system.profile'))
+            dispatch(actions.profiling.setConnection(column?.key))
+          }}>
+          {formatNumber(item?.[column?.key!])}
+        </span>
+      )
     },
-    [],
+    [dispatch],
   )
 
   if (!data) {
