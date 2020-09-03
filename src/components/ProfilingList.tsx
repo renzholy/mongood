@@ -20,7 +20,6 @@ const keys = [
   'ts',
   'keysExamined',
   'docsExamined',
-  'numYield',
   'nreturned',
   'planSummary',
 ]
