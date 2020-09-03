@@ -220,15 +220,15 @@ export function useCommandCount() {
 
 export function useCommandProfile() {
   const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
+  const database = useSelector((state) => state.root.database || 'admin')
   const host = useSelector((state) => state.profiling.host)
   const c = host
     ? generateConnectionWithDirectHost(host, connection)
     : connection
   return useSWR<{ was: number; slowms: number; sampleRate: number }, Error>(
-    database ? `profile/${c}/${database}` : null,
+    `profile/${c}/${database}`,
     () =>
-      runCommand(c, database!, {
+      runCommand(c, database, {
         profile: -1,
       }),
     {},

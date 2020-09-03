@@ -15,6 +15,7 @@ import { actions } from '@/stores'
 import { Table } from './Table'
 import { LargeMessage } from './LargeMessage'
 import { TableCell } from './TableCell'
+import { ProfilingSummaryControlStack } from './ProfilingSummaryControlStack'
 
 type Data = { database: string } & { [host: string]: number }
 
@@ -55,9 +56,13 @@ export function ProfilingSummary() {
       { [KEY_NAME]: _database } as Data,
     )
   }, [])
-  const { data } = useSWRInfinite<Data>(handleGetKey, fetcher, {
-    initialSize: databases?.databases.length,
-  })
+  const { data, isValidating, revalidate } = useSWRInfinite<Data>(
+    handleGetKey,
+    fetcher,
+    {
+      initialSize: databases?.databases.length,
+    },
+  )
   const columns = useMemo<IColumn[]>(() => {
     const cs = (hosts?.hosts.map((h) => [h, 160]) || []) as [string, number][]
     return mapToColumn([[KEY_NAME, 0], ...cs])
@@ -104,11 +109,17 @@ export function ProfilingSummary() {
     return <LargeMessage iconName="HourGlass" title="Loading" />
   }
   return (
-    <Table
-      items={data}
-      columns={columns}
-      onRenderItemColumn={handleRenderItemColumn}
-      onItemInvoked={handleViewProfiling}
-    />
+    <>
+      <ProfilingSummaryControlStack
+        isValidating={isValidating}
+        revalidate={revalidate}
+      />
+      <Table
+        items={data}
+        columns={columns}
+        onRenderItemColumn={handleRenderItemColumn}
+        onItemInvoked={handleViewProfiling}
+      />
+    </>
   )
 }
