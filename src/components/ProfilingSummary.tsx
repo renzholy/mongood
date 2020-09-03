@@ -16,6 +16,8 @@ import { Table } from './Table'
 import { LargeMessage } from './LargeMessage'
 import { TableCell } from './TableCell'
 
+type Data = { database: string } & { [host: string]: number }
+
 export function ProfilingSummary() {
   const connection = useSelector((state) => state.root.connection)
   const { data: databases } = useCommandDatabases()
@@ -53,7 +55,7 @@ export function ProfilingSummary() {
       },
     )
   }, [])
-  const { data } = useSWRInfinite<{ n: number }[]>(handleGetKey, fetcher, {
+  const { data } = useSWRInfinite<Data>(handleGetKey, fetcher, {
     initialSize: databases?.databases.length,
   })
   const columns = useMemo<IColumn[]>(() => {
@@ -62,9 +64,12 @@ export function ProfilingSummary() {
   }, [hosts])
   const dispatch = useDispatch()
   const handleRenderItemColumn = useCallback(
-    (item?: any, _index?: number, column?: IColumn) => {
-      if (column?.key === 'database') {
-        return <TableCell value={item?.[column?.key!]} />
+    (item?: Data, _index?: number, column?: IColumn) => {
+      if (!item || !column?.key) {
+        return null
+      }
+      if (column.key === 'database') {
+        return <TableCell value={item[column.key]} />
       }
       return (
         <span
@@ -72,14 +77,14 @@ export function ProfilingSummary() {
           onClick={() => {
             dispatch(
               actions.root.setExpandedDatabases(
-                item?.database ? [item?.database] : [],
+                item.database ? [item.database] : [],
               ),
             )
             dispatch(actions.root.setDatabase(item?.database))
             dispatch(actions.root.setCollection('system.profile'))
-            dispatch(actions.profiling.setConnection(column?.key))
+            dispatch(actions.profiling.setHost(column?.key))
           }}>
-          {formatNumber(item?.[column?.key!])}
+          {formatNumber(item[column.key])}
         </span>
       )
     },

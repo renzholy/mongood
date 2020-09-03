@@ -13,7 +13,7 @@ export default createSlice({
     isEditorOpen: false,
     isMenuHidden: true,
   } as {
-    connection?: string
+    host?: string
     filter: FilterQuery<unknown>
     skip: number
     limit: number
@@ -22,9 +22,9 @@ export default createSlice({
     invokedProfiling?: { [key: string]: MongoData }
   },
   reducers: {
-    setConnection: (state, { payload }: PayloadAction<string | undefined>) => ({
+    setHost: (state, { payload }: PayloadAction<string>) => ({
       ...state,
-      connection: payload,
+      host: payload,
     }),
     setFilter: (state, { payload }: PayloadAction<FilterQuery<unknown>>) =>
       isEqual(payload, state.filter)

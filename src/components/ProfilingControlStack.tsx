@@ -26,7 +26,10 @@ enum ProfilingLevel {
 
 export function ProfilingControlStack() {
   const connection = useSelector((state) => state.root.connection)
-  const profilingConnection = useSelector((state) => state.profiling.connection)
+  const host = useSelector((state) => state.profiling.host)
+  const profilingConnection = host
+    ? generateConnectionWithDirectHost(host, connection)
+    : undefined
   const database = useSelector((state) => state.root.database)
   const [level, setLevel] = useState<ProfilingLevel>()
   const [slowms, setSlowms] = useState(0)
@@ -65,13 +68,11 @@ export function ProfilingControlStack() {
     setSlowms(profile.slowms)
     setSampleRate(profile.sampleRate)
   }, [profile])
-  const [host, setHost] = useState<string>()
   const dispatch = useDispatch()
   const { data: replicaConfig } = useCommandIsMaster()
   const hosts = useMemo<string[]>(() => replicaConfig?.hosts || [], [
     replicaConfig,
   ])
-
   const items = useMemo<IContextualMenuItem[]>(
     () =>
       hosts.map((h) => ({
@@ -80,26 +81,16 @@ export function ProfilingControlStack() {
         checked: h === host,
         canCheck: true,
         onClick() {
-          setHost(h)
-          dispatch(
-            actions.profiling.setConnection(
-              generateConnectionWithDirectHost(h, connection),
-            ),
-          )
+          dispatch(actions.profiling.setHost(h))
         },
       })),
-    [dispatch, host, hosts, connection],
+    [dispatch, host, hosts],
   )
   useEffect(() => {
-    setHost(hosts[0])
-    dispatch(
-      actions.profiling.setConnection(
-        hosts[0]
-          ? generateConnectionWithDirectHost(hosts[0], connection)
-          : undefined,
-      ),
-    )
-  }, [dispatch, hosts, connection])
+    if (!host) {
+      dispatch(actions.profiling.setHost(hosts[0]))
+    }
+  }, [dispatch, host, hosts, connection])
 
   return (
     <Stack
