@@ -60,7 +60,7 @@ export function ProfilingSummary() {
   })
   const columns = useMemo<IColumn[]>(() => {
     const cs = (hosts?.hosts.map((h) => [h, 160]) || []) as [string, number][]
-    return mapToColumn([['database', 200], ...cs])
+    return mapToColumn([['database', 0], ...cs])
   }, [hosts])
   const dispatch = useDispatch()
   const theme = getTheme()
