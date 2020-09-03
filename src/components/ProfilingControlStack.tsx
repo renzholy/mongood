@@ -2,7 +2,6 @@ import {
   Stack,
   SpinButton,
   Label,
-  Slider,
   IContextualMenuItem,
   DefaultButton,
   Dropdown,
@@ -161,19 +160,21 @@ export function ProfilingControlStack() {
               setSlowms(Math.max(parseInt(value, 10) - 10, 0))
             }}
           />
-          <Label>Sample rate:</Label>
-          <Slider
+          <SpinButton
+            label="Sample rate:"
             styles={{
-              slideBox: { width: 80 },
+              spinButtonWrapper: { width: 80 },
+              root: { width: 'fit-content' },
             }}
-            min={0}
-            max={1}
-            step={0.01}
-            valueFormat={(value) => `${Math.round(value * 100)}%`}
-            value={sampleRate}
-            onChange={setSampleRate}
-            onChanged={(_ev, value) => {
-              setSampleRate(value)
+            value={`${(sampleRate * 100).toString()}%`}
+            onValidate={(value) => {
+              setSampleRate(Math.max(parseInt(value, 10) / 100, 0))
+            }}
+            onIncrement={(value) => {
+              setSampleRate(Math.max(parseInt(value, 10) / 100 + 0.01, 0))
+            }}
+            onDecrement={(value) => {
+              setSampleRate(Math.max(parseInt(value, 10) / 100 - 0.01, 0))
             }}
           />
         </>
