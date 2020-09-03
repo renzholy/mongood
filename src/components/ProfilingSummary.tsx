@@ -64,6 +64,21 @@ export function ProfilingSummary() {
   }, [hosts])
   const dispatch = useDispatch()
   const theme = getTheme()
+  const handleJump = useCallback(
+    (item: Data, host?: string) => {
+      dispatch(
+        actions.root.setExpandedDatabases(
+          item[KEY_NAME] ? [item[KEY_NAME]] : [],
+        ),
+      )
+      dispatch(actions.root.setDatabase(item[KEY_NAME]))
+      dispatch(actions.root.setCollection('system.profile'))
+      if (host) {
+        dispatch(actions.profiling.setHost(host))
+      }
+    },
+    [dispatch],
+  )
   const handleRenderItemColumn = useCallback(
     (item?: Data, _index?: number, column?: IColumn) => {
       if (!item || !column?.key) {
@@ -76,20 +91,13 @@ export function ProfilingSummary() {
         <span
           style={{ cursor: 'pointer', color: theme.palette.themePrimary }}
           onClick={() => {
-            dispatch(
-              actions.root.setExpandedDatabases(
-                item[KEY_NAME] ? [item[KEY_NAME]] : [],
-              ),
-            )
-            dispatch(actions.root.setDatabase(item[KEY_NAME]))
-            dispatch(actions.root.setCollection('system.profile'))
-            dispatch(actions.profiling.setHost(column?.key))
+            handleJump(item, column.key)
           }}>
           {formatNumber(item[column.key])}
         </span>
       )
     },
-    [dispatch, theme.palette.themePrimary],
+    [handleJump, theme.palette.themePrimary],
   )
 
   if (!data) {
@@ -100,6 +108,7 @@ export function ProfilingSummary() {
       items={data}
       columns={columns}
       onRenderItemColumn={handleRenderItemColumn}
+      onItemInvoked={handleJump}
     />
   )
 }
