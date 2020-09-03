@@ -64,7 +64,7 @@ export function ProfilingSummary() {
   }, [hosts])
   const dispatch = useDispatch()
   const theme = getTheme()
-  const handleJump = useCallback(
+  const handleViewProfiling = useCallback(
     (item: Data, host?: string) => {
       dispatch(
         actions.root.setExpandedDatabases(
@@ -91,13 +91,13 @@ export function ProfilingSummary() {
         <span
           style={{ cursor: 'pointer', color: theme.palette.themePrimary }}
           onClick={() => {
-            handleJump(item, column.key)
+            handleViewProfiling(item, column.key)
           }}>
           {formatNumber(item[column.key])}
         </span>
       )
     },
-    [handleJump, theme.palette.themePrimary],
+    [handleViewProfiling, theme.palette.themePrimary],
   )
 
   if (!data) {
@@ -108,7 +108,7 @@ export function ProfilingSummary() {
       items={data}
       columns={columns}
       onRenderItemColumn={handleRenderItemColumn}
-      onItemInvoked={handleJump}
+      onItemInvoked={handleViewProfiling}
     />
   )
 }
