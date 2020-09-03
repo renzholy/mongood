@@ -85,7 +85,7 @@ export function ProfilingList() {
     <>
       {invokedProfiling ? (
         <MongoDataModal
-          tabs={['execStats', 'command', 'locks']}
+          tabs={['execStats', 'command', 'originatingCommand', 'locks']}
           title="View Profile"
           value={invokedProfiling}
           isOpen={isEditorOpen}
