@@ -13,6 +13,7 @@ import {
   IndexStats,
 } from '@/types'
 import { JsonSchema } from '@/types/schema'
+import { generateConnectionWithDirectHost } from '@/utils'
 
 export function useCommandDatabases() {
   const connection = useSelector((state) => state.root.connection)
@@ -218,14 +219,16 @@ export function useCommandCount() {
 }
 
 export function useCommandProfile() {
-  const connection = useSelector(
-    (state) => state.profiling.connection || state.root.connection,
-  )
+  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
+  const host = useSelector((state) => state.profiling.host)
+  const c = host
+    ? generateConnectionWithDirectHost(host, connection)
+    : connection
   return useSWR<{ was: number; slowms: number; sampleRate: number }, Error>(
-    database ? `profile/${connection}/${database}` : null,
+    database ? `profile/${c}/${database}` : null,
     () =>
-      runCommand(connection, database!, {
+      runCommand(c, database!, {
         profile: -1,
       }),
     {},
@@ -233,13 +236,15 @@ export function useCommandProfile() {
 }
 
 export function useCommandSystemProfileFind() {
-  const connection = useSelector(
-    (state) => state.profiling.connection || state.root.connection,
-  )
+  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
+  const host = useSelector((state) => state.profiling.host)
   const filter = useSelector((state) => state.profiling.filter)
   const skip = useSelector((state) => state.profiling.skip)
   const limit = useSelector((state) => state.profiling.limit)
+  const c = host
+    ? generateConnectionWithDirectHost(host, connection)
+    : connection
   return useSWR<
     {
       cursor: { firstBatch: { [key: string]: MongoData }[] }
@@ -247,13 +252,13 @@ export function useCommandSystemProfileFind() {
     Error
   >(
     database
-      ? `systemProfile/${connection}/${database}/${JSON.stringify(
+      ? `systemProfile/${c}/${database}/${JSON.stringify(
           filter,
         )}/${skip}/${limit}`
       : null,
     () =>
       runCommand(
-        connection,
+        c,
         database!,
         {
           find: 'system.profile',
@@ -273,17 +278,19 @@ export function useCommandSystemProfileFind() {
 }
 
 export function useCommandSystemProfileCount() {
-  const connection = useSelector(
-    (state) => state.profiling.connection || state.root.connection,
-  )
+  const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
+  const host = useSelector((state) => state.profiling.host)
   const filter = useSelector((state) => state.profiling.filter)
+  const c = host
+    ? generateConnectionWithDirectHost(host, connection)
+    : connection
   return useSWR<{ n: number }, Error>(
     database
-      ? `systemProfileCount/${connection}/${database}/${JSON.stringify(filter)}`
+      ? `systemProfileCount/${c}/${database}/${JSON.stringify(filter)}`
       : null,
     () =>
-      runCommand(connection, database!, {
+      runCommand(c, database!, {
         count: 'system.profile',
         query: filter,
       }),
@@ -293,8 +300,6 @@ export function useCommandSystemProfileCount() {
 
 export function useCommandCurrentOp() {
   const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
   const filter = useSelector((state) => state.operations.filter)
   const refreshInterval = useSelector(
     (state) => state.operations.refreshInterval,
@@ -302,9 +307,9 @@ export function useCommandCurrentOp() {
   const isEditorOpen = useSelector((state) => state.operations.isEditorOpen)
   const isDialogHidden = useSelector((state) => state.operations.isDialogHidden)
   const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
-  const ns = database && collection ? `${database}.${collection}` : undefined
+
   return useSWR<{ inprog: { [key: string]: MongoData }[] }, Error>(
-    `currentOp/${connection}/${ns}/${JSON.stringify(filter)}`,
+    `currentOp/${connection}/${JSON.stringify(filter)}`,
     () =>
       runCommand(
         connection,
@@ -312,7 +317,6 @@ export function useCommandCurrentOp() {
         {
           currentOp: 1,
           ...filter,
-          ns,
         },
         {
           canonical: true,
@@ -352,23 +356,18 @@ export function useCommandUsers() {
   )
 }
 
-export function useCommandReplSetGetConfig() {
+export function useCommandIsMaster() {
   const connection = useSelector((state) => state.root.connection)
   return useSWR<
     {
-      config: {
-        members: {
-          _id: number
-          host: string
-        }[]
-      }
+      hosts: string[]
     },
     Error
   >(
-    `replSetGetConfig/${connection}`,
+    `isMaster/${connection}`,
     () =>
       runCommand(connection, 'admin', {
-        replSetGetConfig: 1,
+        isMaster: 1,
       }),
     { shouldRetryOnError: false },
   )

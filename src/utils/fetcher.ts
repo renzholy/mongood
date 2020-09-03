@@ -6,17 +6,20 @@ export async function runCommand<T>(
   command: object,
   opts: { canonical?: boolean } = {},
 ): Promise<T> {
-  const response = await fetch('/api/runCommand', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  const response = await fetch(
+    `/api/runCommand?d=${database}&c=${Object.keys(command)[0]}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        connection,
+        database,
+        command: JSON.stringify(command),
+      }),
     },
-    body: JSON.stringify({
-      connection,
-      database,
-      command: JSON.stringify(command),
-    }),
-  })
+  )
   if (response.ok) {
     return opts.canonical
       ? response.json()

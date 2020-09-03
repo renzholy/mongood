@@ -28,6 +28,13 @@ export default createSlice({
             ...state,
             filter: payload,
           },
+    setNs: (state, { payload }: PayloadAction<unknown>) =>
+      isEqual(payload, state.filter)
+        ? state
+        : {
+            ...state,
+            filter: { ...state.filter, ns: payload },
+          },
     setRefreshInterval: (state, { payload }: PayloadAction<number>) => ({
       ...state,
       refreshInterval: payload,
