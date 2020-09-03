@@ -149,7 +149,7 @@ export function ProfilingControlStack() {
               items,
             }}
             styles={{
-              root: { width: 200 },
+              root: { width: 160 },
               label: {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -206,7 +206,7 @@ export function ProfilingControlStack() {
           <Label>Sample rate:</Label>
           <Slider
             styles={{
-              slideBox: { width: 100 },
+              slideBox: { width: 80 },
             }}
             min={0}
             max={1}
