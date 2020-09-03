@@ -27,6 +27,13 @@ export function MongoDataModal(props: {
         horizontal={true}
         tokens={{ childrenGap: 10 }}
         styles={{ root: { marginLeft: 20, marginRight: 20 } }}>
+        <DefaultButton
+          text="other"
+          primary={tab === undefined}
+          onClick={() => {
+            setTab(undefined)
+          }}
+        />
         {props.tabs.map((t) => (
           <DefaultButton
             key={t}
@@ -37,13 +44,6 @@ export function MongoDataModal(props: {
             }}
           />
         ))}
-        <DefaultButton
-          text="other"
-          primary={tab === undefined}
-          onClick={() => {
-            setTab(undefined)
-          }}
-        />
       </Stack>
       <div style={{ flex: 1, margin: 20, overflow: 'scroll' }}>
         {(tab && props.onRenderTab?.(tab)) || (
