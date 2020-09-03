@@ -349,23 +349,18 @@ export function useCommandUsers() {
   )
 }
 
-export function useCommandReplSetGetConfig() {
+export function useCommandIsMaster() {
   const connection = useSelector((state) => state.root.connection)
   return useSWR<
     {
-      config: {
-        members: {
-          _id: number
-          host: string
-        }[]
-      }
+      hosts: string[]
     },
     Error
   >(
-    `replSetGetConfig/${connection}`,
+    `isMaster/${connection}`,
     () =>
       runCommand(connection, 'admin', {
-        replSetGetConfig: 1,
+        isMaster: 1,
       }),
     { shouldRetryOnError: false },
   )

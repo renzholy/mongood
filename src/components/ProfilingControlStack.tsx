@@ -12,10 +12,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import mongodbUri from 'mongodb-uri'
 
 import { actions } from '@/stores'
-import {
-  useCommandProfile,
-  useCommandReplSetGetConfig,
-} from '@/hooks/use-command'
+import { useCommandProfile, useCommandIsMaster } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { ProfilingPagination } from './ProfilingPagination'
@@ -80,16 +77,10 @@ export function ProfilingControlStack() {
       return undefined
     }
   }, [connection])
-  const { data: replicaConfig } = useCommandReplSetGetConfig()
-  const hosts = useMemo<string[]>(() => {
-    if (replicaConfig) {
-      return replicaConfig.config.members.map((m) => m.host)
-    }
-    if (parsed) {
-      return parsed.hosts.map((h) => `${h.host}:${h.port || 27017}`)
-    }
-    return []
-  }, [parsed, replicaConfig])
+  const { data: replicaConfig } = useCommandIsMaster()
+  const hosts = useMemo<string[]>(() => replicaConfig?.hosts || [], [
+    replicaConfig,
+  ])
   const generateConnectionWithDirectHost = useCallback(
     (h: string) => {
       if (!parsed) {
