@@ -9,12 +9,12 @@ import {
 } from '@fluentui/react'
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import mongodbUri from 'mongodb-uri'
 
 import { actions } from '@/stores'
 import { useCommandProfile, useCommandIsMaster } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
+import { generateConnectionWithDirectHost } from '@/utils'
 import { ProfilingPagination } from './ProfilingPagination'
 import { PromiseButton } from './PromiseButton'
 
@@ -67,37 +67,12 @@ export function ProfilingControlStack() {
   }, [profile])
   const [host, setHost] = useState<string>()
   const dispatch = useDispatch()
-  const parsed = useMemo(() => {
-    if (!connection) {
-      return undefined
-    }
-    try {
-      return mongodbUri.parse(connection)
-    } catch {
-      return undefined
-    }
-  }, [connection])
+
   const { data: replicaConfig } = useCommandIsMaster()
   const hosts = useMemo<string[]>(() => replicaConfig?.hosts || [], [
     replicaConfig,
   ])
-  const generateConnectionWithDirectHost = useCallback(
-    (h: string) => {
-      if (!parsed) {
-        return undefined
-      }
-      const [_host, _port] = h.split(':')
-      return mongodbUri.format({
-        ...parsed,
-        hosts: [{ host: _host, port: parseInt(_port, 10) }],
-        options: {
-          ...parsed?.options,
-          connect: 'direct',
-        },
-      })
-    },
-    [parsed],
-  )
+
   const items = useMemo<IContextualMenuItem[]>(
     () =>
       hosts.map((h) => ({
@@ -109,21 +84,23 @@ export function ProfilingControlStack() {
           setHost(h)
           dispatch(
             actions.profiling.setConnection(
-              generateConnectionWithDirectHost(h),
+              generateConnectionWithDirectHost(h, connection),
             ),
           )
         },
       })),
-    [dispatch, generateConnectionWithDirectHost, host, hosts],
+    [dispatch, host, hosts, connection],
   )
   useEffect(() => {
     setHost(hosts[0])
     dispatch(
       actions.profiling.setConnection(
-        hosts[0] ? generateConnectionWithDirectHost(hosts[0]) : undefined,
+        hosts[0]
+          ? generateConnectionWithDirectHost(hosts[0], connection)
+          : undefined,
       ),
     )
-  }, [dispatch, generateConnectionWithDirectHost, hosts])
+  }, [dispatch, hosts, connection])
 
   return (
     <Stack
