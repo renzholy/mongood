@@ -6,7 +6,7 @@ export async function runCommand<T>(
   command: object,
   opts: { canonical?: boolean } = {},
 ): Promise<T> {
-  const response = await fetch('/api/runCommand', {
+  const response = await fetch(`/api/runCommand?c=${Object.keys(command)[0]}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
