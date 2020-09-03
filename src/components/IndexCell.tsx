@@ -29,7 +29,7 @@ export function IndexCell(props: {
       return props.size !== undefined ? <>{bytes(props.size)}</> : null
     }
     case 'ops': {
-      return props.accesses ? formatNumber(props.accesses.ops) : null
+      return props.accesses ? <>{formatNumber(props.accesses.ops)}</> : null
     }
     case 'since': {
       return props.accesses ? (

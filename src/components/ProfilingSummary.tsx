@@ -15,8 +15,11 @@ import { actions } from '@/stores'
 import { Table } from './Table'
 import { LargeMessage } from './LargeMessage'
 import { TableCell } from './TableCell'
+import { ProfilingSummaryControlStack } from './ProfilingSummaryControlStack'
 
 type Data = { database: string } & { [host: string]: number }
+
+const KEY_NAME = 'database'
 
 export function ProfilingSummary() {
   const connection = useSelector((state) => state.root.connection)
@@ -50,56 +53,73 @@ export function ProfilingSummary() {
         obj[h] = d[index]?.n
         return obj
       },
-      { database: _database } as {
-        [host: string]: string | number | undefined
-      },
+      { [KEY_NAME]: _database } as Data,
     )
   }, [])
-  const { data } = useSWRInfinite<Data>(handleGetKey, fetcher, {
-    initialSize: databases?.databases.length,
-  })
+  const { data, isValidating, revalidate } = useSWRInfinite<Data>(
+    handleGetKey,
+    fetcher,
+    {
+      initialSize: databases?.databases.length,
+    },
+  )
   const columns = useMemo<IColumn[]>(() => {
     const cs = (hosts?.hosts.map((h) => [h, 160]) || []) as [string, number][]
-    return mapToColumn([['database', 200], ...cs])
+    return mapToColumn([[KEY_NAME, 0], ...cs])
   }, [hosts])
   const dispatch = useDispatch()
   const theme = getTheme()
+  const handleViewProfiling = useCallback(
+    (item: Data, host?: string) => {
+      dispatch(
+        actions.root.setExpandedDatabases(
+          item[KEY_NAME] ? [item[KEY_NAME]] : [],
+        ),
+      )
+      dispatch(actions.root.setDatabase(item[KEY_NAME]))
+      dispatch(actions.root.setCollection('system.profile'))
+      if (host) {
+        dispatch(actions.profiling.setHost(host))
+      }
+    },
+    [dispatch],
+  )
   const handleRenderItemColumn = useCallback(
     (item?: Data, _index?: number, column?: IColumn) => {
       if (!item || !column?.key) {
         return null
       }
-      if (column.key === 'database') {
+      if (column.key === KEY_NAME) {
         return <TableCell value={item[column.key]} />
       }
       return (
         <span
           style={{ cursor: 'pointer', color: theme.palette.themePrimary }}
           onClick={() => {
-            dispatch(
-              actions.root.setExpandedDatabases(
-                item.database ? [item.database] : [],
-              ),
-            )
-            dispatch(actions.root.setDatabase(item?.database))
-            dispatch(actions.root.setCollection('system.profile'))
-            dispatch(actions.profiling.setHost(column?.key))
+            handleViewProfiling(item, column.key)
           }}>
           {formatNumber(item[column.key])}
         </span>
       )
     },
-    [dispatch, theme.palette.themePrimary],
+    [handleViewProfiling, theme.palette.themePrimary],
   )
 
   if (!data) {
     return <LargeMessage iconName="HourGlass" title="Loading" />
   }
   return (
-    <Table
-      items={data}
-      columns={columns}
-      onRenderItemColumn={handleRenderItemColumn}
-    />
+    <>
+      <ProfilingSummaryControlStack
+        isValidating={isValidating}
+        revalidate={revalidate}
+      />
+      <Table
+        items={data}
+        columns={columns}
+        onRenderItemColumn={handleRenderItemColumn}
+        onItemInvoked={handleViewProfiling}
+      />
+    </>
   )
 }

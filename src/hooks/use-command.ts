@@ -220,15 +220,15 @@ export function useCommandCount() {
 
 export function useCommandProfile() {
   const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
+  const database = useSelector((state) => state.root.database || 'admin')
   const host = useSelector((state) => state.profiling.host)
-  const c = host
+  const profilingConnection = host
     ? generateConnectionWithDirectHost(host, connection)
     : connection
   return useSWR<{ was: number; slowms: number; sampleRate: number }, Error>(
-    database ? `profile/${c}/${database}` : null,
+    `profile/${profilingConnection}/${database}`,
     () =>
-      runCommand(c, database!, {
+      runCommand(profilingConnection, database, {
         profile: -1,
       }),
     {},
@@ -242,7 +242,7 @@ export function useCommandSystemProfileFind() {
   const filter = useSelector((state) => state.profiling.filter)
   const skip = useSelector((state) => state.profiling.skip)
   const limit = useSelector((state) => state.profiling.limit)
-  const c = host
+  const profilingConnection = host
     ? generateConnectionWithDirectHost(host, connection)
     : connection
   return useSWR<
@@ -252,13 +252,13 @@ export function useCommandSystemProfileFind() {
     Error
   >(
     database
-      ? `systemProfile/${c}/${database}/${JSON.stringify(
+      ? `systemProfile/${profilingConnection}/${database}/${JSON.stringify(
           filter,
         )}/${skip}/${limit}`
       : null,
     () =>
       runCommand(
-        c,
+        profilingConnection,
         database!,
         {
           find: 'system.profile',
@@ -282,15 +282,17 @@ export function useCommandSystemProfileCount() {
   const database = useSelector((state) => state.root.database)
   const host = useSelector((state) => state.profiling.host)
   const filter = useSelector((state) => state.profiling.filter)
-  const c = host
+  const profilingConnection = host
     ? generateConnectionWithDirectHost(host, connection)
     : connection
   return useSWR<{ n: number }, Error>(
     database
-      ? `systemProfileCount/${c}/${database}/${JSON.stringify(filter)}`
+      ? `systemProfileCount/${profilingConnection}/${database}/${JSON.stringify(
+          filter,
+        )}`
       : null,
     () =>
-      runCommand(c, database!, {
+      runCommand(profilingConnection, database!, {
         count: 'system.profile',
         query: filter,
       }),

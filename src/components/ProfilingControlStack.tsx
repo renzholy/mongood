@@ -1,8 +1,6 @@
 import {
   Stack,
-  SpinButton,
   Label,
-  Slider,
   IContextualMenuItem,
   DefaultButton,
   Dropdown,
@@ -29,30 +27,18 @@ export function ProfilingControlStack() {
   const host = useSelector((state) => state.profiling.host)
   const profilingConnection = host
     ? generateConnectionWithDirectHost(host, connection)
-    : undefined
+    : connection
   const database = useSelector((state) => state.root.database)
   const [level, setLevel] = useState<ProfilingLevel>()
-  const [slowms, setSlowms] = useState(0)
-  const [sampleRate, setSampleRate] = useState(0)
   const { data: profile, error, revalidate, isValidating } = useCommandProfile()
   const handleSetProfile = useCallback(
     async () =>
       database && level !== undefined
-        ? runCommand(
-            profilingConnection || connection,
-            database,
-            level === ProfilingLevel.SLOW
-              ? {
-                  profile: level,
-                  slowms,
-                  sampleRate: {
-                    $numberDouble: sampleRate.toString(),
-                  },
-                }
-              : { profile: level },
-          )
+        ? runCommand(profilingConnection, database, {
+            profile: level,
+          })
         : undefined,
-    [profilingConnection, connection, database, level, sampleRate, slowms],
+    [profilingConnection, database, level],
   )
   const promiseSetProfile = usePromise(handleSetProfile)
   useEffect(() => {
@@ -65,8 +51,6 @@ export function ProfilingControlStack() {
       return
     }
     setLevel(profile.was)
-    setSlowms(profile.slowms)
-    setSampleRate(profile.sampleRate)
   }, [profile])
   const dispatch = useDispatch()
   const { data: replicaConfig } = useCommandIsMaster()
@@ -99,7 +83,7 @@ export function ProfilingControlStack() {
       styles={{
         root: { height: 52, alignItems: 'center' },
       }}>
-      {hosts.length > 1 && !error ? (
+      {error ? null : (
         <>
           <Label>Host:</Label>
           <DefaultButton
@@ -107,7 +91,7 @@ export function ProfilingControlStack() {
               items,
             }}
             styles={{
-              root: { width: 160 },
+              root: { width: 160, marginRight: 10 },
               label: {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -123,10 +107,6 @@ export function ProfilingControlStack() {
             menuIconProps={{ hidden: true }}>
             {host}
           </DefaultButton>
-        </>
-      ) : null}
-      {error ? null : (
-        <>
           <Label>Level:</Label>
           <Dropdown
             selectedKey={level}
@@ -142,47 +122,7 @@ export function ProfilingControlStack() {
           />
         </>
       )}
-      {level === ProfilingLevel.SLOW ? (
-        <>
-          <SpinButton
-            label="Slow ms:"
-            styles={{
-              spinButtonWrapper: { width: 80 },
-              root: { width: 'fit-content' },
-            }}
-            value={slowms.toString()}
-            onValidate={(value) => {
-              setSlowms(Math.max(parseInt(value, 10), 0))
-            }}
-            onIncrement={(value) => {
-              setSlowms(Math.max(parseInt(value, 10) + 10, 0))
-            }}
-            onDecrement={(value) => {
-              setSlowms(Math.max(parseInt(value, 10) - 10, 0))
-            }}
-          />
-          <Label>Sample rate:</Label>
-          <Slider
-            styles={{
-              slideBox: { width: 80 },
-            }}
-            min={0}
-            max={1}
-            step={0.01}
-            valueFormat={(value) => `${Math.round(value * 100)}%`}
-            value={sampleRate}
-            onChange={setSampleRate}
-            onChanged={(_ev, value) => {
-              setSampleRate(value)
-            }}
-          />
-        </>
-      ) : null}
-      {(profile?.was === level &&
-        profile?.slowms === slowms &&
-        profile?.sampleRate === sampleRate) ||
-      isValidating ||
-      error ? null : (
+      {profile?.was === level || isValidating || error ? null : (
         <div>
           <PromiseButton icon="CheckMark" promise={promiseSetProfile} />
         </div>
