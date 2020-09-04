@@ -111,6 +111,14 @@ export default () => {
   }
   return (
     <>
+      <ControlledEditor
+        language="typescript"
+        theme={isDarkMode ? 'vs-dark' : 'vs'}
+        value={value}
+        onChange={handleChange}
+        options={options}
+      />
+      <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <Stack
         horizontal={true}
         tokens={{ padding: 10 }}
@@ -160,19 +168,11 @@ export default () => {
           <PromiseButton icon="AutoEnhanceOn" promise={promiseGenerate} />
         </TooltipHost>
         <PromiseButton
-          icon="Save"
+          icon="CheckMark"
           disabled={!validationAction || !validationLevel || !value}
           promise={promiseSave}
         />
       </Stack>
-      <Separator styles={{ root: { padding: 0, height: 2 } }} />
-      <ControlledEditor
-        language="typescript"
-        theme={isDarkMode ? 'vs-dark' : 'vs'}
-        value={value}
-        onChange={handleChange}
-        options={options}
-      />
     </>
   )
 }
