@@ -1,11 +1,19 @@
-import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import {
+  Stack,
+  SpinButton,
+  Label,
+  Slider,
+  IContextualMenuItem,
+  DefaultButton,
+} from '@fluentui/react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
-import { useCommandProfile } from '@/hooks/use-command'
+import { useCommandProfile, useCommandIsMaster } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { generateConnectionWithDirectHost } from '@/utils'
+import { actions } from '@/stores'
 import { PromiseButton } from './PromiseButton'
 
 export function ProfilingSummaryBottomStack() {
@@ -41,15 +49,46 @@ export function ProfilingSummaryBottomStack() {
     setSlowms(profile.slowms)
     setSampleRate(profile.sampleRate)
   }, [profile])
+  const dispatch = useDispatch()
+  const { data: replicaConfig } = useCommandIsMaster()
+  const hosts = useMemo<string[]>(() => replicaConfig?.hosts || [], [
+    replicaConfig,
+  ])
+  const items = useMemo<IContextualMenuItem[]>(
+    () =>
+      hosts.map((h) => ({
+        key: h,
+        text: h,
+        checked: h === host,
+        canCheck: true,
+        onClick() {
+          dispatch(actions.profiling.setHost(h))
+        },
+      })),
+    [dispatch, host, hosts],
+  )
+  useEffect(() => {
+    if (!host) {
+      dispatch(actions.profiling.setHost(hosts[0]))
+    }
+  }, [dispatch, host, hosts, connection])
 
   return (
     <Stack
       horizontal={true}
       tokens={{ padding: 10 }}
       styles={{ root: { height: 52, alignItems: 'center' } }}>
+      <Label styles={{ root: { marginRight: 10 } }}>Host:</Label>
+      <DefaultButton
+        menuProps={{
+          items,
+        }}>
+        {host}
+      </DefaultButton>
       <SpinButton
         label="Slow ms:"
         styles={{
+          label: { marginLeft: 20 },
           spinButtonWrapper: { width: 80 },
           root: { width: 'fit-content', marginRight: 20 },
         }}
