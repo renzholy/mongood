@@ -37,6 +37,9 @@ export function ProfilingControlStack() {
       dispatch(actions.profiling.setHost(hosts[0]))
     }
   }, [dispatch, host, hosts, connection])
+  useEffect(() => {
+    dispatch(actions.profiling.resetPage())
+  }, [host, dispatch])
 
   return (
     <Stack
