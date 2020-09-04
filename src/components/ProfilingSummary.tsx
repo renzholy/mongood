@@ -32,26 +32,29 @@ export function ProfilingSummary() {
     },
     [connection, databases, hosts],
   )
-  const fetcher = useCallback(async (_connection, _database, ..._hosts) => {
-    const obj = { [KEY_NAME]: _database } as Data
-    // eslint-disable-next-line no-restricted-syntax
-    for (const h of _hosts) {
-      // eslint-disable-next-line no-await-in-loop
-      const { n } = await runCommand<{ n: number }>(
-        generateConnectionWithDirectHost(h, _connection),
-        _database,
-        {
-          count: 'system.profile',
-          query: {},
-        },
-      )
-      obj[h] = n
-    }
-    return obj
-  }, [])
+  const profileCountFetcher = useCallback(
+    async (_connection: string, _database: string, ..._hosts: string[]) => {
+      const obj = { [KEY_NAME]: _database } as Data
+      // eslint-disable-next-line no-restricted-syntax
+      for (const h of _hosts) {
+        // eslint-disable-next-line no-await-in-loop
+        const { n } = await runCommand<{ n: number }>(
+          generateConnectionWithDirectHost(h, _connection),
+          _database,
+          {
+            count: 'system.profile',
+            query: {},
+          },
+        )
+        obj[h] = n
+      }
+      return obj
+    },
+    [],
+  )
   const { data, isValidating, revalidate } = useSWRInfinite<Data>(
     handleGetKey,
-    fetcher,
+    profileCountFetcher,
     {
       initialSize: databases?.databases.length,
       revalidateAll: true,
