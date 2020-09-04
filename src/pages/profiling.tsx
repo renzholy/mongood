@@ -6,6 +6,7 @@ import { actions } from '@/stores'
 import { ProfilingControlStack } from '@/components/ProfilingControlStack'
 import { ProfilingList } from '@/components/ProfilingList'
 import { ProfilingSummary } from '@/components/ProfilingSummary'
+import { ProfilingBottomStack } from '@/components/ProfilingBottomStack'
 
 export default () => {
   const database = useSelector((state) => state.root.database)
@@ -32,8 +33,9 @@ export default () => {
   return (
     <>
       <ProfilingControlStack />
-      <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <ProfilingList />
+      <Separator styles={{ root: { padding: 0, height: 2 } }} />
+      <ProfilingBottomStack />
     </>
   )
 }

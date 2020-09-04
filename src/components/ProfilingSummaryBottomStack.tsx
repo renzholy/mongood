@@ -1,4 +1,4 @@
-import { Stack, SpinButton, IconButton, Label, Slider } from '@fluentui/react'
+import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -8,10 +8,7 @@ import { runCommand } from '@/utils/fetcher'
 import { generateConnectionWithDirectHost } from '@/utils'
 import { PromiseButton } from './PromiseButton'
 
-export function ProfilingSummaryControlStack(props: {
-  isValidating: boolean
-  revalidate(): void
-}) {
+export function ProfilingSummaryBottomStack() {
   const connection = useSelector((state) => state.root.connection)
   const host = useSelector((state) => state.profiling.host)
   const profilingConnection = host
@@ -49,9 +46,7 @@ export function ProfilingSummaryControlStack(props: {
     <Stack
       horizontal={true}
       tokens={{ padding: 10 }}
-      styles={{
-        root: { height: 52, alignItems: 'center' },
-      }}>
+      styles={{ root: { height: 52, alignItems: 'center' } }}>
       <SpinButton
         label="Slow ms:"
         styles={{
@@ -84,20 +79,17 @@ export function ProfilingSummaryControlStack(props: {
           setSampleRate(value)
         }}
       />
-      {(profile?.slowms === slowms && profile?.sampleRate === sampleRate) ||
-      isValidating ||
-      error ? null : (
-        <div>
-          <PromiseButton icon="CheckMark" promise={promiseSetProfile} />
-        </div>
-      )}
       <Stack.Item grow={true}>
         <div />
       </Stack.Item>
-      <IconButton
-        iconProps={{ iconName: 'Refresh' }}
-        disabled={props.isValidating}
-        onClick={props.revalidate}
+      <PromiseButton
+        disabled={
+          (profile?.slowms === slowms && profile?.sampleRate === sampleRate) ||
+          isValidating ||
+          !!error
+        }
+        icon="CheckMark"
+        promise={promiseSetProfile}
       />
     </Stack>
   )

@@ -1,6 +1,12 @@
 import { useSWRInfinite } from 'swr'
 import React, { useCallback, useMemo } from 'react'
-import { IColumn, getTheme } from '@fluentui/react'
+import {
+  IColumn,
+  getTheme,
+  IconButton,
+  Stack,
+  Separator,
+} from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
@@ -12,7 +18,7 @@ import { actions } from '@/stores'
 import { Table } from './Table'
 import { LargeMessage } from './LargeMessage'
 import { TableCell } from './TableCell'
-import { ProfilingSummaryControlStack } from './ProfilingSummaryControlStack'
+import { ProfilingSummaryBottomStack } from './ProfilingSummaryBottomStack'
 
 type Data = { database: string } & { [host: string]: number }
 
@@ -53,6 +59,7 @@ export function ProfilingSummary() {
     fetcher,
     {
       initialSize: databases?.databases.length,
+      revalidateAll: true,
     },
   )
   const columns = useMemo<IColumn[]>(() => {
@@ -103,16 +110,29 @@ export function ProfilingSummary() {
   }
   return (
     <>
-      <ProfilingSummaryControlStack
-        isValidating={isValidating}
-        revalidate={revalidate}
-      />
+      <Stack
+        horizontal={true}
+        tokens={{ padding: 10 }}
+        styles={{
+          root: { height: 52, alignItems: 'center' },
+        }}>
+        <Stack.Item grow={true}>
+          <div />
+        </Stack.Item>
+        <IconButton
+          iconProps={{ iconName: 'Refresh' }}
+          disabled={isValidating}
+          onClick={revalidate}
+        />
+      </Stack>
       <Table
         items={data}
         columns={columns}
         onRenderItemColumn={handleRenderItemColumn}
         onItemInvoked={handleViewProfiling}
       />
+      <Separator styles={{ root: { padding: 0, height: 2 } }} />
+      <ProfilingSummaryBottomStack />
     </>
   )
 }
