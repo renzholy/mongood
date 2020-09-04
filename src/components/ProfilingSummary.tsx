@@ -18,7 +18,7 @@ import { actions } from '@/stores'
 import { Table } from './Table'
 import { LargeMessage } from './LargeMessage'
 import { TableCell } from './TableCell'
-import { ProfilingSummaryControlStack } from './ProfilingSummaryControlStack'
+import { ProfilingSummaryBottomStack } from './ProfilingSummaryBottomStack'
 
 type Data = { database: string } & { [host: string]: number }
 
@@ -132,7 +132,7 @@ export function ProfilingSummary() {
         onItemInvoked={handleViewProfiling}
       />
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
-      <ProfilingSummaryControlStack />
+      <ProfilingSummaryBottomStack />
     </>
   )
 }

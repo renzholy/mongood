@@ -8,7 +8,7 @@ import { runCommand } from '@/utils/fetcher'
 import { generateConnectionWithDirectHost } from '@/utils'
 import { PromiseButton } from './PromiseButton'
 
-export function ProfilingSummaryControlStack() {
+export function ProfilingSummaryBottomStack() {
   const connection = useSelector((state) => state.root.connection)
   const host = useSelector((state) => state.profiling.host)
   const profilingConnection = host
