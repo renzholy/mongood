@@ -145,7 +145,7 @@ export default () => {
           ]}
           placeholder="please select"
         />
-        <Label styles={{ root: { marginRight: 10, marginLeft: 10 } }}>
+        <Label styles={{ root: { marginLeft: 20, marginRight: 10 } }}>
           Validation level:
         </Label>
         <Dropdown
