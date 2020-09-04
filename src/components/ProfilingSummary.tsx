@@ -130,7 +130,10 @@ export function ProfilingSummary() {
           onItemInvoked={handleViewProfiling}
         />
       ) : (
-        <LargeMessage iconName="HourGlass" title="Loading" />
+        <>
+          <Separator styles={{ root: { padding: 0, height: 2 } }} />
+          <LargeMessage iconName="HourGlass" title="Loading" />
+        </>
       )}
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <ProfilingSummaryBottomStack />
