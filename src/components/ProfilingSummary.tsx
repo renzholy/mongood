@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-
 import { useSWRInfinite } from 'swr'
 import React, { useCallback, useMemo } from 'react'
 import { IColumn, getTheme } from '@fluentui/react'
@@ -35,26 +32,21 @@ export function ProfilingSummary() {
     [connection, databases, hosts],
   )
   const fetcher = useCallback(async (_connection, _database, ..._hosts) => {
-    const d = await Promise.all(
-      _hosts.map((h) =>
-        runCommand<{ n: number }>(
-          generateConnectionWithDirectHost(h, _connection),
-          _database,
-          {
-            count: 'system.profile',
-            query: {},
-          },
-        ),
-      ),
-    )
-    return _hosts.reduce(
-      (obj, h, index) => {
-        // eslint-disable-next-line no-param-reassign
-        obj[h] = d[index]?.n
-        return obj
-      },
-      { [KEY_NAME]: _database } as Data,
-    )
+    const obj = { [KEY_NAME]: _database } as Data
+    // eslint-disable-next-line no-restricted-syntax
+    for (const h of _hosts) {
+      // eslint-disable-next-line no-await-in-loop
+      const { n } = await runCommand<{ n: number }>(
+        generateConnectionWithDirectHost(h, _connection),
+        _database,
+        {
+          count: 'system.profile',
+          query: {},
+        },
+      )
+      obj[h] = n
+    }
+    return obj
   }, [])
   const { data, isValidating, revalidate } = useSWRInfinite<Data>(
     handleGetKey,
@@ -93,6 +85,7 @@ export function ProfilingSummary() {
         return <TableCell value={item[column.key]} />
       }
       return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <span
           style={{ cursor: 'pointer', color: theme.palette.themePrimary }}
           onClick={() => {

@@ -49,6 +49,13 @@ export function Table<T>(props: {
     ),
     [theme],
   )
+  const handleItemInvoked = useCallback(
+    (item: T) => {
+      props.onItemInvoked?.(item)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [props.onItemInvoked],
+  )
 
   if (props.items.length === 0) {
     return (
@@ -80,7 +87,7 @@ export function Table<T>(props: {
             items={props.items}
             onRenderItemColumn={props.onRenderItemColumn}
             onRenderDetailsHeader={handleRenderDetailsHeader}
-            onItemInvoked={props.onItemInvoked}
+            onItemInvoked={handleItemInvoked}
             onItemContextMenu={(item, _index, ev) => {
               props.onItemContextMenu?.(ev as MouseEvent, item)
             }}
