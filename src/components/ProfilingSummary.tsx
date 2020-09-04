@@ -1,12 +1,6 @@
 import { useSWRInfinite } from 'swr'
 import React, { useCallback, useMemo } from 'react'
-import {
-  IColumn,
-  getTheme,
-  IconButton,
-  Stack,
-  Separator,
-} from '@fluentui/react'
+import { IColumn, getTheme, IconButton, Stack } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
@@ -19,6 +13,7 @@ import { Table } from './Table'
 import { LargeMessage } from './LargeMessage'
 import { TableCell } from './TableCell'
 import { ProfilingSummaryBottomStack } from './ProfilingSummaryBottomStack'
+import { Divider } from './Divider'
 
 type Data = { database: string } & { [host: string]: number }
 
@@ -122,6 +117,7 @@ export function ProfilingSummary() {
           onClick={revalidate}
         />
       </Stack>
+      <Divider />
       {data ? (
         <Table
           items={data}
@@ -130,12 +126,9 @@ export function ProfilingSummary() {
           onItemInvoked={handleViewProfiling}
         />
       ) : (
-        <>
-          <Separator styles={{ root: { padding: 0, height: 2 } }} />
-          <LargeMessage iconName="HourGlass" title="Loading" />
-        </>
+        <LargeMessage iconName="HourGlass" title="Loading" />
       )}
-      <Separator styles={{ root: { padding: 0, height: 2 } }} />
+      <Divider />
       <ProfilingSummaryBottomStack />
     </>
   )

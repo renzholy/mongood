@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { Stack, IconButton, Separator } from '@fluentui/react'
+import { Stack, IconButton } from '@fluentui/react'
 
 import { LargeMessage } from '@/components/LargeMessage'
 import { EditorModal } from '@/components/EditorModal'
@@ -13,6 +13,7 @@ import {
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { PromiseButton } from '@/components/PromiseButton'
+import { Divider } from '@/components/Divider'
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)
@@ -66,7 +67,27 @@ export default () => {
     <>
       <Stack horizontal={true} tokens={{ padding: 10 }}>
         <Stack.Item grow={true}>
-          <div />
+          <EditorModal
+            title="Create Index"
+            value={value}
+            onChange={setValue}
+            isOpen={isOpen}
+            onDismiss={() => {
+              setIsOpen(false)
+            }}
+            onDismissed={() => {
+              setValue({
+                background: true,
+              })
+            }}
+            footer={
+              <PromiseButton
+                text="Create"
+                primary={true}
+                promise={promiseCreate}
+              />
+            }
+          />
         </Stack.Item>
         <IconButton
           iconProps={{ iconName: 'Add' }}
@@ -81,25 +102,8 @@ export default () => {
           onClick={revalidate}
         />
       </Stack>
-      <Separator styles={{ root: { padding: 0, height: 2 } }} />
+      <Divider />
       <IndexesList />
-      <EditorModal
-        title="Create Index"
-        value={value}
-        onChange={setValue}
-        isOpen={isOpen}
-        onDismiss={() => {
-          setIsOpen(false)
-        }}
-        onDismissed={() => {
-          setValue({
-            background: true,
-          })
-        }}
-        footer={
-          <PromiseButton text="Create" primary={true} promise={promiseCreate} />
-        }
-      />
     </>
   )
 }

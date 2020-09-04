@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { Separator } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
@@ -7,6 +6,7 @@ import { ProfilingControlStack } from '@/components/ProfilingControlStack'
 import { ProfilingList } from '@/components/ProfilingList'
 import { ProfilingSummary } from '@/components/ProfilingSummary'
 import { ProfilingBottomStack } from '@/components/ProfilingBottomStack'
+import { Divider } from '@/components/Divider'
 
 export default () => {
   const database = useSelector((state) => state.root.database)
@@ -33,8 +33,9 @@ export default () => {
   return (
     <>
       <ProfilingControlStack />
+      <Divider />
       <ProfilingList />
-      <Separator styles={{ root: { padding: 0, height: 2 } }} />
+      <Divider />
       <ProfilingBottomStack />
     </>
   )

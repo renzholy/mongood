@@ -40,20 +40,19 @@ export function Table<T>(props: {
           styles={{
             root: {
               paddingTop: 0,
-              borderTop: `1px solid ${theme.palette.neutralLight}`,
-              paddingBottom: -1,
+              paddingBottom: 0,
             },
           }}
         />
       </Sticky>
     ),
-    [theme],
+    [],
   )
   const handleItemInvoked = useCallback(
     (item: T) => {
       props.onItemInvoked?.(item)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.onItemInvoked],
   )
 

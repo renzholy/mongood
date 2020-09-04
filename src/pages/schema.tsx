@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { Dropdown, Label, Stack, Separator, TooltipHost } from '@fluentui/react'
+import { Dropdown, Label, Stack, TooltipHost } from '@fluentui/react'
 
 import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
@@ -13,6 +13,7 @@ import { MongoData, ValidationAction, ValidationLevel } from '@/types'
 import { useCommandListCollections } from '@/hooks/use-command'
 import { PromiseButton } from '@/components/PromiseButton'
 import { usePromise } from '@/hooks/use-promise'
+import { Divider } from '@/components/Divider'
 import { TAB_SIZE_KEY } from './settings'
 
 export default () => {
@@ -118,7 +119,7 @@ export default () => {
         onChange={handleChange}
         options={options}
       />
-      <Separator styles={{ root: { padding: 0, height: 2 } }} />
+      <Divider />
       <Stack
         horizontal={true}
         tokens={{ padding: 10 }}

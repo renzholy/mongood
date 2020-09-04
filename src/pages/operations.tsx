@@ -1,11 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import {
-  Stack,
-  DefaultButton,
-  IconButton,
-  Toggle,
-  Separator,
-} from '@fluentui/react'
+import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
 import { map, omit } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -13,6 +7,7 @@ import { FilterInput } from '@/components/FilterInput'
 import { useCommandCurrentOp } from '@/hooks/use-command'
 import { OperationsList } from '@/components/OperationsList'
 import { actions } from '@/stores'
+import { Divider } from '@/components/Divider'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -142,7 +137,7 @@ export default () => {
           }}
         />
       </Stack>
-      <Separator styles={{ root: { padding: 0, height: 2 } }} />
+      <Divider />
       <OperationsList />
     </>
   )

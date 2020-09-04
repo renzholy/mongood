@@ -5,6 +5,7 @@ import { DocumentsList } from '@/components/DocumentsList'
 import { DocumentControlStack } from '@/components/DocumentControlStack'
 import { DocumentFilterStack } from '@/components/DocumentFilterStack'
 import { LargeMessage } from '@/components/LargeMessage'
+import { Divider } from '@/components/Divider'
 
 export default () => {
   const database = useSelector((state) => state.root.database)
@@ -17,6 +18,7 @@ export default () => {
     <>
       <DocumentControlStack />
       <DocumentFilterStack />
+      <Divider />
       <DocumentsList />
     </>
   )
