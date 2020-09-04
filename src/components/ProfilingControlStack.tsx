@@ -33,7 +33,7 @@ export function ProfilingControlStack() {
     [dispatch, host, hosts],
   )
   useEffect(() => {
-    if (!host) {
+    if (!host || !hosts.includes(host)) {
       dispatch(actions.profiling.setHost(hosts[0]))
     }
   }, [dispatch, host, hosts, connection])
@@ -45,13 +45,17 @@ export function ProfilingControlStack() {
       styles={{
         root: { height: 52, alignItems: 'center' },
       }}>
-      <Label>Host:</Label>
-      <DefaultButton
-        menuProps={{
-          items,
-        }}>
-        {host}
-      </DefaultButton>
+      {items.length === 0 ? null : (
+        <>
+          <Label>Host:</Label>
+          <DefaultButton
+            menuProps={{
+              items,
+            }}>
+            {host}
+          </DefaultButton>
+        </>
+      )}
       <Stack.Item grow={true}>
         <div />
       </Stack.Item>

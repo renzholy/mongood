@@ -54,7 +54,7 @@ export function ProfilingBottomStack() {
       }}>
       {error ? null : (
         <>
-          <Label>Level:</Label>
+          <Label>Profiling Level:</Label>
           <Dropdown
             selectedKey={level}
             onChange={(_ev, option) => {

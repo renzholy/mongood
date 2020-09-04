@@ -362,7 +362,7 @@ export function useCommandIsMaster() {
   const connection = useSelector((state) => state.root.connection)
   return useSWR<
     {
-      hosts: string[]
+      hosts?: string[]
     },
     Error
   >(

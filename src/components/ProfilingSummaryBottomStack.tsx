@@ -68,7 +68,7 @@ export function ProfilingSummaryBottomStack() {
     [dispatch, host, hosts],
   )
   useEffect(() => {
-    if (!host) {
+    if (!host || !hosts.includes(host)) {
       dispatch(actions.profiling.setHost(hosts[0]))
     }
   }, [dispatch, host, hosts, connection])
@@ -78,17 +78,21 @@ export function ProfilingSummaryBottomStack() {
       horizontal={true}
       tokens={{ padding: 10 }}
       styles={{ root: { height: 52, alignItems: 'center' } }}>
-      <Label styles={{ root: { marginRight: 10 } }}>Host:</Label>
-      <DefaultButton
-        menuProps={{
-          items,
-        }}>
-        {host}
-      </DefaultButton>
+      {items.length === 0 ? null : (
+        <>
+          <Label styles={{ root: { marginRight: 10 } }}>Host:</Label>
+          <DefaultButton
+            styles={{ root: { marginRight: 20 } }}
+            menuProps={{
+              items,
+            }}>
+            {host}
+          </DefaultButton>
+        </>
+      )}
       <SpinButton
         label="Slow ms:"
         styles={{
-          label: { marginLeft: 20 },
           spinButtonWrapper: { width: 80 },
           root: { width: 'fit-content', marginRight: 20 },
         }}

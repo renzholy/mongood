@@ -32,7 +32,7 @@ export function ProfilingSummary() {
     (index: number): string[] | null => {
       const database = databases?.databases[index]?.name
       return connection && database && hosts
-        ? [connection, database, ...hosts.hosts]
+        ? [connection, database, ...(hosts.hosts || [])]
         : null
     },
     [connection, databases, hosts],
@@ -63,7 +63,7 @@ export function ProfilingSummary() {
     },
   )
   const columns = useMemo<IColumn[]>(() => {
-    const cs = (hosts?.hosts.map((h) => [h, 160]) || []) as [string, number][]
+    const cs = (hosts?.hosts?.map((h) => [h, 160]) || []) as [string, number][]
     return mapToColumn([[KEY_NAME, 0], ...cs])
   }, [hosts])
   const dispatch = useDispatch()
@@ -105,9 +105,6 @@ export function ProfilingSummary() {
     [handleViewProfiling, theme.palette.themePrimary],
   )
 
-  if (!data) {
-    return <LargeMessage iconName="HourGlass" title="Loading" />
-  }
   return (
     <>
       <Stack
@@ -125,12 +122,16 @@ export function ProfilingSummary() {
           onClick={revalidate}
         />
       </Stack>
-      <Table
-        items={data}
-        columns={columns}
-        onRenderItemColumn={handleRenderItemColumn}
-        onItemInvoked={handleViewProfiling}
-      />
+      {data ? (
+        <Table
+          items={data}
+          columns={columns}
+          onRenderItemColumn={handleRenderItemColumn}
+          onItemInvoked={handleViewProfiling}
+        />
+      ) : (
+        <LargeMessage iconName="HourGlass" title="Loading" />
+      )}
       <Separator styles={{ root: { padding: 0, height: 2 } }} />
       <ProfilingSummaryBottomStack />
     </>
