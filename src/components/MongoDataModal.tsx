@@ -38,6 +38,7 @@ export function MongoDataModal(props: {
           <DefaultButton
             key={t}
             text={t}
+            disabled={!props.value[t]}
             primary={tab === t}
             onClick={() => {
               setTab(t)
