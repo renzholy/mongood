@@ -7,6 +7,6 @@ require (
 	github.com/markbates/pkger v0.17.0
 	github.com/shibukawa/configdir v0.0.0-20170330084843-e180dbdc8da0
 	github.com/zserge/lorca v0.1.9
-	go.mongodb.org/mongo-driver v1.4.0
+	go.mongodb.org/mongo-driver v1.4.1
 	golang.org/x/net v0.0.0-20200822124328-c89045814202
 )
