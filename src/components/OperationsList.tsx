@@ -119,7 +119,7 @@ export function OperationsList() {
       <OperationContextualMenu target={target} />
       {invokedOperation ? (
         <MongoDataModal
-          tabs={['command', 'lockStats', 'cursor']}
+          tabs={['cursor', 'command', 'originatingCommand', 'lockStats']}
           title={`View Operation: ${
             invokedOperation ? stringify(invokedOperation.opid) : ''
           }`}
