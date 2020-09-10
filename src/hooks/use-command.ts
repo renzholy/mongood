@@ -226,7 +226,7 @@ export function useCommandProfile() {
     ? generateConnectionWithDirectHost(host, connection)
     : connection
   return useSWR<{ was: number; slowms: number; sampleRate: number }, Error>(
-    `profile/${profilingConnection}/${database}`,
+    profilingConnection ? `profile/${profilingConnection}/${database}` : null,
     () =>
       runCommand(profilingConnection, database, {
         profile: -1,
@@ -251,7 +251,7 @@ export function useCommandSystemProfileFind() {
     },
     Error
   >(
-    database
+    database && profilingConnection
       ? `systemProfile/${profilingConnection}/${database}/${JSON.stringify(
           filter,
         )}/${skip}/${limit}`
@@ -286,7 +286,7 @@ export function useCommandSystemProfileCount() {
     ? generateConnectionWithDirectHost(host, connection)
     : connection
   return useSWR<{ n: number }, Error>(
-    database
+    database && profilingConnection
       ? `systemProfileCount/${profilingConnection}/${database}/${JSON.stringify(
           filter,
         )}`
@@ -302,6 +302,10 @@ export function useCommandSystemProfileCount() {
 
 export function useCommandCurrentOp() {
   const connection = useSelector((state) => state.root.connection)
+  const host = useSelector((state) => state.operations.host)
+  const operationConnection = host
+    ? generateConnectionWithDirectHost(host, connection)
+    : connection
   const filter = useSelector((state) => state.operations.filter)
   const refreshInterval = useSelector(
     (state) => state.operations.refreshInterval,
@@ -311,10 +315,12 @@ export function useCommandCurrentOp() {
   const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
 
   return useSWR<{ inprog: { [key: string]: MongoData }[] }, Error>(
-    `currentOp/${connection}/${JSON.stringify(filter)}`,
+    operationConnection
+      ? `currentOp/${operationConnection}/${JSON.stringify(filter)}`
+      : null,
     () =>
       runCommand(
-        connection,
+        operationConnection,
         'admin',
         {
           currentOp: 1,

@@ -1,5 +1,11 @@
-import React, { useState, useMemo, useEffect } from 'react'
-import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
+import React, { useState, useMemo, useEffect, useCallback } from 'react'
+import {
+  Stack,
+  DefaultButton,
+  IconButton,
+  Toggle,
+  Label,
+} from '@fluentui/react'
 import { map, omit } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -8,6 +14,7 @@ import { useCommandCurrentOp } from '@/hooks/use-command'
 import { OperationsList } from '@/components/OperationsList'
 import { actions } from '@/stores'
 import { Divider } from '@/components/pure/Divider'
+import { HostButton } from '@/components/pure/HostButton'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -79,6 +86,13 @@ export default () => {
     ns,
     filter,
   ])
+  const host = useSelector((state) => state.operations.host)
+  const handleSetHost = useCallback(
+    (h: string) => {
+      dispatch(actions.operations.setHost(h))
+    },
+    [dispatch],
+  )
 
   return (
     <>
@@ -102,17 +116,29 @@ export default () => {
             }}
           />
         ))}
-        <Stack.Item grow={true}>
-          <div />
-        </Stack.Item>
+      </Stack>
+      <Stack
+        horizontal={true}
+        tokens={{ childrenGap: 10, padding: 10 }}
+        styles={{ root: { height: 52, alignItems: 'center' } }}>
+        <Label>Host:</Label>
+        <HostButton host={host} setHost={handleSetHost} />
+        <Label>Filter:</Label>
+        <FilterInput
+          value={value}
+          onChange={(_value) => {
+            setExample(undefined)
+            dispatch(actions.operations.setFilter(_value as {}))
+          }}
+        />
         <Toggle
           inlineLabel={true}
           label="Auto refresh:"
           onText=" "
           offText=" "
           styles={{
-            root: { marginRight: -5, marginBottom: 5 },
-            container: { display: 'flex', alignItems: 'center' },
+            label: { marginRight: 10 },
+            root: { margin: 0, display: 'flex', alignItems: 'center' },
           }}
           checked={refreshInterval !== 0}
           onChange={(_ev, v) => {
@@ -123,18 +149,6 @@ export default () => {
           iconProps={{ iconName: 'Refresh' }}
           disabled={isValidating}
           onClick={revalidate}
-        />
-      </Stack>
-      <Stack
-        horizontal={true}
-        tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52 } }}>
-        <FilterInput
-          value={value}
-          onChange={(_value) => {
-            setExample(undefined)
-            dispatch(actions.operations.setFilter(_value as {}))
-          }}
         />
       </Stack>
       <Divider />

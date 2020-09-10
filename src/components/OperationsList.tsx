@@ -10,6 +10,7 @@ import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { MongoData } from '@/types'
 import { mapToColumn } from '@/utils/table'
+import { generateConnectionWithDirectHost } from '@/utils'
 import { LargeMessage } from './pure/LargeMessage'
 import { OperationContextualMenu } from './OperationContextualMenu'
 import { MongoDataModal } from './pure/MongoDataModal'
@@ -40,18 +41,22 @@ export function OperationsList() {
     (state) => state.operations.invokedOperation,
   )
   const connection = useSelector((state) => state.root.connection)
+  const host = useSelector((state) => state.operations.host)
+  const operationConnection = host
+    ? generateConnectionWithDirectHost(host, connection)
+    : connection
   const isEditorOpen = useSelector((state) => state.operations.isEditorOpen)
   const isDialogHidden = useSelector((state) => state.operations.isDialogHidden)
   const dispatch = useDispatch()
   const handleKill = useCallback(
     async () =>
-      invokedOperation
-        ? runCommand(connection, 'admin', {
+      invokedOperation && operationConnection
+        ? runCommand(operationConnection, 'admin', {
             killOp: 1,
             op: invokedOperation.opid,
           })
         : null,
-    [connection, invokedOperation],
+    [operationConnection, invokedOperation],
   )
   const promiseKill = usePromise(handleKill)
   useEffect(() => {
