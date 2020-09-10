@@ -8,16 +8,17 @@ import type {
 import { isEqual } from 'lodash'
 
 import { DisplayMode } from '@/types'
+import { storage } from '@/utils/storage'
 
 export default createSlice({
   name: 'docs',
   initialState: {
-    displayMode: localStorage.getItem('displayMode') || DisplayMode.TABLE,
+    displayMode: storage.displayMode,
     filter: {},
     projection: {},
     sort: {},
     skip: 0,
-    limit: parseInt(localStorage.getItem('limit') || '25', 10),
+    limit: storage.limit,
   } as {
     displayMode: DisplayMode
     index?: IndexSpecification
@@ -32,7 +33,7 @@ export default createSlice({
   },
   reducers: {
     setDisplayMode: (state, { payload }: PayloadAction<DisplayMode>) => {
-      localStorage.setItem('displayMode', payload)
+      storage.setDisplayMode(payload)
       return {
         ...state,
         displayMode: payload,
@@ -89,7 +90,7 @@ export default createSlice({
       skip: Math.min(state.skip + state.limit, payload),
     }),
     setLimit: (state, { payload }: PayloadAction<number>) => {
-      localStorage.setItem('limit', payload.toString())
+      storage.setLimit(payload)
       return {
         ...state,
         limit: payload,

@@ -1,10 +1,7 @@
 import { EJSON } from 'bson'
 
 import { MongoData } from '@/types'
-import {
-  STATIC_MAP_URL_TEMPLATE_KEY,
-  STATIC_MAP_URL_TEMPLATE_DEFAULT,
-} from '@/pages/settings'
+import { storage } from './storage'
 
 /**
  * @see https://docs.mongodb.com/manual/core/2dsphere/#dsphere-data-restrictions
@@ -43,16 +40,9 @@ export function getMap(
   longitude: number,
   latitude: number,
 ): string | undefined {
-  try {
-    return (
-      localStorage.getItem(STATIC_MAP_URL_TEMPLATE_KEY) ||
-      STATIC_MAP_URL_TEMPLATE_DEFAULT
-    )
-      .replace(/\{\{longitude\}\}/g, longitude.toString())
-      .replace(/\{\{latitude\}\}/g, latitude.toString())
-      .replace(/\{\{width\}\}/g, width.toString())
-      .replace(/\{\{height\}\}/g, height.toString())
-  } catch {
-    return undefined
-  }
+  return storage.staticMapUrlTemplate
+    .replace(/\{\{longitude\}\}/g, longitude.toString())
+    .replace(/\{\{latitude\}\}/g, latitude.toString())
+    .replace(/\{\{width\}\}/g, width.toString())
+    .replace(/\{\{height\}\}/g, height.toString())
 }

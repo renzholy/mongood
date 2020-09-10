@@ -5,8 +5,8 @@
 import saferEval from 'safer-eval'
 
 import { MongoData } from '@/types'
-import { TAB_SIZE_KEY, TIMEZONE_OFFSET_KEY } from '@/pages/settings'
 import { formatDate } from './formatter'
+import { storage } from './storage'
 
 function wrapKey(key: string) {
   const strKey = key.toString()
@@ -21,14 +21,7 @@ function wrapKey(key: string) {
   return key
 }
 
-const tabSize = parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10)
-
-const timezoneOffset = parseInt(
-  localStorage.getItem(TIMEZONE_OFFSET_KEY) || '0',
-  10,
-)
-
-const extraSpaces = Array.from({ length: tabSize })
+const extraSpaces = Array.from({ length: storage.tabSize })
   .map(() => ' ')
   .join('')
 
@@ -56,7 +49,7 @@ export function stringify(
     return `ObjectId("${val.$oid}")`
   }
   if ('$date' in val && '$numberLong' in val.$date) {
-    return timezoneOffset
+    return storage.timezoneOffset
       ? `Date("${formatDate(parseInt(val.$date.$numberLong, 10))}")`
       : `ISODate("${new Date(
           parseInt(val.$date.$numberLong, 10),
@@ -96,7 +89,7 @@ export function stringify(
   if (Array.isArray(val)) {
     if (!hasIndent) {
       return `[${val
-        .map((v) => `${stringify(v, hasIndent, depth + tabSize)}`)
+        .map((v) => `${stringify(v, hasIndent, depth + storage.tabSize)}`)
         .join(', ')}]`
     }
     const spaces = Array.from({ length: depth })
@@ -109,7 +102,7 @@ export function stringify(
               `${extraSpaces}${spaces}${stringify(
                 v,
                 hasIndent,
-                depth + tabSize,
+                depth + storage.tabSize,
               )}`,
           )
           .join(',\n')}\n${spaces}]`
@@ -123,7 +116,11 @@ export function stringify(
     return `{ ${entries
       .map(
         ([key, value]) =>
-          `${wrapKey(key)}: ${stringify(value, hasIndent, depth + tabSize)}`,
+          `${wrapKey(key)}: ${stringify(
+            value,
+            hasIndent,
+            depth + storage.tabSize,
+          )}`,
       )
       .join(', ')} }`
   }
@@ -136,7 +133,7 @@ export function stringify(
         `${extraSpaces}${spaces}${wrapKey(key)}: ${stringify(
           value,
           hasIndent,
-          depth + tabSize,
+          depth + storage.tabSize,
         )}`,
     )
     .join(',\n')}\n${spaces}}`

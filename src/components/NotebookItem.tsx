@@ -14,12 +14,12 @@ import {
   TooltipHost,
   DirectionalHint,
 } from '@fluentui/react'
-import { TAB_SIZE_KEY } from '@/pages/settings'
 
 import { evalCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
+import { storage } from '@/utils/storage'
 import { MongoDataColorized } from './pure/MongoDataColorized'
 
 export function NotebookItem(props: {
@@ -117,7 +117,7 @@ export function NotebookItem(props: {
   }, [])
   const options = useMemo<ControlledEditorProps['options']>(
     () => ({
-      tabSize: parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10),
+      tabSize: storage.tabSize,
       readOnly: isLoading,
       lineDecorationsWidth: 0,
       glyphMargin: false,

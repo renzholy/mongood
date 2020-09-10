@@ -2,33 +2,21 @@ import { TextField, SpinButton, Stack } from '@fluentui/react'
 import React, { useState, useEffect } from 'react'
 import { padStart } from 'lodash'
 
-export const TAB_SIZE_KEY = 'settings.tabSize'
-export const TIMEZONE_OFFSET_KEY = 'settings.timezoneOffset'
-export const STATIC_MAP_URL_TEMPLATE_KEY = 'setting.staticMapUrlTemplate'
-/**
- * @see https://tech.yandex.com/maps/staticapi/doc/1.x/dg/concepts/input_params-docpage/
- */
-export const STATIC_MAP_URL_TEMPLATE_DEFAULT =
-  'https://static-maps.yandex.ru/1.x/?lang=en_US&ll={{longitude}},{{latitude}}&size={{width}},{{height}}&z=8&l=map&pt={{longitude}},{{latitude}},round'
+import { storage } from '@/utils/storage'
 
 export default () => {
   const [staticMapUrlTemplate, setStaticMapUrlTemplate] = useState<
     string | undefined
-  >(
-    localStorage.getItem(STATIC_MAP_URL_TEMPLATE_KEY) ||
-      STATIC_MAP_URL_TEMPLATE_DEFAULT,
-  )
-  const [tabSize, setTabSize] = useState<string>(
-    localStorage.getItem(TAB_SIZE_KEY) || '2',
-  )
+  >(storage.staticMapUrlTemplate)
+  const [tabSize, setTabSize] = useState<number>(storage.tabSize)
   useEffect(() => {
-    localStorage.setItem(TAB_SIZE_KEY, tabSize.toString())
+    storage.setTabSize(tabSize)
   }, [tabSize])
   const [timezoneOffset, setTimezoneOffset] = useState<number>(
-    parseInt(localStorage.getItem(TIMEZONE_OFFSET_KEY) || '0', 10),
+    storage.timezoneOffset,
   )
   useEffect(() => {
-    localStorage.setItem(TIMEZONE_OFFSET_KEY, timezoneOffset.toString())
+    storage.setTimezoneOffset(timezoneOffset)
   }, [timezoneOffset])
 
   return (
@@ -42,12 +30,14 @@ export default () => {
           root: { width: 80 },
         }}
         value={tabSize.toString()}
-        onValidate={setTabSize}
+        onValidate={(t) => {
+          setTabSize(parseInt(t, 10))
+        }}
         onIncrement={(value) => {
-          setTabSize(Math.max(parseInt(value, 10) + 2, 0).toString())
+          setTabSize(Math.max(parseInt(value, 10) + 2, 0))
         }}
         onDecrement={(value) => {
-          setTabSize(Math.max(parseInt(value, 10) - 2, 0).toString())
+          setTabSize(Math.max(parseInt(value, 10) - 2, 0))
         }}
       />
       <SpinButton
@@ -85,10 +75,7 @@ export default () => {
         description="Supported parameters: {{longitude}}, {{latitude}}, {{width}} and {{height}}"
         value={staticMapUrlTemplate}
         onBlur={() => {
-          localStorage.setItem(
-            STATIC_MAP_URL_TEMPLATE_KEY,
-            staticMapUrlTemplate || STATIC_MAP_URL_TEMPLATE_DEFAULT,
-          )
+          storage.setStaticMapUrlTemplate(staticMapUrlTemplate)
         }}
         onChange={(_ev, newValue) => {
           setStaticMapUrlTemplate(newValue)
