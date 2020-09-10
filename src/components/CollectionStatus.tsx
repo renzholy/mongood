@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux'
 import bytes from 'bytes'
 
 import { formatNumber } from '@/utils/formatter'
-import { StatsArea } from '@/components/StatsArea'
+import { StatsArea } from '@/components/pure/StatsArea'
 import { useCommandCollStats, useCommandDbStats } from '@/hooks/use-command'
-import { LargeMessage } from './LargeMessage'
+import { LargeMessage } from './pure/LargeMessage'
 
 export function CollectionStatus() {
   const collection = useSelector((state) => state.root.collection)

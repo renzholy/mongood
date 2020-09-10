@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { Stack, IconButton } from '@fluentui/react'
 
-import { LargeMessage } from '@/components/LargeMessage'
-import { EditorModal } from '@/components/EditorModal'
+import { LargeMessage } from '@/components/pure/LargeMessage'
+import { EditorModal } from '@/components/pure/EditorModal'
 import { IndexesList } from '@/components/IndexesList'
 import {
   useCommandListIndexes,
@@ -12,8 +12,8 @@ import {
 } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
-import { PromiseButton } from '@/components/PromiseButton'
-import { Divider } from '@/components/Divider'
+import { PromiseButton } from '@/components/pure/PromiseButton'
+import { Divider } from '@/components/pure/Divider'
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)

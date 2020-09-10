@@ -9,11 +9,11 @@ import { mapToColumn } from '@/utils/table'
 import { generateConnectionWithDirectHost } from '@/utils'
 import { formatNumber } from '@/utils/formatter'
 import { actions } from '@/stores'
-import { Table } from './Table'
-import { LargeMessage } from './LargeMessage'
-import { TableCell } from './TableCell'
+import { Table } from './pure/Table'
+import { LargeMessage } from './pure/LargeMessage'
+import { TableCell } from './pure/TableCell'
 import { ProfilingSummaryBottomStack } from './ProfilingSummaryBottomStack'
-import { Divider } from './Divider'
+import { Divider } from './pure/Divider'
 
 type Data = { database: string } & { [host: string]: number }
 

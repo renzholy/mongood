@@ -1,23 +1,18 @@
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
-import { TIMEZONE_OFFSET_KEY } from '@/pages/settings'
+import { storage } from './storage'
 
 dayjs.extend(utc)
 
 const Number = Intl.NumberFormat()
-
-const timezoneOffset = parseInt(
-  localStorage.getItem(TIMEZONE_OFFSET_KEY) || '0',
-  10,
-)
 
 export function formatNumber(num: number): string {
   return Number.format(num)
 }
 
 export function formatDate(date: Date | number): string {
-  return timezoneOffset
-    ? dayjs(date).utcOffset(timezoneOffset).format()
-    : new Date(date).toISOString()
+  return storage.timezoneOffset === 0
+    ? new Date(date).toISOString()
+    : dayjs(date).utcOffset(storage.timezoneOffset).format()
 }

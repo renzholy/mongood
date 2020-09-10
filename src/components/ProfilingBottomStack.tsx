@@ -6,7 +6,7 @@ import { useCommandProfile } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { generateConnectionWithDirectHost } from '@/utils'
-import { PromiseButton } from './PromiseButton'
+import { PromiseButton } from './pure/PromiseButton'
 
 enum ProfilingLevel {
   OFF = 0,

@@ -1,20 +1,14 @@
-import {
-  Stack,
-  SpinButton,
-  Label,
-  Slider,
-  IContextualMenuItem,
-  DefaultButton,
-} from '@fluentui/react'
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { useCommandProfile, useCommandIsMaster } from '@/hooks/use-command'
+import { useCommandProfile } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { generateConnectionWithDirectHost } from '@/utils'
 import { actions } from '@/stores'
-import { PromiseButton } from './PromiseButton'
+import { PromiseButton } from './pure/PromiseButton'
+import { HostButton } from './pure/HostButton'
 
 export function ProfilingSummaryBottomStack() {
   const connection = useSelector((state) => state.root.connection)
@@ -50,46 +44,24 @@ export function ProfilingSummaryBottomStack() {
     setSampleRate(profile.sampleRate)
   }, [profile])
   const dispatch = useDispatch()
-  const { data: replicaConfig } = useCommandIsMaster()
-  const hosts = useMemo<string[]>(() => replicaConfig?.hosts || [], [
-    replicaConfig,
-  ])
-  const items = useMemo<IContextualMenuItem[]>(
-    () =>
-      hosts.map((h) => ({
-        key: h,
-        text: h,
-        checked: h === host,
-        canCheck: true,
-        onClick() {
-          dispatch(actions.profiling.setHost(h))
-        },
-      })),
-    [dispatch, host, hosts],
+  const handleSetHost = useCallback(
+    (h: string) => {
+      dispatch(actions.profiling.setHost(h))
+    },
+    [dispatch],
   )
-  useEffect(() => {
-    if (!host || !hosts.includes(host)) {
-      dispatch(actions.profiling.setHost(hosts[0]))
-    }
-  }, [dispatch, host, hosts, connection])
 
   return (
     <Stack
       horizontal={true}
       tokens={{ padding: 10 }}
       styles={{ root: { height: 52, alignItems: 'center' } }}>
-      {items.length === 0 ? null : (
-        <>
-          <Label styles={{ root: { marginRight: 10 } }}>Host:</Label>
-          <DefaultButton
-            styles={{ root: { marginRight: 20 } }}
-            menuProps={{
-              items,
-            }}>
-            {host}
-          </DefaultButton>
-        </>
-      )}
+      <Label styles={{ root: { marginRight: 10 } }}>Host:</Label>
+      <HostButton
+        style={{ marginRight: 20 }}
+        host={host}
+        setHost={handleSetHost}
+      />
       <SpinButton
         label="Slow ms:"
         styles={{

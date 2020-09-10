@@ -6,7 +6,7 @@ import { ProfilingControlStack } from '@/components/ProfilingControlStack'
 import { ProfilingList } from '@/components/ProfilingList'
 import { ProfilingSummary } from '@/components/ProfilingSummary'
 import { ProfilingBottomStack } from '@/components/ProfilingBottomStack'
-import { Divider } from '@/components/Divider'
+import { Divider } from '@/components/pure/Divider'
 
 export default () => {
   const database = useSelector((state) => state.root.database)

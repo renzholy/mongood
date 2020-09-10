@@ -1,13 +1,20 @@
-import React, { useState, useMemo, useEffect } from 'react'
-import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
+import React, { useState, useMemo, useEffect, useCallback } from 'react'
+import {
+  Stack,
+  DefaultButton,
+  IconButton,
+  Toggle,
+  Label,
+} from '@fluentui/react'
 import { map, omit } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { FilterInput } from '@/components/FilterInput'
+import { FilterInput } from '@/components/pure/FilterInput'
 import { useCommandCurrentOp } from '@/hooks/use-command'
 import { OperationsList } from '@/components/OperationsList'
 import { actions } from '@/stores'
-import { Divider } from '@/components/Divider'
+import { Divider } from '@/components/pure/Divider'
+import { HostButton } from '@/components/pure/HostButton'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -79,6 +86,13 @@ export default () => {
     ns,
     filter,
   ])
+  const host = useSelector((state) => state.operations.host)
+  const handleSetHost = useCallback(
+    (h: string) => {
+      dispatch(actions.operations.setHost(h))
+    },
+    [dispatch],
+  )
 
   return (
     <>
@@ -86,7 +100,11 @@ export default () => {
         wrap={true}
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { marginBottom: -10 } }}>
+        styles={{
+          root: { marginBottom: -10 },
+          inner: { alignItems: 'center' },
+        }}>
+        <Label>Suggested filters:</Label>
         {map(examples, (_v, k) => (
           <DefaultButton
             key={k}
@@ -102,8 +120,26 @@ export default () => {
             }}
           />
         ))}
-        <Stack.Item grow={true}>
-          <div />
+      </Stack>
+      <Stack
+        horizontal={true}
+        tokens={{ childrenGap: 10, padding: 10 }}
+        styles={{ root: { height: 52, alignItems: 'center' } }}>
+        <Label>Host:</Label>
+        <HostButton
+          style={{ marginRight: 10 }}
+          host={host}
+          setHost={handleSetHost}
+        />
+        <Label>Filter:</Label>
+        <Stack.Item styles={{ root: { marginRight: 10 } }} grow={true}>
+          <FilterInput
+            value={value}
+            onChange={(_value) => {
+              setExample(undefined)
+              dispatch(actions.operations.setFilter(_value as {}))
+            }}
+          />
         </Stack.Item>
         <Toggle
           inlineLabel={true}
@@ -111,8 +147,8 @@ export default () => {
           onText=" "
           offText=" "
           styles={{
-            root: { marginRight: -5, marginBottom: 5 },
-            container: { display: 'flex', alignItems: 'center' },
+            label: { marginRight: 10 },
+            root: { margin: 0, display: 'flex', alignItems: 'center' },
           }}
           checked={refreshInterval !== 0}
           onChange={(_ev, v) => {
@@ -123,18 +159,6 @@ export default () => {
           iconProps={{ iconName: 'Refresh' }}
           disabled={isValidating}
           onClick={revalidate}
-        />
-      </Stack>
-      <Stack
-        horizontal={true}
-        tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52 } }}>
-        <FilterInput
-          value={value}
-          onChange={(_value) => {
-            setExample(undefined)
-            dispatch(actions.operations.setFilter(_value as {}))
-          }}
         />
       </Stack>
       <Divider />

@@ -1,8 +1,8 @@
 import { monaco, ControlledEditor, Monaco } from '@monaco-editor/react'
 import type { IDisposable } from 'monaco-editor'
 
-import { TAB_SIZE_KEY } from '@/pages/settings'
 import { Deferred } from '../deferred'
+import { storage } from '../storage'
 
 const _monaco = new Deferred<Monaco>()
 
@@ -61,7 +61,7 @@ export async function colorize(
   ;(await _monaco.promise).editor.setTheme(isDarkMode ? 'vs-dark' : 'vs')
   return (
     (await _monaco.promise).editor.colorize(text, 'javascript', {
-      tabSize: parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10),
+      tabSize: storage.tabSize,
     }) || ''
   )
 }

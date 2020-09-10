@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
 import { useCommandCount, useCommandFind } from '@/hooks/use-command'
-import { Pagination } from './Pagination'
+import { Pagination } from './pure/Pagination'
 
 export function DocumentPagination() {
   const skip = useSelector((state) => state.docs.skip)

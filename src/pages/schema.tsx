@@ -7,14 +7,14 @@ import { runCommand } from '@/utils/fetcher'
 import { ControlledEditor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { stringify, parse } from '@/utils/ejson'
-import { LargeMessage } from '@/components/LargeMessage'
+import { LargeMessage } from '@/components/pure/LargeMessage'
 import { generateMongoJsonSchema } from '@/utils/schema'
 import { MongoData, ValidationAction, ValidationLevel } from '@/types'
 import { useCommandListCollections } from '@/hooks/use-command'
-import { PromiseButton } from '@/components/PromiseButton'
+import { PromiseButton } from '@/components/pure/PromiseButton'
 import { usePromise } from '@/hooks/use-promise'
-import { Divider } from '@/components/Divider'
-import { TAB_SIZE_KEY } from './settings'
+import { Divider } from '@/components/pure/Divider'
+import { storage } from '@/utils/storage'
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)
@@ -73,7 +73,7 @@ export default () => {
   }, [])
   const options = useMemo<ControlledEditorProps['options']>(
     () => ({
-      tabSize: parseInt(localStorage.getItem(TAB_SIZE_KEY) || '2', 10),
+      tabSize: storage.tabSize,
       wordWrap: 'on',
       contextmenu: false,
       scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },

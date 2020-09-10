@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { ServerStatus } from '@/components/ServerStatus'
+import { ServerStatus } from '@/components/pure/ServerStatus'
 import { CollectionStatus } from '@/components/CollectionStatus'
 
 export default () => {

@@ -13,6 +13,7 @@ export default createSlice({
     isDialogHidden: true,
     isMenuHidden: true,
   } as {
+    host?: string
     filter: FilterQuery<unknown>
     refreshInterval: number
     isEditorOpen: boolean
@@ -21,6 +22,10 @@ export default createSlice({
     invokedOperation?: { [key: string]: MongoData }
   },
   reducers: {
+    setHost: (state, { payload }: PayloadAction<string>) => ({
+      ...state,
+      host: payload,
+    }),
     setFilter: (state, { payload }: PayloadAction<FilterQuery<unknown>>) =>
       isEqual(payload, state.filter)
         ? state

@@ -3,13 +3,14 @@ import type { FilterQuery } from 'mongodb'
 import { isEqual } from 'lodash'
 
 import { MongoData } from '@/types'
+import { storage } from '@/utils/storage'
 
 export default createSlice({
   name: 'profiling',
   initialState: {
     filter: {},
     skip: 0,
-    limit: parseInt(localStorage.getItem('limit') || '25', 10),
+    limit: storage.limit,
     isEditorOpen: false,
     isMenuHidden: true,
   } as {
@@ -46,7 +47,7 @@ export default createSlice({
       skip: Math.min(state.skip + state.limit, payload),
     }),
     setLimit: (state, { payload }: PayloadAction<number>) => {
-      localStorage.setItem('limit', payload.toString())
+      storage.setLimit(payload)
       return {
         ...state,
         limit: payload,

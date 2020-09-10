@@ -8,7 +8,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
-import { FilterInput } from './FilterInput'
+import { FilterInput } from './pure/FilterInput'
 
 const height = 52
 
