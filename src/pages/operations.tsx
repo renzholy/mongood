@@ -104,7 +104,7 @@ export default () => {
           root: { marginBottom: -10 },
           inner: { alignItems: 'center' },
         }}>
-        <Label style={{ marginLeft: 5 }}>Suggested filters:</Label>
+        <Label style={{ margin: 5 }}>Suggested filters:</Label>
         {map(examples, (_v, k) => (
           <DefaultButton
             key={k}
