@@ -100,7 +100,11 @@ export default () => {
         wrap={true}
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { marginBottom: -10 } }}>
+        styles={{
+          root: { marginBottom: -10 },
+          inner: { alignItems: 'center' },
+        }}>
+        <Label>Suggested filters:</Label>
         {map(examples, (_v, k) => (
           <DefaultButton
             key={k}
