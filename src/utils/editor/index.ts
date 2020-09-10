@@ -61,7 +61,7 @@ export async function colorize(
   ;(await _monaco.promise).editor.setTheme(isDarkMode ? 'vs-dark' : 'vs')
   return (
     (await _monaco.promise).editor.colorize(text, 'javascript', {
-      tabSize: storage.tabSize,
+      tabSize: storage.tabSize.get,
     }) || ''
   )
 }

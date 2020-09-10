@@ -5,8 +5,8 @@ import { storage } from '@/utils/storage'
 export default createSlice({
   name: 'root',
   initialState: {
-    selfAddedConnections: storage.selfAddedConnections,
-    connection: storage.connection,
+    selfAddedConnections: storage.selfAddedConnections.get,
+    connection: storage.connection.get,
     expandedDatabases: [],
     collectionsMap: {},
   } as {
@@ -19,14 +19,14 @@ export default createSlice({
   },
   reducers: {
     setSelfAddedConnections: (state, { payload }: PayloadAction<string[]>) => {
-      storage.setSelfAddedConnections(payload)
+      storage.selfAddedConnections.set(payload)
       return {
         ...state,
         selfAddedConnections: payload,
       }
     },
     setConnection: (state, { payload }: PayloadAction<string | undefined>) => {
-      storage.setConnection(payload)
+      storage.connection.set(payload)
       return {
         ...state,
         connection: payload,

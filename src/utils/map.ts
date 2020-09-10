@@ -40,7 +40,7 @@ export function getMap(
   longitude: number,
   latitude: number,
 ): string | undefined {
-  return storage.staticMapUrlTemplate
+  return storage.staticMapUrlTemplate.get
     .replace(/\{\{longitude\}\}/g, longitude.toString())
     .replace(/\{\{latitude\}\}/g, latitude.toString())
     .replace(/\{\{width\}\}/g, width.toString())

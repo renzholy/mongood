@@ -6,13 +6,10 @@ enum StorageType {
   JSON,
 }
 
-function getItem<T extends string>(
-  type: StorageType.STRING,
+function getItem<T>(
+  type: StorageType,
   key: string,
-): T | undefined
-function getItem(type: StorageType.NUMBER, key: string): number | undefined
-function getItem<T>(type: StorageType.JSON, key: string): T | undefined
-function getItem(type: StorageType, key: string) {
+): string | number | T | undefined {
   const item = localStorage.getItem(key)
   switch (type) {
     case StorageType.STRING: {
@@ -38,16 +35,10 @@ function getItem(type: StorageType, key: string) {
   }
 }
 
-function setItem<T extends string>(
-  type: StorageType.STRING,
+function setItem<T>(
+  type: StorageType,
   key: string,
-): (value?: T) => void
-function setItem(
-  type: StorageType.NUMBER,
-  key: string,
-): (value?: number) => void
-function setItem<T>(type: StorageType.JSON, key: string): (value?: T) => void
-function setItem(type: StorageType, key: string): (value?: any) => void {
+): (value?: T | number | string) => void {
   return (value) => {
     if (value === undefined) {
       localStorage.removeItem(key)
@@ -73,36 +64,76 @@ function setItem(type: StorageType, key: string): (value?: any) => void {
   }
 }
 
+function genGetSet(
+  type: StorageType.STRING,
+  key: string,
+  defaultValue: string,
+): { get: string; set: (value?: string) => void }
+function genGetSet(
+  type: StorageType.STRING,
+  key: string,
+): { get: string | undefined; set: (value?: string) => void }
+function genGetSet<T extends string>(
+  type: StorageType.STRING,
+  key: string,
+  defaultValue: T,
+): { get: T; set: (value?: T) => void }
+function genGetSet<T extends string>(
+  type: StorageType.STRING,
+  key: string,
+): { get: T | undefined; set: (value?: T) => void }
+function genGetSet(
+  type: StorageType.NUMBER,
+  key: string,
+  defaultValue: number,
+): { get: number; set: (value?: number) => void }
+function genGetSet(
+  type: StorageType.NUMBER,
+  key: string,
+): { get: number | undefined; set: (value?: number) => void }
+function genGetSet<T>(
+  type: StorageType.JSON,
+  key: string,
+  defaultValue: T,
+): { get: T; set: (value?: T) => void }
+function genGetSet<T>(
+  type: StorageType.JSON,
+  key: string,
+): { get: T | undefined; set: (value?: T) => void }
+function genGetSet(type: StorageType, key: string, defaultValue?: any) {
+  return {
+    get: getItem(type, key) || defaultValue,
+    set: setItem(type, key),
+  }
+}
+
 export const storage = {
-  connection: getItem(StorageType.STRING, 'connection'),
-  setConnection: setItem(StorageType.STRING, 'connection'),
+  connection: genGetSet(StorageType.STRING, 'connection'),
 
-  selfAddedConnections:
-    getItem<string[]>(StorageType.JSON, 'connections') || [],
-  setSelfAddedConnections: setItem<string[]>(StorageType.JSON, 'connections'),
+  selfAddedConnections: genGetSet<string[]>(
+    StorageType.JSON,
+    'connections',
+    [],
+  ),
 
-  displayMode:
-    getItem<DisplayMode>(StorageType.STRING, 'displayMode') ||
+  displayMode: genGetSet<DisplayMode>(
+    StorageType.STRING,
+    'displayMode',
     DisplayMode.TABLE,
-  setDisplayMode: setItem<DisplayMode>(StorageType.STRING, 'displayMode'),
+  ),
 
-  limit: getItem(StorageType.NUMBER, 'limit') || 25,
-  setLimit: setItem(StorageType.NUMBER, 'limit'),
+  limit: genGetSet(StorageType.NUMBER, 'limit', 25),
 
-  tabSize: getItem(StorageType.NUMBER, 'settings.tabSize') || 2,
-  setTabSize: setItem(StorageType.NUMBER, 'settings.tabSize'),
+  tabSize: genGetSet(StorageType.NUMBER, 'settings.tabSize', 2),
 
-  timezoneOffset: getItem(StorageType.NUMBER, 'settings.timezoneOffset') || 0,
-  setTimezoneOffset: setItem(StorageType.NUMBER, 'settings.timezoneOffset'),
+  timezoneOffset: genGetSet(StorageType.NUMBER, 'settings.timezoneOffset', 0),
 
   /**
    * @see https://tech.yandex.com/maps/staticapi/doc/1.x/dg/concepts/input_params-docpage/
    */
-  staticMapUrlTemplate:
-    getItem(StorageType.STRING, 'settings.staticMapUrlTemplate') ||
-    'https://static-maps.yandex.ru/1.x/?lang=en_US&ll={{longitude}},{{latitude}}&size={{width}},{{height}}&z=8&l=map&pt={{longitude}},{{latitude}},round',
-  setStaticMapUrlTemplate: setItem(
+  staticMapUrlTemplate: genGetSet(
     StorageType.STRING,
     'settings.staticMapUrlTemplate',
+    'https://static-maps.yandex.ru/1.x/?lang=en_US&ll={{longitude}},{{latitude}}&size={{width}},{{height}}&z=8&l=map&pt={{longitude}},{{latitude}},round',
   ),
 }

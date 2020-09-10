@@ -21,7 +21,7 @@ function wrapKey(key: string) {
   return key
 }
 
-const extraSpaces = Array.from({ length: storage.tabSize })
+const extraSpaces = Array.from({ length: storage.tabSize.get })
   .map(() => ' ')
   .join('')
 
@@ -89,7 +89,7 @@ export function stringify(
   if (Array.isArray(val)) {
     if (!hasIndent) {
       return `[${val
-        .map((v) => `${stringify(v, hasIndent, depth + storage.tabSize)}`)
+        .map((v) => `${stringify(v, hasIndent, depth + storage.tabSize.get)}`)
         .join(', ')}]`
     }
     const spaces = Array.from({ length: depth })
@@ -102,7 +102,7 @@ export function stringify(
               `${extraSpaces}${spaces}${stringify(
                 v,
                 hasIndent,
-                depth + storage.tabSize,
+                depth + storage.tabSize.get,
               )}`,
           )
           .join(',\n')}\n${spaces}]`
@@ -119,7 +119,7 @@ export function stringify(
           `${wrapKey(key)}: ${stringify(
             value,
             hasIndent,
-            depth + storage.tabSize,
+            depth + storage.tabSize.get,
           )}`,
       )
       .join(', ')} }`
@@ -133,7 +133,7 @@ export function stringify(
         `${extraSpaces}${spaces}${wrapKey(key)}: ${stringify(
           value,
           hasIndent,
-          depth + storage.tabSize,
+          depth + storage.tabSize.get,
         )}`,
     )
     .join(',\n')}\n${spaces}}`

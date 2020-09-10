@@ -7,16 +7,16 @@ import { storage } from '@/utils/storage'
 export default () => {
   const [staticMapUrlTemplate, setStaticMapUrlTemplate] = useState<
     string | undefined
-  >(storage.staticMapUrlTemplate)
-  const [tabSize, setTabSize] = useState<number>(storage.tabSize)
+  >(storage.staticMapUrlTemplate.get)
+  const [tabSize, setTabSize] = useState<number>(storage.tabSize.get)
   useEffect(() => {
-    storage.setTabSize(tabSize)
+    storage.tabSize.set(tabSize)
   }, [tabSize])
   const [timezoneOffset, setTimezoneOffset] = useState<number>(
-    storage.timezoneOffset,
+    storage.timezoneOffset.get,
   )
   useEffect(() => {
-    storage.setTimezoneOffset(timezoneOffset)
+    storage.timezoneOffset.set(timezoneOffset)
   }, [timezoneOffset])
 
   return (
@@ -75,7 +75,7 @@ export default () => {
         description="Supported parameters: {{longitude}}, {{latitude}}, {{width}} and {{height}}"
         value={staticMapUrlTemplate}
         onBlur={() => {
-          storage.setStaticMapUrlTemplate(staticMapUrlTemplate)
+          storage.staticMapUrlTemplate.set(staticMapUrlTemplate)
         }}
         onChange={(_ev, newValue) => {
           setStaticMapUrlTemplate(newValue)
@@ -84,9 +84,9 @@ export default () => {
       <div>
         <PrimaryButton
           disabled={
-            tabSize === storage.tabSize &&
-            timezoneOffset === storage.timezoneOffset &&
-            staticMapUrlTemplate === storage.staticMapUrlTemplate
+            tabSize === storage.tabSize.get &&
+            timezoneOffset === storage.timezoneOffset.get &&
+            staticMapUrlTemplate === storage.staticMapUrlTemplate.get
           }
           text="Apply"
           onClick={() => {

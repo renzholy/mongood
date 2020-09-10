@@ -12,7 +12,7 @@ export function formatNumber(num: number): string {
 }
 
 export function formatDate(date: Date | number): string {
-  return storage.timezoneOffset === 0
+  return storage.timezoneOffset.get === 0
     ? new Date(date).toISOString()
-    : dayjs(date).utcOffset(storage.timezoneOffset).format()
+    : dayjs(date).utcOffset(storage.timezoneOffset.get).format()
 }

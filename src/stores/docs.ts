@@ -13,12 +13,12 @@ import { storage } from '@/utils/storage'
 export default createSlice({
   name: 'docs',
   initialState: {
-    displayMode: storage.displayMode,
+    displayMode: storage.displayMode.get,
     filter: {},
     projection: {},
     sort: {},
     skip: 0,
-    limit: storage.limit,
+    limit: storage.limit.get,
   } as {
     displayMode: DisplayMode
     index?: IndexSpecification
@@ -33,7 +33,7 @@ export default createSlice({
   },
   reducers: {
     setDisplayMode: (state, { payload }: PayloadAction<DisplayMode>) => {
-      storage.setDisplayMode(payload)
+      storage.displayMode.set(payload)
       return {
         ...state,
         displayMode: payload,
@@ -90,7 +90,7 @@ export default createSlice({
       skip: Math.min(state.skip + state.limit, payload),
     }),
     setLimit: (state, { payload }: PayloadAction<number>) => {
-      storage.setLimit(payload)
+      storage.limit.set(payload)
       return {
         ...state,
         limit: payload,

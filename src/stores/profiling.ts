@@ -10,7 +10,7 @@ export default createSlice({
   initialState: {
     filter: {},
     skip: 0,
-    limit: storage.limit,
+    limit: storage.limit.get,
     isEditorOpen: false,
     isMenuHidden: true,
   } as {
@@ -47,7 +47,7 @@ export default createSlice({
       skip: Math.min(state.skip + state.limit, payload),
     }),
     setLimit: (state, { payload }: PayloadAction<number>) => {
-      storage.setLimit(payload)
+      storage.limit.set(payload)
       return {
         ...state,
         limit: payload,
