@@ -1,4 +1,4 @@
-import { TextField, SpinButton, Stack } from '@fluentui/react'
+import { TextField, SpinButton, Stack, PrimaryButton } from '@fluentui/react'
 import React, { useState, useEffect } from 'react'
 import { padStart } from 'lodash'
 
@@ -81,6 +81,19 @@ export default () => {
           setStaticMapUrlTemplate(newValue)
         }}
       />
+      <div>
+        <PrimaryButton
+          disabled={
+            tabSize === storage.tabSize &&
+            timezoneOffset === storage.timezoneOffset &&
+            staticMapUrlTemplate === storage.staticMapUrlTemplate
+          }
+          text="Apply"
+          onClick={() => {
+            window.location.reload()
+          }}
+        />
+      </div>
     </Stack>
   )
 }
