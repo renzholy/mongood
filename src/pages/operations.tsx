@@ -122,15 +122,21 @@ export default () => {
         tokens={{ childrenGap: 10, padding: 10 }}
         styles={{ root: { height: 52, alignItems: 'center' } }}>
         <Label>Host:</Label>
-        <HostButton host={host} setHost={handleSetHost} />
-        <Label>Filter:</Label>
-        <FilterInput
-          value={value}
-          onChange={(_value) => {
-            setExample(undefined)
-            dispatch(actions.operations.setFilter(_value as {}))
-          }}
+        <HostButton
+          style={{ marginRight: 10 }}
+          host={host}
+          setHost={handleSetHost}
         />
+        <Label>Filter:</Label>
+        <Stack.Item styles={{ root: { marginRight: 10 } }} grow={true}>
+          <FilterInput
+            value={value}
+            onChange={(_value) => {
+              setExample(undefined)
+              dispatch(actions.operations.setFilter(_value as {}))
+            }}
+          />
+        </Stack.Item>
         <Toggle
           inlineLabel={true}
           label="Auto refresh:"
