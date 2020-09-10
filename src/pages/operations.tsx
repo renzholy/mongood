@@ -3,11 +3,11 @@ import { Stack, DefaultButton, IconButton, Toggle } from '@fluentui/react'
 import { map, omit } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { FilterInput } from '@/components/FilterInput'
+import { FilterInput } from '@/components/pure/FilterInput'
 import { useCommandCurrentOp } from '@/hooks/use-command'
 import { OperationsList } from '@/components/OperationsList'
 import { actions } from '@/stores'
-import { Divider } from '@/components/Divider'
+import { Divider } from '@/components/pure/Divider'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {

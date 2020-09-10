@@ -7,7 +7,7 @@ import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { generateConnectionWithDirectHost } from '@/utils'
 import { actions } from '@/stores'
-import { PromiseButton } from './PromiseButton'
+import { PromiseButton } from './pure/PromiseButton'
 import { HostButton } from './pure/HostButton'
 
 export function ProfilingSummaryBottomStack() {

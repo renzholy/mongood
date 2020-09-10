@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux'
 import { DocumentsList } from '@/components/DocumentsList'
 import { DocumentControlStack } from '@/components/DocumentControlStack'
 import { DocumentFilterStack } from '@/components/DocumentFilterStack'
-import { LargeMessage } from '@/components/LargeMessage'
-import { Divider } from '@/components/Divider'
+import { LargeMessage } from '@/components/pure/LargeMessage'
+import { Divider } from '@/components/pure/Divider'
 
 export default () => {
   const database = useSelector((state) => state.root.database)

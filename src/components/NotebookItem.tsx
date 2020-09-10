@@ -20,7 +20,7 @@ import { evalCommand } from '@/utils/collection'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
-import { MongoDataColorized } from './MongoDataColorized'
+import { MongoDataColorized } from './pure/MongoDataColorized'
 
 export function NotebookItem(props: {
   index?: number

@@ -10,8 +10,8 @@ import { MongoData } from '@/types'
 import { useCommandFind, useCommandCount } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
-import { PromiseButton } from './PromiseButton'
-import { DefaultDialog } from './DefaultDialog'
+import { PromiseButton } from './pure/PromiseButton'
+import { DefaultDialog } from './pure/DefaultDialog'
 
 const cast: Options['cast'] = {
   boolean: (value) => stringify(value),

@@ -20,7 +20,7 @@ import { actions } from '@/stores'
 import { ServerStats } from '@/types'
 import { useConnections } from '@/hooks/use-connections'
 import { usePromise } from '@/hooks/use-promise'
-import { PromiseButton } from './PromiseButton'
+import { PromiseButton } from './pure/PromiseButton'
 
 function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const uri = useMemo(() => {

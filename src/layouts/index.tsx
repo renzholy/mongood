@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 
 import { DatabaseNav } from '@/components/DatabaseNav'
 import { store } from '@/stores/index'
-import { TopPivot } from '@/components/TopPivot'
+import { TopPivot } from '@/components/pure/TopPivot'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { ControlledEditor } from '@/utils/editor'
 

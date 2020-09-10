@@ -11,10 +11,10 @@ import {
   useCommandListIndexes,
 } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
-import { IndexButton } from './IndexButton'
+import { IndexButton } from './pure/IndexButton'
 import { DocumentPagination } from './DocumentPagination'
-import { EditorModal } from './EditorModal'
-import { PromiseButton } from './PromiseButton'
+import { EditorModal } from './pure/EditorModal'
+import { PromiseButton } from './pure/PromiseButton'
 
 export function DocumentControlStack() {
   const connection = useSelector((state) => state.root.connection)

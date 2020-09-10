@@ -6,11 +6,11 @@ import { useCommandSystemProfileFind } from '@/hooks/use-command'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { calcHeaders, mapToColumn } from '@/utils/table'
-import { LargeMessage } from './LargeMessage'
-import { Table } from './Table'
-import { TableCell } from './TableCell'
-import { MongoDataModal } from './MongoDataModal'
-import { ExecStage } from './ExecStage'
+import { LargeMessage } from './pure/LargeMessage'
+import { Table } from './pure/Table'
+import { TableCell } from './pure/TableCell'
+import { MongoDataModal } from './pure/MongoDataModal'
+import { ExecStage } from './pure/ExecStage'
 
 type Profiling = { [key: string]: MongoData }
 
