@@ -1,11 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
-import {
-  Stack,
-  DefaultButton,
-  IconButton,
-  Toggle,
-  Label,
-} from '@fluentui/react'
+import { Stack, DefaultButton, Toggle, Label } from '@fluentui/react'
 import { map, omit } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -15,6 +9,7 @@ import { OperationsList } from '@/components/OperationsList'
 import { actions } from '@/stores'
 import { Divider } from '@/components/pure/Divider'
 import { HostButton } from '@/components/pure/HostButton'
+import { RefreshButton } from '@/components/pure/RefreshButton'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -155,11 +150,7 @@ export default () => {
             dispatch(actions.operations.setRefreshInterval(v ? 1000 : 0))
           }}
         />
-        <IconButton
-          iconProps={{ iconName: 'Refresh' }}
-          disabled={isValidating}
-          onClick={revalidate}
-        />
+        <RefreshButton isRefreshing={isValidating} onRefresh={revalidate} />
       </Stack>
       <Divider />
       <OperationsList />

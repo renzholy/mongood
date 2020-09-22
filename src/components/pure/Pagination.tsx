@@ -8,6 +8,7 @@ import {
 } from '@fluentui/react'
 
 import { formatNumber } from '@/utils/formatter'
+import { RefreshButton } from './RefreshButton'
 
 export function Pagination(props: {
   skip: number
@@ -68,10 +69,9 @@ export function Pagination(props: {
         disabled={props.skip + props.limit >= props.count}
         onClick={props.onNext}
       />
-      <IconButton
-        iconProps={{ iconName: 'Refresh' }}
-        disabled={props.isValidating}
-        onClick={props.revalidate}
+      <RefreshButton
+        isRefreshing={props.isValidating}
+        onRefresh={props.revalidate}
       />
     </Stack>
   )
