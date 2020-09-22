@@ -14,6 +14,7 @@ import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { PromiseButton } from '@/components/pure/PromiseButton'
 import { Divider } from '@/components/pure/Divider'
+import { RefreshButton } from '@/components/pure/RefreshButton'
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)
@@ -96,11 +97,7 @@ export default () => {
           }}>
           Create
         </IconButton>
-        <IconButton
-          iconProps={{ iconName: 'Refresh' }}
-          disabled={isValidating}
-          onClick={revalidate}
-        />
+        <RefreshButton isRefreshing={isValidating} onRefresh={revalidate} />
       </Stack>
       <Divider />
       <IndexesList />

@@ -1,6 +1,6 @@
 import { useSWRInfinite } from 'swr'
 import React, { useCallback, useMemo } from 'react'
-import { IColumn, getTheme, IconButton, Stack } from '@fluentui/react'
+import { IColumn, getTheme, Stack } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
@@ -14,6 +14,7 @@ import { LargeMessage } from './pure/LargeMessage'
 import { TableCell } from './pure/TableCell'
 import { ProfilingSummaryBottomStack } from './ProfilingSummaryBottomStack'
 import { Divider } from './pure/Divider'
+import { RefreshButton } from './pure/RefreshButton'
 
 type Data = { database: string } & { [host: string]: number }
 
@@ -114,11 +115,7 @@ export function ProfilingSummary() {
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
-        <IconButton
-          iconProps={{ iconName: 'Refresh' }}
-          disabled={isValidating}
-          onClick={revalidate}
-        />
+        <RefreshButton isRefreshing={isValidating} onRefresh={revalidate} />
       </Stack>
       <Divider />
       {data ? (
