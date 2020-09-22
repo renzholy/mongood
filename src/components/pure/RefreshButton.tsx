@@ -1,15 +1,16 @@
-import { IconButton } from '@fluentui/react'
+import { IconButton, Spinner, SpinnerSize } from '@fluentui/react'
 import React from 'react'
 
 export function RefreshButton(props: {
   isRefreshing: boolean
   onRefresh(): void
 }) {
-  return (
-    <IconButton
-      iconProps={{ iconName: 'Refresh' }}
-      disabled={props.isRefreshing}
-      onClick={props.onRefresh}
+  return props.isRefreshing ? (
+    <Spinner
+      size={SpinnerSize.small}
+      styles={{ root: { padding: 8, cursor: 'wait' } }}
     />
+  ) : (
+    <IconButton iconProps={{ iconName: 'Refresh' }} onClick={props.onRefresh} />
   )
 }
