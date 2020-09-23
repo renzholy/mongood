@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { runCommand } from '@/utils/fetcher'
 import { useCommandDatabases, useCommandIsMaster } from '@/hooks/use-command'
 import { mapToColumn } from '@/utils/table'
-import { generateConnectionWithDirectHost } from '@/utils'
+import { generateConnectionWithDirectHost, getHostsOfMongoURI } from '@/utils'
 import { formatNumber } from '@/utils/formatter'
 import { actions } from '@/stores'
 import { Table } from './pure/Table'
@@ -28,7 +28,11 @@ export function ProfilingSummary() {
     (index: number): string[] | null => {
       const database = databases?.databases[index]?.name
       return connection && database && hosts
-        ? [connection, database, ...(hosts.hosts || [])]
+        ? [
+            connection,
+            database,
+            ...(hosts.hosts || getHostsOfMongoURI(connection)),
+          ]
         : null
     },
     [connection, databases, hosts],
@@ -62,9 +66,12 @@ export function ProfilingSummary() {
     },
   )
   const columns = useMemo<IColumn[]>(() => {
-    const cs = (hosts?.hosts?.map((h) => [h, 160]) || []) as [string, number][]
+    const cs = (hosts?.hosts || getHostsOfMongoURI(connection)).map((h) => [
+      h,
+      160,
+    ]) as [string, number][]
     return mapToColumn([[KEY_NAME, 0], ...cs])
-  }, [hosts])
+  }, [hosts, connection])
   const dispatch = useDispatch()
   const theme = getTheme()
   const handleViewProfiling = useCallback(

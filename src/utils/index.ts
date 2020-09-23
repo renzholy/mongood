@@ -22,3 +22,11 @@ export function generateConnectionWithDirectHost(
     return undefined
   }
 }
+
+export function getHostsOfMongoURI(uri?: string): string[] {
+  if (!uri) {
+    return []
+  }
+  const parsed = mongodbUri.parse(uri)
+  return parsed.hosts.map((h) => `${h.host}:${h.port || 27017}`)
+}
