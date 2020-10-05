@@ -61,7 +61,7 @@
     "@umijs/preset-react": "1.6.8",
     "@welldone-software/why-did-you-render": "4.3.2",
     "eslint": "7.10.0",
-    "eslint-config-airbnb-typescript": "10.0.0",
+    "eslint-config-airbnb-typescript": "11.0.0",
     "eslint-config-prettier": "6.12.0",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsx-a11y": "6.3.1",
