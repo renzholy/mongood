@@ -28,6 +28,7 @@ const columns = mapToColumn(
     ['op', 100],
     ['ms', 100],
     ['planSummary', 100],
+    ['msg', 200],
     ['client', 100],
     ['clientMetadata', 200],
   ]),
