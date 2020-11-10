@@ -46,7 +46,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
 
-  build_macos:
+  build:
     name: Build release
     needs: create_release
     runs-on: ${{ matrix.os }}
@@ -100,7 +100,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           go build -o mongood
-          fyne package -os windows -icon ./assets/logo.png -release --executable mongood
+          fyne package -os windows -icon ./assets/logo.png -release --executable mongood -appID mongood
           mv mongood.exe ${{ matrix.asset_name }}
 
       - name: Upload Release Asset
