@@ -197,8 +197,8 @@ export function DatabaseNav() {
               )
             }
           }}
-          onRenderLink={(l) => {
-            return l ? (
+          onRenderLink={(l) =>
+            l ? (
               <div
                 style={{
                   flex: 1,
@@ -209,7 +209,7 @@ export function DatabaseNav() {
                 {l.name}
               </div>
             ) : null
-          }}
+          }
         />
       </div>
       <div

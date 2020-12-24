@@ -29,8 +29,8 @@ export function useConnections(): {
     [],
   )
   const handleUriText = useCallback(
-    async (connections: string[]) => {
-      return Promise.all(
+    async (connections: string[]) =>
+      Promise.all(
         connections.map(async (uri) => {
           try {
             const { host, repl } = await serverStatus(uri)
@@ -39,8 +39,7 @@ export function useConnections(): {
             return { uri, text: uri }
           }
         }),
-      )
-    },
+      ),
     [serverStatus],
   )
   useAsyncEffect(

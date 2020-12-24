@@ -25,15 +25,16 @@ function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {
 }
 
 export const MongoDataHoverCard = React.memo(
-  function TableCell(props: {
+  (props: {
     value: MongoData
     children: React.ReactNode
     header?: React.ReactNode
-  }) {
+  }) => {
     const theme = getTheme()
-    const onRenderPlainCard = useCallback(() => {
-      return <PlainCard value={props.value} header={props.header} />
-    }, [props.value, props.header])
+    const onRenderPlainCard = useCallback(
+      () => <PlainCard value={props.value} header={props.header} />,
+      [props.value, props.header],
+    )
 
     return (
       <HoverCard

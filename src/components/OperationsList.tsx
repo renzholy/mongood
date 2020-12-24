@@ -89,9 +89,11 @@ export function OperationsList() {
     },
     [],
   )
-  const handleGetKey = useCallback((item: Operation, index?: number) => {
-    return item.opid?.$numberInt || stringify(item) + index
-  }, [])
+  const handleGetKey = useCallback(
+    (item: Operation, index?: number) =>
+      item.opid?.$numberInt || stringify(item) + index,
+    [],
+  )
 
   if (error) {
     return (

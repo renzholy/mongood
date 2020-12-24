@@ -14,8 +14,8 @@ import { MongoDataColorized } from './MongoDataColorized'
 function IndexFeature(props: { value: { text: string; data?: object } }) {
   const theme = getTheme()
 
-  const onRenderPlainCard = useCallback(() => {
-    return (
+  const onRenderPlainCard = useCallback(
+    () => (
       <div
         style={{
           padding: 10,
@@ -26,8 +26,9 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
         }}>
         <MongoDataColorized value={props.value.data} />
       </div>
-    )
-  }, [props.value.data, theme.palette.neutralLighter])
+    ),
+    [props.value.data, theme.palette.neutralLighter],
+  )
 
   return (
     <HoverCard

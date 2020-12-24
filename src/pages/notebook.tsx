@@ -18,9 +18,7 @@ export default () => {
   const notebooks = useSelector((state) => state.notebook.notebooks)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
   useAsyncEffect(
-    () => {
-      return changeLib(collectionsMap)
-    },
+    () => changeLib(collectionsMap),
     (disposable) => {
       disposable?.dispose()
     },

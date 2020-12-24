@@ -88,9 +88,7 @@ export function IndexesList() {
     },
     [collStats, indexStats],
   )
-  const handleGetKey = useCallback((item: Index) => {
-    return item.name || ''
-  }, [])
+  const handleGetKey = useCallback((item: Index) => item.name || '', [])
   const handleItemInvoked = useCallback(
     (item?: Index) => {
       if (item) {

@@ -8,7 +8,7 @@ import { MongoData } from '@/types'
 import { MongoDataHoverCard } from './MongoDataHoverCard'
 
 export const TableCell = React.memo(
-  function TableCell(props: { value: MongoData }) {
+  (props: { value: MongoData }) => {
     const str = useMemo(() => stringify(props.value), [props.value])
     const html = useColorize(str)
 

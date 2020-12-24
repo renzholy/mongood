@@ -54,9 +54,9 @@ export function ProfilingList() {
     [dispatch],
   )
   const handleRenderItemColumn = useCallback(
-    (item?: Profiling, _index?: number, column?: IColumn) => {
-      return <TableCell value={item?.[column?.key!]} />
-    },
+    (item?: Profiling, _index?: number, column?: IColumn) => (
+      <TableCell value={item?.[column?.key!]} />
+    ),
     [],
   )
   const order = useMemo(

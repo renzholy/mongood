@@ -23,8 +23,8 @@ export function ExecStage(props: { value?: { [key: string]: MongoData } }) {
         : undefined,
     [props.value],
   )
-  const onRenderPlainCard = useCallback(() => {
-    return (
+  const onRenderPlainCard = useCallback(
+    () => (
       <div
         style={{
           padding: 10,
@@ -37,8 +37,9 @@ export function ExecStage(props: { value?: { [key: string]: MongoData } }) {
           value={omit(props.value, ['inputStage', 'inputStages'])}
         />
       </div>
-    )
-  }, [props.value, theme.palette.neutralLighter])
+    ),
+    [props.value, theme.palette.neutralLighter],
+  )
   const iconStyles = useMemo(
     () => ({
       root: {

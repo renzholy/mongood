@@ -151,9 +151,11 @@ export function DocumentsList() {
           },
         ]
   }, [displayMode, data, order])
-  const handleGetKey = useCallback((item: Document, i?: number) => {
-    return item._id ? JSON.stringify(item._id) : JSON.stringify(item) + i
-  }, [])
+  const handleGetKey = useCallback(
+    (item: Document, i?: number) =>
+      item._id ? JSON.stringify(item._id) : JSON.stringify(item) + i,
+    [],
+  )
 
   if (error) {
     return (

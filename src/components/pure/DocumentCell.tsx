@@ -9,11 +9,11 @@ import { getMap, getLocation } from '@/utils/map'
 import { MongoDataHoverCard } from './MongoDataHoverCard'
 
 export const DocumentCell = React.memo(
-  function TableCell(props: {
+  (props: {
     value: MongoData
     subStringLength?: number
     index2dsphere?: MongoData
-  }) {
+  }) => {
     const str = useMemo(
       () => stringify(props.value).substr(0, props.subStringLength),
       [props.value, props.subStringLength],
