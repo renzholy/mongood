@@ -6,7 +6,7 @@ import { DatabaseNav } from '@/components/DatabaseNav'
 import { store } from '@/stores/index'
 import { TopPivot } from '@/components/pure/TopPivot'
 import { useDarkMode } from '@/hooks/use-dark-mode'
-import { ControlledEditor } from '@/utils/editor'
+import { Editor } from '@/utils/editor'
 
 initializeIcons()
 
@@ -73,7 +73,7 @@ export default (props: { children: React.ReactNode }) => {
     <Provider store={store}>
       <div style={{ display: 'none' }}>
         {/* init colorize */}
-        <ControlledEditor language="javascript" />
+        <Editor language="javascript" />
       </div>
       <div
         style={{

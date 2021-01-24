@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Dropdown, Label, Stack, TooltipHost } from '@fluentui/react'
-import { ControlledEditorProps } from '@monaco-editor/react'
+import { EditorProps, OnChange } from '@monaco-editor/react'
 
 import { runCommand } from '@/utils/fetcher'
-import { ControlledEditor } from '@/utils/editor'
+import { Editor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { stringify, parse } from '@/utils/ejson'
 import { LargeMessage } from '@/components/pure/LargeMessage'
@@ -68,12 +68,12 @@ export default () => {
     setValidationLevel(options.validationLevel || null)
     setValue(str ? `return ${str}` : 'return {}')
   }, [data])
-  const handleChange = useCallback((_ev: unknown, _value?: string) => {
+  const handleChange = useCallback<OnChange>((_value?: string) => {
     setValue(_value || '')
   }, [])
-  const options = useMemo<ControlledEditorProps['options']>(
+  const options = useMemo<EditorProps['options']>(
     () => ({
-      tabSize: storage.tabSize,
+      tabSize: storage.tabSize.get,
       wordWrap: 'on',
       contextmenu: false,
       scrollbar: { verticalScrollbarSize: 0, horizontalSliderSize: 0 },
@@ -112,7 +112,7 @@ export default () => {
   }
   return (
     <>
-      <ControlledEditor
+      <Editor
         language="typescript"
         theme={isDarkMode ? 'vs-dark' : 'vs'}
         value={value}

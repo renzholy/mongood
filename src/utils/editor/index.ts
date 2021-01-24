@@ -1,4 +1,4 @@
-import { monaco, ControlledEditor, Monaco } from '@monaco-editor/react'
+import Editor, { loader, Monaco } from '@monaco-editor/react'
 import type { IDisposable } from 'monaco-editor'
 
 import { Deferred } from '../deferred'
@@ -6,7 +6,7 @@ import { storage } from '../storage'
 
 const _monaco = new Deferred<Monaco>()
 
-monaco
+loader
   .init()
   .then((_m) => {
     _m.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
@@ -66,4 +66,4 @@ export async function colorize(
   )
 }
 
-export { ControlledEditor }
+export { Editor }
