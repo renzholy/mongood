@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Card } from '@uifabric/react-cards'
-import {
-  ControlledEditor,
-  EditorDidMount,
-  ControlledEditorProps,
-} from '@monaco-editor/react'
+import Editor, { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -101,23 +97,23 @@ export function NotebookItem(props: {
   useEffect(() => {
     setError(props.error)
   }, [props.error])
-  const handleEditorDidMount = useCallback<EditorDidMount>(
-    (getEditorValue, editor) => {
+  const handleEditorMount = useCallback<OnMount>(
+    (editor) => {
       editor.onKeyDown(async (e) => {
         if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
           e.stopPropagation()
-          await handleRunCommand(getEditorValue())
+          await handleRunCommand(editor.getValue())
         }
       })
     },
     [handleRunCommand],
   )
-  const handleChange = useCallback((_ev: unknown, _value?: string) => {
-    value.current = _value
+  const handleChange = useCallback<OnChange>((v?: string) => {
+    value.current = v
   }, [])
-  const options = useMemo<ControlledEditorProps['options']>(
+  const options = useMemo<EditorProps['options']>(
     () => ({
-      tabSize: storage.tabSize,
+      tabSize: storage.tabSize.get,
       readOnly: isLoading,
       lineDecorationsWidth: 0,
       glyphMargin: false,
@@ -147,13 +143,13 @@ export function NotebookItem(props: {
           },
         }}>
         <Card.Item>
-          <ControlledEditor
+          <Editor
             height={5 * 18}
             language="typescript"
             value={value.current}
             onChange={handleChange}
             theme={isDarkMode ? 'vs-dark' : 'vs'}
-            editorDidMount={handleEditorDidMount}
+            onMount={handleEditorMount}
             options={options}
           />
         </Card.Item>

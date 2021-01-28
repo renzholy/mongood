@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
-import { EditorDidMount, ControlledEditorProps } from '@monaco-editor/react'
+import { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
 
 import { stringify, parse } from '@/utils/ejson'
-import { ControlledEditor } from '@/utils/editor'
+import { Editor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { MongoData } from '@/types'
 import { storage } from '@/utils/storage'
@@ -24,22 +24,19 @@ export function EditorModal<T extends MongoData>(props: {
   useEffect(() => {
     setValue(`return ${stringify(props.value, true)}\n`)
   }, [props.value])
-  const handleEditorDidMount = useCallback<EditorDidMount>(
-    (_getEditorValue, editor) => {
-      editor.onKeyDown((e) => {
-        if (e.keyCode === KeyCode.Escape) {
-          e.stopPropagation()
-        }
-      })
-    },
-    [],
-  )
-  const handleChange = useCallback((_ev: unknown, _value?: string) => {
+  const handleEditorDidMount = useCallback<OnMount>((editor) => {
+    editor.onKeyDown((e) => {
+      if (e.keyCode === KeyCode.Escape) {
+        e.stopPropagation()
+      }
+    })
+  }, [])
+  const handleChange = useCallback<OnChange>((_value?: string) => {
     setValue(_value || '')
   }, [])
-  const options = useMemo<ControlledEditorProps['options']>(
+  const options = useMemo<EditorProps['options']>(
     () => ({
-      tabSize: storage.tabSize,
+      tabSize: storage.tabSize.get,
       readOnly: props.readOnly,
       wordWrap: 'on',
       contextmenu: false,
@@ -63,12 +60,12 @@ export function EditorModal<T extends MongoData>(props: {
             // eslint-disable-next-line no-empty
           } catch {}
         }}>
-        <ControlledEditor
+        <Editor
           language="typescript"
           value={value}
           onChange={handleChange}
           theme={isDarkMode ? 'vs-dark' : 'vs'}
-          editorDidMount={handleEditorDidMount}
+          onMount={handleEditorDidMount}
           options={options}
         />
       </div>
