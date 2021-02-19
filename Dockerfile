@@ -1,7 +1,7 @@
 FROM node:slim AS node-builder
 WORKDIR /src/node
 COPY package.json .
-COPY package-lock.json .
+COPY yarn.lock .
 RUN yarn
 COPY .umirc.ts .
 COPY tsconfig.json .
