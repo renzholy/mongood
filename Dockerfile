@@ -11,7 +11,6 @@ RUN yarn build
 
 FROM golang:alpine AS golang-builder
 RUN go env -w GO111MODULE=on
-RUN go env -w GOPROXY=https://goproxy.io,direct
 RUN go get github.com/markbates/pkger/cmd/pkger
 WORKDIR /src/golang
 COPY go/go.mod go/go.sum ./
