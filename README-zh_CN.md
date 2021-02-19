@@ -66,8 +66,8 @@
 ### 前端
 
 ```bash
-npm ci
-npm run dev
+yarn
+yarn dev
 ```
 
 ### 后端

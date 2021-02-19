@@ -66,8 +66,8 @@ English | [简体中文](./README-zh_CN.md)
 ### Frontend
 
 ```bash
-npm ci
-npm run dev
+yarn
+yarn dev
 ```
 
 ### Backend

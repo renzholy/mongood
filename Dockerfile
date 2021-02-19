@@ -2,12 +2,12 @@ FROM node:slim AS node-builder
 WORKDIR /src/node
 COPY package.json .
 COPY package-lock.json .
-RUN npm ci
+RUN yarn
 COPY .umirc.ts .
 COPY tsconfig.json .
 COPY public ./public
 COPY src ./src
-RUN npm run build
+RUN yarn build
 
 FROM golang:alpine AS golang-builder
 RUN go env -w GO111MODULE=on

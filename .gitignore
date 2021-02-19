@@ -9,3 +9,4 @@ go/mongood-darwin
 go/mongood.exe
 go/mongood-windows
 .DS_Store
+.husky/

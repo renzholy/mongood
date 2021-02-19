@@ -16,8 +16,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: npm ci
-      - run: npm run build
+      - run: yarn
+      - run: yarn build
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
