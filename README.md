@@ -5,7 +5,7 @@
 A [MongoDB](https://www.mongodb.com/) GUI with [Fluent Design](https://www.microsoft.com/design/fluent/)
 
 [![License: AGPL 3.0](https://img.shields.io/badge/License-AGPL%203.0-brightgreen.svg)](https://opensource.org/licenses/AGPL-3.0)
-[![Docker Build](https://img.shields.io/docker/cloud/build/renzholy/mongood)](https://hub.docker.com/r/renzholy/mongood)
+[![Docker Build](https://img.shields.io/docker/cloud/build/renzholy/mongood)](https://github.com/users/RenzHoly/packages/container/package/mongood)
 ![Docker Pulls](https://img.shields.io/docker/pulls/renzholy/mongood)
 ![GitHub Actions](https://github.com/renzholy/mongood/workflows/Release/badge.svg?branch=v0.1.0)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f7b2974cfea2417a8bd489a9bdbea4a7)](https://app.codacy.com/manual/RenzHoly/Mongood?utm_source=github.com&utm_medium=referral&utm_content=RenzHoly/Mongood&utm_campaign=Badge_Grade_Dashboard)
@@ -16,7 +16,7 @@ English | [简体中文](./README-zh_CN.md)
 ## Download ⚡️
 
 - [Run as Client](https://github.com/RenzHoly/Mongood/releases)
-- [Run as Server](https://hub.docker.com/r/renzholy/mongood)
+- [Run as Server](https://github.com/users/RenzHoly/packages/container/package/mongood)
 
 ## Feature 🔮
 
