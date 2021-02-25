@@ -1,6 +1,6 @@
 module github.com/RenzHoly/Mongood
 
-go 1.15
+go 1.16
 
 require (
 	github.com/NYTimes/gziphandler v1.1.1
