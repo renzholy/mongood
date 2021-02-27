@@ -11,7 +11,7 @@ type Connection = { uri: string; text: string; secondaryText?: string }
 
 export function useConnections(): {
   builtIn?: Connection[]
-  selfAdded: Connection[]
+  selfAdded?: Connection[]
   updateSelfAdded(connections: Connection[]): void
 } {
   const { data } = useSWR<string[], Error>('connections', listConnections)
@@ -20,7 +20,7 @@ export function useConnections(): {
   )
   const dispatch = useDispatch()
   const [builtIn, setBuiltIn] = useState<Connection[] | undefined>()
-  const [selfAdded, setSelfAdded] = useState<Connection[]>([])
+  const [selfAdded, setSelfAdded] = useState<Connection[]>()
   const serverStatus = useCallback(
     async (_connection: string) =>
       runCommand<ServerStats>(_connection, 'admin', {

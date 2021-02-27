@@ -67,9 +67,11 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
                   styles: { root: { color: theme.palette.red } },
                 },
                 onClick() {
-                  updateSelfAdded(
-                    selfAdded.filter((c) => c.uri !== props.connection),
-                  )
+                  if (selfAdded) {
+                    updateSelfAdded(
+                      selfAdded.filter((c) => c.uri !== props.connection),
+                    )
+                  }
                   if (connection === props.connection) {
                     dispatch(actions.root.setConnection(undefined))
                   }
@@ -136,7 +138,6 @@ export function ConnectionEditModal(props: {
   const { selfAdded, builtIn, updateSelfAdded } = useConnections()
   const theme = getTheme()
   const [value, setValue] = useState('')
-  const dispatch = useDispatch()
   const handleAddConnection = useCallback(async () => {
     if (!value) {
       return undefined
@@ -150,17 +151,15 @@ export function ConnectionEditModal(props: {
   useEffect(() => {
     const _connection = promiseAddConnection.resolved
     if (_connection) {
-      dispatch(
-        updateSelfAdded(
-          uniqBy(
-            [{ uri: _connection, text: _connection }, ...selfAdded],
-            'uri',
-          ),
+      updateSelfAdded(
+        uniqBy(
+          [{ uri: _connection, text: _connection }, ...(selfAdded || [])],
+          'uri',
         ),
       )
       setValue('')
     }
-  }, [selfAdded, dispatch, promiseAddConnection.resolved, updateSelfAdded])
+  }, [selfAdded, promiseAddConnection.resolved, updateSelfAdded])
 
   return (
     <Modal
@@ -214,7 +213,7 @@ export function ConnectionEditModal(props: {
           promise={promiseAddConnection}
         />
       </Stack>
-      {selfAdded.length ? (
+      {selfAdded?.length ? (
         <>
           <Text
             variant="xLarge"

@@ -18,14 +18,16 @@ export function ConnectionButton(props: { style?: IStyle }) {
   const { selfAdded, builtIn } = useConnections()
   const [isOpen, setIsOpen] = useState(false)
   useEffect(() => {
-    if ((builtIn?.length || selfAdded.length) && !connection) {
+    if ((builtIn?.length || selfAdded?.length) && !connection) {
       dispatch(
-        actions.root.setConnection([...selfAdded, ...(builtIn || [])][0]?.uri),
+        actions.root.setConnection(
+          [...(selfAdded || []), ...(builtIn || [])][0]?.uri,
+        ),
       )
     }
   }, [connection, selfAdded, builtIn, dispatch])
   useEffect(() => {
-    if (selfAdded.length === 0 && builtIn?.length === 0) {
+    if (selfAdded?.length === 0 && builtIn?.length === 0) {
       setIsOpen(true)
     }
   }, [connection, selfAdded, builtIn])
@@ -53,8 +55,8 @@ export function ConnectionButton(props: { style?: IStyle }) {
           },
         },
         { key: 'divider1', itemType: ContextualMenuItemType.Divider },
-        ...selfAdded.map(connectionToItem),
-        selfAdded.length
+        ...(selfAdded?.map(connectionToItem) || []),
+        selfAdded?.length
           ? { key: 'divider0', itemType: ContextualMenuItemType.Divider }
           : undefined,
         ...(builtIn?.map(connectionToItem) || []),
@@ -72,7 +74,7 @@ export function ConnectionButton(props: { style?: IStyle }) {
       />
       <CommandButton
         text={
-          [...(builtIn || []), ...selfAdded].find(
+          [...(builtIn || []), ...(selfAdded || [])].find(
             ({ uri }) => uri === connection,
           )?.text || 'Connection'
         }
