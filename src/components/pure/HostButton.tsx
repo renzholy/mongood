@@ -22,6 +22,7 @@ export function HostButton(props: {
       hosts.map((h) => ({
         key: h,
         text: h,
+        secondaryText: h === replicaConfig?.primary ? 'Primary' : 'Secondary',
         checked: h === props.host,
         canCheck: true,
         onClick() {

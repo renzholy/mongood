@@ -387,6 +387,7 @@ export function useCommandIsMaster() {
   return useSWR<
     {
       hosts?: string[]
+      primary: string
     },
     Error
   >(
