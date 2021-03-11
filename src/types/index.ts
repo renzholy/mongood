@@ -151,3 +151,8 @@ export enum ValidationLevel {
   MODERATE = 'moderate',
   STRICT = 'strict',
 }
+
+export interface Connection {
+  name: string
+  uri: string
+}

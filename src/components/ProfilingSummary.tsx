@@ -1,5 +1,5 @@
 import { useSWRInfinite } from 'swr'
-import React, { useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { IColumn, getTheme, Stack } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 

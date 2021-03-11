@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Selection, IColumn, ColumnActionsMode } from '@fluentui/react'
 import { get } from 'lodash'

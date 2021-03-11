@@ -1,5 +1,4 @@
 import { Dialog, DialogType, DialogFooter, getTheme } from '@fluentui/react'
-import React from 'react'
 
 export function DefaultDialog(props: {
   hidden: boolean

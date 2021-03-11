@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import {
   DetailsList,
   SelectionMode,

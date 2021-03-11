@@ -1,5 +1,5 @@
 import { Stack, Label } from '@fluentui/react'
-import React, { useEffect, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'

@@ -1,5 +1,5 @@
 import { DefaultButton, IColumn } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { compact } from 'lodash'
 

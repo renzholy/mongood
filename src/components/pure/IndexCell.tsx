@@ -1,6 +1,5 @@
 /* eslint-disable react/no-danger */
 
-import React from 'react'
 import type { IndexSpecification } from 'mongodb'
 import { IColumn, getTheme } from '@fluentui/react'
 import bytes from 'bytes'

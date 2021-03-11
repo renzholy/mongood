@@ -1,5 +1,5 @@
 import { Stack, DefaultButton } from '@fluentui/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { omit } from 'lodash'
 
 import { MongoData } from '@/types'

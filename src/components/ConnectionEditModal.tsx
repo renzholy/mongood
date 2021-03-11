@@ -9,7 +9,7 @@ import {
   IContextualMenuProps,
   DirectionalHint,
 } from '@fluentui/react'
-import React, { useMemo, useCallback, useState, useEffect } from 'react'
+import { useMemo, useCallback, useState, useEffect } from 'react'
 import mongodbUri from 'mongodb-uri'
 import { compact, uniqBy } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
@@ -153,7 +153,7 @@ export function ConnectionEditModal(props: {
     if (_connection) {
       updateSelfAdded(
         uniqBy(
-          [{ uri: _connection, text: _connection }, ...(selfAdded || [])],
+          [{ uri: _connection, name: _connection }, ...(selfAdded || [])],
           'uri',
         ),
       )

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
 

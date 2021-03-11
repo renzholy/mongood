@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "umi dev",
     "build": "umi build",
-    "analyze": "ANALYZE=1 npm run build",
+    "analyze": "ANALYZE=1 yarn build",
     "test": "exit 0",
     "format": "prettier --config .prettierrc --write .",
     "lint": "eslint ."

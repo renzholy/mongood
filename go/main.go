@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"sync"
 
 	"github.com/NYTimes/gziphandler"
@@ -91,20 +90,12 @@ func destory() {
 }
 
 func listConnections(w http.ResponseWriter, r *http.Request) {
-	uris := os.Getenv("MONGO_URIS")
-	var data []byte
-	var err error
-	if uris == "" {
-		data = []byte("[]")
-	} else {
-		data, err = json.Marshal(strings.Split(uris, "|"))
-	}
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	opts := os.Getenv("MONGO_URIS")
+	if opts == "" {
+		opts = "[]"
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(data)
+	w.Write([]byte(opts))
 }
 
 func main() {

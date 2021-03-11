@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 
-import React, { useCallback } from 'react'
+import { useCallback, memo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 
 import { MongoData } from '@/types'
@@ -24,7 +24,7 @@ function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {
   )
 }
 
-export const MongoDataHoverCard = React.memo(
+export const MongoDataHoverCard = memo(
   (props: {
     value: MongoData
     children: React.ReactNode

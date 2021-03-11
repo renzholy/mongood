@@ -1,4 +1,3 @@
-import React from 'react'
 import prettyMilliseconds from 'pretty-ms'
 import { sortBy } from 'lodash'
 import bytes from 'bytes'

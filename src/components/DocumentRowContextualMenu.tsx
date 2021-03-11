@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { ContextualMenu, getTheme } from '@fluentui/react'
 import csv, { Options } from 'csv-stringify'
 import table from 'markdown-table'

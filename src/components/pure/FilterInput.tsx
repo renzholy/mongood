@@ -4,7 +4,7 @@ import {
   IconButton,
   IContextualMenuProps,
 } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 import { parse, stringify } from '@/utils/ejson'
 

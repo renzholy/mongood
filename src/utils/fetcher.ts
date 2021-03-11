@@ -1,5 +1,7 @@
 import { EJSON } from 'bson'
 
+import { Connection } from '@/types'
+
 export async function runCommand<T>(
   connection: string | undefined,
   database: string,
@@ -28,7 +30,7 @@ export async function runCommand<T>(
   throw new Error(await response.text())
 }
 
-export async function listConnections(): Promise<string[]> {
+export async function listConnections(): Promise<Connection[]> {
   const response = await fetch('/api/listConnections', {
     method: 'POST',
   })

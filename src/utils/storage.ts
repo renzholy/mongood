@@ -1,4 +1,4 @@
-import { DisplayMode } from '@/types'
+import { Connection, DisplayMode } from '@/types'
 
 enum StorageType {
   STRING,
@@ -110,7 +110,7 @@ function genGetSet(type: StorageType, key: string, defaultValue?: any) {
 export const storage = {
   connection: genGetSet(StorageType.STRING, 'connection'),
 
-  selfAddedConnections: genGetSet<string[]>(
+  selfAddedConnections: genGetSet<Connection[]>(
     StorageType.JSON,
     'connections',
     [],

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react'
+import { useEffect, useCallback, useState, useMemo } from 'react'
 import {
   CommandButton,
   ContextualMenuItemType,
@@ -11,6 +11,7 @@ import { compact } from 'lodash'
 import { actions } from '@/stores'
 import { useConnections } from '@/hooks/use-connections'
 import { ConnectionEditModal } from './ConnectionEditModal'
+import { Connection } from '@/types'
 
 export function ConnectionButton(props: { style?: IStyle }) {
   const connection = useSelector((state) => state.root.connection)
@@ -32,10 +33,9 @@ export function ConnectionButton(props: { style?: IStyle }) {
     }
   }, [connection, selfAdded, builtIn])
   const connectionToItem = useCallback(
-    ({ uri, text, secondaryText }) => ({
+    ({ uri, name }: Connection) => ({
       key: uri,
-      text,
-      secondaryText,
+      name,
       canCheck: true,
       checked: connection === uri,
       onClick() {
@@ -76,7 +76,7 @@ export function ConnectionButton(props: { style?: IStyle }) {
         text={
           [...(builtIn || []), ...(selfAdded || [])].find(
             ({ uri }) => uri === connection,
-          )?.text || 'Connection'
+          )?.name || 'Connection'
         }
         styles={{
           root: props.style,

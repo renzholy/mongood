@@ -1,5 +1,5 @@
 import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { useCommandProfile } from '@/hooks/use-command'

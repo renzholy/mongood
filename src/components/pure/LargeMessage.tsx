@@ -1,8 +1,8 @@
-import React, { CSSProperties } from 'react'
+import { CSSProperties, memo } from 'react'
 import { Icon, Text, getTheme } from '@fluentui/react'
 import { isEqual } from 'lodash'
 
-export const LargeMessage = React.memo(
+export const LargeMessage = memo(
   (props: {
     iconName: string
     title: string

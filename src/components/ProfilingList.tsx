@@ -1,5 +1,5 @@
 import { ContextualMenu, DirectionalHint, IColumn } from '@fluentui/react'
-import React, { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { useCommandSystemProfileFind } from '@/hooks/use-command'

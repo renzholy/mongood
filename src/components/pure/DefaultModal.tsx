@@ -1,5 +1,4 @@
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
-import React from 'react'
 
 export function DefaultModal(props: {
   title: string

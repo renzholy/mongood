@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { initializeIcons, loadTheme, ITheme } from '@fluentui/react'
 import { Provider } from 'react-redux'
 

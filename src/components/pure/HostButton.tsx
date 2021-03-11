@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react'
+import { useMemo, useEffect } from 'react'
 import { DefaultButton, IContextualMenuItem, IStyle } from '@fluentui/react'
 
 import { useCommandIsMaster } from '@/hooks/use-command'

@@ -1,6 +1,5 @@
 import { getTheme, Text } from '@fluentui/react'
 import { Card } from '@uifabric/react-cards'
-import React from 'react'
 
 export function StatsCard(props: { title: string; content: string }) {
   const theme = getTheme()

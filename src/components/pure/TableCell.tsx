@@ -1,13 +1,13 @@
 /* eslint-disable react/no-danger */
 
-import React, { useMemo } from 'react'
+import { useMemo, memo } from 'react'
 
 import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
 import { MongoData } from '@/types'
 import { MongoDataHoverCard } from './MongoDataHoverCard'
 
-export const TableCell = React.memo(
+export const TableCell = memo(
   (props: { value: MongoData }) => {
     const str = useMemo(() => stringify(props.value), [props.value])
     const html = useColorize(str)

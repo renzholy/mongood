@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { DefaultButton, IStyle, IconButton } from '@fluentui/react'
 
 import { usePromise } from '@/hooks/use-promise'

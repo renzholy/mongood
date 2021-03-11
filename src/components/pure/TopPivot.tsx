@@ -1,4 +1,3 @@
-import React from 'react'
 import { Pivot, PivotItem, getTheme, IconButton } from '@fluentui/react'
 import { useHistory } from 'umi'
 

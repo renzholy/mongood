@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-indent */
 
-import React from 'react'
 import { Text, getTheme, Icon, Stack } from '@fluentui/react'
 import { map } from 'lodash'
 import type { IndexSpecification } from 'mongodb'

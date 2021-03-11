@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 
-import React, { useMemo } from 'react'
+import { useMemo, memo } from 'react'
 
 import { stringify } from '@/utils/ejson'
 import { useColorize } from '@/hooks/use-colorize'
@@ -8,7 +8,7 @@ import { MongoData } from '@/types'
 import { getMap, getLocation } from '@/utils/map'
 import { MongoDataHoverCard } from './MongoDataHoverCard'
 
-export const DocumentCell = React.memo(
+export const DocumentCell = memo(
   (props: {
     value: MongoData
     subStringLength?: number

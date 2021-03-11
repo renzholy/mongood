@@ -1,5 +1,5 @@
 import { Stack, Label, Dropdown } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCommandProfile } from '@/hooks/use-command'

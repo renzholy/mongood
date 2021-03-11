@@ -1,5 +1,5 @@
 import { getTheme, Stack, Text } from '@fluentui/react'
-import React from 'react'
+
 import { isEmpty, chunk, map } from 'lodash'
 
 import { StatsCard } from './StatsCard'
