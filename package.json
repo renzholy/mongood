@@ -10,7 +10,9 @@
     "analyze": "ANALYZE=1 yarn build",
     "test": "exit 0",
     "format": "prettier --config .prettierrc --write .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepare": "husky install",
+    "precommit": "lint-staged"
   },
   "repository": {
     "type": "git",
@@ -75,11 +77,6 @@
     "raw-loader": "4.0.2",
     "typescript": "4.2.3",
     "umi": "3.4.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*": [

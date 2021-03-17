@@ -17,3 +17,4 @@ Dockerfile
 *.xml
 go/
 LICENSE
+.husky/
