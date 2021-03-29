@@ -225,7 +225,9 @@ export function useCommandCount() {
         hint,
       })
     },
-    {},
+    {
+      revalidateOnFocus: false,
+    },
   )
 }
 
