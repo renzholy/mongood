@@ -27,6 +27,7 @@
     "react/jsx-one-expression-per-line": "off",
     "react/jsx-wrap-multilines": "off",
     "react/require-default-props": "off",
+    "react/react-in-jsx-scope": "off",
     "no-underscore-dangle": "off",
     "no-nested-ternary": "off",
     "@typescript-eslint/naming-convention": "off"

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { ContextualMenu, getTheme } from '@fluentui/react'
 import csv, { Options } from 'csv-stringify'
-import table from 'markdown-table'
+import { markdownTable } from 'markdown-table'
 import { useSelector } from 'react-redux'
 
 import { stringify } from '@/utils/ejson'
@@ -188,7 +188,7 @@ export function DocumentRowContextualMenu<
                   onClick() {
                     const headers = calcHeaders(props.selectedItems)
                     window.navigator.clipboard.writeText(
-                      table([
+                      markdownTable([
                         headers.map(([key]) => key),
                         ...props.selectedItems.map((item) =>
                           headers.map(([key]) => stringify(item[key])),

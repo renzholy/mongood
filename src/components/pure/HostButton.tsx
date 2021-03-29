@@ -29,7 +29,7 @@ export function HostButton(props: {
           props.setHost(h)
         },
       })),
-    [props, hosts],
+    [hosts, replicaConfig?.primary, props],
   )
 
   return (

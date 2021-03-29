@@ -10,8 +10,8 @@ import { compact } from 'lodash'
 
 import { actions } from '@/stores'
 import { useConnections } from '@/hooks/use-connections'
-import { ConnectionEditModal } from './ConnectionEditModal'
 import { Connection } from '@/types'
+import { ConnectionEditModal } from './ConnectionEditModal'
 
 export function ConnectionButton(props: { style?: IStyle }) {
   const connection = useSelector((state) => state.root.connection)
