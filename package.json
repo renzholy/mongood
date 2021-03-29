@@ -61,7 +61,6 @@
     "@typescript-eslint/parser": "4.19.0",
     "@umijs/plugin-esbuild": "1.1.1",
     "@umijs/preset-react": "1.8.3",
-    "@welldone-software/why-did-you-render": "6.1.1",
     "eslint": "7.23.0",
     "eslint-config-airbnb-typescript": "12.3.1",
     "eslint-config-prettier": "8.1.0",
