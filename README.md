@@ -5,8 +5,7 @@
 A [MongoDB](https://www.mongodb.com/) GUI with [Fluent Design](https://www.microsoft.com/design/fluent/)
 
 [![License: AGPL 3.0](https://img.shields.io/badge/License-AGPL%203.0-brightgreen.svg)](https://opensource.org/licenses/AGPL-3.0)
-[![Docker Build](https://img.shields.io/docker/cloud/build/renzholy/mongood)](https://github.com/users/RenzHoly/packages/container/package/mongood)
-![Docker Pulls](https://img.shields.io/docker/pulls/renzholy/mongood)
+[![docker](https://github.com/RenzHoly/Mongood/actions/workflows/docker.yml/badge.svg)](https://github.com/RenzHoly/Mongood/actions/workflows/docker.yml)
 ![GitHub Actions](https://github.com/renzholy/mongood/workflows/Release/badge.svg?branch=v0.1.0)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f7b2974cfea2417a8bd489a9bdbea4a7)](https://app.codacy.com/manual/RenzHoly/Mongood?utm_source=github.com&utm_medium=referral&utm_content=RenzHoly/Mongood&utm_campaign=Badge_Grade_Dashboard)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4b5f9ef66205961e4ddd/maintainability)](https://codeclimate.com/github/RenzHoly/Mongood/maintainability)
