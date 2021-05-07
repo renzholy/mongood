@@ -25,6 +25,7 @@ export function DefaultModal(props: {
           backgroundColor: theme.palette.neutralLighterAlt,
         },
       }}
+      layerProps={{ eventBubblingEnabled: true }}
       isOpen={props.isOpen}
       onDismiss={props.onDismiss}
       onDismissed={props.onDismissed}>
