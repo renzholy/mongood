@@ -43,13 +43,11 @@ export class Preprocessor {
       ast,
     )
 
-    const {
-      ast: newAst,
-      lexicalContext: newLexicalContext,
-    } = saveAndRestoreLexicalContext(ast, {
-      lexicalContext: this.lexicalContext,
-      lexicalContextStoreVariableName: this.lexicalContextStoreVariableName,
-    })
+    const { ast: newAst, lexicalContext: newLexicalContext } =
+      saveAndRestoreLexicalContext(ast, {
+        lexicalContext: this.lexicalContext,
+        lexicalContextStoreVariableName: this.lexicalContextStoreVariableName,
+      })
 
     ast = newAst
     const finalAst = wrapInAsyncFunctionCall(ast)

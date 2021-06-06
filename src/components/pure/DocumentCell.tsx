@@ -20,9 +20,10 @@ export const DocumentCell = memo(
     )
     const html = useColorize(str)
 
-    const location = useMemo(() => getLocation(props.index2dsphere), [
-      props.index2dsphere,
-    ])
+    const location = useMemo(
+      () => getLocation(props.index2dsphere),
+      [props.index2dsphere],
+    )
     const mapSrc = location ? getMap(500, 250, ...location) : undefined
 
     return str.length > 36 || props.index2dsphere ? (

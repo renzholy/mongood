@@ -77,10 +77,10 @@ export default () => {
     dispatch(actions.operations.setNs(ns))
   }, [ns, dispatch])
   const { revalidate, isValidating } = useCommandCurrentOp()
-  const value = useMemo(() => (ns ? { ...filter, ns } : omit(filter, 'ns')), [
-    ns,
-    filter,
-  ])
+  const value = useMemo(
+    () => (ns ? { ...filter, ns } : omit(filter, 'ns')),
+    [ns, filter],
+  )
   const host = useSelector((state) => state.operations.host)
   const handleSetHost = useCallback(
     (h: string) => {

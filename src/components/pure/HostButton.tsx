@@ -9,9 +9,10 @@ export function HostButton(props: {
   style?: IStyle
 }) {
   const { data: replicaConfig } = useCommandIsMaster()
-  const hosts = useMemo<string[]>(() => replicaConfig?.hosts || [], [
-    replicaConfig,
-  ])
+  const hosts = useMemo<string[]>(
+    () => replicaConfig?.hosts || [],
+    [replicaConfig],
+  )
   useEffect(() => {
     if (!props.host || !hosts.includes(props.host)) {
       props.setHost(hosts[0])

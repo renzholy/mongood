@@ -38,15 +38,11 @@ class Collection<T = any> {
 
   async findOne(filter: object = {}): Promise<T | null>
 
-  async insertOne(
-    doc: object,
-  ): Promise<{
+  async insertOne(doc: object): Promise<{
     insertedCount: number
   }>
 
-  async insertMany(
-    docs: object[],
-  ): Promise<{
+  async insertMany(docs: object[]): Promise<{
     insertedCount: number
   }>
 
@@ -72,15 +68,11 @@ class Collection<T = any> {
     upsertedId?: typeof ObjectId
   }>
 
-  async deleteOne(
-    filter: object,
-  ): Promise<{
+  async deleteOne(filter: object): Promise<{
     deletedCount: number
   }>
 
-  async deleteMany(
-    filter: object,
-  ): Promise<{
+  async deleteMany(filter: object): Promise<{
     deletedCount: number
   }>
 

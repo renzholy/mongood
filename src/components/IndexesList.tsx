@@ -57,9 +57,10 @@ export function IndexesList() {
       revalidate()
     }
   }, [promiseDrop.resolved, dispatch, revalidate])
-  const indexStats = useMemo(() => keyBy(data?.cursor.firstBatch, 'name'), [
-    data,
-  ])
+  const indexStats = useMemo(
+    () => keyBy(data?.cursor.firstBatch, 'name'),
+    [data],
+  )
   const columns = useMemo<IColumn[]>(
     () =>
       mapToColumn([

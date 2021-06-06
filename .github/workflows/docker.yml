@@ -3,7 +3,7 @@ name: docker
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build-and-push:
@@ -30,7 +30,7 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/renzholy/mongood:master
+            ghcr.io/renzholy/mongood:latest
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.revision=${{ github.sha }}

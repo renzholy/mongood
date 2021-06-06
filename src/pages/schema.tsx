@@ -22,14 +22,10 @@ export default () => {
   const collection = useSelector((state) => state.root.collection)
   const { data, revalidate } = useCommandListCollections()
   const isDarkMode = useDarkMode()
-  const [
-    validationAction,
-    setValidationAction,
-  ] = useState<ValidationAction | null>(null)
-  const [
-    validationLevel,
-    setValidationLevel,
-  ] = useState<ValidationLevel | null>(null)
+  const [validationAction, setValidationAction] =
+    useState<ValidationAction | null>(null)
+  const [validationLevel, setValidationLevel] =
+    useState<ValidationLevel | null>(null)
   const [value, setValue] = useState('')
   const handleSave = useCallback(
     async () =>

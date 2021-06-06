@@ -160,9 +160,7 @@ class Collection<T> {
     return firstBatch?.[0] || null
   }
 
-  async insertOne(
-    doc: object,
-  ): Promise<{
+  async insertOne(doc: object): Promise<{
     insertedCount: number
   }> {
     const { n } = await runCommand<{ n: number }>(
@@ -178,9 +176,7 @@ class Collection<T> {
     }
   }
 
-  async insertMany(
-    docs: object[],
-  ): Promise<{
+  async insertMany(docs: object[]): Promise<{
     insertedCount: number
   }> {
     const { n } = await runCommand<{ n: number }>(
@@ -296,9 +292,7 @@ class Collection<T> {
     }
   }
 
-  async deleteOne(
-    filter: object,
-  ): Promise<{
+  async deleteOne(filter: object): Promise<{
     deletedCount: number
   }> {
     const { n } = await runCommand(this.#connection, this.#database, {
@@ -313,9 +307,7 @@ class Collection<T> {
     return { deletedCount: n }
   }
 
-  async deleteMany(
-    filter: object,
-  ): Promise<{
+  async deleteMany(filter: object): Promise<{
     deletedCount: number
   }> {
     const { n } = await runCommand(this.#connection, this.#database, {

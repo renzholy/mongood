@@ -24,10 +24,8 @@ export default () => {
   const [value, setValue] = useState<object>({
     background: true,
   })
-  const {
-    revalidate: revalidateIndex,
-    isValidating: isValidatingIndex,
-  } = useCommandListIndexes()
+  const { revalidate: revalidateIndex, isValidating: isValidatingIndex } =
+    useCommandListIndexes()
   const {
     revalidate: revalidateIndexStats,
     isValidating: isValidatingIndexStats,

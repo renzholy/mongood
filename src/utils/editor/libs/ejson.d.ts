@@ -3,18 +3,14 @@
 /**
  * @param {string} id Must be a 24 byte hex string.
  */
-function ObjectId(
-  id: string,
-): {
+function ObjectId(id: string): {
   $oid: string
 }
 
 /**
  * @param {string} date An ISO-8601 date string
  */
-function ISODate(
-  date?: string,
-): {
+function ISODate(date?: string): {
   $date: {
     $numberLong: string
   }
@@ -23,9 +19,7 @@ function ISODate(
 /**
  * @param {number|string} date
  */
-function Date(
-  date?: number | string,
-): {
+function Date(date?: number | string): {
   $date: {
     $numberLong: string
   }
@@ -34,27 +28,21 @@ function Date(
 /**
  * @param {string} A high-precision decimal as string.
  */
-function NumberDecimal(
-  num: string | number,
-): {
+function NumberDecimal(num: string | number): {
   $numberDecimal: string
 }
 
 /**
  * @param {string} num A long number string
  */
-function NumberLong(
-  num: string,
-): {
+function NumberLong(num: string): {
   $numberLong: string
 }
 
 /**
  * @param {string} num A int number string
  */
-function NumberInt(
-  num: string,
-): {
+function NumberInt(num: string): {
   $numberInt: string
 }
 

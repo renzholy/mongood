@@ -22,7 +22,7 @@ const cast: Options['cast'] = {
 }
 
 export function DocumentRowContextualMenu<
-  T extends { [key: string]: MongoData }
+  T extends { [key: string]: MongoData },
 >(props: {
   hidden: boolean
   onDismiss(): void

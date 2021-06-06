@@ -76,9 +76,11 @@ export function OperationsList() {
             column?.key === 'ms'
               ? Math.ceil(
                   parseInt(
-                    (item?.microsecs_running as
-                      | { $numberLong: string }
-                      | undefined)?.$numberLong || '0',
+                    (
+                      item?.microsecs_running as
+                        | { $numberLong: string }
+                        | undefined
+                    )?.$numberLong || '0',
                     10,
                   ) / 1000,
                 )
