@@ -51,17 +51,18 @@ jobs:
 
       - run: yarn build
 
-      - run: cd go
-
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
           go-version: ^1.16
-      - run: go get fyne.io/fyne/cmd/fyne
+      - run: |
+          cd go
+          go get fyne.io/fyne/cmd/fyne
 
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
+          cd go
           cp -r ../dist ./
           go build -o mongood
           fyne package -os linux -icon ./assets/logo.png -release --executable mongood
@@ -70,6 +71,7 @@ jobs:
       - name: Build macOS
         if: matrix.os == 'macos-latest'
         run: |
+          cd go
           cp -r ../dist ./
           MACOSX_DEPLOYMENT_TARGET=11.0 go build -o mongood
           fyne package -os darwin -name Mongood -icon ./assets/logo.png -release --executable ./mongood
@@ -80,6 +82,7 @@ jobs:
       - name: Build Windows
         if: matrix.os == 'windows-latest'
         run: |
+          cd go
           cp -r ../dist ./
           go build -o mongood
           fyne package -os windows -icon ./assets/logo.png -release --executable mongood -appID mongood
