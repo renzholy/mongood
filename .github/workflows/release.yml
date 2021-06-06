@@ -72,6 +72,7 @@ jobs:
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
+          cp -r ../dist ./
           go build -o mongood
           fyne package -os linux -icon ./assets/logo.png -release --executable mongood
           zip -r ${{ matrix.asset_name }} mongood
@@ -79,6 +80,7 @@ jobs:
       - name: Build macOS
         if: matrix.os == 'macos-latest'
         run: |
+          cp -r ../dist ./
           MACOSX_DEPLOYMENT_TARGET=11.0 go build -o mongood
           fyne package -os darwin -name Mongood -icon ./assets/logo.png -release --executable ./mongood
           cp ./assets/Info.plist ./Mongood.app/Contents/Info.plist
@@ -88,6 +90,7 @@ jobs:
       - name: Build Windows
         if: matrix.os == 'windows-latest'
         run: |
+          cp -r ../dist ./
           go build -o mongood
           fyne package -os windows -icon ./assets/logo.png -release --executable mongood -appID mongood
           mv mongood.exe ${{ matrix.asset_name }}
