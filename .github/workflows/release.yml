@@ -9,7 +9,6 @@ jobs:
   create_release:
     name: Create release
     runs-on: ubuntu-latest
-    needs: build_js_bundle
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
