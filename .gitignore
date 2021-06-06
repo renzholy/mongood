@@ -3,7 +3,6 @@ dist/
 .umi/
 .umi-production/
 go/mongood
-go/pkged.go
 go/mongood.app
 go/mongood-darwin
 go/mongood.exe
