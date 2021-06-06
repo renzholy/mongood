@@ -1,39 +1,14 @@
+name: Release
+
 on:
   push:
     tags:
       - 'v*'
 
-name: Release
-
 jobs:
-  build_js_bundle:
-    name: Build JS Bundle
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16.x'
-      - run: yarn
-      - run: yarn build
-      - name: Setup Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: ^1.16
-      - run: go get github.com/markbates/pkger/cmd/pkger
-      - run: cd go && cp -r ../dist ./ && pkger && rm -rf dist
-      - name: Upload pkged.go
-        uses: actions/upload-artifact@v2
-        with:
-          name: pkged.go
-          path: go/pkged.go
-
   create_release:
     name: Create release
     runs-on: ubuntu-latest
-    needs: build_js_bundle
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
@@ -63,26 +38,32 @@ jobs:
           - os: windows-latest
             asset_name: Mongood-win64.exe
             asset_content_type: application/vnd.microsoft.portable-executable
-    defaults:
-      run:
-        working-directory: go
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Download pkged.go
-        uses: actions/download-artifact@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          name: pkged.go
-          path: ./go
+          node-version: '16.x'
+
+      - run: yarn
+
+      - run: yarn build
+
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
           go-version: ^1.16
-      - run: go get fyne.io/fyne/cmd/fyne
+      - run: |
+          cd go
+          go get fyne.io/fyne/cmd/fyne
 
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
+          cd go
+          cp -r ../dist ./
           go build -o mongood
           fyne package -os linux -icon ./assets/logo.png -release --executable mongood
           zip -r ${{ matrix.asset_name }} mongood
@@ -90,7 +71,9 @@ jobs:
       - name: Build macOS
         if: matrix.os == 'macos-latest'
         run: |
-          MACOSX_DEPLOYMENT_TARGET=10.13 go build -o mongood
+          cd go
+          cp -r ../dist ./
+          MACOSX_DEPLOYMENT_TARGET=11.0 go build -o mongood
           fyne package -os darwin -name Mongood -icon ./assets/logo.png -release --executable ./mongood
           cp ./assets/Info.plist ./Mongood.app/Contents/Info.plist
           cp ./assets/icon.icns ./Mongood.app/Contents/Resources/icon.icns
@@ -99,6 +82,8 @@ jobs:
       - name: Build Windows
         if: matrix.os == 'windows-latest'
         run: |
+          cd go
+          cp -r ../dist ./
           go build -o mongood
           fyne package -os windows -icon ./assets/logo.png -release --executable mongood -appID mongood
           mv mongood.exe ${{ matrix.asset_name }}
