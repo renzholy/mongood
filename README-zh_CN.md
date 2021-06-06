@@ -5,17 +5,17 @@
 一个遵循 [Fluent Design](https://www.microsoft.com/design/fluent/) 的 [MongoDB](https://www.mongodb.com/) GUI
 
 [![License: AGPL 3.0](https://img.shields.io/badge/License-AGPL%203.0-brightgreen.svg)](https://opensource.org/licenses/AGPL-3.0)
-[![docker](https://github.com/RenzHoly/Mongood/actions/workflows/docker.yml/badge.svg)](https://github.com/RenzHoly/Mongood/actions/workflows/docker.yml)
+[![docker](https://github.com/renzholy/mongood/actions/workflows/docker.yml/badge.svg)](https://github.com/renzholy/mongood/actions/workflows/docker.yml)
 ![GitHub Actions](https://github.com/renzholy/mongood/workflows/Release/badge.svg?branch=v0.1.0)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f7b2974cfea2417a8bd489a9bdbea4a7)](https://app.codacy.com/manual/RenzHoly/Mongood?utm_source=github.com&utm_medium=referral&utm_content=RenzHoly/Mongood&utm_campaign=Badge_Grade_Dashboard)
-[![Maintainability](https://api.codeclimate.com/v1/badges/4b5f9ef66205961e4ddd/maintainability)](https://codeclimate.com/github/RenzHoly/Mongood/maintainability)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f7b2974cfea2417a8bd489a9bdbea4a7)](https://app.codacy.com/manual/renzholy/mongood?utm_source=github.com&utm_medium=referral&utm_content=renzholy/mongood&utm_campaign=Badge_Grade_Dashboard)
+[![Maintainability](https://api.codeclimate.com/v1/badges/4b5f9ef66205961e4ddd/maintainability)](https://codeclimate.com/github/renzholy/mongood/maintainability)
 
 [English](./README.md) | 简体中文
 
 ## 下载 ⚡️
 
-- [客户端](https://github.com/RenzHoly/Mongood/releases)
-- [服务端](https://github.com/users/RenzHoly/packages/container/package/mongood)
+- [客户端](https://github.com/renzholy/mongood/releases)
+- [服务端](https://github.com/users/renzholy/packages/container/package/mongood)
 
 ## 特性 🔮
 

@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RenzHoly/Mongood.git"
+    "url": "git+https://github.com/renzholy/mongood.git"
   },
-  "author": "RenzHoly <renzholy@gmail.com>",
+  "author": "renzholy <renzholy@gmail.com>",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/RenzHoly/Mongood/issues"
+    "url": "https://github.com/renzholy/mongood/issues"
   },
-  "homepage": "https://github.com/RenzHoly/Mongood#readme",
+  "homepage": "https://github.com/renzholy/mongood#readme",
   "dependencies": {
     "@fluentui/react": "8.17.0",
     "@monaco-editor/react": "4.1.3",
