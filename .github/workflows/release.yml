@@ -22,13 +22,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ^1.16
-      - run: go get github.com/markbates/pkger/cmd/pkger
-      - run: cd go && cp -r ../dist ./ && pkger && rm -rf dist
-      - name: Upload pkged.go
-        uses: actions/upload-artifact@v2
-        with:
-          name: pkged.go
-          path: go/pkged.go
 
   create_release:
     name: Create release
@@ -90,7 +83,7 @@ jobs:
       - name: Build macOS
         if: matrix.os == 'macos-latest'
         run: |
-          MACOSX_DEPLOYMENT_TARGET=10.13 go build -o mongood
+          MACOSX_DEPLOYMENT_TARGET=11.0 go build -o mongood
           fyne package -os darwin -name Mongood -icon ./assets/logo.png -release --executable ./mongood
           cp ./assets/Info.plist ./Mongood.app/Contents/Info.plist
           cp ./assets/icon.icns ./Mongood.app/Contents/Resources/icon.icns

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -9,7 +10,6 @@ import (
 	"sync"
 
 	"github.com/NYTimes/gziphandler"
-	"github.com/markbates/pkger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -20,6 +20,8 @@ var (
 	clients       sync.Map
 	creationMutex sync.Mutex
 	mux           = http.NewServeMux()
+	//go:embed dist
+	fs embed.FS
 )
 
 func runCommand(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +104,7 @@ func main() {
 	ctx = context.Background()
 
 	// serve root dir
-	mux.Handle("/", gziphandler.GzipHandler(http.FileServer(pkger.Dir("/dist"))))
+	mux.Handle("/", gziphandler.GzipHandler(http.FileServer(http.FS(fs))))
 
 	// handle runCommand
 	mux.Handle("/api/runCommand", gziphandler.GzipHandler(http.HandlerFunc(runCommand)))
