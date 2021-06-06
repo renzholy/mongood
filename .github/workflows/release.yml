@@ -6,23 +6,6 @@ on:
 name: Release
 
 jobs:
-  build_js_bundle:
-    name: Build JS Bundle
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16.x'
-      - run: yarn
-      - run: yarn build
-      - name: Setup Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: ^1.16
-
   create_release:
     name: Create release
     runs-on: ubuntu-latest
@@ -56,12 +39,20 @@ jobs:
           - os: windows-latest
             asset_name: Mongood-win64.exe
             asset_content_type: application/vnd.microsoft.portable-executable
-    defaults:
-      run:
-        working-directory: go
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      - run: yarn
+
+      - run: yarn build
+
+      - run: cd go
 
       - name: Setup Go
         uses: actions/setup-go@v2
@@ -71,7 +62,6 @@ jobs:
 
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
-        run: |
           cp -r ../dist ./
           go build -o mongood
           fyne package -os linux -icon ./assets/logo.png -release --executable mongood
