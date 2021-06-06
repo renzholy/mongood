@@ -4,6 +4,7 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -20,8 +21,8 @@ var (
 	clients       sync.Map
 	creationMutex sync.Mutex
 	mux           = http.NewServeMux()
-	//go:embed dist
-	fs embed.FS
+	//go:embed dist/*
+	dist embed.FS
 )
 
 func runCommand(w http.ResponseWriter, r *http.Request) {
@@ -100,11 +101,19 @@ func listConnections(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(opts))
 }
 
+func getFileSystem() http.FileSystem {
+	fsys, err := fs.Sub(dist, "dist")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return http.FS(fsys)
+}
+
 func main() {
 	ctx = context.Background()
 
 	// serve root dir
-	mux.Handle("/", gziphandler.GzipHandler(http.FileServer(http.FS(fs))))
+	mux.Handle("/", gziphandler.GzipHandler(http.FileServer(getFileSystem())))
 
 	// handle runCommand
 	mux.Handle("/api/runCommand", gziphandler.GzipHandler(http.HandlerFunc(runCommand)))
