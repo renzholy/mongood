@@ -19,12 +19,12 @@ loader
     })
     _m.languages.typescript.typescriptDefaults.addExtraLib(
       // eslint-disable-next-line global-require
-      require('./libs/ejson.d.ts').default,
+      require('./libs/ejson.d').default,
       'ejson.d.ts',
     )
     _m.languages.typescript.typescriptDefaults.addExtraLib(
       // eslint-disable-next-line global-require
-      require('./libs/collection.d.ts').default,
+      require('./libs/collection.d').default,
       'collection.d.ts',
     )
     _monaco.resolve(_m)

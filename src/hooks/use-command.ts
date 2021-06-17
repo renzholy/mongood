@@ -217,21 +217,15 @@ export function useCommandCount() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
-  const index = useSelector((state) => state.docs.index)
-  const filter = useSelector((state) => state.docs.filter)
 
   return useSWR<{ n: number }, Error>(
     connection && database && collection
-      ? ['count', connection, database, collection, filter, index?.name]
+      ? ['count', connection, database, collection]
       : null,
-    () => {
-      const hint = filter.$text || isEmpty(filter) ? undefined : index?.name
-      return runCommand(connection, database!, {
+    () =>
+      runCommand(connection, database!, {
         count: collection,
-        query: filter,
-        hint,
-      })
-    },
+      }),
     {
       revalidateOnFocus: false,
     },
