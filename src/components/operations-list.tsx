@@ -15,7 +15,7 @@ import { LargeMessage } from './pure/large-message'
 import { OperationContextualMenu } from './operation-contextual-menu'
 import { MongoDataModal } from './pure/mongo-data-modal'
 import { PromiseButton } from './pure/promise-button'
-import { Table } from './pure/table0'
+import { Table } from './pure/table'
 import { TableCell } from './pure/table-cell'
 import { DefaultDialog } from './pure/default-dialog'
 

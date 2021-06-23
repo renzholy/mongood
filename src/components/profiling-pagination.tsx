@@ -6,7 +6,7 @@ import {
   useCommandSystemProfileCount,
   useCommandSystemProfileFind,
 } from '@/hooks/use-command'
-import { Pagination } from './pure/pagination0'
+import { Pagination } from './pure/pagination'
 
 export function ProfilingPagination() {
   const skip = useSelector((state) => state.profiling.skip)

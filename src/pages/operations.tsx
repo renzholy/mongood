@@ -7,7 +7,7 @@ import { FilterInput } from '@/components/pure/filter-input'
 import { useCommandCurrentOp } from '@/hooks/use-command'
 import { OperationsList } from '@/components/operations-list'
 import { actions } from '@/stores'
-import { Divider } from '@/components/pure/divider0'
+import { Divider } from '@/components/pure/divider'
 import { HostButton } from '@/components/pure/host-button'
 import { RefreshButton } from '@/components/pure/refresh-button'
 

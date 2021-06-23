@@ -13,7 +13,7 @@ import { MongoData, ValidationAction, ValidationLevel } from '@/types'
 import { useCommandListCollections } from '@/hooks/use-command'
 import { PromiseButton } from '@/components/pure/promise-button'
 import { usePromise } from '@/hooks/use-promise'
-import { Divider } from '@/components/pure/divider0'
+import { Divider } from '@/components/pure/divider'
 import { storage } from '@/utils/storage'
 
 export default () => {

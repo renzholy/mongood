@@ -9,11 +9,11 @@ import { mapToColumn } from '@/utils/table'
 import { generateConnectionWithDirectHost, getHostsOfMongoURI } from '@/utils'
 import { formatNumber } from '@/utils/formatter'
 import { actions } from '@/stores'
-import { Table } from './pure/table0'
+import { Table } from './pure/table'
 import { LargeMessage } from './pure/large-message'
 import { TableCell } from './pure/table-cell'
 import { ProfilingSummaryBottomStack } from './profiling-summary-bottom-stack'
-import { Divider } from './pure/divider0'
+import { Divider } from './pure/divider'
 import { RefreshButton } from './pure/refresh-button'
 
 type Data = { database: string } & { [host: string]: number }

@@ -13,7 +13,7 @@ import {
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { PromiseButton } from '@/components/pure/promise-button'
-import { Divider } from '@/components/pure/divider0'
+import { Divider } from '@/components/pure/divider'
 import { RefreshButton } from '@/components/pure/refresh-button'
 
 export default () => {

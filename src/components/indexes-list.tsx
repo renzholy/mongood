@@ -17,7 +17,7 @@ import { LargeMessage } from './pure/large-message'
 import { EditorModal } from './pure/editor-modal'
 import { IndexContextualMenu } from './index-contextual-menu'
 import { PromiseButton } from './pure/promise-button'
-import { Table } from './pure/table0'
+import { Table } from './pure/table'
 import { IndexCell } from './pure/index-cell'
 import { DefaultDialog } from './pure/default-dialog'
 
