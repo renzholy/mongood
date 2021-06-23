@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { initializeIcons, loadTheme, ITheme } from '@fluentui/react'
 import { Provider } from 'react-redux'
 
-import { DatabaseNav } from '@/components/DatabaseNav'
+import { DatabaseNav } from '@/components/database-nav'
 import { store } from '@/stores/index'
-import { TopPivot } from '@/components/pure/TopPivot'
+import { TopPivot } from '@/components/pure/top-pivot'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { Editor } from '@/utils/editor'
 

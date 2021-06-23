@@ -10,7 +10,7 @@ import {
 import useAsyncEffect from 'use-async-effect'
 
 import { changeLib } from '@/utils/editor'
-import { NotebookItem } from '@/components/NotebookItem'
+import { NotebookItem } from '@/components/notebook-item'
 import { actions } from '@/stores'
 
 export default () => {

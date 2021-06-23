@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 
-import { ServerStatus } from '@/components/pure/ServerStatus'
-import { CollectionStatus } from '@/components/CollectionStatus'
+import { ServerStatus } from '@/components/pure/server-status'
+import { CollectionStatus } from '@/components/collection-status'
 
 export default () => {
   const database = useSelector((state) => state.root.database)

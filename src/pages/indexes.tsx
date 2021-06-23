@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { Stack, IconButton } from '@fluentui/react'
 
-import { LargeMessage } from '@/components/pure/LargeMessage'
-import { EditorModal } from '@/components/pure/EditorModal'
-import { IndexesList } from '@/components/IndexesList'
+import { LargeMessage } from '@/components/pure/large-message'
+import { EditorModal } from '@/components/pure/editor-modal'
+import { IndexesList } from '@/components/indexes-list'
 import {
   useCommandListIndexes,
   useCommandIndexStats,
@@ -12,9 +12,9 @@ import {
 } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
-import { PromiseButton } from '@/components/pure/PromiseButton'
-import { Divider } from '@/components/pure/Divider'
-import { RefreshButton } from '@/components/pure/RefreshButton'
+import { PromiseButton } from '@/components/pure/promise-button'
+import { Divider } from '@/components/pure/divider0'
+import { RefreshButton } from '@/components/pure/refresh-button'
 
 export default () => {
   const connection = useSelector((state) => state.root.connection)

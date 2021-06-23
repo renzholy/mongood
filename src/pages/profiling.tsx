@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
-import { ProfilingControlStack } from '@/components/ProfilingControlStack'
-import { ProfilingList } from '@/components/ProfilingList'
-import { ProfilingSummary } from '@/components/ProfilingSummary'
-import { ProfilingBottomStack } from '@/components/ProfilingBottomStack'
-import { Divider } from '@/components/pure/Divider'
+import { ProfilingControlStack } from '@/components/profiling-control-stack'
+import { ProfilingList } from '@/components/profiling-list'
+import { ProfilingSummary } from '@/components/profiling-summary'
+import { ProfilingBottomStack } from '@/components/profiling-bottom-stack'
+import { Divider } from '@/components/pure/divider0'
 
 export default () => {
   const database = useSelector((state) => state.root.database)

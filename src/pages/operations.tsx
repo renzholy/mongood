@@ -3,13 +3,13 @@ import { Stack, DefaultButton, Toggle, Label } from '@fluentui/react'
 import { map, omit } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { FilterInput } from '@/components/pure/FilterInput'
+import { FilterInput } from '@/components/pure/filter-input'
 import { useCommandCurrentOp } from '@/hooks/use-command'
-import { OperationsList } from '@/components/OperationsList'
+import { OperationsList } from '@/components/operations-list'
 import { actions } from '@/stores'
-import { Divider } from '@/components/pure/Divider'
-import { HostButton } from '@/components/pure/HostButton'
-import { RefreshButton } from '@/components/pure/RefreshButton'
+import { Divider } from '@/components/pure/divider0'
+import { HostButton } from '@/components/pure/host-button'
+import { RefreshButton } from '@/components/pure/refresh-button'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
