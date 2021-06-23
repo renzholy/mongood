@@ -1,4 +1,3 @@
-import React from 'react'
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
 
 export function DefaultModal(props: {

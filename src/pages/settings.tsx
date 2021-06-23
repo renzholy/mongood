@@ -1,9 +1,10 @@
 import { TextField, SpinButton, Stack, PrimaryButton } from '@fluentui/react'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { padStart } from 'lodash'
-import { storage } from 'utils/storage'
 
-export default function Settings() {
+import { storage } from '@/utils/storage'
+
+export default () => {
   const [staticMapUrlTemplate, setStaticMapUrlTemplate] = useState<
     string | undefined
   >(storage.staticMapUrlTemplate.get)

@@ -1,15 +1,16 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react'
+import { useEffect, useCallback, useState, useMemo } from 'react'
+import {
+  CommandButton,
+  ContextualMenuItemType,
+  IContextualMenuItem,
+  IStyle,
+} from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { compact } from 'lodash'
-import { actions } from 'stores'
-import { useConnections } from 'hooks/use-connections'
-import type { Connection } from 'types'
-import {
-  IStyle,
-  IContextualMenuItem,
-  ContextualMenuItemType,
-  CommandButton,
-} from '@fluentui/react'
+
+import { actions } from '@/stores'
+import { useConnections } from '@/hooks/use-connections'
+import { Connection } from '@/types'
 import { ConnectionEditModal } from './connection-edit-modal'
 
 export function ConnectionButton(props: { style?: IStyle }) {

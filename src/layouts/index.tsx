@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { initializeIcons, loadTheme, ITheme } from '@fluentui/react'
 import { Provider } from 'react-redux'
-import { DatabaseNav } from 'components/database-nav'
-import { store } from 'stores/index'
-import { TopPivot } from 'components/pure/top-pivot'
-import { useDarkMode } from 'hooks/use-dark-mode'
-import { Editor } from 'utils/editor'
+
+import { DatabaseNav } from '@/components/database-nav'
+import { store } from '@/stores/index'
+import { TopPivot } from '@/components/pure/top-pivot'
+import { useDarkMode } from '@/hooks/use-dark-mode'
+import { Editor } from '@/utils/editor'
 
 initializeIcons()
 
-export default function Layout(props: { children: React.ReactNode }) {
+export default (props: { children: React.ReactNode }) => {
   const isDarkMode = useDarkMode()
   const [theme, setTheme] = useState<ITheme>()
   useEffect(() => {

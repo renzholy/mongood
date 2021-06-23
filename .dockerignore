@@ -2,6 +2,7 @@
 node_modules/
 dist/
 screenshot/
+src/.umi/
 npm-debug.log
 go/mongood
 go/mongood.app

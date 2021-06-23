@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import {
   Stack,
   IIconProps,
@@ -6,7 +6,8 @@ import {
   IContextualMenuProps,
 } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
-import { actions } from 'stores'
+
+import { actions } from '@/stores'
 import { FilterInput } from './pure/filter-input'
 
 const height = 52

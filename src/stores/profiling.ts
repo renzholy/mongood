@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { FilterQuery } from 'mongodb'
 import { isEqual } from 'lodash'
-import type { MongoData } from 'types'
-import { storage } from 'utils/storage'
+
+import { MongoData } from '@/types'
+import { storage } from '@/utils/storage'
 
 export default createSlice({
   name: 'profiling',

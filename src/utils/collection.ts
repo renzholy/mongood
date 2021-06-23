@@ -6,7 +6,8 @@
 import saferEval from 'safer-eval'
 import { EJSON } from 'bson'
 import { omitBy, isNil } from 'lodash'
-import type { MongoData } from 'types'
+
+import { MongoData } from '@/types'
 import { sandbox } from './ejson'
 import { runCommand } from './fetcher'
 import { Preprocessor } from './preprocessor'

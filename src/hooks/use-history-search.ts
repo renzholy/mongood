@@ -1,8 +1,9 @@
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'umi'
 import { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { omitBy, isNil } from 'lodash'
-import { actions } from 'stores'
+
+import { actions } from '@/stores'
 import { useConnections } from './use-connections'
 
 export function useHistorySearch() {

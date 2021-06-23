@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import {
   DetailsList,
   SelectionMode,
@@ -15,6 +15,7 @@ import {
   MarqueeSelection,
   Selection,
 } from '@fluentui/react'
+
 import { LargeMessage } from './large-message'
 
 export function Table<T>(props: {

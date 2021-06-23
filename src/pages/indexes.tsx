@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { Stack, IconButton } from '@fluentui/react'
-import { LargeMessage } from 'components/pure/large-message'
-import { EditorModal } from 'components/pure/editor-modal'
-import { IndexesList } from 'components/indexes-list'
+
+import { LargeMessage } from '@/components/pure/large-message'
+import { EditorModal } from '@/components/pure/editor-modal'
+import { IndexesList } from '@/components/indexes-list'
 import {
   useCommandListIndexes,
   useCommandIndexStats,
   useCommandCollStats,
-} from 'hooks/use-command'
-import { usePromise } from 'hooks/use-promise'
-import { runCommand } from 'utils/fetcher'
-import { PromiseButton } from 'components/pure/promise-button'
-import { Divider } from 'components/pure/divider'
-import { RefreshButton } from 'components/pure/refresh-button'
+} from '@/hooks/use-command'
+import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from '@/utils/fetcher'
+import { PromiseButton } from '@/components/pure/promise-button'
+import { Divider } from '@/components/pure/divider'
+import { RefreshButton } from '@/components/pure/refresh-button'
 
-export default function Indexes() {
+export default () => {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)

@@ -1,8 +1,9 @@
 import useSWR from 'swr'
-import { listConnections } from 'utils/fetcher'
-import type { Connection } from 'types'
+
+import { listConnections } from '@/utils/fetcher'
+import { Connection } from '@/types'
 import { useSelector, useDispatch } from 'react-redux'
-import { actions } from 'stores'
+import { actions } from '@/stores'
 
 export function useConnections(): {
   builtIn?: Connection[]

@@ -3,11 +3,10 @@ WORKDIR /src/node
 COPY package.json .
 COPY yarn.lock .
 RUN yarn
-COPY vite.config.ts .
+COPY .umirc.ts .
 COPY tsconfig.json .
 COPY public ./public
 COPY src ./src
-COPY index.html ./index.html
 RUN yarn build
 
 FROM golang:alpine AS golang-builder

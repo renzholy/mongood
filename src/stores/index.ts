@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { configureStore } from '@reduxjs/toolkit'
+
 import docs from './docs'
 import indexes from './indexes'
 import notebook from './notebook'

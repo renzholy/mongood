@@ -1,11 +1,12 @@
 import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useCommandProfile } from 'hooks/use-command'
-import { usePromise } from 'hooks/use-promise'
-import { runCommand } from 'utils/fetcher'
-import { generateConnectionWithDirectHost } from 'utils'
-import { actions } from 'stores'
+
+import { useCommandProfile } from '@/hooks/use-command'
+import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from '@/utils/fetcher'
+import { generateConnectionWithDirectHost } from '@/utils'
+import { actions } from '@/stores'
 import { PromiseButton } from './pure/promise-button'
 import { HostButton } from './pure/host-button'
 

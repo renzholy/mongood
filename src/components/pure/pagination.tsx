@@ -1,11 +1,12 @@
-import React, {
+import {
   IconButton,
   getTheme,
   Stack,
   CommandBarButton,
   ContextualMenuItemType,
 } from '@fluentui/react'
-import { formatNumber } from 'utils/formatter'
+
+import { formatNumber } from '@/utils/formatter'
 import { RefreshButton } from './refresh-button'
 
 export function Pagination(props: {

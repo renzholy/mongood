@@ -1,9 +1,9 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 import bytes from 'bytes'
-import { formatNumber } from 'utils/formatter'
-import { StatsArea } from 'components/pure/stats-area'
-import { useCommandCollStats, useCommandDbStats } from 'hooks/use-command'
+
+import { formatNumber } from '@/utils/formatter'
+import { StatsArea } from '@/components/pure/stats-area'
+import { useCommandCollStats, useCommandDbStats } from '@/hooks/use-command'
 import { LargeMessage } from './pure/large-message'
 
 export function CollectionStatus() {

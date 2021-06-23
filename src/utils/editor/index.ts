@@ -1,5 +1,6 @@
 import Editor, { loader, Monaco } from '@monaco-editor/react'
 import type { IDisposable } from 'monaco-editor'
+
 import { Deferred } from '../deferred'
 import { storage } from '../storage'
 

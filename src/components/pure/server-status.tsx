@@ -1,9 +1,9 @@
-import React from 'react'
 import prettyMilliseconds from 'pretty-ms'
 import { sortBy } from 'lodash'
 import bytes from 'bytes'
-import { useCommandServerStatus } from 'hooks/use-command'
-import { formatNumber } from 'utils/formatter'
+
+import { useCommandServerStatus } from '@/hooks/use-command'
+import { formatNumber } from '@/utils/formatter'
 import { StatsArea } from './stats-area'
 import { LargeMessage } from './large-message'
 

@@ -1,21 +1,22 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Dropdown, Label, Stack, TooltipHost } from '@fluentui/react'
-import type { EditorProps, OnChange } from '@monaco-editor/react'
-import { runCommand } from 'utils/fetcher'
-import { Editor } from 'utils/editor'
-import { useDarkMode } from 'hooks/use-dark-mode'
-import { stringify, parse } from 'utils/ejson'
-import { LargeMessage } from 'components/pure/large-message'
-import { generateMongoJsonSchema } from 'utils/schema'
-import { MongoData, ValidationAction, ValidationLevel } from 'types'
-import { useCommandListCollections } from 'hooks/use-command'
-import { PromiseButton } from 'components/pure/promise-button'
-import { usePromise } from 'hooks/use-promise'
-import { Divider } from 'components/pure/divider'
-import { storage } from 'utils/storage'
+import { EditorProps, OnChange } from '@monaco-editor/react'
 
-export default function Schema() {
+import { runCommand } from '@/utils/fetcher'
+import { Editor } from '@/utils/editor'
+import { useDarkMode } from '@/hooks/use-dark-mode'
+import { stringify, parse } from '@/utils/ejson'
+import { LargeMessage } from '@/components/pure/large-message'
+import { generateMongoJsonSchema } from '@/utils/schema'
+import { MongoData, ValidationAction, ValidationLevel } from '@/types'
+import { useCommandListCollections } from '@/hooks/use-command'
+import { PromiseButton } from '@/components/pure/promise-button'
+import { usePromise } from '@/hooks/use-promise'
+import { Divider } from '@/components/pure/divider'
+import { storage } from '@/utils/storage'
+
+export default () => {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)

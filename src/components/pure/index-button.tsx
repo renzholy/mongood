@@ -1,4 +1,3 @@
-import React from 'react'
 import { DefaultButton } from '@fluentui/react'
 import type { IndexSpecification } from 'mongodb'
 

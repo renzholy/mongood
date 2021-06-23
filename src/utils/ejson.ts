@@ -3,7 +3,8 @@
  */
 
 import saferEval from 'safer-eval'
-import type { MongoData } from 'types'
+
+import { MongoData } from '@/types'
 import { formatDate } from './formatter'
 import { storage } from './storage'
 

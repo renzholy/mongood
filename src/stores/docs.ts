@@ -6,8 +6,9 @@ import type {
   ProjectionOperators,
 } from 'mongodb'
 import { isEqual } from 'lodash'
-import type { DisplayMode } from 'types'
-import { storage } from 'utils/storage'
+
+import { DisplayMode } from '@/types'
+import { storage } from '@/utils/storage'
 
 export default createSlice({
   name: 'docs',

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Dialog, DialogType, DialogFooter, getTheme } from '@fluentui/react'
 
 export function DefaultDialog(props: {

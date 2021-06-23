@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { MongoData } from 'types'
+import { MongoData } from '@/types'
 
 type Notebook = {
   index: number

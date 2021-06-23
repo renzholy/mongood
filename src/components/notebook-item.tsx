@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { Card } from '@fluentui/react-cards'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { Card } from '@uifabric/react-cards'
 import Editor, { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useSelector, useDispatch } from 'react-redux'
@@ -10,11 +10,12 @@ import {
   TooltipHost,
   DirectionalHint,
 } from '@fluentui/react'
-import { evalCommand } from 'utils/collection'
-import { useDarkMode } from 'hooks/use-dark-mode'
-import { actions } from 'stores'
-import type { MongoData } from 'types'
-import { storage } from 'utils/storage'
+
+import { evalCommand } from '@/utils/collection'
+import { useDarkMode } from '@/hooks/use-dark-mode'
+import { actions } from '@/stores'
+import { MongoData } from '@/types'
+import { storage } from '@/utils/storage'
 import { MongoDataColorized } from './pure/mongo-data-colorized'
 
 export function NotebookItem(props: {

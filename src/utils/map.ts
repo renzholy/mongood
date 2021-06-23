@@ -1,5 +1,6 @@
 import { EJSON } from 'bson'
-import type { MongoData } from 'types'
+
+import { MongoData } from '@/types'
 import { storage } from './storage'
 
 /**
