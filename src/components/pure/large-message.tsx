@@ -1,4 +1,4 @@
-import { CSSProperties, memo } from 'react'
+import React, { CSSProperties, memo } from 'react'
 import { Icon, Text, getTheme } from '@fluentui/react'
 import { isEqual } from 'lodash'
 

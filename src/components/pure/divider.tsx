@@ -1,3 +1,4 @@
+import React from 'react'
 import { getTheme } from '@fluentui/react'
 
 export function Divider() {

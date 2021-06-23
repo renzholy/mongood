@@ -1,7 +1,7 @@
 import { ContextualMenu, IColumn } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import { actions } from '@/stores'
+import React from 'react'
+import { actions } from 'stores'
 
 export function DocumentColumnContextualMenu(props: {
   value?: IColumn

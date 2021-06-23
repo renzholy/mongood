@@ -1,11 +1,10 @@
 /* eslint-disable react/no-danger */
 
-import { useMemo, CSSProperties } from 'react'
+import React, { useMemo, CSSProperties } from 'react'
 import { getTheme } from '@fluentui/react'
-
-import { stringify } from '@/utils/ejson'
-import { MongoData } from '@/types'
-import { useColorize } from '@/hooks/use-colorize'
+import { stringify } from 'utils/ejson'
+import type { MongoData } from 'types'
+import { useColorize } from 'hooks/use-colorize'
 
 export function MongoDataColorized(props: {
   style?: CSSProperties

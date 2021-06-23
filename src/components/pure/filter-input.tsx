@@ -4,9 +4,8 @@ import {
   IconButton,
   IContextualMenuProps,
 } from '@fluentui/react'
-import { useState, useEffect, useCallback } from 'react'
-
-import { parse, stringify } from '@/utils/ejson'
+import React, { useState, useEffect, useCallback } from 'react'
+import { parse, stringify } from 'utils/ejson'
 
 export function FilterInput<T extends string | object | undefined>(props: {
   prefix?: string

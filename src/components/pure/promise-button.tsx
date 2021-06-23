@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DefaultButton, IStyle, IconButton } from '@fluentui/react'
-
-import { usePromise } from '@/hooks/use-promise'
+import type { usePromise } from 'hooks/use-promise'
 import { DefaultDialog } from './default-dialog'
 
 export function PromiseButton(props: {

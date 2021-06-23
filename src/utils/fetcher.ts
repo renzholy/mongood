@@ -1,6 +1,5 @@
 import { EJSON } from 'bson'
-
-import { Connection } from '@/types'
+import type { Connection } from 'types'
 
 export async function runCommand<T>(
   connection: string | undefined,

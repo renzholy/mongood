@@ -5,8 +5,7 @@
 
 import { mapValues, omit, uniq, omitBy, isNil } from 'lodash'
 import deepmerge from 'deepmerge'
-
-import { MongoData } from '@/types'
+import type { MongoData } from 'types'
 
 type Schema = {
   bsonType: string | string[]
