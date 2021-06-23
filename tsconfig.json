@@ -3,7 +3,7 @@
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -15,7 +15,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-    "baseUrl": "./src"
+    "baseUrl": "src"
   },
-  "include": ["./src", "./vite.config.ts"]
+  "include": ["src", "vite.config.ts"],
+  "exclude": ["src/utils/editor/libs/**"]
 }
