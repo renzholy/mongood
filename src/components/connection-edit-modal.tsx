@@ -1,4 +1,4 @@
-import React, {
+import {
   Modal,
   CompoundButton,
   Stack,
@@ -9,7 +9,7 @@ import React, {
   IContextualMenuProps,
   DirectionalHint,
 } from '@fluentui/react'
-import { useMemo, useCallback, useState, useEffect } from 'react'
+import React, { useMemo, useCallback, useState, useEffect } from 'react'
 import mongodbUri from 'mongodb-uri'
 import { compact, uniqBy } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
