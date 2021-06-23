@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-import { storage } from '@/utils/storage'
-import { Connection } from '@/types'
+import { storage } from 'utils/storage'
+import type { Connection } from 'types'
 
 export default createSlice({
   name: 'root',

@@ -2,18 +2,17 @@ import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import type { CollStats, IndexSpecification } from 'mongodb'
-
-import { runCommand } from '@/utils/fetcher'
-import {
+import { runCommand } from 'utils/fetcher'
+import type {
   MongoData,
   DbStats,
   ServerStats,
   ValidationAction,
   ValidationLevel,
   IndexStats,
-} from '@/types'
-import { JsonSchema } from '@/types/schema'
-import { generateConnectionWithDirectHost } from '@/utils'
+} from 'types'
+import type { JsonSchema } from 'types/schema'
+import { generateConnectionWithDirectHost } from 'utils'
 
 export function useCommandDatabases() {
   const connection = useSelector((state) => state.root.connection)

@@ -1,4 +1,4 @@
-import {
+import React, {
   Modal,
   CompoundButton,
   Stack,
@@ -14,12 +14,11 @@ import mongodbUri from 'mongodb-uri'
 import { compact, uniqBy } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 import useAsyncEffect from 'use-async-effect'
-
-import { runCommand } from '@/utils/fetcher'
-import { actions } from '@/stores'
-import { ServerStats } from '@/types'
-import { useConnections } from '@/hooks/use-connections'
-import { usePromise } from '@/hooks/use-promise'
+import { runCommand } from 'utils/fetcher'
+import { actions } from 'stores'
+import type { ServerStats } from 'types'
+import { useConnections } from 'hooks/use-connections'
+import { usePromise } from 'hooks/use-promise'
 import { PromiseButton } from './pure/promise-button'
 
 function ConnectionItem(props: { connection: string; disabled?: boolean }) {

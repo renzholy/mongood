@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ContextualMenu, getTheme, DirectionalHint } from '@fluentui/react'
 import { useDispatch } from 'react-redux'
-
-import { actions } from '@/stores'
+import { actions } from 'stores'
 
 export function IndexContextualMenu(props: { target?: MouseEvent }) {
   const theme = getTheme()

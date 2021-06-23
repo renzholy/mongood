@@ -8,8 +8,6 @@ dist/
 Dockerfile
 *.conf
 .npmrc
-.umi/
-.umi-production/
 .env
 *.png
 *.ico

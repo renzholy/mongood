@@ -1,5 +1,6 @@
+import React from 'react'
 import { Pivot, PivotItem, getTheme, IconButton } from '@fluentui/react'
-import { useHistory } from 'umi'
+import { useHistory } from 'react-router-dom'
 
 export function TopPivot() {
   const history = useHistory()

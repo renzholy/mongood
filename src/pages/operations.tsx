@@ -1,15 +1,14 @@
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import { Stack, DefaultButton, Toggle, Label } from '@fluentui/react'
 import { map, omit } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
-
-import { FilterInput } from '@/components/pure/filter-input'
-import { useCommandCurrentOp } from '@/hooks/use-command'
-import { OperationsList } from '@/components/operations-list'
-import { actions } from '@/stores'
-import { Divider } from '@/components/pure/divider'
-import { HostButton } from '@/components/pure/host-button'
-import { RefreshButton } from '@/components/pure/refresh-button'
+import { FilterInput } from 'components/pure/filter-input'
+import { useCommandCurrentOp } from 'hooks/use-command'
+import { OperationsList } from 'components/operations-list'
+import { actions } from 'stores'
+import { Divider } from 'components/pure/divider'
+import { HostButton } from 'components/pure/host-button'
+import { RefreshButton } from 'components/pure/refresh-button'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -52,7 +51,7 @@ const examples: { [key: string]: object } = {
   },
 }
 
-export default () => {
+export default function Operations() {
   const database = useSelector((state) => state.root.database)
   const filter = useSelector((state) => state.operations.filter)
   const refreshInterval = useSelector(

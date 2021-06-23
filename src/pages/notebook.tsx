@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   DetailsList,
@@ -8,12 +8,11 @@ import {
   getTheme,
 } from '@fluentui/react'
 import useAsyncEffect from 'use-async-effect'
+import { changeLib } from 'utils/editor'
+import { NotebookItem } from 'components/notebook-item'
+import { actions } from 'stores'
 
-import { changeLib } from '@/utils/editor'
-import { NotebookItem } from '@/components/notebook-item'
-import { actions } from '@/stores'
-
-export default () => {
+export default function Notebook() {
   const connection = useSelector((state) => state.root.connection)
   const notebooks = useSelector((state) => state.notebook.notebooks)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)

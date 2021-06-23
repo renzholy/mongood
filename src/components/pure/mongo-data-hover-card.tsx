@@ -1,9 +1,8 @@
 /* eslint-disable react/no-danger */
 
-import { useCallback, memo } from 'react'
+import React, { useCallback, memo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
-
-import { MongoData } from '@/types'
+import type { MongoData } from 'types'
 import { MongoDataColorized } from './mongo-data-colorized'
 
 function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {

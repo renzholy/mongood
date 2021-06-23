@@ -2,8 +2,7 @@
 
 import { sortBy } from 'lodash'
 import { IColumn, ColumnActionsMode } from '@fluentui/react'
-
-import { MongoData } from '@/types'
+import type { MongoData } from 'types'
 import { stringify } from './ejson'
 
 export function calcHeaders<T extends { [key: string]: MongoData }>(
