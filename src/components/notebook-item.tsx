@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { Card } from '@uifabric/react-cards'
+import { Card } from '@fluentui/react-cards'
 import Editor, { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
 import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useSelector, useDispatch } from 'react-redux'
