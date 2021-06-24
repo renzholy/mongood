@@ -2,12 +2,14 @@
   "extends": [
     "airbnb-typescript",
     "plugin:react-hooks/recommended",
-    "prettier"
+    "prettier",
+    "next"
   ],
   "plugins": ["prettier", "react", "import"],
   "env": {
     "browser": true
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
