@@ -4,6 +4,9 @@ import Head from 'next/head'
 import Layout from '@/components/layout'
 import { injectGlobal } from '@emotion/css'
 import { useMonacoInit } from '@/hooks/use-monaco'
+import { Provider } from 'react-redux'
+import { store } from '@/stores/index'
+import { initializeIcons } from '@fluentui/react'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
 injectGlobal`
@@ -24,6 +27,8 @@ body {
 }
 `
 
+initializeIcons()
+
 function MyApp({ Component, pageProps }: AppProps) {
   useMonacoInit()
 
@@ -32,13 +37,16 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+          content="width=900, minimum-scale=0.5, maximum-scale=2.0"
         />
+        <title>Mongood</title>
       </Head>
-      <Layout>
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        <Component {...pageProps} />
-      </Layout>
+      <Provider store={store}>
+        <Layout>
+          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+          <Component {...pageProps} />
+        </Layout>
+      </Provider>
     </>
   )
 }

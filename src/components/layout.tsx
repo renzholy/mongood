@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react'
-import { initializeIcons, loadTheme, ITheme } from '@fluentui/react'
-import { Provider } from 'react-redux'
+import { loadTheme, ITheme } from '@fluentui/react'
 import Editor from '@monaco-editor/react'
 
 import { DatabaseNav } from '@/components/database-nav'
-import { store } from '@/stores/index'
 import { TopPivot } from '@/components/pure/top-pivot'
 import { useDarkMode } from '@/hooks/use-dark-mode'
-
-initializeIcons()
 
 export default (props: { children: React.ReactNode }) => {
   const isDarkMode = useDarkMode()
@@ -70,7 +66,7 @@ export default (props: { children: React.ReactNode }) => {
   }, [isDarkMode])
 
   return (
-    <Provider store={store}>
+    <>
       <div style={{ display: 'none' }}>
         {/* init colorize */}
         <Editor language="javascript" />
@@ -95,6 +91,6 @@ export default (props: { children: React.ReactNode }) => {
           </div>
         </div>
       </div>
-    </Provider>
+    </>
   )
 }

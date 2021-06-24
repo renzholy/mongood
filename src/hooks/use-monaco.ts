@@ -17,14 +17,28 @@ export function useMonacoInit() {
       noResolve: true,
       allowNonTsExtensions: true,
     })
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      ejson,
-      'ejson.d.ts',
-    )
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      collection,
-      'collection.d.ts',
-    )
+  }, [monaco])
+  useEffect(() => {
+    if (!monaco) {
+      return undefined
+    }
+    const { dispose } =
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
+        ejson,
+        'ejson.d.ts',
+      )
+    return dispose
+  }, [monaco])
+  useEffect(() => {
+    if (!monaco) {
+      return undefined
+    }
+    const { dispose } =
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
+        collection,
+        'collection.d.ts',
+      )
+    return dispose
   }, [monaco])
 }
 
