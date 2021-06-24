@@ -32,6 +32,7 @@
     "react/react-in-jsx-scope": "off",
     "no-underscore-dangle": "off",
     "no-nested-ternary": "off",
-    "@typescript-eslint/naming-convention": "off"
+    "@typescript-eslint/naming-convention": "off",
+    "@next/next/no-img-element": "off"
   }
 }
