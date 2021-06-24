@@ -7,23 +7,16 @@ import {
   IDetailsRowProps,
   getTheme,
 } from '@fluentui/react'
-import useAsyncEffect from 'use-async-effect'
 
-import { changeLib } from '@/utils/editor'
 import { NotebookItem } from '@/components/notebook-item'
 import { actions } from '@/stores'
+import { useMonacoLib } from '@/hooks/use-monaco'
 
-export default () => {
+export default function Notebook() {
   const connection = useSelector((state) => state.root.connection)
   const notebooks = useSelector((state) => state.notebook.notebooks)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
-  useAsyncEffect(
-    () => changeLib(collectionsMap),
-    (disposable) => {
-      disposable?.dispose()
-    },
-    [collectionsMap],
-  )
+  useMonacoLib(collectionsMap)
   const theme = getTheme()
   const handleRenderRow = useCallback<IRenderFunction<IDetailsRowProps>>(
     (_props, defaultRender) =>

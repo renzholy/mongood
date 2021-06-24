@@ -1,10 +1,11 @@
+import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useHistory } from 'umi'
 
-export default () => {
-  const history = useHistory()
+export default function Index() {
+  const router = useRouter()
   useEffect(() => {
-    history.replace('/stats')
-  }, [history])
-  return <div />
+    router.replace('/stats')
+  }, [router])
+
+  return null
 }

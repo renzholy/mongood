@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
-import { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
+import Editor, { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
 
 import { stringify, parse } from '@/utils/ejson'
-import { Editor } from '@/utils/editor'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 import { MongoData } from '@/types'
 import { storage } from '@/utils/storage'
@@ -26,7 +24,7 @@ export function EditorModal<T extends MongoData>(props: {
   }, [props.value])
   const handleEditorDidMount = useCallback<OnMount>((editor) => {
     editor.onKeyDown((e) => {
-      if (e.keyCode === KeyCode.Escape) {
+      if (e.keyCode === 9) {
         e.stopPropagation()
       }
     })

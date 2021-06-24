@@ -1,10 +1,9 @@
 node_modules/
 dist/
-.umi/
-.umi-production/
 go/mongood
 go/mongood.app
 go/mongood-darwin
 go/mongood.exe
 go/mongood-windows
 .DS_Store
+.next/

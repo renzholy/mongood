@@ -16,7 +16,7 @@ import { PromiseButton } from '@/components/pure/promise-button'
 import { Divider } from '@/components/pure/divider'
 import { RefreshButton } from '@/components/pure/refresh-button'
 
-export default () => {
+export default function Indexes() {
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)

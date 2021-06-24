@@ -1,8 +1,8 @@
 import { Pivot, PivotItem, getTheme, IconButton } from '@fluentui/react'
-import { useHistory } from 'umi'
+import { useRouter } from 'next/router'
 
 export function TopPivot() {
-  const history = useHistory()
+  const router = useRouter()
   const theme = getTheme()
 
   return (
@@ -17,15 +17,11 @@ export function TopPivot() {
         flexShrink: 0,
       }}>
       <Pivot
-        selectedKey={
-          history.location.pathname === '/settings'
-            ? null
-            : history.location.pathname
-        }
+        selectedKey={router.pathname === '/settings' ? null : router.pathname}
         onLinkClick={(link) => {
-          history.push({
+          router.push({
             pathname: link?.props.itemKey || '/',
-            search: history.location.search,
+            query: router.query,
           })
         }}>
         <PivotItem headerText="Stats" itemKey="/stats" />
@@ -42,14 +38,14 @@ export function TopPivot() {
           styles: {
             root: {
               color:
-                history.location.pathname === '/settings'
+                router.pathname === '/settings'
                   ? theme.palette.themePrimary
                   : theme.palette.neutralPrimary,
             },
           },
         }}
         onClick={() => {
-          history.push('/settings')
+          router.push('/settings')
         }}
       />
     </div>

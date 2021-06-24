@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
+export default `
 /**
  * @param {string} id Must be a 24 byte hex string.
  */
@@ -107,3 +106,4 @@ const SubType = {
   Encrypted: 0x6,
   UserDefined: 0x80,
 }
+`

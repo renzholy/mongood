@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Card } from '@fluentui/react-cards'
 import Editor, { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
-import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   Text,
@@ -100,7 +99,7 @@ export function NotebookItem(props: {
   const handleEditorMount = useCallback<OnMount>(
     (editor) => {
       editor.onKeyDown(async (e) => {
-        if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
+        if (e.keyCode === 3 && (e.metaKey || e.ctrlKey)) {
           e.stopPropagation()
           await handleRunCommand(editor.getValue())
         }

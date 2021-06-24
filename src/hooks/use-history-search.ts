@@ -1,14 +1,14 @@
-import { useHistory } from 'umi'
 import { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { omitBy, isNil } from 'lodash'
+import { useRouter } from 'next/router'
 
 import { actions } from '@/stores'
 import { useConnections } from './use-connections'
 
 export function useHistorySearch() {
   const { builtIn } = useConnections()
-  const history = useHistory()
+  const router = useRouter()
   const connection = useSelector((state) => state.root.connection)
   const database = useSelector((state) => state.root.database)
   const collection = useSelector((state) => state.root.collection)
@@ -21,14 +21,15 @@ export function useHistorySearch() {
     if (builtIn) {
       firstLaunch.current = false
     }
-    if (!history.location.search) {
-      return
-    }
 
-    const search = new URLSearchParams(history.location.search)
-    const _connection = builtIn?.[parseInt(search.get('connection')!, 10)]?.uri
-    const _database = search.get('database')
-    const _collection = search.get('collection')
+    const search = router.query as {
+      connection?: string
+      database?: string
+      collection?: string
+    }
+    const _connection = builtIn?.[parseInt(search.connection!, 10)]?.uri
+    const _database = search.database
+    const _collection = search.collection
 
     if (_connection) {
       dispatch(actions.root.setConnection(_connection))
@@ -40,7 +41,7 @@ export function useHistorySearch() {
     if (_collection) {
       dispatch(actions.root.setCollection(_collection))
     }
-  }, [history, dispatch, connection, builtIn, database, collection])
+  }, [builtIn, dispatch, router.query])
   useEffect(() => {
     if (firstLaunch.current) {
       return
@@ -58,8 +59,8 @@ export function useHistorySearch() {
         isNil,
       ) as Record<string, string>,
     ).toString()
-    history.push({
+    router.push({
       search,
     })
-  }, [builtIn, collection, connection, database, history])
+  }, [builtIn, collection, connection, database, router])
 }

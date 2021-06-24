@@ -3,7 +3,7 @@ WORKDIR /src/node
 COPY package.json .
 COPY yarn.lock .
 RUN yarn
-COPY .umirc.ts .
+COPY next.config.js .
 COPY tsconfig.json .
 COPY public ./public
 COPY src ./src

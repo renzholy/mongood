@@ -52,7 +52,7 @@ const examples: { [key: string]: object } = {
   },
 }
 
-export default () => {
+export default function Operations() {
   const database = useSelector((state) => state.root.database)
   const filter = useSelector((state) => state.operations.filter)
   const refreshInterval = useSelector(
