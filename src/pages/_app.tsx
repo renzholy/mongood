@@ -6,6 +6,7 @@ import { useMonacoInit } from '@/hooks/use-monaco'
 import { Provider } from 'react-redux'
 import { store } from '@/stores/index'
 import { initializeIcons } from '@fluentui/react'
+import 'normalize.css'
 import './global.css'
 
 initializeIcons()
