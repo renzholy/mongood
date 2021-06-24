@@ -18,12 +18,12 @@ export function ConnectionButton(props: { style?: IStyle }) {
   const { selfAdded, builtIn } = useConnections()
   const [isOpen, setIsOpen] = useState(false)
   useEffect(() => {
-    if ((builtIn?.length || selfAdded?.length) && !connection) {
+    if ((builtIn?.length || selfAdded?.length) && conn === undefined) {
       setRoute({
         conn: 0,
       })
     }
-  }, [builtIn?.length, connection, selfAdded?.length, setRoute])
+  }, [builtIn?.length, conn, selfAdded?.length, setRoute])
   useEffect(() => {
     if (selfAdded?.length === 0 && builtIn?.length === 0) {
       setIsOpen(true)

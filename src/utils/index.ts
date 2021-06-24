@@ -12,6 +12,7 @@ export function generateConnectionWithDirectHost(
     const [_host, _port] = host.split(':')
     return mongodbUri.format({
       ...parsed,
+      scheme: 'mongodb',
       hosts: [{ host: _host, port: parseInt(_port, 10) }],
       options: {
         ...parsed?.options,
@@ -28,5 +29,5 @@ export function getHostsOfMongoURI(uri?: string): string[] {
     return []
   }
   const parsed = mongodbUri.parse(uri)
-  return parsed.hosts.map((h) => `${h.host}:${h.port || 27017}`)
+  return parsed.hosts.map((h) => (h.port ? `${h.host}:${h.port}` : h.host))
 }

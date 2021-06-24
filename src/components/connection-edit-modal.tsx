@@ -38,7 +38,9 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
               (uri.password
                 ? `${uri.username}:${uri.password.replace(/./g, '*')}@`
                 : `${uri.username}@`),
-            ...uri.hosts.map((host) => `${host.host}:${host.port || 27017}`),
+            ...uri.hosts.map((host) =>
+              host.port ? `${host.host}:${host.port}` : host.host,
+            ),
             uri.database && `/${uri.database}`,
             Object.entries(uri?.options || {})
               .map(([k, v]) => `${k}=${v}`)

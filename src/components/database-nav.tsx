@@ -141,10 +141,9 @@ export function DatabaseNav() {
     [databases, expandedDatabases, collectionsMap, keyword],
   )
   useEffect(() => {
-    setRoute({ conn })
     dispatch(actions.root.setExpandedDatabases([]))
     dispatch(actions.root.resetCollectionsMap())
-  }, [conn, dispatch, setRoute])
+  }, [conn, dispatch])
 
   return (
     <div

@@ -31,7 +31,7 @@ export function useCommandDatabases() {
     },
     Error
   >(
-    ['listDatabases', connection],
+    connection ? ['listDatabases', connection] : null,
     () => runCommand(connection, 'admin', { listDatabases: 1 }),
     { revalidateOnFocus: false },
   )
@@ -81,7 +81,7 @@ export function useCommandServerStatus() {
   const connection = useConnection(conn)
 
   return useSWR<ServerStats, Error>(
-    ['serverStatus', connection],
+    connection ? ['serverStatus', connection] : null,
     () =>
       runCommand(connection, 'admin', {
         serverStatus: 1,
@@ -110,7 +110,7 @@ export function useCommandDbStats() {
   const [{ conn, database }] = useRouterQuery()
   const connection = useConnection(conn)
   return useSWR<DbStats, Error>(
-    database ? ['dbStats', connection, database] : null,
+    connection && database ? ['dbStats', connection, database] : null,
     () =>
       runCommand(connection, database!, {
         dbStats: 1,
@@ -235,7 +235,7 @@ export function useCommandProfile() {
   const host = useSelector((state) => state.profiling.host)
 
   return useSWR<{ was: number; slowms: number; sampleRate: number }, Error>(
-    host ? ['profile', host, connection, database] : null,
+    connection && host ? ['profile', host, connection, database] : null,
     () => {
       const profilingConnection = host
         ? generateConnectionWithDirectHost(host, connection)
@@ -262,7 +262,7 @@ export function useCommandSystemProfileFind() {
     },
     Error
   >(
-    database && host
+    connection && database && host
       ? ['systemProfile', host, connection, database, filter, skip, limit]
       : null,
     () => {
@@ -297,7 +297,7 @@ export function useCommandSystemProfileCount() {
   const filter = useSelector((state) => state.profiling.filter)
 
   return useSWR<{ n: number }, Error>(
-    database && host
+    connection && database && host
       ? ['systemProfileCount', host, connection, database, filter]
       : null,
     () => {
@@ -326,7 +326,7 @@ export function useCommandCurrentOp() {
   const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
 
   return useSWR<{ inprog: { [key: string]: MongoData }[] }, Error>(
-    host ? ['currentOp', host, connection, filter] : null,
+    host && connection ? ['currentOp', host, connection, filter] : null,
     () => {
       const operationConnection = host
         ? generateConnectionWithDirectHost(host, connection)
@@ -369,7 +369,7 @@ export function useCommandUsers() {
     },
     Error
   >(
-    ['usersInfo', connection, database],
+    connection ? ['usersInfo', connection, database] : null,
     () =>
       runCommand(connection, database || 'admin', {
         usersInfo: database ? 1 : { forAllDBs: true },
@@ -389,7 +389,7 @@ export function useCommandIsMaster() {
     },
     Error
   >(
-    ['isMaster', connection],
+    connection ? ['isMaster', connection] : null,
     () =>
       runCommand(connection, 'admin', {
         isMaster: 1,
