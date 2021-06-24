@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import { Dropdown, Label, Stack, TooltipHost } from '@fluentui/react'
 import Editor, { EditorProps, OnChange } from '@monaco-editor/react'
 
@@ -14,11 +13,11 @@ import { PromiseButton } from '@/components/pure/promise-button'
 import { usePromise } from '@/hooks/use-promise'
 import { Divider } from '@/components/pure/divider'
 import { storage } from '@/utils/storage'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 
 export default function Schema() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
   const { data, revalidate } = useCommandListCollections()
   const isDarkMode = useDarkMode()
   const [validationAction, setValidationAction] =
@@ -26,6 +25,7 @@ export default function Schema() {
   const [validationLevel, setValidationLevel] =
     useState<ValidationLevel | null>(null)
   const [value, setValue] = useState('')
+  const connection = useConnection(conn)
   const handleSave = useCallback(
     async () =>
       database && collection

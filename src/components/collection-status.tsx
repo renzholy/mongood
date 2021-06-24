@@ -1,13 +1,13 @@
-import { useSelector } from 'react-redux'
 import bytes from 'bytes'
 
 import { formatNumber } from '@/utils/formatter'
 import { StatsArea } from '@/components/pure/stats-area'
 import { useCommandCollStats, useCommandDbStats } from '@/hooks/use-command'
+import { useRouterQuery } from '@/hooks/use-router-query'
 import { LargeMessage } from './pure/large-message'
 
 export function CollectionStatus() {
-  const collection = useSelector((state) => state.root.collection)
+  const [{ collection }] = useRouterQuery()
   const { data: collStats, error: collStatsError } = useCommandCollStats()
   const { data: dbStats, error: dbStatsError } = useCommandDbStats()
 

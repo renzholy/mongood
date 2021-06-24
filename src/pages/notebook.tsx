@@ -11,9 +11,10 @@ import {
 import { NotebookItem } from '@/components/notebook-item'
 import { actions } from '@/stores'
 import { useMonacoLib } from '@/hooks/use-monaco'
+import { useRouterQuery } from '@/hooks/use-router-query'
 
 export default function Notebook() {
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn }] = useRouterQuery()
   const notebooks = useSelector((state) => state.notebook.notebooks)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
   useMonacoLib(collectionsMap)
@@ -37,7 +38,7 @@ export default function Notebook() {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(actions.notebook.clearNotebook())
-  }, [connection, dispatch])
+  }, [conn, dispatch])
 
   return (
     <div

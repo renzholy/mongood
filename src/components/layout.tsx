@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { loadTheme, ITheme } from '@fluentui/react'
-import Editor from '@monaco-editor/react'
 
 import { DatabaseNav } from '@/components/database-nav'
 import { TopPivot } from '@/components/pure/top-pivot'
@@ -66,31 +65,25 @@ export default function Layout(props: { children: React.ReactNode }) {
   }, [isDarkMode])
 
   return (
-    <>
-      <div style={{ display: 'none' }}>
-        {/* init colorize */}
-        <Editor language="javascript" />
-      </div>
-      <div
-        style={{
-          height: '100vh',
-          overflow: 'hidden',
-          backgroundColor: theme?.palette.white,
-        }}>
-        <div style={{ display: 'flex', height: '100%' }}>
-          <DatabaseNav />
-          <div
-            style={{
-              flex: 1,
-              width: 0,
-              display: 'flex',
-              flexDirection: 'column',
-            }}>
-            <TopPivot />
-            {props.children}
-          </div>
+    <div
+      style={{
+        height: '100vh',
+        overflow: 'hidden',
+        backgroundColor: theme?.palette.white,
+      }}>
+      <div style={{ display: 'flex', height: '100%' }}>
+        <DatabaseNav />
+        <div
+          style={{
+            flex: 1,
+            width: 0,
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+          <TopPivot />
+          {props.children}
         </div>
       </div>
-    </>
+    </div>
   )
 }

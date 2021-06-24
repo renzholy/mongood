@@ -5,44 +5,41 @@ import {
   IContextualMenuItem,
   IStyle,
 } from '@fluentui/react'
-import { useSelector, useDispatch } from 'react-redux'
 import { compact } from 'lodash'
 
-import { actions } from '@/stores'
-import { useConnections } from '@/hooks/use-connections'
+import { useConnection, useConnections } from '@/hooks/use-connections'
 import { Connection } from '@/types'
+import { useRouterQuery } from '@/hooks/use-router-query'
 import { ConnectionEditModal } from './connection-edit-modal'
 
 export function ConnectionButton(props: { style?: IStyle }) {
-  const connection = useSelector((state) => state.root.connection)
-  const dispatch = useDispatch()
+  const [{ conn }, setRoute] = useRouterQuery()
+  const connection = useConnection(conn)
   const { selfAdded, builtIn } = useConnections()
   const [isOpen, setIsOpen] = useState(false)
   useEffect(() => {
     if ((builtIn?.length || selfAdded?.length) && !connection) {
-      dispatch(
-        actions.root.setConnection(
-          [...(selfAdded || []), ...(builtIn || [])][0]?.uri,
-        ),
-      )
+      setRoute({
+        conn: 0,
+      })
     }
-  }, [connection, selfAdded, builtIn, dispatch])
+  }, [builtIn?.length, connection, selfAdded?.length, setRoute])
   useEffect(() => {
     if (selfAdded?.length === 0 && builtIn?.length === 0) {
       setIsOpen(true)
     }
   }, [connection, selfAdded, builtIn])
   const connectionToItem = useCallback(
-    ({ uri, name }: Connection) => ({
+    ({ uri, name }: Connection, index: number) => ({
       key: uri,
       name,
       canCheck: true,
       checked: connection === uri,
       onClick() {
-        dispatch(actions.root.setConnection(uri))
+        setRoute({ conn: index })
       },
     }),
-    [connection, dispatch],
+    [connection, setRoute],
   )
   const items = useMemo<IContextualMenuItem[]>(
     () =>
@@ -55,7 +52,9 @@ export function ConnectionButton(props: { style?: IStyle }) {
           },
         },
         { key: 'divider1', itemType: ContextualMenuItemType.Divider },
-        ...(selfAdded?.map(connectionToItem) || []),
+        ...(selfAdded?.map((a, index) =>
+          connectionToItem(a, index + (builtIn?.length || 0)),
+        ) || []),
         selfAdded?.length
           ? { key: 'divider0', itemType: ContextualMenuItemType.Divider }
           : undefined,

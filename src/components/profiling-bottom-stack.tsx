@@ -6,6 +6,8 @@ import { useCommandProfile } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { generateConnectionWithDirectHost } from '@/utils'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { PromiseButton } from './pure/promise-button'
 
 enum ProfilingLevel {
@@ -15,12 +17,12 @@ enum ProfilingLevel {
 }
 
 export function ProfilingBottomStack() {
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn, database }] = useRouterQuery()
+  const connection = useConnection(conn)
   const host = useSelector((state) => state.profiling.host)
   const profilingConnection = host
     ? generateConnectionWithDirectHost(host, connection)
     : connection
-  const database = useSelector((state) => state.root.database)
   const [level, setLevel] = useState<ProfilingLevel>()
   const { data: profile, error, revalidate, isValidating } = useCommandProfile()
   const handleSetProfile = useCallback(

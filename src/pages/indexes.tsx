@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useSelector } from 'react-redux'
 import { Stack, IconButton } from '@fluentui/react'
 
 import { LargeMessage } from '@/components/pure/large-message'
@@ -15,11 +14,11 @@ import { runCommand } from '@/utils/fetcher'
 import { PromiseButton } from '@/components/pure/promise-button'
 import { Divider } from '@/components/pure/divider'
 import { RefreshButton } from '@/components/pure/refresh-button'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 
 export default function Indexes() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState<object>({
     background: true,
@@ -34,6 +33,7 @@ export default function Indexes() {
     revalidate: revalidateCollStats,
     isValidating: isValidatingCollStats,
   } = useCommandCollStats()
+  const connection = useConnection(conn)
   const handleCreate = useCallback(
     async () =>
       database && collection

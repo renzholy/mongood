@@ -7,11 +7,14 @@ import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { generateConnectionWithDirectHost } from '@/utils'
 import { actions } from '@/stores'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { PromiseButton } from './pure/promise-button'
 import { HostButton } from './pure/host-button'
 
 export function ProfilingSummaryBottomStack() {
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn }] = useRouterQuery()
+  const connection = useConnection(conn)
   const host = useSelector((state) => state.profiling.host)
   const profilingConnection = host
     ? generateConnectionWithDirectHost(host, connection)

@@ -114,8 +114,6 @@ function genGetSet(type: StorageType, key: string, defaultValue?: any) {
 }
 
 export const storage = {
-  connection: genGetSet(StorageType.STRING, 'connection'),
-
   selfAddedConnections: genGetSet<Connection[]>(
     StorageType.JSON,
     'connections',

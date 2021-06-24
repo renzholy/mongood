@@ -11,15 +11,16 @@ import {
   useCommandListIndexes,
 } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { IndexButton } from './pure/index-button'
 import { DocumentPagination } from './document-pagination'
 import { EditorModal } from './pure/editor-modal'
 import { PromiseButton } from './pure/promise-button'
 
 export function DocumentControlStack() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
   const displayMode = useSelector((state) => state.docs.displayMode)
   const index = useSelector((state) => state.docs.index)
   const { revalidate: reFind } = useCommandFind()

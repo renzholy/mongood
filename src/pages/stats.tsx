@@ -1,11 +1,9 @@
-import { useSelector } from 'react-redux'
-
 import { ServerStatus } from '@/components/pure/server-status'
 import { CollectionStatus } from '@/components/collection-status'
+import { useRouterQuery } from '@/hooks/use-router-query'
 
 export default function Stats() {
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ database, collection }] = useRouterQuery()
 
   return database && collection ? <CollectionStatus /> : <ServerStatus />
 }

@@ -7,14 +7,10 @@ export default createSlice({
   name: 'root',
   initialState: {
     selfAddedConnections: storage.selfAddedConnections.get,
-    connection: storage.connection.get,
     expandedDatabases: [],
     collectionsMap: {},
   } as {
     selfAddedConnections: Connection[]
-    connection?: string
-    database?: string
-    collection?: string
     expandedDatabases: string[]
     collectionsMap: { [database: string]: string[] }
   },
@@ -29,21 +25,6 @@ export default createSlice({
         selfAddedConnections: payload,
       }
     },
-    setConnection: (state, { payload }: PayloadAction<string | undefined>) => {
-      storage.connection.set(payload)
-      return {
-        ...state,
-        connection: payload,
-      }
-    },
-    setDatabase: (state, { payload }: PayloadAction<string | undefined>) => ({
-      ...state,
-      database: payload,
-    }),
-    setCollection: (state, { payload }: PayloadAction<string | undefined>) => ({
-      ...state,
-      collection: payload,
-    }),
     setExpandedDatabases: (state, { payload }: PayloadAction<string[]>) => ({
       ...state,
       expandedDatabases: payload,

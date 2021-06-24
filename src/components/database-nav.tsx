@@ -7,21 +7,21 @@ import useAsyncEffect from 'use-async-effect'
 import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
 import { useCommandDatabases } from '@/hooks/use-command'
-import { useHistorySearch } from '@/hooks/use-history-search'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { ConnectionButton } from './connection-button'
 
 const splitter = '/'
 
 export function DatabaseNav() {
   const theme = getTheme()
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }, setRoute] = useRouterQuery()
   const expandedDatabases = useSelector((state) => state.root.expandedDatabases)
   const collectionsMap = useSelector((state) => state.root.collectionsMap)
   const [keyword, setKeyword] = useState('')
   const { data } = useCommandDatabases()
   const dispatch = useDispatch()
+  const connection = useConnection(conn)
   const listCollections = useCallback(
     async (_database: string) => {
       const {
@@ -141,12 +141,10 @@ export function DatabaseNav() {
     [databases, expandedDatabases, collectionsMap, keyword],
   )
   useEffect(() => {
-    dispatch(actions.root.setDatabase())
-    dispatch(actions.root.setCollection())
+    setRoute({ conn })
     dispatch(actions.root.setExpandedDatabases([]))
     dispatch(actions.root.resetCollectionsMap())
-  }, [connection, dispatch])
-  useHistorySearch()
+  }, [conn, dispatch, setRoute])
 
   return (
     <div
@@ -178,11 +176,13 @@ export function DatabaseNav() {
             if (!item?.links && item?.key) {
               const [_database, _collection] = item.key.split(splitter)
               if (database === _database && collection === _collection) {
-                dispatch(actions.root.setDatabase(undefined))
-                dispatch(actions.root.setCollection(undefined))
+                setRoute({ conn })
               } else {
-                dispatch(actions.root.setDatabase(_database))
-                dispatch(actions.root.setCollection(_collection))
+                setRoute({
+                  conn,
+                  database: _database,
+                  collection: _collection,
+                })
               }
             }
           }}

@@ -10,6 +10,7 @@ import { actions } from '@/stores'
 import { Divider } from '@/components/pure/divider'
 import { HostButton } from '@/components/pure/host-button'
 import { RefreshButton } from '@/components/pure/refresh-button'
+import { useRouterQuery } from '@/hooks/use-router-query'
 
 const examples: { [key: string]: object } = {
   'Slow operations': {
@@ -53,7 +54,7 @@ const examples: { [key: string]: object } = {
 }
 
 export default function Operations() {
-  const database = useSelector((state) => state.root.database)
+  const [{ database }] = useRouterQuery()
   const filter = useSelector((state) => state.operations.filter)
   const refreshInterval = useSelector(
     (state) => state.operations.refreshInterval,
