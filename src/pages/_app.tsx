@@ -5,7 +5,7 @@ import Layout from '@/components/layout'
 import { useMonacoInit } from '@/hooks/use-monaco'
 import { Provider } from 'react-redux'
 import { store } from '@/stores/index'
-import { initializeIcons } from '@fluentui/react'
+import { initializeIcons, ThemeProvider } from '@fluentui/react'
 import './global.css'
 
 initializeIcons()
@@ -23,10 +23,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <title>Mongood</title>
       </Head>
       <Provider store={store}>
-        <Layout>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <Component {...pageProps} />
-        </Layout>
+        <ThemeProvider>
+          <Layout>
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <Component {...pageProps} />
+          </Layout>
+        </ThemeProvider>
       </Provider>
     </>
   )
