@@ -1,5 +1,6 @@
 node_modules/
 dist/
+out/
 go/mongood
 go/mongood.app
 go/mongood-darwin

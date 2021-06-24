@@ -21,8 +21,8 @@ var (
 	clients       sync.Map
 	creationMutex sync.Mutex
 	mux           = http.NewServeMux()
-	//go:embed dist/*
-	dist embed.FS
+	//go:embed out/* out/_next/static/*/* out/_next/static/*/*/*
+	root embed.FS
 )
 
 func runCommand(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +102,7 @@ func listConnections(w http.ResponseWriter, r *http.Request) {
 }
 
 func getFileSystem() http.FileSystem {
-	fsys, err := fs.Sub(dist, "dist")
+	fsys, err := fs.Sub(root, "out")
 	if err != nil {
 		log.Fatal(err)
 	}
