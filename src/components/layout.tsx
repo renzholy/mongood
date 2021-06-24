@@ -6,7 +6,7 @@ import { DatabaseNav } from '@/components/database-nav'
 import { TopPivot } from '@/components/pure/top-pivot'
 import { useDarkMode } from '@/hooks/use-dark-mode'
 
-export default (props: { children: React.ReactNode }) => {
+export default function Layout(props: { children: React.ReactNode }) {
   const isDarkMode = useDarkMode()
   const [theme, setTheme] = useState<ITheme>()
   useEffect(() => {

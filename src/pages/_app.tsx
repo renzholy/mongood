@@ -2,34 +2,15 @@ import React from 'react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Layout from '@/components/layout'
-import { injectGlobal } from '@emotion/css'
 import { useMonacoInit } from '@/hooks/use-monaco'
 import { Provider } from 'react-redux'
 import { store } from '@/stores/index'
 import { initializeIcons } from '@fluentui/react'
-
-// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-injectGlobal`
-::-webkit-scrollbar {
-  display: none;
-}
-
-* {
-  outline: none !important;
-}
-
-html,
-body {
-  margin: 0;
-  height: 100vh;
-  width: 100vw;
-  min-width: 900px;
-}
-`
+import './global.css'
 
 initializeIcons()
 
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   useMonacoInit()
 
   return (
@@ -50,5 +31,3 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   )
 }
-
-export default MyApp
