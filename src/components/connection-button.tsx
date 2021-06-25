@@ -6,10 +6,9 @@ import {
   IStyle,
 } from '@fluentui/react'
 import { compact } from 'lodash'
-
-import { useConnection, useConnections } from '@/hooks/use-connections'
-import { Connection } from '@/types'
-import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection, useConnections } from 'hooks/use-connections'
+import { Connection } from 'types'
+import { useRouterQuery } from 'hooks/use-router-query'
 import { ConnectionEditModal } from './connection-edit-modal'
 
 export function ConnectionButton(props: { style?: IStyle }) {

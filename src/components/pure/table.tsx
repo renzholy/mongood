@@ -15,7 +15,6 @@ import {
   MarqueeSelection,
   Selection,
 } from '@fluentui/react'
-
 import { LargeMessage } from './large-message'
 
 export function Table<T>(props: {

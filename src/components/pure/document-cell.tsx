@@ -1,11 +1,10 @@
 /* eslint-disable react/no-danger */
 
 import { useMemo, memo } from 'react'
-
-import { stringify } from '@/utils/ejson'
-import { useColorize } from '@/hooks/use-colorize'
-import { MongoData } from '@/types'
-import { getMap, getLocation } from '@/utils/map'
+import { stringify } from 'utils/ejson'
+import { useColorize } from 'hooks/use-colorize'
+import { MongoData } from 'types'
+import { getMap, getLocation } from 'utils/map'
 import { MongoDataHoverCard } from './mongo-data-hover-card'
 
 export const DocumentCell = memo(

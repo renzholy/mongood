@@ -1,10 +1,9 @@
 /* eslint-disable react/no-danger */
 
 import { useMemo, memo } from 'react'
-
-import { stringify } from '@/utils/ejson'
-import { useColorize } from '@/hooks/use-colorize'
-import { MongoData } from '@/types'
+import { stringify } from 'utils/ejson'
+import { useColorize } from 'hooks/use-colorize'
+import { MongoData } from 'types'
 import { MongoDataHoverCard } from './mongo-data-hover-card'
 
 export const TableCell = memo(

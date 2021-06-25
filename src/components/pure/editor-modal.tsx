@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import Editor, { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
-
-import { stringify, parse } from '@/utils/ejson'
-import { useDarkMode } from '@/hooks/use-dark-mode'
-import { MongoData } from '@/types'
-import { storage } from '@/utils/storage'
+import { stringify, parse } from 'utils/ejson'
+import { useDarkMode } from 'hooks/use-dark-mode'
+import { MongoData } from 'types'
+import { storage } from 'utils/storage'
 import { DefaultModal } from './default-modal'
 
 export function EditorModal<T extends MongoData>(props: {

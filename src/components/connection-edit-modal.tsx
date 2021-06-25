@@ -13,12 +13,11 @@ import { useMemo, useCallback, useState, useEffect } from 'react'
 import mongodbUri from 'mongodb-uri'
 import { compact, uniqBy } from 'lodash'
 import useSWR from 'swr'
-
-import { runCommand } from '@/utils/fetcher'
-import { ServerStats } from '@/types'
-import { useConnection, useConnections } from '@/hooks/use-connections'
-import { usePromise } from '@/hooks/use-promise'
-import { useRouterQuery } from '@/hooks/use-router-query'
+import { runCommand } from 'utils/fetcher'
+import { ServerStats } from 'types'
+import { useConnection, useConnections } from 'hooks/use-connections'
+import { usePromise } from 'hooks/use-promise'
+import { useRouterQuery } from 'hooks/use-router-query'
 import { PromiseButton } from './pure/promise-button'
 
 function ConnectionItem(props: { connection: string; disabled?: boolean }) {

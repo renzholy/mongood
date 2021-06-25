@@ -9,9 +9,8 @@ import {
 import { omit, compact } from 'lodash'
 import bytes from 'bytes'
 import { EJSON } from 'bson'
-
-import { ExecStats, MongoData } from '@/types'
-import { formatNumber } from '@/utils/formatter'
+import { ExecStats, MongoData } from 'types'
+import { formatNumber } from 'utils/formatter'
 import { MongoDataColorized } from './mongo-data-colorized'
 
 export function ExecStage(props: { value?: { [key: string]: MongoData } }) {

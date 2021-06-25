@@ -9,14 +9,13 @@ import {
   TooltipHost,
   DirectionalHint,
 } from '@fluentui/react'
-
-import { evalCommand } from '@/utils/collection'
-import { useDarkMode } from '@/hooks/use-dark-mode'
-import { actions } from '@/stores'
-import { MongoData } from '@/types'
-import { storage } from '@/utils/storage'
-import { useRouterQuery } from '@/hooks/use-router-query'
-import { useConnection } from '@/hooks/use-connections'
+import { evalCommand } from 'utils/collection'
+import { useDarkMode } from 'hooks/use-dark-mode'
+import { actions } from 'stores'
+import { MongoData } from 'types'
+import { storage } from 'utils/storage'
+import { useRouterQuery } from 'hooks/use-router-query'
+import { useConnection } from 'hooks/use-connections'
 import { MongoDataColorized } from './pure/mongo-data-colorized'
 
 export function NotebookItem(props: {

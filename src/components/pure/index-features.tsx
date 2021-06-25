@@ -8,7 +8,6 @@ import {
   Stack,
   Text,
 } from '@fluentui/react'
-
 import { MongoDataColorized } from './mongo-data-colorized'
 
 function IndexFeature(props: { value: { text: string; data?: object } }) {

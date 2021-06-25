@@ -7,11 +7,10 @@ import {
   IDetailsRowProps,
   getTheme,
 } from '@fluentui/react'
-
-import { NotebookItem } from '@/components/notebook-item'
-import { actions } from '@/stores'
-import { useMonacoLib } from '@/hooks/use-monaco'
-import { useRouterQuery } from '@/hooks/use-router-query'
+import { NotebookItem } from 'components/notebook-item'
+import { actions } from 'stores'
+import { useMonacoLib } from 'hooks/use-monaco'
+import { useRouterQuery } from 'hooks/use-router-query'
 
 export default function Notebook() {
   const [{ conn }] = useRouterQuery()

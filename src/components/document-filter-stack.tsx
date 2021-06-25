@@ -6,10 +6,9 @@ import {
   IContextualMenuProps,
 } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
-
-import { actions } from '@/stores'
-import { useRouterQuery } from '@/hooks/use-router-query'
-import { useConnection } from '@/hooks/use-connections'
+import { actions } from 'stores'
+import { useRouterQuery } from 'hooks/use-router-query'
+import { useConnection } from 'hooks/use-connections'
 import { FilterInput } from './pure/filter-input'
 
 const height = 52

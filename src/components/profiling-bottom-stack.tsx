@@ -1,13 +1,12 @@
 import { Stack, Label, Dropdown } from '@fluentui/react'
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
-
-import { useCommandProfile } from '@/hooks/use-command'
-import { usePromise } from '@/hooks/use-promise'
-import { runCommand } from '@/utils/fetcher'
-import { generateConnectionWithDirectHost } from '@/utils'
-import { useRouterQuery } from '@/hooks/use-router-query'
-import { useConnection } from '@/hooks/use-connections'
+import { useCommandProfile } from 'hooks/use-command'
+import { usePromise } from 'hooks/use-promise'
+import { runCommand } from 'utils/fetcher'
+import { generateConnectionWithDirectHost } from 'utils'
+import { useRouterQuery } from 'hooks/use-router-query'
+import { useConnection } from 'hooks/use-connections'
 import { PromiseButton } from './pure/promise-button'
 
 enum ProfilingLevel {

@@ -2,8 +2,7 @@
 
 import { useCallback, memo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
-
-import { MongoData } from '@/types'
+import { MongoData } from 'types'
 import { MongoDataColorized } from './mongo-data-colorized'
 
 function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {

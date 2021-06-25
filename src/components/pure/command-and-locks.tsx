@@ -1,6 +1,5 @@
 import { omit } from 'lodash'
-
-import { MongoData } from '@/types'
+import { MongoData } from 'types'
 import { MongoDataColorized } from './mongo-data-colorized'
 
 export function CommandAndLocks(props: {

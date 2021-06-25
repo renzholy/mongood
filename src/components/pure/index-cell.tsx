@@ -3,8 +3,7 @@
 import type { IndexSpecification } from 'mongodb'
 import { IColumn, getTheme } from '@fluentui/react'
 import bytes from 'bytes'
-
-import { formatNumber, formatDate } from '@/utils/formatter'
+import { formatNumber, formatDate } from 'utils/formatter'
 import { IndexFeatures } from './index-features'
 import { IndexInfo } from './index-info'
 

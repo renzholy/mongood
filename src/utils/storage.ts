@@ -1,4 +1,4 @@
-import { Connection, DisplayMode } from '@/types'
+import { Connection, DisplayMode } from 'types'
 
 enum StorageType {
   STRING,

@@ -1,18 +1,17 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
-
-import { runCommand } from '@/utils/fetcher'
-import { actions } from '@/stores'
-import { DisplayMode } from '@/types'
+import { runCommand } from 'utils/fetcher'
+import { actions } from 'stores'
+import { DisplayMode } from 'types'
 import {
   useCommandFind,
   useCommandCount,
   useCommandListIndexes,
-} from '@/hooks/use-command'
-import { usePromise } from '@/hooks/use-promise'
-import { useRouterQuery } from '@/hooks/use-router-query'
-import { useConnection } from '@/hooks/use-connections'
+} from 'hooks/use-command'
+import { usePromise } from 'hooks/use-promise'
+import { useRouterQuery } from 'hooks/use-router-query'
+import { useConnection } from 'hooks/use-connections'
 import { IndexButton } from './pure/index-button'
 import { DocumentPagination } from './document-pagination'
 import { EditorModal } from './pure/editor-modal'

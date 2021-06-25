@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-
-import { actions } from '@/stores'
+import { actions } from 'stores'
 import {
   useCommandSystemProfileCount,
   useCommandSystemProfileFind,
-} from '@/hooks/use-command'
+} from 'hooks/use-command'
 import { Pagination } from './pure/pagination'
 
 export function ProfilingPagination() {

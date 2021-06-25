@@ -1,9 +1,8 @@
 import bytes from 'bytes'
-
-import { formatNumber } from '@/utils/formatter'
-import { StatsArea } from '@/components/pure/stats-area'
-import { useCommandCollStats, useCommandDbStats } from '@/hooks/use-command'
-import { useRouterQuery } from '@/hooks/use-router-query'
+import { formatNumber } from 'utils/formatter'
+import { StatsArea } from 'components/pure/stats-area'
+import { useCommandCollStats, useCommandDbStats } from 'hooks/use-command'
+import { useRouterQuery } from 'hooks/use-router-query'
 import { LargeMessage } from './pure/large-message'
 
 export function CollectionStatus() {

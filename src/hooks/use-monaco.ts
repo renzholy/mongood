@@ -1,5 +1,5 @@
-import collection from '@/utils/libs/collection'
-import ejson from '@/utils/libs/ejson'
+import collection from 'utils/libs/collection'
+import ejson from 'utils/libs/ejson'
 import { useMonaco } from '@monaco-editor/react'
 import { useEffect } from 'react'
 

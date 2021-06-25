@@ -3,18 +3,17 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { keyBy } from 'lodash'
 import type { IndexSpecification } from 'mongodb'
-
 import {
   useCommandCollStats,
   useCommandListIndexes,
   useCommandIndexStats,
-} from '@/hooks/use-command'
-import { actions } from '@/stores'
-import { usePromise } from '@/hooks/use-promise'
-import { runCommand } from '@/utils/fetcher'
-import { mapToColumn } from '@/utils/table'
-import { useRouterQuery } from '@/hooks/use-router-query'
-import { useConnection } from '@/hooks/use-connections'
+} from 'hooks/use-command'
+import { actions } from 'stores'
+import { usePromise } from 'hooks/use-promise'
+import { runCommand } from 'utils/fetcher'
+import { mapToColumn } from 'utils/table'
+import { useRouterQuery } from 'hooks/use-router-query'
+import { useConnection } from 'hooks/use-connections'
 import { LargeMessage } from './pure/large-message'
 import { EditorModal } from './pure/editor-modal'
 import { IndexContextualMenu } from './index-contextual-menu'

@@ -1,9 +1,9 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import Layout from '@/components/layout'
-import { useMonacoInit } from '@/hooks/use-monaco'
+import Layout from 'components/layout'
+import { useMonacoInit } from 'hooks/use-monaco'
 import { Provider } from 'react-redux'
-import { store } from '@/stores/index'
+import { store } from 'stores/index'
 import { initializeIcons, ThemeProvider } from '@fluentui/react'
 import './global.css'
 

@@ -17,10 +17,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "baseUrl": "src"
   },
   "exclude": ["node_modules"],
   "include": ["**/*.ts", "**/*.tsx", "next.config.js", "next-env.d.ts"]

@@ -2,8 +2,7 @@ import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import type { CollStats, IndexSpecification } from 'mongodb'
-
-import { runCommand } from '@/utils/fetcher'
+import { runCommand } from 'utils/fetcher'
 import {
   MongoData,
   DbStats,
@@ -11,9 +10,9 @@ import {
   ValidationAction,
   ValidationLevel,
   IndexStats,
-} from '@/types'
-import { JsonSchema } from '@/types/schema'
-import { generateConnectionWithDirectHost } from '@/utils'
+} from 'types'
+import { JsonSchema } from 'types/schema'
+import { generateConnectionWithDirectHost } from 'utils'
 import { useRouterQuery } from './use-router-query'
 import { useConnection } from './use-connections'
 

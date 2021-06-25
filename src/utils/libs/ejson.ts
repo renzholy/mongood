@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-anonymous-default-export
 export default `
 /**
  * @param {string} id Must be a 24 byte hex string.
