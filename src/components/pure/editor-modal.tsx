@@ -14,7 +14,7 @@ export function EditorModal<T extends MongoData>(props: {
   isOpen: boolean
   onDismiss(): void
   onDismissed?(): void
-  footer?: React.ReactNode
+  footer?(disabled: boolean): React.ReactNode
 }) {
   const isDarkMode = useDarkMode()
   const [value, setValue] = useState('')
@@ -28,8 +28,17 @@ export function EditorModal<T extends MongoData>(props: {
       }
     })
   }, [])
+  const [disabled, setDisabled] = useState(false)
   const handleChange = useCallback<OnChange>((_value?: string) => {
     setValue(_value || '')
+    try {
+      if (_value) {
+        parse(_value.replace(/^return/, ''))
+      }
+      setDisabled(false)
+    } catch {
+      setDisabled(true)
+    }
   }, [])
   const options = useMemo<EditorProps['options']>(
     () => ({
@@ -48,14 +57,16 @@ export function EditorModal<T extends MongoData>(props: {
       isOpen={props.isOpen}
       onDismiss={props.onDismiss}
       onDismissed={props.onDismissed}
-      footer={props.footer}>
+      footer={props.footer?.(disabled)}>
       <div
         style={{ flex: 1 }}
         onBlur={() => {
           try {
+            setDisabled(false)
             props.onChange?.(parse(value.replace(/^return/, '')) as T)
-            // eslint-disable-next-line no-empty
-          } catch {}
+          } catch {
+            setDisabled(true)
+          }
         }}>
         <Editor
           language="typescript"

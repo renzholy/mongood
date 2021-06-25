@@ -178,14 +178,15 @@ export function DocumentsList() {
         onDismissed={() => {
           setEditedItem(invokedItem)
         }}
-        footer={
+        footer={(disabled) => (
           <PromiseButton
             text="Update"
             primary={true}
+            disabled={disabled}
             promise={promiseUpdate}
             style={{ flexShrink: 0 }}
           />
-        }
+        )}
       />
       <DocumentRowContextualMenu
         hidden={isRowMenuHidden}

@@ -89,13 +89,14 @@ export function DocumentControlStack() {
           onDismissed={() => {
             setDoc({})
           }}
-          footer={
+          footer={(disabled) => (
             <PromiseButton
               text="Insert"
+              disabled={disabled}
               primary={true}
               promise={promiseInsert}
             />
-          }
+          )}
         />
       </Stack.Item>
       <Stack horizontal={true} styles={{ root: { alignItems: 'center' } }}>

@@ -78,13 +78,14 @@ export default function Indexes() {
                 background: true,
               })
             }}
-            footer={
+            footer={(disabled) => (
               <PromiseButton
                 text="Create"
+                disabled={disabled}
                 primary={true}
                 promise={promiseCreate}
               />
-            }
+            )}
           />
         </Stack.Item>
         <IconButton
