@@ -1,5 +1,3 @@
-@import '../node_modules/normalize.css/normalize.css';
-
 ::-webkit-scrollbar {
   display: none;
 }
@@ -10,6 +8,7 @@
 
 html,
 body {
+  margin: 0;
   height: 100vh;
   width: 100vw;
   min-width: 900px;

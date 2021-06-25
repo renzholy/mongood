@@ -13,6 +13,8 @@ import { actions } from '@/stores'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
 import { mapToColumn } from '@/utils/table'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { LargeMessage } from './pure/large-message'
 import { EditorModal } from './pure/editor-modal'
 import { IndexContextualMenu } from './index-contextual-menu'
@@ -31,9 +33,8 @@ export function IndexesList() {
     error: indexesError,
     revalidate,
   } = useCommandListIndexes()
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
   const invokedIndex = useSelector((state) => state.indexes.invokedIndex)
   const isViewOpen = useSelector((state) => state.indexes.isViewOpen)
   const isDetailOpen = useSelector((state) => state.indexes.isDetailOpen)

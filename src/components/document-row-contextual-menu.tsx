@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { ContextualMenu, getTheme } from '@fluentui/react'
 import csv, { Options } from 'csv-stringify'
 import { markdownTable } from 'markdown-table'
-import { useSelector } from 'react-redux'
 
 import { stringify } from '@/utils/ejson'
 import { calcHeaders } from '@/utils/table'
@@ -10,6 +9,8 @@ import { MongoData } from '@/types'
 import { useCommandFind, useCommandCount } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { runCommand } from '@/utils/fetcher'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { PromiseButton } from './pure/promise-button'
 import { DefaultDialog } from './pure/default-dialog'
 
@@ -30,9 +31,8 @@ export function DocumentRowContextualMenu<
   selectedItems: T[]
   onEdit?(): void
 }) {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
   const [hidden, setHidden] = useState(true)
   const { revalidate: reFind } = useCommandFind()
   const { revalidate: reCount } = useCommandCount()

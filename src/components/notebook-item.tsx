@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Card } from '@fluentui/react-cards'
 import Editor, { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
-import { KeyCode } from 'monaco-editor/esm/vs/editor/editor.api'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import {
   Text,
   getTheme,
@@ -16,6 +15,8 @@ import { useDarkMode } from '@/hooks/use-dark-mode'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { storage } from '@/utils/storage'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { MongoDataColorized } from './pure/mongo-data-colorized'
 
 export function NotebookItem(props: {
@@ -30,7 +31,8 @@ export function NotebookItem(props: {
   const [result, setResult] = useState<MongoData>()
   const [error, setError] = useState<string>()
   const theme = getTheme()
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn }] = useRouterQuery()
+  const connection = useConnection(conn)
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
   const handleNext = useCallback(
@@ -100,7 +102,7 @@ export function NotebookItem(props: {
   const handleEditorMount = useCallback<OnMount>(
     (editor) => {
       editor.onKeyDown(async (e) => {
-        if (e.keyCode === KeyCode.Enter && (e.metaKey || e.ctrlKey)) {
+        if (e.keyCode === 3 && (e.metaKey || e.ctrlKey)) {
           e.stopPropagation()
           await handleRunCommand(editor.getValue())
         }

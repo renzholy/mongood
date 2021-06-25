@@ -4,7 +4,7 @@ import { padStart } from 'lodash'
 
 import { storage } from '@/utils/storage'
 
-export default () => {
+export default function Settings() {
   const [staticMapUrlTemplate, setStaticMapUrlTemplate] = useState<
     string | undefined
   >(storage.staticMapUrlTemplate.get)

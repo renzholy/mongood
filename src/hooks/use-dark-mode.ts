@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 
 export function useDarkMode(): boolean {
   const [isDarkMode, setIsDarkMode] = useState(
-    window.matchMedia('(prefers-color-scheme: dark)').matches,
+    typeof window === 'undefined'
+      ? false
+      : window.matchMedia('(prefers-color-scheme: dark)').matches,
   )
   useEffect(() => {
     function darkListener(e: MediaQueryListEvent) {
@@ -15,17 +17,19 @@ export function useDarkMode(): boolean {
         setIsDarkMode(false)
       }
     }
-    window.matchMedia('(prefers-color-scheme: dark)').addListener(darkListener)
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', darkListener)
     window
       .matchMedia('(prefers-color-scheme: light)')
-      .addListener(lightListener)
+      .addEventListener('change', lightListener)
     return () => {
       window
         .matchMedia('(prefers-color-scheme: dark)')
-        .removeListener(darkListener)
+        .addEventListener('change', darkListener)
       window
         .matchMedia('(prefers-color-scheme: light)')
-        .removeListener(lightListener)
+        .addEventListener('change', lightListener)
     }
   }, [])
   return isDarkMode

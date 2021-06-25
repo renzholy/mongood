@@ -1,7 +1,7 @@
 import { useSWRInfinite } from 'swr'
 import { useCallback, useMemo } from 'react'
 import { IColumn, getTheme, Stack } from '@fluentui/react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { runCommand } from '@/utils/fetcher'
 import { useCommandDatabases, useCommandIsMaster } from '@/hooks/use-command'
@@ -9,6 +9,8 @@ import { mapToColumn } from '@/utils/table'
 import { generateConnectionWithDirectHost, getHostsOfMongoURI } from '@/utils'
 import { formatNumber } from '@/utils/formatter'
 import { actions } from '@/stores'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { Table } from './pure/table'
 import { LargeMessage } from './pure/large-message'
 import { TableCell } from './pure/table-cell'
@@ -21,7 +23,8 @@ type Data = { database: string } & { [host: string]: number }
 const KEY_NAME = 'database'
 
 export function ProfilingSummary() {
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn }, setRoute] = useRouterQuery()
+  const connection = useConnection(conn)
   const { data: databases } = useCommandDatabases()
   const { data: hosts } = useCommandIsMaster()
   const handleGetKey = useCallback(
@@ -81,13 +84,12 @@ export function ProfilingSummary() {
           item[KEY_NAME] ? [item[KEY_NAME]] : [],
         ),
       )
-      dispatch(actions.root.setDatabase(item[KEY_NAME]))
-      dispatch(actions.root.setCollection('system.profile'))
+      setRoute({ conn, database: item[KEY_NAME], collection: 'system.profile' })
       if (host) {
         dispatch(actions.profiling.setHost(host))
       }
     },
-    [dispatch],
+    [conn, dispatch, setRoute],
   )
   const handleRenderItemColumn = useCallback(
     (item?: Data, _index?: number, column?: IColumn) => {

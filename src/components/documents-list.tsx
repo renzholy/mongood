@@ -9,6 +9,8 @@ import { MongoData, DisplayMode } from '@/types'
 import { useCommandFind } from '@/hooks/use-command'
 import { usePromise } from '@/hooks/use-promise'
 import { calcHeaders, mapToColumn } from '@/utils/table'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { Table } from './pure/table'
 import { EditorModal } from './pure/editor-modal'
 import { DocumentRowContextualMenu } from './document-row-contextual-menu'
@@ -22,9 +24,8 @@ type Document = { [key: string]: MongoData }
 
 export function DocumentsList() {
   const displayMode = useSelector((state) => state.docs.displayMode)
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
   const index = useSelector((state) => state.docs.index)
   const { data, error, revalidate } = useCommandFind()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)

@@ -2,14 +2,13 @@
 .vscode/
 node_modules/
 dist/
+out/
 .*ignore
 .gitattributes
 *.html
 Dockerfile
 *.conf
 .npmrc
-.umi/
-.umi-production/
 .env
 *.png
 *.ico
@@ -19,3 +18,4 @@ go/
 LICENSE
 .husky/
 yarn.lock
+.next/

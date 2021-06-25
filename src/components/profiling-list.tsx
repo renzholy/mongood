@@ -6,6 +6,7 @@ import { useCommandSystemProfileFind } from '@/hooks/use-command'
 import { actions } from '@/stores'
 import { MongoData } from '@/types'
 import { calcHeaders, mapToColumn } from '@/utils/table'
+import { useRouterQuery } from '@/hooks/use-router-query'
 import { LargeMessage } from './pure/large-message'
 import { Table } from './pure/table'
 import { TableCell } from './pure/table-cell'
@@ -26,7 +27,7 @@ const keys = [
 
 export function ProfilingList() {
   const { data, error } = useCommandSystemProfileFind()
-  const collection = useSelector((state) => state.root.collection)
+  const [{ collection }] = useRouterQuery()
   const invokedProfiling = useSelector(
     (state) => state.profiling.invokedProfiling,
   )

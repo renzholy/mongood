@@ -25,11 +25,12 @@ function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {
 }
 
 export const MongoDataHoverCard = memo(
-  (props: {
+  // eslint-disable-next-line prefer-arrow-callback
+  function MongoDataHoverCard(props: {
     value: MongoData
     children: React.ReactNode
     header?: React.ReactNode
-  }) => {
+  }) {
     const theme = getTheme()
     const onRenderPlainCard = useCallback(
       () => <PlainCard value={props.value} header={props.header} />,

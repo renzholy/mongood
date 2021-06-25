@@ -14,9 +14,12 @@ import {
 } from '@/types'
 import { JsonSchema } from '@/types/schema'
 import { generateConnectionWithDirectHost } from '@/utils'
+import { useRouterQuery } from './use-router-query'
+import { useConnection } from './use-connections'
 
 export function useCommandDatabases() {
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn }] = useRouterQuery()
+  const connection = useConnection(conn)
 
   return useSWR<
     {
@@ -28,16 +31,15 @@ export function useCommandDatabases() {
     },
     Error
   >(
-    ['listDatabases', connection],
+    connection ? ['listDatabases', connection] : null,
     () => runCommand(connection, 'admin', { listDatabases: 1 }),
     { revalidateOnFocus: false },
   )
 }
 
 export function useCommandListCollections() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
 
   return useSWR<
     {
@@ -75,10 +77,11 @@ export function useCommandListCollections() {
 }
 
 export function useCommandServerStatus() {
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn }] = useRouterQuery()
+  const connection = useConnection(conn)
 
   return useSWR<ServerStats, Error>(
-    ['serverStatus', connection],
+    connection ? ['serverStatus', connection] : null,
     () =>
       runCommand(connection, 'admin', {
         serverStatus: 1,
@@ -88,9 +91,8 @@ export function useCommandServerStatus() {
 }
 
 export function useCommandCollStats() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
 
   return useSWR<CollStats, Error>(
     connection && database && collection
@@ -105,11 +107,10 @@ export function useCommandCollStats() {
 }
 
 export function useCommandDbStats() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-
+  const [{ conn, database }] = useRouterQuery()
+  const connection = useConnection(conn)
   return useSWR<DbStats, Error>(
-    database ? ['dbStats', connection, database] : null,
+    connection && database ? ['dbStats', connection, database] : null,
     () =>
       runCommand(connection, database!, {
         dbStats: 1,
@@ -119,9 +120,8 @@ export function useCommandDbStats() {
 }
 
 export function useCommandListIndexes() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
 
   return useSWR<{ cursor: { firstBatch: IndexSpecification[] } }, Error>(
     connection && database && collection
@@ -136,9 +136,8 @@ export function useCommandListIndexes() {
 }
 
 export function useCommandIndexStats() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
 
   return useSWR<
     {
@@ -162,9 +161,8 @@ export function useCommandIndexStats() {
 }
 
 export function useCommandFind() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
   const index = useSelector((state) => state.docs.index)
   const filter = useSelector((state) => state.docs.filter)
   const projection = useSelector((state) => state.docs.projection)
@@ -214,9 +212,8 @@ export function useCommandFind() {
 }
 
 export function useCommandCount() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
 
   return useSWR<{ n: number }, Error>(
     connection && database && collection
@@ -233,12 +230,12 @@ export function useCommandCount() {
 }
 
 export function useCommandProfile() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database || 'admin')
+  const [{ conn, database = 'admin' }] = useRouterQuery()
+  const connection = useConnection(conn)
   const host = useSelector((state) => state.profiling.host)
 
   return useSWR<{ was: number; slowms: number; sampleRate: number }, Error>(
-    host ? ['profile', host, connection, database] : null,
+    connection && host ? ['profile', host, connection, database] : null,
     () => {
       const profilingConnection = host
         ? generateConnectionWithDirectHost(host, connection)
@@ -252,8 +249,8 @@ export function useCommandProfile() {
 }
 
 export function useCommandSystemProfileFind() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
+  const [{ conn, database }] = useRouterQuery()
+  const connection = useConnection(conn)
   const host = useSelector((state) => state.profiling.host)
   const filter = useSelector((state) => state.profiling.filter)
   const skip = useSelector((state) => state.profiling.skip)
@@ -265,7 +262,7 @@ export function useCommandSystemProfileFind() {
     },
     Error
   >(
-    database && host
+    connection && database && host
       ? ['systemProfile', host, connection, database, filter, skip, limit]
       : null,
     () => {
@@ -294,13 +291,13 @@ export function useCommandSystemProfileFind() {
 }
 
 export function useCommandSystemProfileCount() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
+  const [{ conn, database }] = useRouterQuery()
+  const connection = useConnection(conn)
   const host = useSelector((state) => state.profiling.host)
   const filter = useSelector((state) => state.profiling.filter)
 
   return useSWR<{ n: number }, Error>(
-    database && host
+    connection && database && host
       ? ['systemProfileCount', host, connection, database, filter]
       : null,
     () => {
@@ -317,7 +314,8 @@ export function useCommandSystemProfileCount() {
 }
 
 export function useCommandCurrentOp() {
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn }] = useRouterQuery()
+  const connection = useConnection(conn)
   const host = useSelector((state) => state.operations.host)
   const filter = useSelector((state) => state.operations.filter)
   const refreshInterval = useSelector(
@@ -328,7 +326,7 @@ export function useCommandCurrentOp() {
   const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
 
   return useSWR<{ inprog: { [key: string]: MongoData }[] }, Error>(
-    host ? ['currentOp', host, connection, filter] : null,
+    host && connection ? ['currentOp', host, connection, filter] : null,
     () => {
       const operationConnection = host
         ? generateConnectionWithDirectHost(host, connection)
@@ -354,8 +352,8 @@ export function useCommandCurrentOp() {
 }
 
 export function useCommandUsers() {
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
+  const [{ conn, database }] = useRouterQuery()
+  const connection = useConnection(conn)
 
   return useSWR<
     {
@@ -371,7 +369,7 @@ export function useCommandUsers() {
     },
     Error
   >(
-    ['usersInfo', connection, database],
+    connection ? ['usersInfo', connection, database] : null,
     () =>
       runCommand(connection, database || 'admin', {
         usersInfo: database ? 1 : { forAllDBs: true },
@@ -381,7 +379,8 @@ export function useCommandUsers() {
 }
 
 export function useCommandIsMaster() {
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn }] = useRouterQuery()
+  const connection = useConnection(conn)
 
   return useSWR<
     {
@@ -390,7 +389,7 @@ export function useCommandIsMaster() {
     },
     Error
   >(
-    ['isMaster', connection],
+    connection ? ['isMaster', connection] : null,
     () =>
       runCommand(connection, 'admin', {
         isMaster: 1,

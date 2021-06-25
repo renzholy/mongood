@@ -11,6 +11,8 @@ import { runCommand } from '@/utils/fetcher'
 import { MongoData } from '@/types'
 import { mapToColumn } from '@/utils/table'
 import { generateConnectionWithDirectHost } from '@/utils'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { LargeMessage } from './pure/large-message'
 import { OperationContextualMenu } from './operation-contextual-menu'
 import { MongoDataModal } from './pure/mongo-data-modal'
@@ -36,12 +38,12 @@ const columns = mapToColumn(
 
 export function OperationsList() {
   const { data, error, revalidate } = useCommandCurrentOp()
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, collection }, setRoute] = useRouterQuery()
+  const connection = useConnection(conn)
   const [target, setTarget] = useState<MouseEvent>()
   const invokedOperation = useSelector(
     (state) => state.operations.invokedOperation,
   )
-  const connection = useSelector((state) => state.root.connection)
   const host = useSelector((state) => state.operations.host)
   const operationConnection = host
     ? generateConnectionWithDirectHost(host, connection)
@@ -115,8 +117,7 @@ export function OperationsList() {
             <DefaultButton
               text="View all operations"
               onClick={() => {
-                dispatch(actions.root.setDatabase(undefined))
-                dispatch(actions.root.setCollection(undefined))
+                setRoute({ conn })
               }}
             />
           ) : null

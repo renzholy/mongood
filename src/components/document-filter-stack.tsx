@@ -8,6 +8,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 
 import { actions } from '@/stores'
+import { useRouterQuery } from '@/hooks/use-router-query'
+import { useConnection } from '@/hooks/use-connections'
 import { FilterInput } from './pure/filter-input'
 
 const height = 52
@@ -15,9 +17,8 @@ const height = 52
 export function DocumentFilterStack() {
   const dispatch = useDispatch()
   const theme = getTheme()
-  const connection = useSelector((state) => state.root.connection)
-  const database = useSelector((state) => state.root.database)
-  const collection = useSelector((state) => state.root.collection)
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
   const index = useSelector((state) => state.docs.index)
   const filter = useSelector((state) => state.docs.filter)
   const projection = useSelector((state) => state.docs.projection)

@@ -3,11 +3,12 @@ WORKDIR /src/node
 COPY package.json .
 COPY yarn.lock .
 RUN yarn
-COPY .umirc.ts .
+COPY next.config.js .
 COPY tsconfig.json .
 COPY public ./public
 COPY src ./src
 RUN yarn build
+RUN yarn export
 
 FROM golang:alpine AS golang-builder
 RUN go env -w GO111MODULE=on
@@ -15,7 +16,7 @@ WORKDIR /src/golang
 COPY go/go.mod go/go.sum ./
 RUN go mod download
 COPY go/. .
-COPY --from=node-builder /src/node/dist ./dist
+COPY --from=node-builder /src/node/out ./out
 RUN go build -tags headless -o mongood .
 
 FROM alpine

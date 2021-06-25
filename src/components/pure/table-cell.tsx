@@ -8,7 +8,8 @@ import { MongoData } from '@/types'
 import { MongoDataHoverCard } from './mongo-data-hover-card'
 
 export const TableCell = memo(
-  (props: { value: MongoData }) => {
+  // eslint-disable-next-line prefer-arrow-callback
+  function TableCell(props: { value: MongoData }) {
     const str = useMemo(() => stringify(props.value), [props.value])
     const html = useColorize(str)
 

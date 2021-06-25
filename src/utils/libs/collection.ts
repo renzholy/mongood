@@ -1,6 +1,4 @@
-/* eslint-disable max-classes-per-file */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
+export default `
 class AggregationCursor {
   async explain(): Promise<any>
 
@@ -111,3 +109,4 @@ class Database<T = any> {
     options: { dropTarget?: boolean } = {},
   ): Promise<void>
 }
+`

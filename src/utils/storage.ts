@@ -10,6 +10,9 @@ function getItem<T>(
   type: StorageType,
   key: string,
 ): string | number | T | undefined {
+  if (typeof window === 'undefined') {
+    return undefined
+  }
   const item = localStorage.getItem(key)
   switch (type) {
     case StorageType.STRING: {
@@ -39,6 +42,9 @@ function setItem<T>(
   type: StorageType,
   key: string,
 ): (value?: T | number | string) => void {
+  if (typeof window === 'undefined') {
+    return () => null
+  }
   return (value) => {
     if (value === undefined) {
       localStorage.removeItem(key)
@@ -108,8 +114,6 @@ function genGetSet(type: StorageType, key: string, defaultValue?: any) {
 }
 
 export const storage = {
-  connection: genGetSet(StorageType.STRING, 'connection'),
-
   selfAddedConnections: genGetSet<Connection[]>(
     StorageType.JSON,
     'connections',

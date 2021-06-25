@@ -12,14 +12,13 @@ import {
 import { useMemo, useCallback, useState, useEffect } from 'react'
 import mongodbUri from 'mongodb-uri'
 import { compact, uniqBy } from 'lodash'
-import { useSelector, useDispatch } from 'react-redux'
 import useAsyncEffect from 'use-async-effect'
 
 import { runCommand } from '@/utils/fetcher'
-import { actions } from '@/stores'
 import { ServerStats } from '@/types'
-import { useConnections } from '@/hooks/use-connections'
+import { useConnection, useConnections } from '@/hooks/use-connections'
 import { usePromise } from '@/hooks/use-promise'
+import { useRouterQuery } from '@/hooks/use-router-query'
 import { PromiseButton } from './pure/promise-button'
 
 function ConnectionItem(props: { connection: string; disabled?: boolean }) {
@@ -39,7 +38,9 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
               (uri.password
                 ? `${uri.username}:${uri.password.replace(/./g, '*')}@`
                 : `${uri.username}@`),
-            ...uri.hosts.map((host) => `${host.host}:${host.port || 27017}`),
+            ...uri.hosts.map((host) =>
+              host.port ? `${host.host}:${host.port}` : host.host,
+            ),
             uri.database && `/${uri.database}`,
             Object.entries(uri?.options || {})
               .map(([k, v]) => `${k}=${v}`)
@@ -49,8 +50,8 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
     [uri],
   )
   const theme = getTheme()
-  const dispatch = useDispatch()
-  const connection = useSelector((state) => state.root.connection)
+  const [{ conn }, setRoute] = useRouterQuery()
+  const connection = useConnection(conn)
   const { selfAdded, updateSelfAdded } = useConnections()
   const menuProps = useMemo<IContextualMenuProps | undefined>(
     () =>
@@ -73,20 +74,20 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
                     )
                   }
                   if (connection === props.connection) {
-                    dispatch(actions.root.setConnection(undefined))
+                    setRoute({})
                   }
                 },
               },
             ],
           },
     [
-      connection,
-      selfAdded,
-      dispatch,
-      props.connection,
       props.disabled,
+      props.connection,
       theme.palette.red,
+      selfAdded,
+      connection,
       updateSelfAdded,
+      setRoute,
     ],
   )
   const [serverStatus, setServerStatus] = useState<ServerStats>()

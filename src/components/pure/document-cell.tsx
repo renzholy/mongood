@@ -9,11 +9,12 @@ import { getMap, getLocation } from '@/utils/map'
 import { MongoDataHoverCard } from './mongo-data-hover-card'
 
 export const DocumentCell = memo(
-  (props: {
+  // eslint-disable-next-line prefer-arrow-callback
+  function DocumentCell(props: {
     value: MongoData
     subStringLength?: number
     index2dsphere?: MongoData
-  }) => {
+  }) {
     const str = useMemo(
       () => stringify(props.value).substr(0, props.subStringLength),
       [props.value, props.subStringLength],
