@@ -101,12 +101,26 @@ func listConnections(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(opts))
 }
 
+type HTMLDir struct {
+	d http.FileSystem
+}
+
+func (d HTMLDir) Open(name string) (http.File, error) {
+	f, err := d.d.Open(name + ".html")
+	if os.IsNotExist(err) {
+		if f, err := d.d.Open(name); err == nil {
+			return f, nil
+		}
+	}
+	return f, err
+}
+
 func getFileSystem() http.FileSystem {
 	fsys, err := fs.Sub(root, "out")
 	if err != nil {
 		log.Fatal(err)
 	}
-	return http.FS(fsys)
+	return HTMLDir{http.FS(fsys)}
 }
 
 func main() {
