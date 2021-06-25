@@ -2,7 +2,6 @@ import { useEffect, useCallback, useState, useMemo } from 'react'
 import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { pullAll, compact, some, difference, union } from 'lodash'
-import useAsyncEffect from 'use-async-effect'
 
 import { actions } from '@/stores'
 import { runCommand } from '@/utils/fetcher'
@@ -72,11 +71,11 @@ export function DatabaseNav() {
     },
     [listCollections, dispatch],
   )
-  useAsyncEffect(async () => {
-    await handleListCollectionOfDatabases(expandedDatabases)
+  useEffect(() => {
+    handleListCollectionOfDatabases(expandedDatabases)
   }, [expandedDatabases, handleListCollectionOfDatabases])
-  useAsyncEffect(async () => {
-    await handleListCollectionOfDatabases(databases)
+  useEffect(() => {
+    handleListCollectionOfDatabases(databases)
   }, [databases, handleListCollectionOfDatabases])
   const links = useMemo<INavLink[]>(
     () =>

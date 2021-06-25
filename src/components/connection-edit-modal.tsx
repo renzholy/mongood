@@ -12,7 +12,7 @@ import {
 import { useMemo, useCallback, useState, useEffect } from 'react'
 import mongodbUri from 'mongodb-uri'
 import { compact, uniqBy } from 'lodash'
-import useAsyncEffect from 'use-async-effect'
+import useSWR from 'swr'
 
 import { runCommand } from '@/utils/fetcher'
 import { ServerStats } from '@/types'
@@ -90,17 +90,12 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
       setRoute,
     ],
   )
-  const [serverStatus, setServerStatus] = useState<ServerStats>()
-  useAsyncEffect(
-    async (isMounted) => {
-      const status = await runCommand<ServerStats>(props.connection, 'admin', {
+  const { data: serverStatus } = useSWR<ServerStats, Error>(
+    ['serverStatus', props.connection],
+    () =>
+      runCommand(props.connection, 'admin', {
         serverStatus: 1,
-      })
-      if (isMounted()) {
-        setServerStatus(status)
-      }
-    },
-    [props.connection],
+      }),
   )
 
   if (!uri) {
