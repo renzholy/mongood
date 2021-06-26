@@ -28,6 +28,7 @@ func startService() {
 	log.Println(dir)
 	ui, err := lorca.New("http://localhost:"+port, dir, 1280, 800)
 	if err != nil {
+		os.RemoveAll(dir)
 		log.Fatal(err)
 	}
 	defer ui.Close()
