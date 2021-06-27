@@ -3,10 +3,10 @@ import { sortBy } from 'lodash'
 import bytes from 'bytes'
 import { useCommandServerStatus } from 'hooks/use-command'
 import { formatNumber } from 'utils/formatter'
-import { StatsArea } from './stats-area'
-import { LargeMessage } from './large-message'
+import StatsArea from './stats-area'
+import LargeMessage from './large-message'
 
-export function ServerStatus() {
+export default function ServerStatus() {
   const { data: serverStatus, error } = useCommandServerStatus()
 
   if (error) {

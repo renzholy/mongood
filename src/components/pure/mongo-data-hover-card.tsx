@@ -3,7 +3,7 @@
 import { useCallback, memo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 import { MongoData } from 'types'
-import { MongoDataColorized } from './mongo-data-colorized'
+import MongoDataColorized from './mongo-data-colorized'
 
 function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {
   const theme = getTheme()
@@ -23,7 +23,7 @@ function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {
   )
 }
 
-export const MongoDataHoverCard = memo(
+export default memo(
   // eslint-disable-next-line prefer-arrow-callback
   function MongoDataHoverCard(props: {
     value: MongoData

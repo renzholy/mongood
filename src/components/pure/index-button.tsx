@@ -1,7 +1,7 @@
 import { DefaultButton } from '@fluentui/react'
 import type { IndexSpecification } from 'mongodb'
 
-export function IndexButton(props: {
+export default function IndexButton(props: {
   selected?: boolean
   onSelect?(): void
   value: IndexSpecification

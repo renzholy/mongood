@@ -1,6 +1,6 @@
 import { IconButton, Spinner, SpinnerSize } from '@fluentui/react'
 
-export function RefreshButton(props: {
+export default function RefreshButton(props: {
   isRefreshing: boolean
   onRefresh(): void
 }) {

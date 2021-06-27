@@ -6,22 +6,22 @@ import { runCommand } from 'utils/fetcher'
 import { stringify } from 'utils/ejson'
 import { MongoData, DisplayMode } from 'types'
 import { useCommandFind } from 'hooks/use-command'
-import { usePromise } from 'hooks/use-promise'
+import usePromise from 'hooks/use-promise'
 import { calcHeaders, mapToColumn } from 'utils/table'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { Table } from './pure/table'
-import { EditorModal } from './pure/editor-modal'
-import { DocumentRowContextualMenu } from './document-row-contextual-menu'
-import { DocumentColumnContextualMenu } from './document-column-contextual-menu'
-import { PromiseButton } from './pure/promise-button'
-import { LargeMessage } from './pure/large-message'
-import { MongoDataColorized } from './pure/mongo-data-colorized'
-import { DocumentCell } from './pure/document-cell'
+import Table from './pure/table'
+import EditorModal from './pure/editor-modal'
+import DocumentRowContextualMenu from './document-row-contextual-menu'
+import DocumentColumnContextualMenu from './document-column-contextual-menu'
+import PromiseButton from './pure/promise-button'
+import LargeMessage from './pure/large-message'
+import MongoDataColorized from './pure/mongo-data-colorized'
+import DocumentCell from './pure/document-cell'
 
 type Document = { [key: string]: MongoData }
 
-export function DocumentsList() {
+export default function DocumentsList() {
   const displayMode = useSelector((state) => state.docs.displayMode)
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)

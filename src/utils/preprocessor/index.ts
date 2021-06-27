@@ -6,14 +6,10 @@
 import { parse } from '@babel/parser'
 import generate from '@babel/generator'
 import type { File } from '@babel/types'
-
-import { injectLastExpressionCallback } from './inject-last-expression-callback'
-
-import { wrapObjectLiteral } from './wrap-object-literal'
-
-import { wrapInAsyncFunctionCall } from './wrap-in-async-function-call'
-
-import { saveAndRestoreLexicalContext } from './save-and-restore-lexical-context'
+import injectLastExpressionCallback from './inject-last-expression-callback'
+import wrapObjectLiteral from './wrap-object-literal'
+import wrapInAsyncFunctionCall from './wrap-in-async-function-call'
+import saveAndRestoreLexicalContext from './save-and-restore-lexical-context'
 
 export class Preprocessor {
   private lexicalContext = {}

@@ -8,7 +8,7 @@ import {
   Stack,
   Text,
 } from '@fluentui/react'
-import { MongoDataColorized } from './mongo-data-colorized'
+import MongoDataColorized from './mongo-data-colorized'
 
 function IndexFeature(props: { value: { text: string; data?: object } }) {
   const theme = getTheme()
@@ -55,7 +55,7 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
   )
 }
 
-export function IndexFeatures(props: { value: IndexSpecification }) {
+export default function IndexFeatures(props: { value: IndexSpecification }) {
   const features = useMemo<{ text: string; data: object }[]>(
     () =>
       compact([

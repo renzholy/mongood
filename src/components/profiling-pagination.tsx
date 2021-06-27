@@ -5,9 +5,9 @@ import {
   useCommandSystemProfileCount,
   useCommandSystemProfileFind,
 } from 'hooks/use-command'
-import { Pagination } from './pure/pagination'
+import Pagination from './pure/pagination'
 
-export function ProfilingPagination() {
+export default function ProfilingPagination() {
   const skip = useSelector((state) => state.profiling.skip)
   const limit = useSelector((state) => state.profiling.limit)
   const {

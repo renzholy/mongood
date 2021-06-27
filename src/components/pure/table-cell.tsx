@@ -2,11 +2,11 @@
 
 import { useMemo, memo } from 'react'
 import { stringify } from 'utils/ejson'
-import { useColorize } from 'hooks/use-colorize'
+import useColorize from 'hooks/use-colorize'
 import { MongoData } from 'types'
-import { MongoDataHoverCard } from './mongo-data-hover-card'
+import MongoDataHoverCard from './mongo-data-hover-card'
 
-export const TableCell = memo(
+export default memo(
   // eslint-disable-next-line prefer-arrow-callback
   function TableCell(props: { value: MongoData }) {
     const str = useMemo(() => stringify(props.value), [props.value])

@@ -10,15 +10,15 @@ import {
   DirectionalHint,
 } from '@fluentui/react'
 import { evalCommand } from 'utils/collection'
-import { useDarkMode } from 'hooks/use-dark-mode'
+import useDarkMode from 'hooks/use-dark-mode'
 import { actions } from 'stores'
 import { MongoData } from 'types'
 import { storage } from 'utils/storage'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { MongoDataColorized } from './pure/mongo-data-colorized'
+import MongoDataColorized from './pure/mongo-data-colorized'
 
-export function NotebookItem(props: {
+export default function NotebookItem(props: {
   index?: number
   value?: string
   result?: MongoData

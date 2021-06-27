@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { DefaultButton, IStyle, IconButton } from '@fluentui/react'
-import { usePromise } from 'hooks/use-promise'
-import { DefaultDialog } from './default-dialog'
+import usePromise from 'hooks/use-promise'
+import DefaultDialog from './default-dialog'
 
-export function PromiseButton(props: {
+export default function PromiseButton(props: {
   icon?: string
   text?: string
   disabled?: boolean

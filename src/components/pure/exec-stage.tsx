@@ -11,9 +11,11 @@ import bytes from 'bytes'
 import { EJSON } from 'bson'
 import { ExecStats, MongoData } from 'types'
 import { formatNumber } from 'utils/formatter'
-import { MongoDataColorized } from './mongo-data-colorized'
+import MongoDataColorized from './mongo-data-colorized'
 
-export function ExecStage(props: { value?: { [key: string]: MongoData } }) {
+export default function ExecStage(props: {
+  value?: { [key: string]: MongoData }
+}) {
   const theme = getTheme()
   const value = useMemo<ExecStats | undefined>(
     () =>

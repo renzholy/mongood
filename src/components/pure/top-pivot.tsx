@@ -1,7 +1,7 @@
 import { Pivot, PivotItem, getTheme, IconButton } from '@fluentui/react'
 import { useRouter } from 'next/router'
 
-export function TopPivot() {
+export default function TopPivot() {
   const router = useRouter()
   const theme = getTheme()
 

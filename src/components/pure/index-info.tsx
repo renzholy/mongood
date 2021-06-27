@@ -4,7 +4,7 @@ import { Text, getTheme, Icon, Stack } from '@fluentui/react'
 import { map } from 'lodash'
 import type { IndexSpecification } from 'mongodb'
 
-export function IndexInfo(props: { value: IndexSpecification }) {
+export default function IndexInfo(props: { value: IndexSpecification }) {
   const theme = getTheme()
 
   return (

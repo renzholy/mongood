@@ -2,12 +2,12 @@ import { Stack, Label, Dropdown } from '@fluentui/react'
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useCommandProfile } from 'hooks/use-command'
-import { usePromise } from 'hooks/use-promise'
+import usePromise from 'hooks/use-promise'
 import { runCommand } from 'utils/fetcher'
 import { generateConnectionWithDirectHost } from 'utils'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { PromiseButton } from './pure/promise-button'
+import PromiseButton from './pure/promise-button'
 
 enum ProfilingLevel {
   OFF = 0,
@@ -15,7 +15,7 @@ enum ProfilingLevel {
   ALL = 2,
 }
 
-export function ProfilingBottomStack() {
+export default function ProfilingBottomStack() {
   const [{ conn, database }] = useRouterQuery()
   const connection = useConnection(conn)
   const host = useSelector((state) => state.profiling.host)

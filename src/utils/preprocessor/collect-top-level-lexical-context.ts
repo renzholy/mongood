@@ -22,7 +22,9 @@ export interface LexicalContext {
   [variableName: string]: VariableDeclarationKind
 }
 
-export function collectTopLevelLexicalContext(ast: File): LexicalContext {
+export default function collectTopLevelLexicalContext(
+  ast: File,
+): LexicalContext {
   const context: LexicalContext = {}
 
   for (const node of ast.program.body) {

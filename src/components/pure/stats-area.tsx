@@ -1,8 +1,8 @@
 import { getTheme, Stack, Text } from '@fluentui/react'
 import { isEmpty, chunk, map } from 'lodash'
-import { StatsCard } from './stats-card'
+import StatsCard from './stats-card'
 
-export function StatsArea(props: {
+export default function StatsArea(props: {
   title: string
   subtitle?: string
   data?: { [title: string]: string }

@@ -1,6 +1,6 @@
 import { Modal, IconButton, getTheme, Text } from '@fluentui/react'
 
-export function DefaultModal(props: {
+export default function DefaultModal(props: {
   title: string
   isOpen: boolean
   onDismiss(): void

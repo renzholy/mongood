@@ -7,7 +7,9 @@ import {
 import { useState, useEffect, useCallback } from 'react'
 import { parse, stringify } from 'utils/ejson'
 
-export function FilterInput<T extends string | object | undefined>(props: {
+export default function FilterInput<
+  T extends string | object | undefined,
+>(props: {
   prefix?: string
   iconProps?: IIconProps
   menuProps?: IContextualMenuProps

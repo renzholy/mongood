@@ -2,7 +2,7 @@ import { useMemo, useEffect } from 'react'
 import { DefaultButton, IContextualMenuItem, IStyle } from '@fluentui/react'
 import { useCommandIsMaster } from 'hooks/use-command'
 
-export function HostButton(props: {
+export default function HostButton(props: {
   host?: string
   setHost(host: string): void
   style?: IStyle

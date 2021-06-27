@@ -1,7 +1,7 @@
 import { getTheme, Text } from '@fluentui/react'
 import { Card } from '@fluentui/react-cards'
 
-export function StatsCard(props: { title: string; content: string }) {
+export default function StatsCard(props: { title: string; content: string }) {
   const theme = getTheme()
 
   return (

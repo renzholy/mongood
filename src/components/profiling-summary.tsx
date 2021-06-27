@@ -8,20 +8,20 @@ import { mapToColumn } from 'utils/table'
 import { generateConnectionWithDirectHost, getHostsOfMongoURI } from 'utils'
 import { formatNumber } from 'utils/formatter'
 import { actions } from 'stores'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { Table } from './pure/table'
-import { LargeMessage } from './pure/large-message'
-import { TableCell } from './pure/table-cell'
-import { ProfilingSummaryBottomStack } from './profiling-summary-bottom-stack'
-import { Divider } from './pure/divider'
-import { RefreshButton } from './pure/refresh-button'
+import Table from './pure/table'
+import LargeMessage from './pure/large-message'
+import TableCell from './pure/table-cell'
+import ProfilingSummaryBottomStack from './profiling-summary-bottom-stack'
+import Divider from './pure/divider'
+import RefreshButton from './pure/refresh-button'
 
 type Data = { database: string } & { [host: string]: number }
 
 const KEY_NAME = 'database'
 
-export function ProfilingSummary() {
+export default function ProfilingSummary() {
   const [{ conn }, setRoute] = useRouterQuery()
   const connection = useConnection(conn)
   const { data: databases } = useCommandDatabases()

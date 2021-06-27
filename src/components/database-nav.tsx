@@ -5,13 +5,13 @@ import { pullAll, compact, some, difference, union } from 'lodash'
 import { actions } from 'stores'
 import { runCommand } from 'utils/fetcher'
 import { useCommandDatabases } from 'hooks/use-command'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { ConnectionButton } from './connection-button'
+import ConnectionButton from './connection-button'
 
 const splitter = '/'
 
-export function DatabaseNav() {
+export default function DatabaseNav() {
   const theme = getTheme()
   const [{ conn, database, collection }, setRoute] = useRouterQuery()
   const expandedDatabases = useSelector((state) => state.root.expandedDatabases)

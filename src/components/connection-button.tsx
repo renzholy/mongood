@@ -8,10 +8,10 @@ import {
 import { compact } from 'lodash'
 import { useConnection, useConnections } from 'hooks/use-connections'
 import { Connection } from 'types'
-import { useRouterQuery } from 'hooks/use-router-query'
-import { ConnectionEditModal } from './connection-edit-modal'
+import useRouterQuery from 'hooks/use-router-query'
+import ConnectionEditModal from './connection-edit-modal'
 
-export function ConnectionButton(props: { style?: IStyle }) {
+export default function ConnectionButton(props: { style?: IStyle }) {
   const [{ conn }, setRoute] = useRouterQuery()
   const connection = useConnection(conn)
   const { selfAdded, builtIn } = useConnections()

@@ -7,13 +7,13 @@ import {
 } from '@fluentui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from 'stores'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { FilterInput } from './pure/filter-input'
+import FilterInput from './pure/filter-input'
 
 const height = 52
 
-export function DocumentFilterStack() {
+export default function DocumentFilterStack() {
   const dispatch = useDispatch()
   const theme = getTheme()
   const [{ conn, database, collection }] = useRouterQuery()

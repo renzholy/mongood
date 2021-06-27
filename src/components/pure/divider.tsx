@@ -1,6 +1,6 @@
 import { getTheme } from '@fluentui/react'
 
-export function Divider() {
+export default function Divider() {
   const theme = getTheme()
 
   return (

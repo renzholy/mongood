@@ -4,9 +4,9 @@ import { useMemo, CSSProperties } from 'react'
 import { getTheme } from '@fluentui/react'
 import { stringify } from 'utils/ejson'
 import { MongoData } from 'types'
-import { useColorize } from 'hooks/use-colorize'
+import useColorize from 'hooks/use-colorize'
 
-export function MongoDataColorized(props: {
+export default function MongoDataColorized(props: {
   style?: CSSProperties
   value: MongoData
 }) {

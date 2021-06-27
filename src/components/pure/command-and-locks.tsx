@@ -1,8 +1,8 @@
 import { omit } from 'lodash'
 import { MongoData } from 'types'
-import { MongoDataColorized } from './mongo-data-colorized'
+import MongoDataColorized from './mongo-data-colorized'
 
-export function CommandAndLocks(props: {
+export default function CommandAndLocks(props: {
   command: MongoData
   locks: MongoData
 }) {

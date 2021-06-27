@@ -2,9 +2,7 @@
 
 import { parse } from '@babel/parser'
 import generate from '@babel/generator'
-
-import {
-  collectTopLevelLexicalContext,
+import collectTopLevelLexicalContext, {
   LexicalContext,
 } from './collect-top-level-lexical-context'
 
@@ -58,7 +56,7 @@ function preventRedeclareFunctionsAsOtherKeywords(
   }
 }
 
-export function saveAndRestoreLexicalContext(
+export default function saveAndRestoreLexicalContext(
   ast: any,
   options: SaveAndRestoreLexicalContextOptions,
 ): SaveAndRestoreLexicalContextResult {

@@ -2,10 +2,10 @@ import { Stack, Label } from '@fluentui/react'
 import { useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from 'stores'
-import { ProfilingPagination } from './profiling-pagination'
-import { HostButton } from './pure/host-button'
+import ProfilingPagination from './profiling-pagination'
+import HostButton from './pure/host-button'
 
-export function ProfilingControlStack() {
+export default function ProfilingControlStack() {
   const host = useSelector((state) => state.profiling.host)
   const dispatch = useDispatch()
   useEffect(() => {

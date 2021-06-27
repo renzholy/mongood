@@ -1,6 +1,6 @@
 import { Dialog, DialogType, DialogFooter, getTheme } from '@fluentui/react'
 
-export function DefaultDialog(props: {
+export default function DefaultDialog(props: {
   hidden: boolean
   onDismiss(): void
   onDismissed?(): void

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export function useDarkMode(): boolean {
+export default function useDarkMode(): boolean {
   const [isDarkMode, setIsDarkMode] = useState(
     typeof window === 'undefined'
       ? false

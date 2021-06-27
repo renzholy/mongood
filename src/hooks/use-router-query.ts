@@ -8,7 +8,7 @@ type Query = {
   collection?: string
 }
 
-export function useRouterQuery(): [Query, (value: Query) => void] {
+export default function useRouterQuery(): [Query, (value: Query) => void] {
   const router = useRouter()
   const query = router.query as {
     connection?: string

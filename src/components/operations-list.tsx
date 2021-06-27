@@ -5,20 +5,20 @@ import { compact } from 'lodash'
 import { useCommandCurrentOp } from 'hooks/use-command'
 import { actions } from 'stores'
 import { stringify } from 'utils/ejson'
-import { usePromise } from 'hooks/use-promise'
+import usePromise from 'hooks/use-promise'
 import { runCommand } from 'utils/fetcher'
 import { MongoData } from 'types'
 import { mapToColumn } from 'utils/table'
 import { generateConnectionWithDirectHost } from 'utils'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { LargeMessage } from './pure/large-message'
-import { OperationContextualMenu } from './operation-contextual-menu'
-import { MongoDataModal } from './pure/mongo-data-modal'
-import { PromiseButton } from './pure/promise-button'
-import { Table } from './pure/table'
-import { TableCell } from './pure/table-cell'
-import { DefaultDialog } from './pure/default-dialog'
+import LargeMessage from './pure/large-message'
+import OperationContextualMenu from './operation-contextual-menu'
+import MongoDataModal from './pure/mongo-data-modal'
+import PromiseButton from './pure/promise-button'
+import Table from './pure/table'
+import TableCell from './pure/table-cell'
+import DefaultDialog from './pure/default-dialog'
 
 type Operation = { opid?: { $numberInt: string }; [key: string]: MongoData }
 
@@ -35,7 +35,7 @@ const columns = mapToColumn(
   ]),
 )
 
-export function OperationsList() {
+export default function OperationsList() {
   const { data, error, revalidate } = useCommandCurrentOp()
   const [{ conn, collection }, setRoute] = useRouterQuery()
   const connection = useConnection(conn)

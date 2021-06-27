@@ -6,7 +6,7 @@ import type {
   FunctionDeclaration,
 } from '@babel/types'
 
-export function injectLastExpressionCallback(
+export default function injectLastExpressionCallback(
   callbackFunctionName: string,
   ast: File,
 ): File {

@@ -3,7 +3,7 @@ import { ContextualMenu, getTheme, DirectionalHint } from '@fluentui/react'
 import { useDispatch } from 'react-redux'
 import { actions } from 'stores'
 
-export function IndexContextualMenu(props: { target?: MouseEvent }) {
+export default function IndexContextualMenu(props: { target?: MouseEvent }) {
   const theme = getTheme()
   const dispatch = useDispatch()
   const [isMenuHidden, setIsMenuHidden] = useState(true)

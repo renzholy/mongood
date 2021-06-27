@@ -1,4 +1,4 @@
-export function wrapObjectLiteral(code: string): string {
+export default function wrapObjectLiteral(code: string): string {
   // Without this hack `{x: 2}` would be interpreted as code block and evaluated to `2`
   // rather than as an object literal.
   //

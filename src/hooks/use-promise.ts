@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 
-export function usePromise<T extends unknown[], O>(
+export default function usePromise<T extends unknown[], O>(
   handler: (...input: T) => Promise<O | undefined>,
 ) {
   const [resolved, setResolved] = useState<O>()

@@ -2,16 +2,16 @@ import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useCommandProfile } from 'hooks/use-command'
-import { usePromise } from 'hooks/use-promise'
+import usePromise from 'hooks/use-promise'
 import { runCommand } from 'utils/fetcher'
 import { generateConnectionWithDirectHost } from 'utils'
 import { actions } from 'stores'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { PromiseButton } from './pure/promise-button'
-import { HostButton } from './pure/host-button'
+import PromiseButton from './pure/promise-button'
+import HostButton from './pure/host-button'
 
-export function ProfilingSummaryBottomStack() {
+export default function ProfilingSummaryBottomStack() {
   const [{ conn }] = useRouterQuery()
   const connection = useConnection(conn)
   const host = useSelector((state) => state.profiling.host)

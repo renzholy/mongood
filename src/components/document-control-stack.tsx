@@ -9,15 +9,15 @@ import {
   useCommandCount,
   useCommandListIndexes,
 } from 'hooks/use-command'
-import { usePromise } from 'hooks/use-promise'
-import { useRouterQuery } from 'hooks/use-router-query'
+import usePromise from 'hooks/use-promise'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { IndexButton } from './pure/index-button'
-import { DocumentPagination } from './document-pagination'
-import { EditorModal } from './pure/editor-modal'
-import { PromiseButton } from './pure/promise-button'
+import IndexButton from './pure/index-button'
+import DocumentPagination from './document-pagination'
+import EditorModal from './pure/editor-modal'
+import PromiseButton from './pure/promise-button'
 
-export function DocumentControlStack() {
+export default function DocumentControlStack() {
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
   const displayMode = useSelector((state) => state.docs.displayMode)

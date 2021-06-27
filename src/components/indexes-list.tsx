@@ -9,22 +9,22 @@ import {
   useCommandIndexStats,
 } from 'hooks/use-command'
 import { actions } from 'stores'
-import { usePromise } from 'hooks/use-promise'
+import usePromise from 'hooks/use-promise'
 import { runCommand } from 'utils/fetcher'
 import { mapToColumn } from 'utils/table'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { LargeMessage } from './pure/large-message'
-import { EditorModal } from './pure/editor-modal'
-import { IndexContextualMenu } from './index-contextual-menu'
-import { PromiseButton } from './pure/promise-button'
-import { Table } from './pure/table'
-import { IndexCell } from './pure/index-cell'
-import { DefaultDialog } from './pure/default-dialog'
+import LargeMessage from './pure/large-message'
+import EditorModal from './pure/editor-modal'
+import IndexContextualMenu from './index-contextual-menu'
+import PromiseButton from './pure/promise-button'
+import Table from './pure/table'
+import IndexCell from './pure/index-cell'
+import DefaultDialog from './pure/default-dialog'
 
 type Index = IndexSpecification & { size?: number; ops: number; since: Date }
 
-export function IndexesList() {
+export default function IndexesList() {
   const { data } = useCommandIndexStats()
   const { data: collStats, error: collStatsError } = useCommandCollStats()
   const {

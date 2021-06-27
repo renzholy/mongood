@@ -2,10 +2,10 @@ import { Stack, DefaultButton } from '@fluentui/react'
 import { useState } from 'react'
 import { omit } from 'lodash'
 import { MongoData } from 'types'
-import { MongoDataColorized } from './mongo-data-colorized'
-import { DefaultModal } from './default-modal'
+import MongoDataColorized from './mongo-data-colorized'
+import DefaultModal from './default-modal'
 
-export function MongoDataModal(props: {
+export default function MongoDataModal(props: {
   tabs: string[]
   title: string
   value: { [key: string]: MongoData }

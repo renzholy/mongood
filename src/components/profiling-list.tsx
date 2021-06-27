@@ -5,12 +5,12 @@ import { useCommandSystemProfileFind } from 'hooks/use-command'
 import { actions } from 'stores'
 import { MongoData } from 'types'
 import { calcHeaders, mapToColumn } from 'utils/table'
-import { useRouterQuery } from 'hooks/use-router-query'
-import { LargeMessage } from './pure/large-message'
-import { Table } from './pure/table'
-import { TableCell } from './pure/table-cell'
-import { MongoDataModal } from './pure/mongo-data-modal'
-import { ExecStage } from './pure/exec-stage'
+import useRouterQuery from 'hooks/use-router-query'
+import LargeMessage from './pure/large-message'
+import Table from './pure/table'
+import TableCell from './pure/table-cell'
+import MongoDataModal from './pure/mongo-data-modal'
+import ExecStage from './pure/exec-stage'
 
 type Profiling = { [key: string]: MongoData }
 
@@ -24,7 +24,7 @@ const keys = [
   'planSummary',
 ]
 
-export function ProfilingList() {
+export default function ProfilingList() {
   const { data, error } = useCommandSystemProfileFind()
   const [{ collection }] = useRouterQuery()
   const invokedProfiling = useSelector(

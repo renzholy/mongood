@@ -13,7 +13,7 @@ import {
 } from 'types'
 import { JsonSchema } from 'types/schema'
 import { generateConnectionWithDirectHost } from 'utils'
-import { useRouterQuery } from './use-router-query'
+import useRouterQuery from './use-router-query'
 import { useConnection } from './use-connections'
 
 export function useCommandDatabases() {

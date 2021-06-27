@@ -2,12 +2,12 @@
 
 import { useMemo, memo } from 'react'
 import { stringify } from 'utils/ejson'
-import { useColorize } from 'hooks/use-colorize'
+import useColorize from 'hooks/use-colorize'
 import { MongoData } from 'types'
 import { getMap, getLocation } from 'utils/map'
-import { MongoDataHoverCard } from './mongo-data-hover-card'
+import MongoDataHoverCard from './mongo-data-hover-card'
 
-export const DocumentCell = memo(
+export default memo(
   // eslint-disable-next-line prefer-arrow-callback
   function DocumentCell(props: {
     value: MongoData

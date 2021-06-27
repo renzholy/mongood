@@ -6,9 +6,9 @@ import {
   ContextualMenuItemType,
 } from '@fluentui/react'
 import { formatNumber } from 'utils/formatter'
-import { RefreshButton } from './refresh-button'
+import RefreshButton from './refresh-button'
 
-export function Pagination(props: {
+export default function Pagination(props: {
   skip: number
   limit: number
   count: number

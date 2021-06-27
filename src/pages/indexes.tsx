@@ -1,19 +1,19 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Stack, IconButton } from '@fluentui/react'
-import { LargeMessage } from 'components/pure/large-message'
-import { EditorModal } from 'components/pure/editor-modal'
-import { IndexesList } from 'components/indexes-list'
+import LargeMessage from 'components/pure/large-message'
+import EditorModal from 'components/pure/editor-modal'
+import IndexesList from 'components/indexes-list'
 import {
   useCommandListIndexes,
   useCommandIndexStats,
   useCommandCollStats,
 } from 'hooks/use-command'
-import { usePromise } from 'hooks/use-promise'
+import usePromise from 'hooks/use-promise'
 import { runCommand } from 'utils/fetcher'
-import { PromiseButton } from 'components/pure/promise-button'
-import { Divider } from 'components/pure/divider'
-import { RefreshButton } from 'components/pure/refresh-button'
-import { useRouterQuery } from 'hooks/use-router-query'
+import PromiseButton from 'components/pure/promise-button'
+import Divider from 'components/pure/divider'
+import RefreshButton from 'components/pure/refresh-button'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
 
 export default function Indexes() {

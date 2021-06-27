@@ -6,12 +6,12 @@ import { stringify } from 'utils/ejson'
 import { calcHeaders } from 'utils/table'
 import { MongoData } from 'types'
 import { useCommandFind, useCommandCount } from 'hooks/use-command'
-import { usePromise } from 'hooks/use-promise'
+import usePromise from 'hooks/use-promise'
 import { runCommand } from 'utils/fetcher'
-import { useRouterQuery } from 'hooks/use-router-query'
+import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
-import { PromiseButton } from './pure/promise-button'
-import { DefaultDialog } from './pure/default-dialog'
+import PromiseButton from './pure/promise-button'
+import DefaultDialog from './pure/default-dialog'
 
 const cast: Options['cast'] = {
   boolean: (value) => stringify(value),
@@ -21,7 +21,7 @@ const cast: Options['cast'] = {
   string: (value) => stringify(value),
 }
 
-export function DocumentRowContextualMenu<
+export default function DocumentRowContextualMenu<
   T extends { [key: string]: MongoData },
 >(props: {
   hidden: boolean

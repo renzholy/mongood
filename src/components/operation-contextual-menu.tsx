@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from 'stores'
 
-export function OperationContextualMenu(props: {
+export default function OperationContextualMenu(props: {
   target: MouseEvent | undefined
 }) {
   const dispatch = useDispatch()

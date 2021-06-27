@@ -3,7 +3,7 @@ import { Icon, Text, getTheme } from '@fluentui/react'
 import { isEqual } from 'lodash'
 
 // eslint-disable-next-line prefer-arrow-callback
-export const LargeMessage = memo(function LargeMessage(props: {
+export default memo(function LargeMessage(props: {
   iconName: string
   title: string
   content?: string
