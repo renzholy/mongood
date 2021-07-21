@@ -5,12 +5,14 @@ import { useMonacoInit } from 'hooks/use-monaco'
 import { Provider } from 'react-redux'
 import { store } from 'stores/index'
 import { initializeIcons, ThemeProvider } from '@fluentui/react'
+import { useEffect } from 'react'
 import './global.css'
-
-initializeIcons()
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   useMonacoInit()
+  useEffect(() => {
+    initializeIcons()
+  }, [])
 
   return (
     <>
