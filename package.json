@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "description": "A MongoDB GUI",
   "main": "index.js",
-  "private": "true",
   "scripts": {
     "dev": "next -p 8000",
     "build": "next build",
