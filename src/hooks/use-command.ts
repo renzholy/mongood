@@ -210,6 +210,34 @@ export function useCommandFind() {
   )
 }
 
+export function useCommandFindById(_id?: MongoData) {
+  const [{ conn, database, collection }] = useRouterQuery()
+  const connection = useConnection(conn)
+
+  return useSWR<
+    {
+      cursor: { firstBatch: { [key: string]: MongoData }[] }
+    },
+    Error
+  >(
+    connection && database && collection && _id
+      ? ['findById', connection, database, collection, JSON.stringify(_id)]
+      : null,
+    () =>
+      runCommand(
+        connection,
+        database!,
+        {
+          find: collection,
+          filter: { _id },
+          limit: 1,
+        },
+        { canonical: true },
+      ),
+    { revalidateOnFocus: false },
+  )
+}
+
 export function useCommandCount() {
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)

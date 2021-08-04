@@ -5,7 +5,7 @@ import { get } from 'lodash'
 import { runCommand } from 'utils/fetcher'
 import { stringify } from 'utils/ejson'
 import { MongoData, DisplayMode } from 'types'
-import { useCommandFind } from 'hooks/use-command'
+import { useCommandFind, useCommandFindById } from 'hooks/use-command'
 import usePromise from 'hooks/use-promise'
 import { calcHeaders, mapToColumn } from 'utils/table'
 import useRouterQuery from 'hooks/use-router-query'
@@ -57,9 +57,12 @@ export default function DocumentsList() {
   const title = useMemo(() => stringify(invokedItem?._id), [invokedItem])
   const onItemInvoked = useCallback((item: Document) => {
     setInvokedItem(item)
-    setEditedItem(item)
     setIsUpdateOpen(true)
   }, [])
+  const { data: invoked } = useCommandFindById(invokedItem?._id)
+  useEffect(() => {
+    setEditedItem(invoked?.cursor.firstBatch[0])
+  }, [invoked?.cursor.firstBatch])
   const onItemContextMenu = useCallback(
     (ev: MouseEvent) => {
       if (selection.getSelectedCount() === 1) {
