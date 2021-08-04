@@ -13,6 +13,7 @@ import {
 } from 'types'
 import { JsonSchema } from 'types/schema'
 import { generateConnectionWithDirectHost } from 'utils'
+import { EJSON } from 'bson'
 import useRouterQuery from './use-router-query'
 import { useConnection } from './use-connections'
 
@@ -183,9 +184,9 @@ export function useCommandFind() {
           collection,
           skip,
           limit,
-          filter,
-          projection,
-          sort,
+          JSON.stringify(filter),
+          JSON.stringify(projection),
+          JSON.stringify(sort),
           index?.name,
         ]
       : null,
@@ -221,7 +222,7 @@ export function useCommandFindById(_id?: MongoData) {
     Error
   >(
     connection && database && collection && _id
-      ? ['findById', connection, database, collection, JSON.stringify(_id)]
+      ? ['findById', connection, database, collection, EJSON.stringify(_id)]
       : null,
     () =>
       runCommand(
@@ -290,7 +291,15 @@ export function useCommandSystemProfileFind() {
     Error
   >(
     connection && database && host
-      ? ['systemProfile', host, connection, database, filter, skip, limit]
+      ? [
+          'systemProfile',
+          host,
+          connection,
+          database,
+          JSON.stringify(filter),
+          skip,
+          limit,
+        ]
       : null,
     () => {
       const profilingConnection = host
@@ -325,7 +334,13 @@ export function useCommandSystemProfileCount() {
 
   return useSWR<{ n: number }, Error>(
     connection && database && host
-      ? ['systemProfileCount', host, connection, database, filter]
+      ? [
+          'systemProfileCount',
+          host,
+          connection,
+          database,
+          JSON.stringify(filter),
+        ]
       : null,
     () => {
       const profilingConnection = host
@@ -353,7 +368,9 @@ export function useCommandCurrentOp() {
   const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
 
   return useSWR<{ inprog: { [key: string]: MongoData }[] }, Error>(
-    host && connection ? ['currentOp', host, connection, filter] : null,
+    host && connection
+      ? ['currentOp', host, connection, JSON.stringify(filter)]
+      : null,
     () => {
       const operationConnection = host
         ? generateConnectionWithDirectHost(host, connection)
