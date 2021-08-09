@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { Card } from '@fluentui/react-cards'
 import Editor, { OnMount, EditorProps, OnChange } from '@monaco-editor/react'
 import { useDispatch } from 'react-redux'
 import {
@@ -8,6 +7,8 @@ import {
   IconButton,
   TooltipHost,
   DirectionalHint,
+  DocumentCard,
+  DocumentCardDetails,
 } from '@fluentui/react'
 import { evalCommand } from 'utils/collection'
 import useDarkMode from 'hooks/use-dark-mode'
@@ -130,20 +131,18 @@ export default function NotebookItem(props: {
 
   return (
     <>
-      <Card
-        tokens={{
-          padding: 10,
-          childrenGap: 0,
-          maxWidth: 'unset',
-          minHeight: 'unset',
-        }}
+      <DocumentCard
         styles={{
           root: {
             backgroundColor: isDarkMode ? '#1e1e1e' : '#fffffe',
             margin: 20,
+            padding: 10,
+            childrenGap: 0,
+            maxWidth: 'unset',
+            minHeight: 'unset',
           },
         }}>
-        <Card.Item>
+        <div>
           <Editor
             height={5 * 18}
             language="typescript"
@@ -153,8 +152,8 @@ export default function NotebookItem(props: {
             onMount={handleEditorMount}
             options={options}
           />
-        </Card.Item>
-        <Card.Item
+        </div>
+        <DocumentCardDetails
           styles={{
             root: { display: 'flex', justifyContent: 'space-between' },
           }}>
@@ -192,8 +191,8 @@ export default function NotebookItem(props: {
               }}
             />
           ) : null}
-        </Card.Item>
-      </Card>
+        </DocumentCardDetails>
+      </DocumentCard>
       {error ? (
         <pre
           style={{

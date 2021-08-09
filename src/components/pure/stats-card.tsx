@@ -1,36 +1,20 @@
-import { getTheme, Text } from '@fluentui/react'
-import { Card } from '@fluentui/react-cards'
+import { DocumentCard, DocumentCardTitle, getTheme } from '@fluentui/react'
 
 export default function StatsCard(props: { title: string; content: string }) {
   const theme = getTheme()
 
   return (
-    <Card
+    <DocumentCard
       styles={{
         root: {
           backgroundColor: theme.palette.neutralLighterAlt,
+          minWidth: 210,
+          maxWidth: 210,
+          paddingTop: 20,
         },
-      }}
-      tokens={{ padding: 20, childrenGap: 10, minWidth: 210, maxWidth: 210 }}>
-      <Card.Section>
-        <Text
-          block={true}
-          styles={{ root: { color: theme.palette.neutralSecondary } }}>
-          {props.title}
-        </Text>
-      </Card.Section>
-      <Card.Section>
-        <Text
-          variant="xLarge"
-          styles={{
-            root: {
-              color: theme.palette.neutralPrimary,
-              wordBreak: 'break-all',
-            },
-          }}>
-          {props.content}
-        </Text>
-      </Card.Section>
-    </Card>
+      }}>
+      <DocumentCardTitle title={props.title} showAsSecondaryTitle={true} />
+      <DocumentCardTitle title={props.content} />
+    </DocumentCard>
   )
 }
