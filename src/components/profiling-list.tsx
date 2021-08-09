@@ -35,7 +35,8 @@ export default function ProfilingList() {
   const dispatch = useDispatch()
   const [target, setTarget] = useState<MouseEvent>()
   const handleItemContextMenu = useCallback(
-    (ev: MouseEvent, item?: Profiling) => {
+    (ev?: MouseEvent, item?: Profiling) => {
+      ev?.preventDefault()
       setTarget(ev)
       if (item) {
         dispatch(actions.profiling.setInvokedProfiling(item))

@@ -169,6 +169,7 @@ export default function OperationsList() {
           dispatch(actions.operations.setIsEditorOpen(true))
         }}
         onItemContextMenu={(ev, item) => {
+          ev?.preventDefault()
           setTarget(ev)
           if (item) {
             dispatch(actions.operations.setInvokedOperation(item))

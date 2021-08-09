@@ -100,7 +100,8 @@ export default function IndexesList() {
     [dispatch],
   )
   const handleItemContextMenu = useCallback(
-    (ev: MouseEvent, item?: Index) => {
+    (ev?: MouseEvent, item?: Index) => {
+      ev?.preventDefault()
       setTarget(ev)
       if (item) {
         dispatch(actions.indexes.setInvokedIndex(item))
