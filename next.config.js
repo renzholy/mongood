@@ -1,6 +1,4 @@
-const withTM = require('next-transpile-modules')(['markdown-table'])
-
-module.exports = withTM({
+module.exports = {
   rewrites() {
     return [
       {
@@ -9,4 +7,7 @@ module.exports = withTM({
       },
     ]
   },
-})
+  experimental: {
+    esmExternals: true,
+  },
+}
