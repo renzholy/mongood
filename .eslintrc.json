@@ -2,8 +2,7 @@
   "extends": [
     "airbnb-typescript",
     "plugin:react-hooks/recommended",
-    "prettier",
-    "next"
+    "prettier"
   ],
   "plugins": ["prettier", "react", "import"],
   "env": {
