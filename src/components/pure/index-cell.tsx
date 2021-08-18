@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 
-import type { IndexSpecification } from 'mongodb'
+import type { IndexDescription } from 'mongodb'
 import { IColumn, getTheme } from '@fluentui/react'
 import bytes from 'bytes'
 import { formatNumber, formatDate } from 'utils/formatter'
@@ -8,7 +8,7 @@ import IndexFeatures from './index-features'
 import IndexInfo from './index-info'
 
 export default function IndexCell(props: {
-  item: IndexSpecification
+  item: IndexDescription
   column: IColumn
   size?: number
   accesses?: { ops: number; since: Date }

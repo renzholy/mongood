@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
-import type { CollStats, IndexSpecification } from 'mongodb'
+import type { CollStats, IndexDescription } from 'mongodb'
 import { runCommand } from 'utils/fetcher'
 import {
   MongoData,
@@ -123,7 +123,7 @@ export function useCommandListIndexes() {
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
 
-  return useSWR<{ cursor: { firstBatch: IndexSpecification[] } }, Error>(
+  return useSWR<{ cursor: { firstBatch: IndexDescription[] } }, Error>(
     connection && database && collection
       ? ['listIndexes', connection, database, collection]
       : null,

@@ -1,4 +1,4 @@
-import type { IndexSpecification } from 'mongodb'
+import type { IndexDescription } from 'mongodb'
 import { useMemo, useCallback } from 'react'
 import { compact, size } from 'lodash'
 import {
@@ -55,7 +55,7 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
   )
 }
 
-export default function IndexFeatures(props: { value: IndexSpecification }) {
+export default function IndexFeatures(props: { value: IndexDescription }) {
   const features = useMemo<{ text: string; data: object }[]>(
     () =>
       compact([

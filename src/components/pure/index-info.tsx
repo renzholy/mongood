@@ -2,9 +2,9 @@
 
 import { Text, getTheme, Icon, Stack } from '@fluentui/react'
 import { map } from 'lodash'
-import type { IndexSpecification } from 'mongodb'
+import type { IndexDescription } from 'mongodb'
 
-export default function IndexInfo(props: { value: IndexSpecification }) {
+export default function IndexInfo(props: { value: IndexDescription }) {
   const theme = getTheme()
 
   return (

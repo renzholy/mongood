@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { FilterQuery } from 'mongodb'
+import type { Filter } from 'mongodb'
 import { isEqual } from 'lodash'
 import { MongoData } from 'types'
 
@@ -13,7 +13,7 @@ export default createSlice({
     isMenuHidden: true,
   } as {
     host?: string
-    filter: FilterQuery<unknown>
+    filter: Filter<unknown>
     refreshInterval: number
     isEditorOpen: boolean
     isDialogHidden: boolean
@@ -25,7 +25,7 @@ export default createSlice({
       ...state,
       host: payload,
     }),
-    setFilter: (state, { payload }: PayloadAction<FilterQuery<unknown>>) =>
+    setFilter: (state, { payload }: PayloadAction<Filter<unknown>>) =>
       isEqual(payload, state.filter)
         ? state
         : {

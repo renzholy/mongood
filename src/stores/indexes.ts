@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { IndexSpecification } from 'mongodb'
+import type { IndexDescription } from 'mongodb'
 
 export default createSlice({
   name: 'indexes',
@@ -11,7 +11,7 @@ export default createSlice({
     isViewOpen: boolean
     isDetailOpen: boolean
     isDialogHidden: boolean
-    invokedIndex?: IndexSpecification
+    invokedIndex?: IndexDescription
   },
   reducers: {
     setIsViewOpen: (state, { payload }: PayloadAction<boolean>) => ({
@@ -26,10 +26,7 @@ export default createSlice({
       ...state,
       isDialogHidden: payload,
     }),
-    setInvokedIndex: (
-      state,
-      { payload }: PayloadAction<IndexSpecification>,
-    ) => ({
+    setInvokedIndex: (state, { payload }: PayloadAction<IndexDescription>) => ({
       ...state,
       invokedIndex: payload,
     }),

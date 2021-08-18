@@ -2,7 +2,7 @@ import { IColumn } from '@fluentui/react'
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { keyBy } from 'lodash'
-import type { IndexSpecification } from 'mongodb'
+import type { IndexDescription } from 'mongodb'
 import {
   useCommandCollStats,
   useCommandListIndexes,
@@ -22,7 +22,7 @@ import Table from './pure/table'
 import IndexCell from './pure/index-cell'
 import DefaultDialog from './pure/default-dialog'
 
-type Index = IndexSpecification & { size?: number; ops: number; since: Date }
+type Index = IndexDescription & { size?: number; ops: number; since: Date }
 
 export default function IndexesList() {
   const { data } = useCommandIndexStats()
