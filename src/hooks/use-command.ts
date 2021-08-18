@@ -199,8 +199,7 @@ export function useCommandFind() {
           find: collection,
           filter,
           projection,
-          // default sort by { _id: -1 }
-          sort: !index?.name && isEmpty(sort) ? { _id: -1 } : sort,
+          sort,
           hint,
           skip,
           limit,

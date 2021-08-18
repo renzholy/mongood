@@ -24,12 +24,14 @@ export default function DocumentFilterStack() {
   const sort = useSelector((state) => state.docs.sort)
   useEffect(() => {
     dispatch(actions.docs.setFilter(index?.partialFilterExpression || {}))
-    dispatch(actions.docs.setSort({}))
+    dispatch(
+      actions.docs.setSort(index && index.name !== '_id_' ? {} : { _id: -1 }),
+    )
   }, [index, dispatch])
   useEffect(() => {
     dispatch(actions.docs.setIndex(undefined))
     dispatch(actions.docs.setFilter({}))
-    dispatch(actions.docs.setSort({}))
+    dispatch(actions.docs.setSort({ _id: -1 }))
     dispatch(actions.docs.setProjection({}))
   }, [connection, database, collection, dispatch])
 
