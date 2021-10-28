@@ -1,4 +1,4 @@
-FROM node:slim AS node-builder
+FROM node:lts-slim AS node-builder
 WORKDIR /src/node
 COPY package.json .
 COPY yarn.lock .
