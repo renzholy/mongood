@@ -59,7 +59,7 @@ jobs:
           go-version: ^1.16
       - run: |
           cd go
-          go get fyne.io/fyne/cmd/fyne
+          go install fyne.io/fyne/cmd/fyne
 
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
