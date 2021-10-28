@@ -86,7 +86,7 @@ export default function Indexes() {
                   iconProps={{ iconName: 'help' }}
                   onClick={() => {
                     window.open(
-                      'https://docs.mongodb.com/manual/reference/command/createIndexes/#mongodb-dbcommand-dbcmd.createIndexes',
+                      'https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/#options-for-all-index-types',
                     )
                   }}
                 />
