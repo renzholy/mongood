@@ -22,16 +22,12 @@ export default function Indexes() {
   const [value, setValue] = useState<object>({
     background: true,
   })
-  const { revalidate: revalidateIndex, isValidating: isValidatingIndex } =
+  const { mutate: mutateIndex, isValidating: isValidatingIndex } =
     useCommandListIndexes()
-  const {
-    revalidate: revalidateIndexStats,
-    isValidating: isValidatingIndexStats,
-  } = useCommandIndexStats()
-  const {
-    revalidate: revalidateCollStats,
-    isValidating: isValidatingCollStats,
-  } = useCommandCollStats()
+  const { mutate: mutateIndexStats, isValidating: isValidatingIndexStats } =
+    useCommandIndexStats()
+  const { mutate: mutateCollStats, isValidating: isValidatingCollStats } =
+    useCommandCollStats()
   const connection = useConnection(conn)
   const handleCreate = useCallback(
     async () =>
@@ -44,17 +40,17 @@ export default function Indexes() {
     [collection, connection, database, value],
   )
   const promiseCreate = usePromise(handleCreate)
-  const revalidate = useCallback(() => {
-    revalidateIndex()
-    revalidateIndexStats()
-    revalidateCollStats()
-  }, [revalidateIndex, revalidateIndexStats, revalidateCollStats])
+  const mutate = useCallback(() => {
+    mutateIndex()
+    mutateIndexStats()
+    mutateCollStats()
+  }, [mutateIndex, mutateIndexStats, mutateCollStats])
   useEffect(() => {
     if (promiseCreate.resolved) {
       setIsOpen(false)
-      revalidate()
+      mutate()
     }
-  }, [promiseCreate.resolved, revalidate])
+  }, [promiseCreate.resolved, mutate])
   const isValidating =
     isValidatingIndex || isValidatingIndexStats || isValidatingCollStats
 
@@ -92,10 +88,11 @@ export default function Indexes() {
           iconProps={{ iconName: 'Add' }}
           onClick={() => {
             setIsOpen(true)
-          }}>
+          }}
+        >
           Create
         </IconButton>
-        <RefreshButton isRefreshing={isValidating} onRefresh={revalidate} />
+        <RefreshButton isRefreshing={isValidating} onRefresh={mutate} />
       </Stack>
       <Divider />
       <IndexesList />

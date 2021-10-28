@@ -1,4 +1,4 @@
-import { useSWRInfinite } from 'swr'
+import useSWRInfinite from 'swr/infinite'
 import { useCallback, useMemo } from 'react'
 import { IColumn, getTheme, Stack } from '@fluentui/react'
 import { useDispatch } from 'react-redux'
@@ -59,7 +59,7 @@ export default function ProfilingSummary() {
     },
     [],
   )
-  const { data, isValidating, revalidate } = useSWRInfinite<Data>(
+  const { data, isValidating, mutate } = useSWRInfinite<Data>(
     handleGetKey,
     profileCountFetcher,
     {
@@ -99,12 +99,12 @@ export default function ProfilingSummary() {
         return <TableCell value={item[column.key]} />
       }
       return (
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <span
           style={{ cursor: 'pointer', color: theme.palette.themePrimary }}
           onClick={() => {
             handleViewProfiling(item, column.key)
-          }}>
+          }}
+        >
           {formatNumber(item[column.key])}
         </span>
       )
@@ -119,11 +119,12 @@ export default function ProfilingSummary() {
         tokens={{ padding: 10 }}
         styles={{
           root: { height: 52, alignItems: 'center' },
-        }}>
+        }}
+      >
         <Stack.Item grow={true}>
           <div />
         </Stack.Item>
-        <RefreshButton isRefreshing={isValidating} onRefresh={revalidate} />
+        <RefreshButton isRefreshing={isValidating} onRefresh={mutate} />
       </Stack>
       <Divider />
       {data ? (

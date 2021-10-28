@@ -15,7 +15,8 @@ export default function TopPivot() {
         paddingLeft: 8,
         paddingRight: 8,
         flexShrink: 0,
-      }}>
+      }}
+    >
       <Pivot
         selectedKey={router.pathname === '/settings' ? null : router.pathname}
         onLinkClick={(link) => {
@@ -23,7 +24,8 @@ export default function TopPivot() {
             pathname: link?.props.itemKey || '/',
             query: router.query,
           })
-        }}>
+        }}
+      >
         <PivotItem headerText="Stats" itemKey="/stats" />
         <PivotItem headerText="Documents" itemKey="/documents" />
         <PivotItem headerText="Indexes" itemKey="/indexes" />

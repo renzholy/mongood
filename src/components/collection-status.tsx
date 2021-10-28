@@ -35,7 +35,8 @@ export default function CollectionStatus() {
     <div
       style={{
         overflowY: 'scroll',
-      }}>
+      }}
+    >
       <div style={{ padding: 10, margin: '0 auto', width: 'fit-content' }}>
         <StatsArea
           title="Database: "

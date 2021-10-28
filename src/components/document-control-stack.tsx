@@ -22,8 +22,8 @@ export default function DocumentControlStack() {
   const connection = useConnection(conn)
   const displayMode = useSelector((state) => state.docs.displayMode)
   const index = useSelector((state) => state.docs.index)
-  const { revalidate: reFind } = useCommandFind()
-  const { revalidate: reCount } = useCommandCount()
+  const { mutate: reFind } = useCommandFind()
+  const { mutate: reCount } = useCommandCount()
   const { data: indexes } = useCommandListIndexes()
   const dispatch = useDispatch()
   const [isInsertOpen, setIsInsertOpen] = useState(false)
@@ -58,7 +58,8 @@ export default function DocumentControlStack() {
       tokens={{ childrenGap: 10, padding: 10 }}
       styles={{
         root: { minHeight: 52, marginBottom: -10 },
-      }}>
+      }}
+    >
       {indexes?.cursor.firstBatch.length ? (
         indexes.cursor.firstBatch.map((item) => (
           <IndexButton

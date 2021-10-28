@@ -39,7 +39,8 @@ export default function HostButton(props: {
       menuProps={{
         items,
       }}
-      menuIconProps={{ hidden: true }}>
+      menuIconProps={{ hidden: true }}
+    >
       {props.host || 'No Host'}
     </DefaultButton>
   )

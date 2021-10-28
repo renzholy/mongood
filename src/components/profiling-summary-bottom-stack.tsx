@@ -20,7 +20,7 @@ export default function ProfilingSummaryBottomStack() {
     : connection
   const [slowms, setSlowms] = useState(0)
   const [sampleRate, setSampleRate] = useState(0)
-  const { data: profile, error, revalidate, isValidating } = useCommandProfile()
+  const { data: profile, error, mutate, isValidating } = useCommandProfile()
   const handleSetProfile = useCallback(
     async () =>
       runCommand(profilingConnection, 'admin', {
@@ -35,9 +35,9 @@ export default function ProfilingSummaryBottomStack() {
   const promiseSetProfile = usePromise(handleSetProfile)
   useEffect(() => {
     if (promiseSetProfile.resolved) {
-      revalidate()
+      mutate()
     }
-  }, [promiseSetProfile.resolved, revalidate])
+  }, [promiseSetProfile.resolved, mutate])
   useEffect(() => {
     if (!profile) {
       return
@@ -57,7 +57,8 @@ export default function ProfilingSummaryBottomStack() {
     <Stack
       horizontal={true}
       tokens={{ padding: 10 }}
-      styles={{ root: { height: 52, alignItems: 'center' } }}>
+      styles={{ root: { height: 52, alignItems: 'center' } }}
+    >
       <Label styles={{ root: { marginRight: 10 } }}>Host:</Label>
       <HostButton
         style={{ marginRight: 20 }}

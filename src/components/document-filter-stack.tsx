@@ -44,7 +44,8 @@ export default function DocumentFilterStack() {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height } }}>
+        styles={{ root: { height } }}
+      >
         <FilterInput
           prefix="filter:"
           value={filter}
@@ -75,7 +76,8 @@ export default function DocumentFilterStack() {
     <Stack
       horizontal={true}
       tokens={{ childrenGap: 10, padding: 10 }}
-      styles={{ root: { height } }}>
+      styles={{ root: { height } }}
+    >
       {'textIndexVersion' in index ? (
         <FilterInput<string>
           prefix="Text Search"

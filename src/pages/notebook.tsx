@@ -44,7 +44,8 @@ export default function Notebook() {
       style={{
         overflowY: 'scroll',
         backgroundColor: theme.palette.neutralLighter,
-      }}>
+      }}
+    >
       <DetailsList
         styles={{
           contentWrapper: notebooks.length ? undefined : { height: 0 },

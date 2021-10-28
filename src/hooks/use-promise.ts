@@ -13,8 +13,10 @@ export default function usePromise<T extends unknown[], O>(
         setResolved(await handler(...input))
         setRejected(undefined)
       } catch (err) {
-        setRejected(err)
-        setResolved(undefined)
+        if (err instanceof Error) {
+          setRejected(err)
+          setResolved(undefined)
+        }
       } finally {
         setPending(false)
       }

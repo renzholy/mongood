@@ -69,7 +69,8 @@ export default function Layout(props: { children: React.ReactNode }) {
         height: '100vh',
         overflow: 'hidden',
         backgroundColor: theme?.palette.white,
-      }}>
+      }}
+    >
       <div style={{ display: 'flex', height: '100%' }}>
         <DatabaseNav />
         <div
@@ -78,7 +79,8 @@ export default function Layout(props: { children: React.ReactNode }) {
             width: 0,
             display: 'flex',
             flexDirection: 'column',
-          }}>
+          }}
+        >
           <TopPivot />
           {props.children}
         </div>

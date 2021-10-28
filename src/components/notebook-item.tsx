@@ -78,12 +78,14 @@ export default function NotebookItem(props: {
         setError(undefined)
         handleNext({ _result })
       } catch (err) {
-        setResult(undefined)
-        const _error = err?.message?.startsWith('(CommandNotFound)')
-          ? `Command Error: ${commandStr}`
-          : err.message
-        setError(_error)
-        handleNext({ _error })
+        if (err instanceof Error) {
+          setResult(undefined)
+          const _error = err?.message?.startsWith('(CommandNotFound)')
+            ? `Command Error: ${commandStr}`
+            : err.message
+          setError(_error)
+          handleNext({ _error })
+        }
       } finally {
         setIsLoading(false)
       }
@@ -141,7 +143,8 @@ export default function NotebookItem(props: {
             maxWidth: 'unset',
             minHeight: 'unset',
           },
-        }}>
+        }}
+      >
         <div>
           <Editor
             height={5 * 18}
@@ -156,12 +159,14 @@ export default function NotebookItem(props: {
         <DocumentCardDetails
           styles={{
             root: { display: 'flex', justifyContent: 'space-between' },
-          }}>
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <TooltipHost
               content="Run (⌘+↵)"
               directionalHint={DirectionalHint.bottomCenter}
-              styles={{ root: { display: 'inline-block' } }}>
+              styles={{ root: { display: 'inline-block' } }}
+            >
               <IconButton
                 disabled={isLoading}
                 iconProps={{ iconName: 'Play' }}
@@ -172,7 +177,8 @@ export default function NotebookItem(props: {
             </TooltipHost>
             {props.ts ? (
               <Text
-                styles={{ root: { color: theme.palette.neutralSecondary } }}>
+                styles={{ root: { color: theme.palette.neutralSecondary } }}
+              >
                 {new Date(props.ts).toLocaleString([], { hour12: false })}
               </Text>
             ) : null}
@@ -203,7 +209,8 @@ export default function NotebookItem(props: {
             wordBreak: 'break-all',
             overflow: 'scroll',
             color: theme.palette.red,
-          }}>
+          }}
+        >
           {error}
         </pre>
       ) : result !== undefined ? (

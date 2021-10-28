@@ -57,7 +57,8 @@ export default function EditorModal<T extends MongoData>(props: {
       isOpen={props.isOpen}
       onDismiss={props.onDismiss}
       onDismissed={props.onDismissed}
-      footer={props.footer?.(disabled)}>
+      footer={props.footer?.(disabled)}
+    >
       <div
         style={{ flex: 1 }}
         onBlur={() => {
@@ -67,7 +68,8 @@ export default function EditorModal<T extends MongoData>(props: {
           } catch {
             setDisabled(true)
           }
-        }}>
+        }}
+      >
         <Editor
           language="typescript"
           value={value}

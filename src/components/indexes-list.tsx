@@ -27,11 +27,7 @@ type Index = IndexDescription & { size?: number; ops: number; since: Date }
 export default function IndexesList() {
   const { data } = useCommandIndexStats()
   const { data: collStats, error: collStatsError } = useCommandCollStats()
-  const {
-    data: indexes,
-    error: indexesError,
-    revalidate,
-  } = useCommandListIndexes()
+  const { data: indexes, error: indexesError, mutate } = useCommandListIndexes()
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
   const invokedIndex = useSelector((state) => state.indexes.invokedIndex)
@@ -54,9 +50,9 @@ export default function IndexesList() {
   useEffect(() => {
     if (promiseDrop.resolved) {
       dispatch(actions.indexes.setIsDialogHidden(true))
-      revalidate()
+      mutate()
     }
-  }, [promiseDrop.resolved, dispatch, revalidate])
+  }, [promiseDrop.resolved, dispatch, mutate])
   const indexStats = useMemo(
     () => keyBy(data?.cursor.firstBatch, 'name'),
     [data],

@@ -23,7 +23,7 @@ export default function ProfilingBottomStack() {
     ? generateConnectionWithDirectHost(host, connection)
     : connection
   const [level, setLevel] = useState<ProfilingLevel>()
-  const { data: profile, error, revalidate, isValidating } = useCommandProfile()
+  const { data: profile, error, mutate, isValidating } = useCommandProfile()
   const handleSetProfile = useCallback(
     async () =>
       database && level !== undefined
@@ -36,9 +36,9 @@ export default function ProfilingBottomStack() {
   const promiseSetProfile = usePromise(handleSetProfile)
   useEffect(() => {
     if (promiseSetProfile.resolved) {
-      revalidate()
+      mutate()
     }
-  }, [promiseSetProfile.resolved, revalidate])
+  }, [promiseSetProfile.resolved, mutate])
   useEffect(() => {
     if (!profile) {
       return
@@ -52,7 +52,8 @@ export default function ProfilingBottomStack() {
       tokens={{ childrenGap: 10, padding: 10 }}
       styles={{
         root: { height: 52, alignItems: 'center' },
-      }}>
+      }}
+    >
       {error ? null : (
         <>
           <Label>Profiling Level:</Label>

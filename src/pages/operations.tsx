@@ -76,7 +76,7 @@ export default function Operations() {
   useEffect(() => {
     dispatch(actions.operations.setNs(ns))
   }, [ns, dispatch])
-  const { revalidate, isValidating } = useCommandCurrentOp()
+  const { mutate, isValidating } = useCommandCurrentOp()
   const value = useMemo(
     () => (ns ? { ...filter, ns } : omit(filter, 'ns')),
     [ns, filter],
@@ -98,7 +98,8 @@ export default function Operations() {
         styles={{
           root: { marginBottom: -10 },
           inner: { alignItems: 'center' },
-        }}>
+        }}
+      >
         <Label style={{ margin: 5 }}>Suggested filters:</Label>
         {map(examples, (_v, k) => (
           <DefaultButton
@@ -119,7 +120,8 @@ export default function Operations() {
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10, padding: 10 }}
-        styles={{ root: { height: 52, alignItems: 'center' } }}>
+        styles={{ root: { height: 52, alignItems: 'center' } }}
+      >
         <Label>Host:</Label>
         <HostButton
           style={{ marginRight: 10 }}
@@ -150,7 +152,7 @@ export default function Operations() {
             dispatch(actions.operations.setRefreshInterval(v ? 1000 : 0))
           }}
         />
-        <RefreshButton isRefreshing={isValidating} onRefresh={revalidate} />
+        <RefreshButton isRefreshing={isValidating} onRefresh={mutate} />
       </Stack>
       <Divider />
       <OperationsList />

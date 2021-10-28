@@ -19,7 +19,8 @@ export default function IndexInfo(props: { value: IndexDescription }) {
                   alignItems: 'center',
                   color: theme.palette.neutralPrimaryAlt,
                 },
-              }}>
+              }}
+            >
               {k}:&nbsp;
               {v}
             </Text>
@@ -33,7 +34,8 @@ export default function IndexInfo(props: { value: IndexDescription }) {
                   alignItems: 'center',
                   color: theme.palette.neutralPrimaryAlt,
                 },
-              }}>
+              }}
+            >
               {k}:&nbsp;
               {v === 1 ? (
                 <Icon iconName="Up" />

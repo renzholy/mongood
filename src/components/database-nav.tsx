@@ -151,7 +151,8 @@ export default function DatabaseNav() {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-      }}>
+      }}
+    >
       <SearchBox
         placeholder="Database & Collection"
         styles={{ root: { margin: 10, flexShrink: 0 } }}
@@ -165,7 +166,8 @@ export default function DatabaseNav() {
           flex: 1,
           height: 0,
           overflowY: 'scroll',
-        }}>
+        }}
+      >
         <Nav
           groups={[{ links }]}
           selectedKey={`${database}${splitter}${collection}`}
@@ -202,7 +204,8 @@ export default function DatabaseNav() {
                   textAlign: 'start',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                }}>
+                }}
+              >
                 {l.name}
               </div>
             ) : null
@@ -213,7 +216,8 @@ export default function DatabaseNav() {
         style={{
           flexShrink: 0,
           backgroundColor: theme.palette.neutralLight,
-        }}>
+        }}
+      >
         <ConnectionButton
           style={{
             width: '100%',

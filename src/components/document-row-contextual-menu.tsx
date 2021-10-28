@@ -33,8 +33,8 @@ export default function DocumentRowContextualMenu<
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
   const [hidden, setHidden] = useState(true)
-  const { revalidate: reFind } = useCommandFind()
-  const { revalidate: reCount } = useCommandCount()
+  const { mutate: reFind } = useCommandFind()
+  const { mutate: reCount } = useCommandCount()
   const handleDelete = useCallback(
     async () =>
       database && collection

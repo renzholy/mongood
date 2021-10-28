@@ -98,7 +98,8 @@ export default function ProfilingList() {
                   flexDirection: 'row-reverse',
                   justifyContent: 'flex-end',
                   alignItems: 'center',
-                }}>
+                }}
+              >
                 <ExecStage
                   value={
                     invokedProfiling.execStats as { [key: string]: MongoData }

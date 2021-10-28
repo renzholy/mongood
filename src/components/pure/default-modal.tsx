@@ -28,7 +28,8 @@ export default function DefaultModal(props: {
       layerProps={{ eventBubblingEnabled: true }}
       isOpen={props.isOpen}
       onDismiss={props.onDismiss}
-      onDismissed={props.onDismissed}>
+      onDismissed={props.onDismissed}
+    >
       <div
         style={{
           display: 'flex',
@@ -36,7 +37,8 @@ export default function DefaultModal(props: {
           justifyContent: 'space-between',
           padding: 10,
           paddingLeft: 20,
-        }}>
+        }}
+      >
         <Text
           variant="xLarge"
           block={true}
@@ -47,7 +49,8 @@ export default function DefaultModal(props: {
               textOverflow: 'ellipsis',
               overflow: 'hidden',
             },
-          }}>
+          }}
+        >
           {props.title}
         </Text>
         <IconButton
@@ -65,7 +68,8 @@ export default function DefaultModal(props: {
             alignItems: 'center',
             flexDirection: 'row-reverse',
             padding: 10,
-          }}>
+          }}
+        >
           {props.footer}
         </div>
       ) : null}

@@ -13,9 +13,9 @@ export default function ProfilingPagination() {
   const {
     data,
     isValidating: isValidatingCount,
-    revalidate: revalidateCount,
+    mutate: mutateCount,
   } = useCommandSystemProfileCount()
-  const { isValidating, revalidate } = useCommandSystemProfileFind()
+  const { isValidating, mutate } = useCommandSystemProfileFind()
   const dispatch = useDispatch()
   const count = data?.n || 0
   const handleLimit = useCallback(
@@ -30,10 +30,10 @@ export default function ProfilingPagination() {
   const handleNext = useCallback(() => {
     dispatch(actions.profiling.nextPage(count))
   }, [dispatch, count])
-  const handleRevalidate = useCallback(() => {
-    revalidateCount()
-    revalidate()
-  }, [revalidate, revalidateCount])
+  const handleMutate = useCallback(() => {
+    mutateCount()
+    mutate()
+  }, [mutate, mutateCount])
 
   return (
     <Pagination
@@ -44,7 +44,7 @@ export default function ProfilingPagination() {
       onPrev={handlePrev}
       onNext={handleNext}
       isValidating={isValidating || isValidatingCount}
-      revalidate={handleRevalidate}
+      mutate={handleMutate}
     />
   )
 }

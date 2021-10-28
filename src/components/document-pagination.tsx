@@ -10,9 +10,9 @@ export default function DocumentPagination() {
   const {
     data,
     isValidating: isValidatingCount,
-    revalidate: revalidateCount,
+    mutate: mutateCount,
   } = useCommandCount()
-  const { isValidating, revalidate } = useCommandFind()
+  const { isValidating, mutate } = useCommandFind()
   const dispatch = useDispatch()
   const count = data?.n || 0
   const handleLimit = useCallback(
@@ -27,10 +27,10 @@ export default function DocumentPagination() {
   const handleNext = useCallback(() => {
     dispatch(actions.docs.nextPage(count))
   }, [dispatch, count])
-  const handleRevalidate = useCallback(() => {
-    revalidateCount()
-    revalidate()
-  }, [revalidate, revalidateCount])
+  const handleMutate = useCallback(() => {
+    mutateCount()
+    mutate()
+  }, [mutate, mutateCount])
 
   return (
     <Pagination
@@ -41,7 +41,7 @@ export default function DocumentPagination() {
       onPrev={handlePrev}
       onNext={handleNext}
       isValidating={isValidating || isValidatingCount}
-      revalidate={handleRevalidate}
+      mutate={handleMutate}
     />
   )
 }

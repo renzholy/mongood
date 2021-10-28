@@ -16,7 +16,8 @@ function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {
         maxHeight: 500,
         overflowY: 'scroll',
         backgroundColor: theme.palette.neutralLighterAlt,
-      }}>
+      }}
+    >
       {props.header}
       <MongoDataColorized value={props.value} />
     </div>
@@ -50,7 +51,8 @@ export default memo(
             overflow: 'hidden',
           },
         }}
-        instantOpenOnClick={true}>
+        instantOpenOnClick={true}
+      >
         {props.children}
       </HoverCard>
     )

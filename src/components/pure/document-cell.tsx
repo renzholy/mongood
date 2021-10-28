@@ -39,7 +39,8 @@ export default memo(
               style={{ marginBottom: 10 }}
             />
           ) : null
-        }>
+        }
+      >
         <span
           style={{ verticalAlign: 'middle' }}
           dangerouslySetInnerHTML={{ __html: html }}

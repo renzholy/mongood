@@ -92,7 +92,7 @@ function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const { data: serverStatus } = useSWR<ServerStats, Error>(
     ['serverStatus', props.connection],
     () =>
-      runCommand(props.connection, 'admin', {
+      runCommand<ServerStats>(props.connection, 'admin', {
         serverStatus: 1,
       }),
   )
@@ -170,7 +170,8 @@ export default function ConnectionEditModal(props: {
         main: {
           minHeight: 'unset',
         },
-      }}>
+      }}
+    >
       <Text
         variant="xLarge"
         block={true}
@@ -179,12 +180,14 @@ export default function ConnectionEditModal(props: {
             color: theme.palette.neutralPrimary,
             marginBottom: 20,
           },
-        }}>
+        }}
+      >
         New Connection
       </Text>
       <Stack
         tokens={{ childrenGap: 10 }}
-        styles={{ root: { alignItems: 'flex-end' } }}>
+        styles={{ root: { alignItems: 'flex-end' } }}
+      >
         <TextField
           styles={{ root: { width: '100%' } }}
           multiline={true}
@@ -218,7 +221,8 @@ export default function ConnectionEditModal(props: {
                 color: theme.palette.neutralPrimary,
                 marginBottom: 20,
               },
-            }}>
+            }}
+          >
             Self-added Connections
           </Text>
           <Stack tokens={{ childrenGap: 10 }}>
@@ -242,13 +246,15 @@ export default function ConnectionEditModal(props: {
                 marginTop: 20,
                 marginBottom: 20,
               },
-            }}>
+            }}
+          >
             Built-in Connections
             <Text
               variant="large"
               styles={{
                 root: { color: theme.palette.neutralPrimaryAlt },
-              }}>
+              }}
+            >
               &nbsp;(read-only)
             </Text>
           </Text>

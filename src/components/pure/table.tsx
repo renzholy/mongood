@@ -72,10 +72,12 @@ export default function Table<T>(props: {
         styles={{
           root: { maxWidth: '100%' },
           stickyBelow: { display: 'none' },
-        }}>
+        }}
+      >
         <MarqueeSelection
           selection={props.selection!}
-          isEnabled={!!props.selection}>
+          isEnabled={!!props.selection}
+        >
           <DetailsList
             columns={props.columns}
             getKey={props.getKey}

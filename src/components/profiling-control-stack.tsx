@@ -24,7 +24,8 @@ export default function ProfilingControlStack() {
       tokens={{ childrenGap: 10, padding: 10 }}
       styles={{
         root: { height: 52, alignItems: 'center' },
-      }}>
+      }}
+    >
       <Label>Host:</Label>
       <HostButton host={host} setHost={handleSetHost} />
       <Stack.Item grow={true}>

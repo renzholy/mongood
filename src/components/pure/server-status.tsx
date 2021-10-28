@@ -21,7 +21,8 @@ export default function ServerStatus() {
     <div
       style={{
         overflowY: 'scroll',
-      }}>
+      }}
+    >
       <div style={{ padding: 10, margin: '0 auto', width: 'fit-content' }}>
         <StatsArea title="Host: " subtitle={serverStatus.host} />
         <StatsArea title="Version: " subtitle={serverStatus.version} />

@@ -33,7 +33,8 @@ export default function ExecStage(props: {
           maxHeight: 500,
           overflowY: 'scroll',
           backgroundColor: theme.palette.neutralLighter,
-        }}>
+        }}
+      >
         <MongoDataColorized
           value={omit(props.value, ['inputStage', 'inputStages'])}
         />
@@ -65,7 +66,8 @@ export default function ExecStage(props: {
             cursor: 'pointer',
           },
         }}
-        instantOpenOnClick={true}>
+        instantOpenOnClick={true}
+      >
         <CompoundButton
           styles={{
             description: {
@@ -108,7 +110,8 @@ export default function ExecStage(props: {
                   unitSeparator: ' ',
                 }).toLocaleLowerCase()} mem used`,
             `${formatNumber(value.nReturned)} returned`,
-          ]).join('\n')}>
+          ]).join('\n')}
+        >
           {value.stage}
         </CompoundButton>
       </HoverCard>
@@ -128,7 +131,8 @@ export default function ExecStage(props: {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-end',
-            }}>
+            }}
+          >
             {(props.value.inputStages as { [key: string]: MongoData }[]).map(
               (inputStage, index) => (
                 <div
@@ -138,7 +142,8 @@ export default function ExecStage(props: {
                     alignItems: 'center',
                     flexDirection: 'row-reverse',
                     marginTop: index === 0 ? 0 : 34,
-                  }}>
+                  }}
+                >
                   <ExecStage value={inputStage} />
                 </div>
               ),

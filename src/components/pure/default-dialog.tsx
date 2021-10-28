@@ -37,7 +37,8 @@ export default function DefaultDialog(props: {
         },
         onDismiss: props.onDismiss,
         onDismissed: props.onDismissed,
-      }}>
+      }}
+    >
       {props.footer ? <DialogFooter>{props.footer}</DialogFooter> : null}
     </Dialog>
   )

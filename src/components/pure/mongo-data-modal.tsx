@@ -21,11 +21,13 @@ export default function MongoDataModal(props: {
       title={props.title}
       isOpen={props.isOpen}
       onDismiss={props.onDismiss}
-      footer={props.footer}>
+      footer={props.footer}
+    >
       <Stack
         horizontal={true}
         tokens={{ childrenGap: 10 }}
-        styles={{ root: { marginLeft: 20, marginRight: 20 } }}>
+        styles={{ root: { marginLeft: 20, marginRight: 20 } }}
+      >
         <DefaultButton
           text="other"
           primary={tab === undefined}

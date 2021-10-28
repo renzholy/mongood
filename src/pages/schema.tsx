@@ -17,7 +17,7 @@ import { useConnection } from 'hooks/use-connections'
 
 export default function Schema() {
   const [{ conn, database, collection }] = useRouterQuery()
-  const { data, revalidate } = useCommandListCollections()
+  const { data, mutate } = useCommandListCollections()
   const isDarkMode = useDarkMode()
   const [validationAction, setValidationAction] =
     useState<ValidationAction | null>(null)
@@ -49,9 +49,9 @@ export default function Schema() {
   const promiseSave = usePromise(handleSave)
   useEffect(() => {
     if (promiseSave.resolved) {
-      revalidate()
+      mutate()
     }
-  }, [promiseSave.resolved, revalidate])
+  }, [promiseSave.resolved, mutate])
   useEffect(() => {
     if (!data?.cursor.firstBatch[0]) {
       return
@@ -124,7 +124,8 @@ export default function Schema() {
             alignItems: 'center',
             justifyContent: 'space-between',
           },
-        }}>
+        }}
+      >
         <Label styles={{ root: { marginRight: 10 } }}>Validation action:</Label>
         <Dropdown
           selectedKey={validationAction}

@@ -26,7 +26,7 @@ export default function DocumentsList() {
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
   const index = useSelector((state) => state.docs.index)
-  const { data, error, revalidate } = useCommandFind()
+  const { data, error, mutate } = useCommandFind()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isRowMenuHidden, setIsRowMenuHidden] = useState(true)
   const [isColumnMenuHidden, setIsColumnMenuHidden] = useState(true)
@@ -47,10 +47,10 @@ export default function DocumentsList() {
   const promiseUpdate = usePromise(handleUpdate)
   useEffect(() => {
     if (promiseUpdate.resolved) {
-      revalidate()
+      mutate()
       setIsUpdateOpen(false)
     }
-  }, [promiseUpdate.resolved, revalidate])
+  }, [promiseUpdate.resolved, mutate])
   const rowTarget = useRef<MouseEvent>()
   const columnTarget = useRef<MouseEvent>()
   const selection = useMemo(() => new Selection<Document>(), [])

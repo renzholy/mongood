@@ -16,7 +16,7 @@ export default function Pagination(props: {
   onPrev(): void
   onNext(): void
   isValidating: boolean
-  revalidate(): void
+  mutate(): void
 }) {
   const theme = getTheme()
 
@@ -69,7 +69,7 @@ export default function Pagination(props: {
       />
       <RefreshButton
         isRefreshing={props.isValidating}
-        onRefresh={props.revalidate}
+        onRefresh={props.mutate}
       />
     </Stack>
   )

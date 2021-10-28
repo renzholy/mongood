@@ -36,7 +36,7 @@ const columns = mapToColumn(
 )
 
 export default function OperationsList() {
-  const { data, error, revalidate } = useCommandCurrentOp()
+  const { data, error, mutate } = useCommandCurrentOp()
   const [{ conn, collection }, setRoute] = useRouterQuery()
   const connection = useConnection(conn)
   const [target, setTarget] = useState<MouseEvent>()
@@ -65,9 +65,9 @@ export default function OperationsList() {
     if (promiseKill.resolved) {
       dispatch(actions.operations.setIsEditorOpen(false))
       dispatch(actions.operations.setIsDialogHidden(true))
-      revalidate()
+      mutate()
     }
-  }, [promiseKill.resolved, dispatch, revalidate])
+  }, [promiseKill.resolved, dispatch, mutate])
   const handleRenderItemColumn = useCallback(
     (item?: Operation, _index?: number, column?: IColumn) => {
       const v = item?.[column?.key!]

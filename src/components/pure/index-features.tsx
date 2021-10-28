@@ -22,7 +22,8 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
           maxHeight: 500,
           overflowY: 'scroll',
           backgroundColor: theme.palette.neutralLighter,
-        }}>
+        }}
+      >
         <MongoDataColorized value={props.value.data} />
       </div>
     ),
@@ -42,13 +43,15 @@ function IndexFeature(props: { value: { text: string; data?: object } }) {
           cursor: 'pointer',
         },
       }}
-      instantOpenOnClick={true}>
+      instantOpenOnClick={true}
+    >
       <Text
         styles={{
           root: {
             color: theme.palette.themeSecondary,
           },
-        }}>
+        }}
+      >
         {props.value.text}
       </Text>
     </HoverCard>

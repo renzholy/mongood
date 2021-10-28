@@ -22,14 +22,16 @@ export default memo(function LargeMessage(props: {
         alignItems: 'center',
         justifyContent: 'center',
         ...props.style,
-      }}>
+      }}
+    >
       <div
         style={{
           maxWidth: 600,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Icon
             iconName={props.iconName}
@@ -50,7 +52,8 @@ export default memo(function LargeMessage(props: {
                 color: theme.palette.neutralSecondary,
                 fontSize: 48,
               },
-            }}>
+            }}
+          >
             {props.title}
           </Text>
         </div>
@@ -63,7 +66,8 @@ export default memo(function LargeMessage(props: {
                 marginLeft: 20,
                 wordBreak: 'break-all',
               },
-            }}>
+            }}
+          >
             {props.content}
           </Text>
         ) : null}

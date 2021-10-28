@@ -12,7 +12,8 @@ export default function StatsCard(props: { title: string; content: string }) {
           maxWidth: 210,
           paddingTop: 20,
         },
-      }}>
+      }}
+    >
       <DocumentCardTitle title={props.title} showAsSecondaryTitle={true} />
       <DocumentCardTitle title={props.content} />
     </DocumentCard>
