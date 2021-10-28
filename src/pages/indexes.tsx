@@ -75,12 +75,22 @@ export default function Indexes() {
               })
             }}
             footer={(disabled) => (
-              <PromiseButton
-                text="Create"
-                disabled={disabled}
-                primary={true}
-                promise={promiseCreate}
-              />
+              <>
+                <PromiseButton
+                  text="Create"
+                  disabled={disabled}
+                  primary={true}
+                  promise={promiseCreate}
+                />
+                <IconButton
+                  iconProps={{ iconName: 'help' }}
+                  onClick={() => {
+                    window.open(
+                      'https://docs.mongodb.com/manual/reference/command/createIndexes/#mongodb-dbcommand-dbcmd.createIndexes',
+                    )
+                  }}
+                />
+              </>
             )}
           />
         </Stack.Item>
