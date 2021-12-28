@@ -158,11 +158,15 @@ export default function DocumentRowContextualMenu<
                   text: 'as CSV',
                   secondaryText: 'without header',
                   onClick() {
-                    csv(props.selectedItems, { cast }, (_err, text) => {
-                      if (text) {
-                        window.navigator.clipboard.writeText(text)
-                      }
-                    })
+                    csv.stringify(
+                      props.selectedItems,
+                      { cast },
+                      (_err, text) => {
+                        if (text) {
+                          window.navigator.clipboard.writeText(text)
+                        }
+                      },
+                    )
                   },
                 },
                 {
@@ -170,7 +174,7 @@ export default function DocumentRowContextualMenu<
                   text: 'as CSV',
                   secondaryText: 'with header',
                   onClick() {
-                    csv(
+                    csv.stringify(
                       props.selectedItems,
                       { header: true, cast },
                       (_err, text) => {
