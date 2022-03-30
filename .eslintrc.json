@@ -2,7 +2,8 @@
   "extends": [
     "airbnb-typescript",
     "plugin:react-hooks/recommended",
-    "prettier"
+    "prettier",
+    "plugin:@next/next/recommended"
   ],
   "plugins": ["prettier", "react", "import"],
   "env": {

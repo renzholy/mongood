@@ -3,7 +3,6 @@
   "singleQuote": true,
   "trailingComma": "all",
   "tabWidth": 2,
-  "jsxBracketSameLine": true,
   "overrides": [
     {
       "files": "*.ejs",

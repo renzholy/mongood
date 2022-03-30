@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { ContextualMenu, getTheme } from '@fluentui/react'
-import csv, { Options } from 'csv-stringify'
+import { Options, stringify as csvStringify } from 'csv-stringify'
 import { markdownTable } from 'markdown-table'
 import { stringify } from 'utils/ejson'
 import { calcHeaders } from 'utils/table'
@@ -158,7 +158,7 @@ export default function DocumentRowContextualMenu<
                   text: 'as CSV',
                   secondaryText: 'without header',
                   onClick() {
-                    csv.stringify(
+                    csvStringify(
                       props.selectedItems,
                       { cast },
                       (_err, text) => {
@@ -174,7 +174,7 @@ export default function DocumentRowContextualMenu<
                   text: 'as CSV',
                   secondaryText: 'with header',
                   onClick() {
-                    csv.stringify(
+                    csvStringify(
                       props.selectedItems,
                       { header: true, cast },
                       (_err, text) => {
