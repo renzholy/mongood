@@ -114,6 +114,7 @@ export default function Operations() {
                 ),
               )
             }}
+            style={{ margin: 5 }}
           />
         ))}
       </Stack>

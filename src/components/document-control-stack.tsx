@@ -58,6 +58,7 @@ export default function DocumentControlStack() {
       tokens={{ childrenGap: 10, padding: 10 }}
       styles={{
         root: { minHeight: 52, marginBottom: -10 },
+        inner: { alignItems: 'center' },
       }}
     >
       {indexes?.cursor.firstBatch.length ? (
@@ -73,6 +74,7 @@ export default function DocumentControlStack() {
                 ),
               )
             }}
+            style={{ margin: 5 }}
           />
         ))
       ) : (
