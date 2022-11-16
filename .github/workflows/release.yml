@@ -40,12 +40,12 @@ jobs:
             asset_content_type: application/vnd.microsoft.portable-executable
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: lts/*
 
       - run: yarn
 
@@ -54,7 +54,7 @@ jobs:
       - run: yarn export
 
       - name: Setup Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ^1.19
       - run: |
@@ -67,7 +67,6 @@ jobs:
           cd go
           cp -r ../out ./
           go build -o mongood
-          export PATH=$PATH:$(go env GOPATH)/bin
           fyne package -os linux -icon ./assets/logo.png -release --executable mongood
           zip -r ${{ matrix.asset_name }} mongood
 
@@ -77,7 +76,6 @@ jobs:
           cd go
           cp -r ../out ./
           MACOSX_DEPLOYMENT_TARGET=11.0 go build -o mongood
-          export PATH=$PATH:$(go env GOPATH)/bin
           fyne package -os darwin -name Mongood -icon ./assets/logo.png -release --executable ./mongood
           cp ./assets/Info.plist ./Mongood.app/Contents/Info.plist
           cp ./assets/icon.icns ./Mongood.app/Contents/Resources/icon.icns
@@ -89,7 +87,6 @@ jobs:
           cd go
           cp -r ../out ./
           go build -o mongood
-          set PATH=%GOROOT%;%PATH%
           fyne package -os windows -icon ./assets/logo.png -release --executable mongood -appID mongood
           mv mongood.exe ${{ matrix.asset_name }}
 
