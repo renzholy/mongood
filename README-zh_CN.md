@@ -71,6 +71,7 @@ yarn dev
 
 ```bash
 cd go
+export MONGO_URIS='[{"name":"name","uri":"mongodb://localhost:27017/"}]'
 go run main.go headless.go
 ```
 
