@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import { useCallback } from 'react'
 import {
   DetailsList,
@@ -47,12 +45,12 @@ export default function Table<T>(props: {
     ),
     [],
   )
+  const { onItemInvoked } = props
   const handleItemInvoked = useCallback(
     (item: T) => {
-      props.onItemInvoked?.(item)
+      onItemInvoked?.(item)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [props.onItemInvoked],
+    [onItemInvoked],
   )
 
   if (props.items.length === 0) {

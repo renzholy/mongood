@@ -1,38 +1,3 @@
 {
-  "extends": [
-    "airbnb-typescript",
-    "plugin:react-hooks/recommended",
-    "prettier",
-    "plugin:@next/next/recommended"
-  ],
-  "plugins": ["prettier", "react", "import"],
-  "env": {
-    "browser": true
-  },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module",
-    "project": "./tsconfig.json",
-    "ecmaFeatures": {
-      "jsx": true
-    }
-  },
-  "rules": {
-    "import/prefer-default-export": "off",
-    "import/no-extraneous-dependencies": "off",
-    "react/destructuring-assignment": "off",
-    "react/jsx-closing-bracket-location": "off",
-    "react/prop-types": "off",
-    "react/jsx-boolean-value": "off",
-    "react/jsx-curly-newline": "off",
-    "react/jsx-one-expression-per-line": "off",
-    "react/jsx-wrap-multilines": "off",
-    "react/require-default-props": "off",
-    "react/react-in-jsx-scope": "off",
-    "no-underscore-dangle": "off",
-    "no-nested-ternary": "off",
-    "@typescript-eslint/naming-convention": "off",
-    "@next/next/no-img-element": "off"
-  }
+  "extends": "next/core-web-vitals"
 }

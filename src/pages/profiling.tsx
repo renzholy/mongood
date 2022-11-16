@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'hooks/use-app'
 import { actions } from 'stores'
 import ProfilingControlStack from 'components/profiling-control-stack'
 import ProfilingList from 'components/profiling-list'
@@ -10,7 +10,7 @@ import useRouterQuery from 'hooks/use-router-query'
 
 export default function Profiling() {
   const [{ database, collection }] = useRouterQuery()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   useEffect(() => {
     dispatch(
       actions.profiling.setFilter(

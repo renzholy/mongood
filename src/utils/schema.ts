@@ -3,7 +3,7 @@
  * @see https://docs.mongodb.com/manual/reference/operator/query/type/#document-type-available-types
  */
 
-import { mapValues, omit, uniq, omitBy, isNil } from 'lodash'
+import { mapValues, omit, uniq, omitBy, isNil } from 'lodash-es'
 import deepmerge from 'deepmerge'
 import { MongoData } from 'types'
 

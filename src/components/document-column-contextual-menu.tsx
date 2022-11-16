@@ -1,5 +1,5 @@
 import { ContextualMenu, IColumn } from '@fluentui/react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { actions } from 'stores'
 
 export default function DocumentColumnContextualMenu(props: {
@@ -8,8 +8,8 @@ export default function DocumentColumnContextualMenu(props: {
   onDismiss(): void
   target?: MouseEvent
 }) {
-  const dispatch = useDispatch()
-  const projection = useSelector((state) => state.docs.projection)
+  const dispatch = useAppDispatch()
+  const projection = useAppSelector((state) => state.docs.projection)
 
   return (
     <ContextualMenu

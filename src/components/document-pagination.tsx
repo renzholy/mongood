@@ -1,19 +1,19 @@
 import { useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { actions } from 'stores'
 import { useCommandCount, useCommandFind } from 'hooks/use-command'
 import Pagination from './pure/pagination'
 
 export default function DocumentPagination() {
-  const skip = useSelector((state) => state.docs.skip)
-  const limit = useSelector((state) => state.docs.limit)
+  const skip = useAppSelector((state) => state.docs.skip)
+  const limit = useAppSelector((state) => state.docs.limit)
   const {
     data,
     isValidating: isValidatingCount,
     mutate: mutateCount,
   } = useCommandCount()
   const { isValidating, mutate } = useCommandFind()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const count = data?.n || 0
   const handleLimit = useCallback(
     (l: number) => {

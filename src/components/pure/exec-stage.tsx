@@ -6,7 +6,7 @@ import {
   HoverCard,
   HoverCardType,
 } from '@fluentui/react'
-import { omit, compact } from 'lodash'
+import { omit, compact } from 'lodash-es'
 import bytes from 'bytes'
 import { EJSON } from 'bson'
 import { ExecStats, MongoData } from 'types'

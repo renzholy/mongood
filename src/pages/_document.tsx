@@ -1,56 +1,32 @@
-import Document, {
-  DocumentContext,
-  Head,
-  Html,
-  Main,
-  NextScript,
-} from 'next/document'
-import { Stylesheet, resetIds } from '@fluentui/react'
+import * as React from 'react'
+import { Stylesheet, InjectionMode } from '@fluentui/merge-styles'
+import { resetIds } from '@fluentui/utilities'
+import Document, { DocumentContext } from 'next/document'
 
 const stylesheet = Stylesheet.getInstance()
 
-/**
- * @see https://github.com/microsoft/fluentui/wiki/Server-side-rendering-and-browserless-testing
- */
-export default class MyDocument extends Document<{
-  styleTags: string
-  serializedStylesheet: string
-}> {
-  static async getInitialProps({ renderPage }: DocumentContext) {
+stylesheet.setConfig({
+  injectionMode: InjectionMode.none,
+  namespace: 'server',
+})
+
+class MyDocument extends Document {
+  static async getInitialProps(ctx: DocumentContext) {
+    stylesheet.reset()
     resetIds()
 
-    const page = renderPage((App) => (props) => <App {...props} />)
-
+    const initialProps = await Document.getInitialProps(ctx)
     return {
-      ...page,
-      styleTags: stylesheet.getRules(true),
-      serializedStylesheet: stylesheet.serialize(),
+      ...initialProps,
+      styles: [
+        initialProps.styles,
+        <style
+          key="fluentui-css"
+          dangerouslySetInnerHTML={{ __html: stylesheet.getRules(true) }}
+        />,
+      ],
     }
   }
-
-  render() {
-    return (
-      <Html>
-        <Head>
-          <style
-            type="text/css"
-            dangerouslySetInnerHTML={{ __html: this.props.styleTags }}
-          />
-          <script
-            type="text/javascript"
-            dangerouslySetInnerHTML={{
-              __html: `
-            window.FabricConfig = window.FabricConfig || {};
-            window.FabricConfig.serializedStylesheet = ${this.props.serializedStylesheet};
-          `,
-            }}
-          />
-        </Head>
-        <body>
-          <Main />
-          <NextScript />
-        </body>
-      </Html>
-    )
-  }
 }
+
+export default MyDocument

@@ -1,6 +1,6 @@
 import { Stack, SpinButton, Label, Slider } from '@fluentui/react'
 import { useState, useEffect, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { useCommandProfile } from 'hooks/use-command'
 import usePromise from 'hooks/use-promise'
 import { runCommand } from 'utils/fetcher'
@@ -14,7 +14,7 @@ import HostButton from './pure/host-button'
 export default function ProfilingSummaryBottomStack() {
   const [{ conn }] = useRouterQuery()
   const connection = useConnection(conn)
-  const host = useSelector((state) => state.profiling.host)
+  const host = useAppSelector((state) => state.profiling.host)
   const profilingConnection = host
     ? generateConnectionWithDirectHost(host, connection)
     : connection
@@ -45,7 +45,7 @@ export default function ProfilingSummaryBottomStack() {
     setSlowms(profile.slowms)
     setSampleRate(profile.sampleRate)
   }, [profile])
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const handleSetHost = useCallback(
     (h: string) => {
       dispatch(actions.profiling.setHost(h))

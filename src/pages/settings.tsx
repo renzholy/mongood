@@ -1,6 +1,6 @@
 import { TextField, SpinButton, Stack, PrimaryButton } from '@fluentui/react'
 import { useState, useEffect } from 'react'
-import { padStart } from 'lodash'
+import { padStart } from 'lodash-es'
 import { storage } from 'utils/storage'
 
 export default function Settings() {

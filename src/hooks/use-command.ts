@@ -1,6 +1,6 @@
 import useSWR from 'swr'
-import { useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { useAppSelector } from 'hooks/use-app'
+import { isEmpty } from 'lodash-es'
 import type { CollStats, IndexDescription } from 'mongodb'
 import { runCommand } from 'utils/fetcher'
 import {
@@ -159,12 +159,12 @@ export function useCommandIndexStats() {
 export function useCommandFind() {
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
-  const index = useSelector((state) => state.docs.index)
-  const filter = useSelector((state) => state.docs.filter)
-  const projection = useSelector((state) => state.docs.projection)
-  const sort = useSelector((state) => state.docs.sort)
-  const skip = useSelector((state) => state.docs.skip)
-  const limit = useSelector((state) => state.docs.limit)
+  const index = useAppSelector((state) => state.docs.index)
+  const filter = useAppSelector((state) => state.docs.filter)
+  const projection = useAppSelector((state) => state.docs.projection)
+  const sort = useAppSelector((state) => state.docs.sort)
+  const skip = useAppSelector((state) => state.docs.skip)
+  const limit = useAppSelector((state) => state.docs.limit)
 
   return useSWR(
     connection && database && collection
@@ -182,7 +182,10 @@ export function useCommandFind() {
         ]
       : null,
     () => {
-      const hint = filter.$text || isEmpty(filter) ? undefined : index?.name
+      const hint =
+        ('$text' in filter && filter.$text) || isEmpty(filter)
+          ? undefined
+          : index?.name
       return runCommand<{
         cursor: { firstBatch: { [key: string]: MongoData }[] }
       }>(
@@ -250,7 +253,7 @@ export function useCommandCount() {
 export function useCommandProfile() {
   const [{ conn, database = 'admin' }] = useRouterQuery()
   const connection = useConnection(conn)
-  const host = useSelector((state) => state.profiling.host)
+  const host = useAppSelector((state) => state.profiling.host)
 
   return useSWR(
     connection && host ? ['profile', host, connection, database] : null,
@@ -273,10 +276,10 @@ export function useCommandProfile() {
 export function useCommandSystemProfileFind() {
   const [{ conn, database }] = useRouterQuery()
   const connection = useConnection(conn)
-  const host = useSelector((state) => state.profiling.host)
-  const filter = useSelector((state) => state.profiling.filter)
-  const skip = useSelector((state) => state.profiling.skip)
-  const limit = useSelector((state) => state.profiling.limit)
+  const host = useAppSelector((state) => state.profiling.host)
+  const filter = useAppSelector((state) => state.profiling.filter)
+  const skip = useAppSelector((state) => state.profiling.skip)
+  const limit = useAppSelector((state) => state.profiling.limit)
 
   return useSWR(
     connection && database && host
@@ -320,8 +323,8 @@ export function useCommandSystemProfileFind() {
 export function useCommandSystemProfileCount() {
   const [{ conn, database }] = useRouterQuery()
   const connection = useConnection(conn)
-  const host = useSelector((state) => state.profiling.host)
-  const filter = useSelector((state) => state.profiling.filter)
+  const host = useAppSelector((state) => state.profiling.host)
+  const filter = useAppSelector((state) => state.profiling.filter)
 
   return useSWR(
     connection && database && host
@@ -349,14 +352,16 @@ export function useCommandSystemProfileCount() {
 export function useCommandCurrentOp() {
   const [{ conn }] = useRouterQuery()
   const connection = useConnection(conn)
-  const host = useSelector((state) => state.operations.host)
-  const filter = useSelector((state) => state.operations.filter)
-  const refreshInterval = useSelector(
+  const host = useAppSelector((state) => state.operations.host)
+  const filter = useAppSelector((state) => state.operations.filter)
+  const refreshInterval = useAppSelector(
     (state) => state.operations.refreshInterval,
   )
-  const isEditorOpen = useSelector((state) => state.operations.isEditorOpen)
-  const isDialogHidden = useSelector((state) => state.operations.isDialogHidden)
-  const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
+  const isEditorOpen = useAppSelector((state) => state.operations.isEditorOpen)
+  const isDialogHidden = useAppSelector(
+    (state) => state.operations.isDialogHidden,
+  )
+  const isMenuHidden = useAppSelector((state) => state.operations.isMenuHidden)
 
   return useSWR(
     host && connection

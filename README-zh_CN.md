@@ -27,7 +27,6 @@
 - [x] 强大的 Profiling 展示功能，轻松分析慢查询
 - [x] 支持为地理位置索引展示地图预览
 - [x] 支持 MongoDB 的 [JSON Schema Validator](https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/)，可以自动生成 schema
-- [x] 独特的 Notebook 功能，向 [Jupyter](https://jupyter.org/) 致敬
 - [x] 支持 HTTP/2
 - [x] 支持**黑暗**模式
 
@@ -55,7 +54,6 @@
     <td align="center"><img src="./screenshot/schema.png" />编辑 JSON Schema</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/notebook.png" />Notebook (Beta)</td>
     <td align="center"><img src="./screenshot/dark.png" />黑暗模式</td>
   </tr>
 </table>
@@ -73,6 +71,7 @@ yarn dev
 
 ```bash
 cd go
+export MONGO_URIS='[{"name":"name","uri":"mongodb://localhost:27017/"}]'
 go run main.go headless.go
 ```
 

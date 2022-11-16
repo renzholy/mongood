@@ -5,7 +5,7 @@ import {
   IContextualMenuItem,
   IStyle,
 } from '@fluentui/react'
-import { compact } from 'lodash'
+import { compact } from 'lodash-es'
 import { useConnection, useConnections } from 'hooks/use-connections'
 import { Connection } from 'types'
 import useRouterQuery from 'hooks/use-router-query'

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { Stack, DefaultButton, Toggle, Label } from '@fluentui/react'
-import { map, omit } from 'lodash'
-import { useSelector, useDispatch } from 'react-redux'
+import { map, omit } from 'lodash-es'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import FilterInput from 'components/pure/filter-input'
 import { useCommandCurrentOp } from 'hooks/use-command'
 import OperationsList from 'components/operations-list'
@@ -54,12 +54,12 @@ const examples: { [key: string]: object } = {
 
 export default function Operations() {
   const [{ database }] = useRouterQuery()
-  const filter = useSelector((state) => state.operations.filter)
-  const refreshInterval = useSelector(
+  const filter = useAppSelector((state) => state.operations.filter)
+  const refreshInterval = useAppSelector(
     (state) => state.operations.refreshInterval,
   )
   const [example, setExample] = useState<string>()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const ns = useMemo(() => {
     if (database) {
       return {
@@ -81,7 +81,7 @@ export default function Operations() {
     () => (ns ? { ...filter, ns } : omit(filter, 'ns')),
     [ns, filter],
   )
-  const host = useSelector((state) => state.operations.host)
+  const host = useAppSelector((state) => state.operations.host)
   const handleSetHost = useCallback(
     (h: string) => {
       dispatch(actions.operations.setHost(h))
@@ -114,6 +114,7 @@ export default function Operations() {
                 ),
               )
             }}
+            style={{ margin: 5 }}
           />
         ))}
       </Stack>

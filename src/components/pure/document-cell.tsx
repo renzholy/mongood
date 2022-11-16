@@ -1,5 +1,3 @@
-/* eslint-disable react/no-danger */
-
 import { useMemo, memo } from 'react'
 import { stringify } from 'utils/ejson'
 import useColorize from 'hooks/use-colorize'
@@ -8,7 +6,6 @@ import { getMap, getLocation } from 'utils/map'
 import MongoDataHoverCard from './mongo-data-hover-card'
 
 export default memo(
-  // eslint-disable-next-line prefer-arrow-callback
   function DocumentCell(props: {
     value: MongoData
     subStringLength?: number
@@ -31,6 +28,7 @@ export default memo(
         value={props.value}
         header={
           mapSrc ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={mapSrc}
               alt="map"

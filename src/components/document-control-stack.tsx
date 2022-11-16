@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Stack, DefaultButton, IconButton } from '@fluentui/react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { runCommand } from 'utils/fetcher'
 import { actions } from 'stores'
 import { DisplayMode } from 'types'
@@ -20,12 +20,12 @@ import PromiseButton from './pure/promise-button'
 export default function DocumentControlStack() {
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
-  const displayMode = useSelector((state) => state.docs.displayMode)
-  const index = useSelector((state) => state.docs.index)
+  const displayMode = useAppSelector((state) => state.docs.displayMode)
+  const index = useAppSelector((state) => state.docs.index)
   const { mutate: reFind } = useCommandFind()
   const { mutate: reCount } = useCommandCount()
   const { data: indexes } = useCommandListIndexes()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [isInsertOpen, setIsInsertOpen] = useState(false)
   const [doc, setDoc] = useState({})
   const handleInsert = useCallback(
@@ -58,6 +58,7 @@ export default function DocumentControlStack() {
       tokens={{ childrenGap: 10, padding: 10 }}
       styles={{
         root: { minHeight: 52, marginBottom: -10 },
+        inner: { alignItems: 'center' },
       }}
     >
       {indexes?.cursor.firstBatch.length ? (
@@ -73,6 +74,7 @@ export default function DocumentControlStack() {
                 ),
               )
             }}
+            style={{ margin: 5 }}
           />
         ))
       ) : (

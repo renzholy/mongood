@@ -1,7 +1,7 @@
 import useSWRInfinite from 'swr/infinite'
 import { useCallback, useMemo } from 'react'
 import { IColumn, getTheme, Stack } from '@fluentui/react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'hooks/use-app'
 import { runCommand } from 'utils/fetcher'
 import { useCommandDatabases, useCommandIsMaster } from 'hooks/use-command'
 import { mapToColumn } from 'utils/table'
@@ -42,9 +42,7 @@ export default function ProfilingSummary() {
   const profileCountFetcher = useCallback(
     async (_connection: string, _database: string, ..._hosts: string[]) => {
       const obj = { [KEY_NAME]: _database } as Data
-      // eslint-disable-next-line no-restricted-syntax
       for (const h of _hosts) {
-        // eslint-disable-next-line no-await-in-loop
         const { n } = await runCommand<{ n: number }>(
           generateConnectionWithDirectHost(h, _connection),
           _database,
@@ -74,7 +72,7 @@ export default function ProfilingSummary() {
     ]) as [string, number][]
     return mapToColumn([[KEY_NAME, 0], ...cs])
   }, [hosts, connection])
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const theme = getTheme()
   const handleViewProfiling = useCallback(
     (item: Data, host?: string) => {
