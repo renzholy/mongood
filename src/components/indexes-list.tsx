@@ -1,7 +1,7 @@
 import { IColumn } from '@fluentui/react'
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useAppSelector, useAppDispatch } from 'hooks/use-app'
-import { keyBy } from 'lodash'
+import { keyBy } from 'lodash-es'
 import type { IndexDescription } from 'mongodb'
 import {
   useCommandCollStats,

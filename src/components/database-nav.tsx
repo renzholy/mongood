@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState, useMemo } from 'react'
 import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
-import { pullAll, compact, some, difference, union } from 'lodash'
+import { pullAll, compact, some, difference, union } from 'lodash-es'
 import { actions } from 'stores'
 import { runCommand } from 'utils/fetcher'
 import { useCommandDatabases } from 'hooks/use-command'

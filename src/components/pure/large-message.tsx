@@ -1,6 +1,6 @@
 import { CSSProperties, memo } from 'react'
 import { Icon, Text, getTheme } from '@fluentui/react'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 
 export default memo(function LargeMessage(props: {
   iconName: string

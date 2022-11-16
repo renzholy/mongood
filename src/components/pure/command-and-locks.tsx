@@ -1,4 +1,4 @@
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 import { MongoData } from 'types'
 import MongoDataColorized from './mongo-data-colorized'
 

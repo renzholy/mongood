@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { Stack, DefaultButton, Toggle, Label } from '@fluentui/react'
-import { map, omit } from 'lodash'
+import { map, omit } from 'lodash-es'
 import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import FilterInput from 'components/pure/filter-input'
 import { useCommandCurrentOp } from 'hooks/use-command'

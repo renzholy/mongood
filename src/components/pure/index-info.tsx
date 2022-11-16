@@ -1,5 +1,5 @@
 import { Text, getTheme, Icon, Stack } from '@fluentui/react'
-import { map } from 'lodash'
+import { map } from 'lodash-es'
 import type { IndexDescription } from 'mongodb'
 
 export default function IndexInfo(props: { value: IndexDescription }) {

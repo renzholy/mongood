@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import { omitBy, isNil } from 'lodash'
+import { omitBy, isNil } from 'lodash-es'
 
 type Query = {
   conn?: number

@@ -1,6 +1,6 @@
 import type { IndexDescription } from 'mongodb'
 import { useMemo, useCallback } from 'react'
-import { compact, size } from 'lodash'
+import { compact, size } from 'lodash-es'
 import {
   getTheme,
   HoverCard,

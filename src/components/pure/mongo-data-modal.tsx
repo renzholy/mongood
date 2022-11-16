@@ -1,6 +1,6 @@
 import { Stack, DefaultButton } from '@fluentui/react'
 import { useState } from 'react'
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 import { MongoData } from 'types'
 import MongoDataColorized from './mongo-data-colorized'
 import DefaultModal from './default-modal'

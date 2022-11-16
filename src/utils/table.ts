@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash'
+import { sortBy } from 'lodash-es'
 import { IColumn, ColumnActionsMode } from '@fluentui/react'
 import { MongoData } from 'types'
 import { stringify } from './ejson'

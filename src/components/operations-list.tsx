@@ -1,7 +1,7 @@
 import { DefaultButton, IColumn } from '@fluentui/react'
 import { useState, useEffect, useCallback } from 'react'
 import { useAppSelector, useAppDispatch } from 'hooks/use-app'
-import { compact } from 'lodash'
+import { compact } from 'lodash-es'
 import { useCommandCurrentOp } from 'hooks/use-command'
 import { actions } from 'stores'
 import { stringify } from 'utils/ejson'

@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useAppSelector } from 'hooks/use-app'
 import { Selection, IColumn, ColumnActionsMode } from '@fluentui/react'
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import { runCommand } from 'utils/fetcher'
 import { stringify } from 'utils/ejson'
 import { MongoData, DisplayMode } from 'types'

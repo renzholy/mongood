@@ -1,5 +1,5 @@
 import prettyMilliseconds from 'pretty-ms'
-import { sortBy } from 'lodash'
+import { sortBy } from 'lodash-es'
 import bytes from 'bytes'
 import { useCommandServerStatus } from 'hooks/use-command'
 import { formatNumber } from 'utils/formatter'

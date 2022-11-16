@@ -11,7 +11,7 @@ import {
 } from '@fluentui/react'
 import { useMemo, useCallback, useState, useEffect } from 'react'
 import mongodbUri from 'mongodb-uri'
-import { compact, uniqBy } from 'lodash'
+import { compact, uniqBy } from 'lodash-es'
 import useSWR from 'swr'
 import { runCommand } from 'utils/fetcher'
 import { ServerStats } from 'types'

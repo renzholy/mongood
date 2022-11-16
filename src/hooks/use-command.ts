@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import { useAppSelector } from 'hooks/use-app'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import type { CollStats, IndexDescription } from 'mongodb'
 import { runCommand } from 'utils/fetcher'
 import {

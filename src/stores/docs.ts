@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { Filter, SchemaMember, Document, IndexDescription } from 'mongodb'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { DisplayMode } from 'types'
 import { storage } from 'utils/storage'
 

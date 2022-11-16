@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { Filter } from 'mongodb'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { MongoData } from 'types'
 
 export default createSlice({
