@@ -89,7 +89,7 @@ jobs:
           cd go
           cp -r ../out ./
           go build -o mongood
-          %GOPATH%\bin\fyne package -os windows -icon ./assets/logo.png -release --executable mongood -appID mongood
+          $GOPATH\bin\fyne package -os windows -icon ./assets/logo.png -release --executable mongood -appID mongood
           mv mongood.exe ${{ matrix.asset_name }}
 
       - name: Upload Release Asset
