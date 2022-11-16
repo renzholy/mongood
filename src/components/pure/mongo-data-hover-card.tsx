@@ -1,5 +1,3 @@
-/* eslint-disable react/no-danger */
-
 import { useCallback, memo } from 'react'
 import { HoverCard, HoverCardType, getTheme } from '@fluentui/react'
 import { MongoData } from 'types'
@@ -25,7 +23,6 @@ function PlainCard(props: { value: MongoData; header?: React.ReactNode }) {
 }
 
 export default memo(
-  // eslint-disable-next-line prefer-arrow-callback
   function MongoDataHoverCard(props: {
     value: MongoData
     children: React.ReactNode

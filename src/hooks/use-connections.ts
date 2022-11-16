@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { listConnections } from 'utils/fetcher'
 import { Connection } from 'types'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { actions } from 'stores'
 import { useMemo } from 'react'
 
@@ -11,8 +11,8 @@ export function useConnections(): {
   updateSelfAdded(connections: Connection[]): void
 } {
   const { data } = useSWR<Connection[], Error>('connections', listConnections)
-  const selfAdded = useSelector((state) => state.root.selfAddedConnections)
-  const dispatch = useDispatch()
+  const selfAdded = useAppSelector((state) => state.root.selfAddedConnections)
+  const dispatch = useAppDispatch()
 
   return {
     builtIn: data,
@@ -25,7 +25,7 @@ export function useConnections(): {
 
 export function useConnection(conn?: number): string | undefined {
   const { data } = useSWR<Connection[], Error>('connections', listConnections)
-  const selfAdded = useSelector((state) => state.root.selfAddedConnections)
+  const selfAdded = useAppSelector((state) => state.root.selfAddedConnections)
   return useMemo(
     () =>
       data && conn !== undefined

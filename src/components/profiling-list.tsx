@@ -1,6 +1,6 @@
 import { ContextualMenu, DirectionalHint, IColumn } from '@fluentui/react'
 import { useState, useCallback, useMemo } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { useCommandSystemProfileFind } from 'hooks/use-command'
 import { actions } from 'stores'
 import { MongoData } from 'types'
@@ -27,12 +27,12 @@ const keys = [
 export default function ProfilingList() {
   const { data, error } = useCommandSystemProfileFind()
   const [{ collection }] = useRouterQuery()
-  const invokedProfiling = useSelector(
+  const invokedProfiling = useAppSelector(
     (state) => state.profiling.invokedProfiling,
   )
-  const isEditorOpen = useSelector((state) => state.profiling.isEditorOpen)
-  const isMenuHidden = useSelector((state) => state.profiling.isMenuHidden)
-  const dispatch = useDispatch()
+  const isEditorOpen = useAppSelector((state) => state.profiling.isEditorOpen)
+  const isMenuHidden = useAppSelector((state) => state.profiling.isMenuHidden)
+  const dispatch = useAppDispatch()
   const [target, setTarget] = useState<MouseEvent>()
   const handleItemContextMenu = useCallback(
     (ev?: MouseEvent, item?: Profiling) => {
@@ -46,7 +46,7 @@ export default function ProfilingList() {
     [dispatch],
   )
   const handleItemInvoked = useCallback(
-    (item) => {
+    (item: Profiling) => {
       if (item) {
         dispatch(actions.profiling.setInvokedProfiling(item))
       }

@@ -1,14 +1,14 @@
 import { ContextualMenu, DirectionalHint, getTheme } from '@fluentui/react'
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { actions } from 'stores'
 
 export default function OperationContextualMenu(props: {
   target: MouseEvent | undefined
 }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const theme = getTheme()
-  const isMenuHidden = useSelector((state) => state.operations.isMenuHidden)
+  const isMenuHidden = useAppSelector((state) => state.operations.isMenuHidden)
   useEffect(() => {
     dispatch(actions.operations.setIsMenuHidden(!props.target))
   }, [dispatch, props.target])

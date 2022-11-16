@@ -39,7 +39,6 @@ export default function ServerStatus() {
             data={sortBy(serverStatus.repl.hosts, (host) =>
               host === serverStatus.repl!.primary ? 0 : 1,
             ).reduce((prev, curr, index) => {
-              // eslint-disable-next-line no-param-reassign
               prev[
                 `${Array.from({ length: index })
                   .map(() => ' ')

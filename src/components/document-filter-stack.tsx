@@ -5,7 +5,7 @@ import {
   getTheme,
   IContextualMenuProps,
 } from '@fluentui/react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { actions } from 'stores'
 import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
@@ -14,14 +14,14 @@ import FilterInput from './pure/filter-input'
 const height = 52
 
 export default function DocumentFilterStack() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const theme = getTheme()
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
-  const index = useSelector((state) => state.docs.index)
-  const filter = useSelector((state) => state.docs.filter)
-  const projection = useSelector((state) => state.docs.projection)
-  const sort = useSelector((state) => state.docs.sort)
+  const index = useAppSelector((state) => state.docs.index)
+  const filter = useAppSelector((state) => state.docs.filter)
+  const projection = useAppSelector((state) => state.docs.projection)
+  const sort = useAppSelector((state) => state.docs.sort)
   useEffect(() => {
     dispatch(actions.docs.setFilter(index?.partialFilterExpression || {}))
     dispatch(

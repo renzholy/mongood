@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from 'hooks/use-app'
 import { Selection, IColumn, ColumnActionsMode } from '@fluentui/react'
 import { get } from 'lodash'
 import { runCommand } from 'utils/fetcher'
@@ -22,10 +22,10 @@ import DocumentCell from './pure/document-cell'
 type Document = { [key: string]: MongoData }
 
 export default function DocumentsList() {
-  const displayMode = useSelector((state) => state.docs.displayMode)
+  const displayMode = useAppSelector((state) => state.docs.displayMode)
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
-  const index = useSelector((state) => state.docs.index)
+  const index = useAppSelector((state) => state.docs.index)
   const { data, error, mutate } = useCommandFind()
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isRowMenuHidden, setIsRowMenuHidden] = useState(true)
@@ -88,7 +88,6 @@ export default function DocumentsList() {
     () =>
       index?.['2dsphereIndexVersion']
         ? Object.entries(index.key).find(
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             ([_key, value]) => value === '2dsphere',
           )?.[0]
         : undefined,
@@ -102,7 +101,6 @@ export default function DocumentsList() {
         <DocumentCell
           value={item?.[_column?.key as keyof typeof item]}
           subStringLength={
-            // eslint-disable-next-line no-bitwise
             _column?.currentWidth ? undefined : _column?.minWidth! >> 2
           }
           index2dsphere={

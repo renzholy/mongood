@@ -1,10 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type {
-  Filter,
-  SchemaMember,
-  ProjectionOperators,
-  IndexDescription,
-} from 'mongodb'
+import type { Filter, SchemaMember, Document, IndexDescription } from 'mongodb'
 import { isEqual } from 'lodash'
 import { DisplayMode } from 'types'
 import { storage } from 'utils/storage'
@@ -22,10 +17,7 @@ export default createSlice({
     displayMode: DisplayMode
     index?: IndexDescription
     filter: Filter<unknown>
-    projection: SchemaMember<
-      unknown,
-      ProjectionOperators | number | boolean | any
-    >
+    projection: SchemaMember<unknown, Document | number | boolean | any>
     sort: { [key: string]: 1 | -1 | undefined }
     skip: number
     limit: number
@@ -57,7 +49,7 @@ export default createSlice({
       {
         payload,
       }: PayloadAction<
-        SchemaMember<unknown, ProjectionOperators | number | boolean | any>
+        SchemaMember<unknown, Document | number | boolean | any>
       >,
     ) =>
       isEqual(payload, state.projection)

@@ -1,5 +1,3 @@
-/* eslint-disable no-bitwise */
-
 import { sortBy } from 'lodash'
 import { IColumn, ColumnActionsMode } from '@fluentui/react'
 import { MongoData } from 'types'

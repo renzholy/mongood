@@ -1,6 +1,6 @@
 import { IColumn } from '@fluentui/react'
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { keyBy } from 'lodash'
 import type { IndexDescription } from 'mongodb'
 import {
@@ -30,11 +30,11 @@ export default function IndexesList() {
   const { data: indexes, error: indexesError, mutate } = useCommandListIndexes()
   const [{ conn, database, collection }] = useRouterQuery()
   const connection = useConnection(conn)
-  const invokedIndex = useSelector((state) => state.indexes.invokedIndex)
-  const isViewOpen = useSelector((state) => state.indexes.isViewOpen)
-  const isDetailOpen = useSelector((state) => state.indexes.isDetailOpen)
-  const isDialogHidden = useSelector((state) => state.indexes.isDialogHidden)
-  const dispatch = useDispatch()
+  const invokedIndex = useAppSelector((state) => state.indexes.invokedIndex)
+  const isViewOpen = useAppSelector((state) => state.indexes.isViewOpen)
+  const isDetailOpen = useAppSelector((state) => state.indexes.isDetailOpen)
+  const isDialogHidden = useAppSelector((state) => state.indexes.isDialogHidden)
+  const dispatch = useAppDispatch()
   const [target, setTarget] = useState<MouseEvent>()
   const handleDrop = useCallback(
     async () =>

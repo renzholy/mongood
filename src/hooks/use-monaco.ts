@@ -1,4 +1,3 @@
-import collection from 'utils/libs/collection'
 import ejson from 'utils/libs/ejson'
 import { useMonaco } from '@monaco-editor/react'
 import { useEffect } from 'react'
@@ -26,17 +25,6 @@ export function useMonacoInit() {
       monaco.languages.typescript.typescriptDefaults.addExtraLib(
         ejson,
         'ejson.d.ts',
-      )
-    return dispose
-  }, [monaco])
-  useEffect(() => {
-    if (!monaco) {
-      return undefined
-    }
-    const { dispose } =
-      monaco.languages.typescript.typescriptDefaults.addExtraLib(
-        collection,
-        'collection.d.ts',
       )
     return dispose
   }, [monaco])

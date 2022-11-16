@@ -21,16 +21,15 @@ export default function FilterInput<
   useEffect(() => {
     setValue(stringify(props.value))
   }, [props.value])
+  const { onChange } = props
   const handleChange = useCallback(() => {
     try {
-      props.onChange((value ? parse(value) : undefined) as T)
+      onChange((value ? parse(value) : undefined) as T)
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error(err)
       setErrorMessage(' ')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, props.value, props.onChange])
+  }, [value, onChange])
 
   return (
     <div style={{ flex: 1, display: 'flex' }}>

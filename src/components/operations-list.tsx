@@ -1,6 +1,6 @@
 import { DefaultButton, IColumn } from '@fluentui/react'
 import { useState, useEffect, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 import { compact } from 'lodash'
 import { useCommandCurrentOp } from 'hooks/use-command'
 import { actions } from 'stores'
@@ -40,16 +40,18 @@ export default function OperationsList() {
   const [{ conn, collection }, setRoute] = useRouterQuery()
   const connection = useConnection(conn)
   const [target, setTarget] = useState<MouseEvent>()
-  const invokedOperation = useSelector(
+  const invokedOperation = useAppSelector(
     (state) => state.operations.invokedOperation,
   )
-  const host = useSelector((state) => state.operations.host)
+  const host = useAppSelector((state) => state.operations.host)
   const operationConnection = host
     ? generateConnectionWithDirectHost(host, connection)
     : connection
-  const isEditorOpen = useSelector((state) => state.operations.isEditorOpen)
-  const isDialogHidden = useSelector((state) => state.operations.isDialogHidden)
-  const dispatch = useDispatch()
+  const isEditorOpen = useAppSelector((state) => state.operations.isEditorOpen)
+  const isDialogHidden = useAppSelector(
+    (state) => state.operations.isDialogHidden,
+  )
+  const dispatch = useAppDispatch()
   const handleKill = useCallback(
     async () =>
       invokedOperation && operationConnection

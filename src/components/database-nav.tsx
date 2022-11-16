@@ -1,6 +1,5 @@
 import { useEffect, useCallback, useState, useMemo } from 'react'
 import { SearchBox, Nav, getTheme, INavLink } from '@fluentui/react'
-import { useDispatch, useSelector } from 'react-redux'
 import { pullAll, compact, some, difference, union } from 'lodash'
 import { actions } from 'stores'
 import { runCommand } from 'utils/fetcher'
@@ -8,17 +7,20 @@ import { useCommandDatabases } from 'hooks/use-command'
 import useRouterQuery from 'hooks/use-router-query'
 import { useConnection } from 'hooks/use-connections'
 import ConnectionButton from './connection-button'
+import { useAppSelector, useAppDispatch } from 'hooks/use-app'
 
 const splitter = '/'
 
 export default function DatabaseNav() {
   const theme = getTheme()
   const [{ conn, database, collection }, setRoute] = useRouterQuery()
-  const expandedDatabases = useSelector((state) => state.root.expandedDatabases)
-  const collectionsMap = useSelector((state) => state.root.collectionsMap)
+  const expandedDatabases = useAppSelector(
+    (state) => state.root.expandedDatabases,
+  )
+  const collectionsMap = useAppSelector((state) => state.root.collectionsMap)
   const [keyword, setKeyword] = useState('')
   const { data } = useCommandDatabases()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const connection = useConnection(conn)
   const listCollections = useCallback(
     async (_database: string) => {
@@ -47,10 +49,8 @@ export default function DatabaseNav() {
   }, [data])
   const handleListCollectionOfDatabases = useCallback(
     async (_databases: string[]) => {
-      // eslint-disable-next-line no-restricted-syntax
       for (const _database of _databases) {
         try {
-          // eslint-disable-next-line no-await-in-loop
           const collections = await listCollections(_database)
           const systemCollections = collections.filter((c) =>
             c.startsWith('system.'),
@@ -64,7 +64,6 @@ export default function DatabaseNav() {
               ],
             }),
           )
-          // eslint-disable-next-line no-empty
         } catch {}
       }
     },

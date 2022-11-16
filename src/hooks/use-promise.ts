@@ -21,7 +21,6 @@ export default function usePromise<T extends unknown[], O>(
         setPending(false)
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [handler],
   )
   const reset = useCallback(() => {

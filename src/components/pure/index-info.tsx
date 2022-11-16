@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-indent */
-
 import { Text, getTheme, Icon, Stack } from '@fluentui/react'
 import { map } from 'lodash'
 import type { IndexDescription } from 'mongodb'

@@ -1,5 +1,3 @@
-/* eslint-disable react/no-danger */
-
 import { useMemo, CSSProperties } from 'react'
 import { getTheme } from '@fluentui/react'
 import { stringify } from 'utils/ejson'

@@ -27,7 +27,6 @@ English | [简体中文](./README-zh_CN.md)
 - [x] Fancy profiling exec stats
 - [x] Geo preview for 2dsphere index
 - [x] Auto generate [JSON Schema Validator](https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/)
-- [x] Notebook function, just like [Jupyter](https://jupyter.org/)
 - [x] HTTP/2
 - [x] Auto **dark** mode
 
@@ -55,7 +54,6 @@ English | [简体中文](./README-zh_CN.md)
     <td align="center"><img src="./screenshot/schema.png" />Edit JSON Schema</td>
   </tr>
   <tr>
-    <td align="center"><img src="./screenshot/notebook.png" />Notebook (Beta)</td>
     <td align="center"><img src="./screenshot/dark.png" />Dark mode</td>
   </tr>
 </table>
