@@ -4,7 +4,6 @@ export function generateConnectionWithDirectHost(
   host: string,
   connection?: string,
 ): string | undefined {
-  console.log('generateConnectionWithDirectHost', host, connection)
   if (!connection) {
     return undefined
   }
