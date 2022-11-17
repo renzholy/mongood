@@ -10,7 +10,6 @@ import {
   DirectionalHint,
 } from '@fluentui/react'
 import { useMemo, useCallback, useState, useEffect } from 'react'
-import mongodbUri from 'mongodb-uri'
 import { compact, uniqBy } from 'lodash-es'
 import useSWR from 'swr'
 import { runCommand } from 'utils/fetcher'
@@ -19,6 +18,7 @@ import { useConnection, useConnections } from 'hooks/use-connections'
 import usePromise from 'hooks/use-promise'
 import useRouterQuery from 'hooks/use-router-query'
 import PromiseButton from './pure/promise-button'
+import { mongodbUri } from 'utils/mongo-uri'
 
 function ConnectionItem(props: { connection: string; disabled?: boolean }) {
   const uri = useMemo(() => {

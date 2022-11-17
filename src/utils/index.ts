@@ -1,4 +1,4 @@
-import mongodbUri from 'mongodb-uri'
+import { mongodbUri } from './mongo-uri'
 
 export function generateConnectionWithDirectHost(
   host: string,
