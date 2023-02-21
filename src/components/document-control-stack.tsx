@@ -114,6 +114,7 @@ export default function DocumentControlStack() {
             iconName: {
               [DisplayMode.TABLE]: 'Table',
               [DisplayMode.DOCUMENT]: 'Documentation',
+              [DisplayMode.YAML]: 'BulletedTreeList',
             }[displayMode],
           }}
           menuIconProps={{ hidden: true }}
@@ -141,6 +142,18 @@ export default function DocumentControlStack() {
                 canCheck: true,
                 onClick() {
                   dispatch(actions.docs.setDisplayMode(DisplayMode.DOCUMENT))
+                },
+              },
+              {
+                key: DisplayMode.YAML,
+                text: 'Yaml view',
+                iconProps: {
+                  iconName: 'BulletedTreeList',
+                },
+                checked: displayMode === DisplayMode.YAML,
+                canCheck: true,
+                onClick() {
+                  dispatch(actions.docs.setDisplayMode(DisplayMode.YAML))
                 },
               },
             ],
