@@ -16,7 +16,9 @@ import DocumentRowContextualMenu from './document-row-contextual-menu'
 import DocumentColumnContextualMenu from './document-column-contextual-menu'
 import PromiseButton from './pure/promise-button'
 import LargeMessage from './pure/large-message'
-import MongoDataColorized from './pure/mongo-data-colorized'
+import MongoDataColorized, {
+  MongoYamlColorized,
+} from './pure/mongo-data-colorized'
 import DocumentCell from './pure/document-cell'
 
 type Document = { [key: string]: MongoData }
@@ -97,7 +99,9 @@ export default function DocumentsList() {
     (item?: Document, _index?: number, _column?: IColumn) =>
       displayMode === DisplayMode.DOCUMENT ? (
         <MongoDataColorized value={item} />
-      ) : (
+      ) : displayMode === DisplayMode.YAML ? (
+        <MongoYamlColorized value={item} />
+      ) : displayMode === DisplayMode.TABLE ? (
         <DocumentCell
           value={item?.[_column?.key as keyof typeof item]}
           subStringLength={
@@ -111,7 +115,7 @@ export default function DocumentsList() {
               : undefined
           }
         />
-      ),
+      ) : undefined, // never undefined
     [index2dsphere, displayMode],
   )
   useEffect(() => {
@@ -142,10 +146,20 @@ export default function DocumentsList() {
             setIsColumnMenuHidden(false)
           },
         }))
-      : [
+      : displayMode === DisplayMode.DOCUMENT
+      ? [
           {
             key: '',
             name: 'Documents',
+            minWidth: 0,
+            isMultiline: true,
+            columnActionsMode: ColumnActionsMode.disabled,
+          },
+        ]
+      : [
+          {
+            key: '',
+            name: 'Yamls',
             minWidth: 0,
             isMultiline: true,
             columnActionsMode: ColumnActionsMode.disabled,

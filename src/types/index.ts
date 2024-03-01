@@ -72,6 +72,7 @@ export type DbStats = {
 export enum DisplayMode {
   TABLE = 'TABLE',
   DOCUMENT = 'DOCUMENT',
+  YAML = 'YAML',
 }
 
 export type IndexStats = {
